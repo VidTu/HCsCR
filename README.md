@@ -40,5 +40,5 @@ This project is licensed under [Apache License 2.0](LICENSE).
 **Q**: Quilt?  
 **A**: Should already work, but I won't support it if it doesn't work.
 
-**Q**: 1.19.2, 1.18.2, 1.16.5, 1.14.4, 1.12.2, etc.?  
+**Q**: 1.18.2, 1.16.5, 1.14.4, 1.12.2, etc.?  
 **A**: Later. (or help me by contributing)
