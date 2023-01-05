@@ -18,6 +18,9 @@
   "entrypoints": {
     "client": [
       "ru.offenderify.hcscr.HCsCR"
+    ],
+    "modmenu": [
+      "ru.offenderify.hcscr.HCsCRModMenu"
     ]
   },
   "mixins": [
@@ -27,5 +30,8 @@
     "fabricloader": ">=0.14.11",
     "fabric-api": "*",
     "minecraft": "1.19.x"
+  },
+  "recommends": {
+    "modmenu": "*"
   }
 }

@@ -40,7 +40,9 @@ public abstract class EndCrystalMixin extends Entity {
 
     @Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
     public void hcscr$hurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        if (isInvulnerableTo(source) || source.getEntity() instanceof EnderDragon || isRemoved() || !level.isClientSide || HCsCR.disabledByCurrentServer) return;
+        if (!HCsCR.explodesClientSide((EndCrystal) (Object) this, source, amount)) {
+            return;
+        }
         remove(RemovalReason.KILLED);
         cir.setReturnValue(true);
     }

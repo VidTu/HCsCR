@@ -12,12 +12,12 @@ Soon™
 You will need:
 
 - Java JDK 17 or higher. (e.g. [Temurin](https://adoptium.net/))
-- 1 GB of available RAM.
-- A bit of storage. (~1 GB)
+- 3 GB of available RAM.
+- A bit of storage.
 
 How to:
 - Ensure your JDK is set up properly. (i.e. JDK path is in `JAVA_HOME` environment variable)
-- Clone this repo or download it. (e.g. via `git clone https://github.com/Offenderify/HCSCR`)
+- Clone this repo or download it. (e.g. via `git clone https://github.com/Offenderify/HCsCR`)
 - Open the terminal (command prompt) there.
 - Run `./gradlew build`.
 
@@ -26,7 +26,7 @@ This project is licensed under [Apache License 2.0](LICENSE).
 
 ## FAQ
 **Q**: How to download?  
-**A**: Releases will be available soon™, snapshots should be available [here](https://github.com/Offenderify/HCSCR/actions).
+**A**: Releases will be available soon™, snapshots should be available [here](https://github.com/Offenderify/HCsCR/actions).
 
 **Q**: Is that a hack?  
 **A**: Not by design, but can be considered so. Please check your server rules before using this mod.
