@@ -97,7 +97,6 @@ public class HCsCR implements ClientModInitializer {
             }
         });
 
-        // "It's not homo if it's a femboy." - VidTu, 2022.
         // "It's not a hack if it can be disabled by the server." - VidTu, 2023.
         ClientPlayNetworking.registerGlobalReceiver(LOCATION, (client, handler, buf, responseSender) -> {
             disabledByCurrentServer = buf.readBoolean();
