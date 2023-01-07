@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "hcscr",
+  "version": "${version}",
+  "name": "HaramClientsideCrystalRemover",
+  "description": "Remove your end crystals before the server even knows you hit 'em!",
+  "authors": [
+    "Offenderify"
+  ],
+  "contact": {
+    "homepage": "https://github.com/Offenderify/HCsCR",
+    "sources": "https://github.com/Offenderify/HCsCR",
+    "issues": "https://github.com/Offenderify/HCsCR/issues"
+  },
+  "license": "Apache-2.0",
+  "icon": "assets/hcscr/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "ru.offenderify.hcscr.HCsCR"
+    ],
+    "modmenu": [
+      "ru.offenderify.hcscr.HCsCRModMenu"
+    ]
+  },
+  "mixins": [
+    "hcscr.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.11",
+    "fabric-api": "*",
+    "minecraft": "1.18.x"
+  },
+  "recommends": {
+    "modmenu": "*"
+  }
+}
