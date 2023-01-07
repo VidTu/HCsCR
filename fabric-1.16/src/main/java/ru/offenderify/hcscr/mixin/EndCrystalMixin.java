@@ -42,7 +42,7 @@ public abstract class EndCrystalMixin extends Entity {
         if (!HCsCR.explodesClientSide((EndCrystal) (Object) this, source, amount)) {
             return;
         }
-        remove(RemovalReason.KILLED);
+        remove();
         cir.setReturnValue(true);
     }
 }
