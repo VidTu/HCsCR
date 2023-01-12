@@ -35,7 +35,7 @@ This project is licensed under [Apache License 2.0](LICENSE).
 **Q**: Is this mod client-side or server-side?  
 **A**: Client-side only, can be blocked by server.
 
-**Q**: How to block this mod as a serer owner?  
+**Q**: How to block this mod as a server owner?  
 **A**: Read more [here](HOW_TO_BLOCK.md).
 
 **Q**: Your mod's name is offensive.  
