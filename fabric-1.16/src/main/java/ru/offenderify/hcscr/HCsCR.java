@@ -31,8 +31,12 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
+import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
@@ -122,8 +126,25 @@ public class HCsCR implements ClientModInitializer {
      * @apiNote This method may be (and designed to be) modified by any third-party mods via bytecode manipulation (e.g. Mixins).
      */
     public static boolean explodesClientSide(EndCrystal crystal, DamageSource source, float amount) {
-        return HCsCR.enabled && !HCsCR.disabledByCurrentServer && crystal.level.isClientSide && !crystal.removed
-                && !crystal.isInvulnerableTo(source) && !(source.getEntity() instanceof EnderDragon);
+        if (!HCsCR.enabled || HCsCR.disabledByCurrentServer || !crystal.level.isClientSide() || crystal.removed ||
+                crystal.isInvulnerableTo(source) || source.getEntity() instanceof EnderDragon || amount <= 0) return false;
+
+        // Hrukjang Studios Moment.
+        if (source.getEntity() instanceof Player) {
+            Player player = (Player) source.getEntity();
+            if (player.getAttributeValue(Attributes.ATTACK_DAMAGE) <= 0) return false;
+            AttributeMap map = player.getAttributes();
+            for (MobEffectInstance instance : player.getActiveEffects()) {
+                instance.getEffect().addAttributeModifiers(player, map, instance.getAmplifier());
+            }
+            amount = Math.min(amount, (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE));
+            for (MobEffectInstance instance : player.getActiveEffects()) {
+                instance.getEffect().removeAttributeModifiers(player, map, instance.getAmplifier());
+            }
+            return !(amount <= 0);
+        }
+
+        return true;
     }
 
     /**

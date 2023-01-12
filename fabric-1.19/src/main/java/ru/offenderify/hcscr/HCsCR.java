@@ -27,11 +27,19 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.components.toasts.SystemToast;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 /**
  * Main mod class.
@@ -121,8 +130,25 @@ public class HCsCR implements ClientModInitializer {
      * @apiNote This method may be (and designed to be) modified by any third-party mods via bytecode manipulation (e.g. Mixins).
      */
     public static boolean explodesClientSide(EndCrystal crystal, DamageSource source, float amount) {
-        return HCsCR.enabled && !HCsCR.disabledByCurrentServer && crystal.level.isClientSide && !crystal.isRemoved()
-                && !crystal.isInvulnerableTo(source) && !(source.getEntity() instanceof EnderDragon);
+        if (!HCsCR.enabled || HCsCR.disabledByCurrentServer || !crystal.level.isClientSide() || crystal.isRemoved() ||
+                crystal.isInvulnerableTo(source) || source.getEntity() instanceof EnderDragon || amount <= 0) return false;
+
+        // Hrukjang Studios Moment.
+        if (source.getEntity() instanceof Player) {
+            Player player = (Player) source.getEntity();
+            if (player.getAttributeValue(Attributes.ATTACK_DAMAGE) <= 0) return false;
+            AttributeMap map = player.getAttributes();
+            for (MobEffectInstance instance : player.getActiveEffects()) {
+                instance.getEffect().addAttributeModifiers(player, map, instance.getAmplifier());
+            }
+            amount = Math.min(amount, (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE));
+            for (MobEffectInstance instance : player.getActiveEffects()) {
+                instance.getEffect().removeAttributeModifiers(player, map, instance.getAmplifier());
+            }
+            return !(amount <= 0);
+        }
+
+        return true;
     }
 
     /**
