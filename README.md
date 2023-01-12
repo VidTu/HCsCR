@@ -2,8 +2,8 @@
 **H**aram**C**lient**s**ide**C**rystal**R**emover.
 
 *Remove your end crystals before the server even knows you hit 'em!*  
-This Fabric mod removes end crystals client-side on hit unlike vanilla client waiting for an "EntityDestroy" packet from the server.
-
+This Fabric mod removes end crystals client-side on hit unlike vanilla client waiting for an "EntityDestroy" packet from the server.  
+You can contact me via [Discord](https://dsc.gg/femboypve).
 
 ## Download
 [GitHub](https://github.com/Offenderify/HCsCR/releases/latest)
@@ -26,8 +26,8 @@ How to:
 This project is licensed under [Apache License 2.0](LICENSE).
 
 ## FAQ
-**Q**: __HELP! ME!!!!! PLEASEEEEEEEEEE!__
-**A**: [Discord](http://dsc.gg/femboypve)
+**Q**: _HELP! ME!!!!! PLEASEEEEEEEEEE!_  
+**A**: [Discord](https://dsc.gg/femboypve).
 
 **Q**: How to download?  
 **A**: Releases are available [here](https://github.com/Offenderify/HCsCR/releases/latest), snapshots should be available [here](https://github.com/Offenderify/HCsCR/actions).
