@@ -25,7 +25,7 @@ How to:
 - Grab JARs from `/fabric-1.[your_version]/build/libs/`
 
 ## License
-This project is licensed under [Apache License 2.0](LICENSE).
+This project is licensed under [Apache License 2.0](https://github.com/FemboyPvE/HCsCR/blob/master/LICENSE).
 
 ## FAQ
 **Q**: _HELP! ME!!!!! PLEASEEEEEEEEEE!_  
@@ -44,7 +44,7 @@ This project is licensed under [Apache License 2.0](LICENSE).
 **A**: Read more [here](https://github.com/FemboyPvE/HCsCR/blob/master/HOW_TO_BLOCK.md).
 
 **Q**: Your mod's name is offensive.  
-**A**: Accept it, report it or fork it. IDC.
+**A**: Accept it, report it or fork it. IDC unless some moderators tell me about it.
 
 **Q**: Forge?  
 **A**: Later. (or help me by contributing)
@@ -52,5 +52,5 @@ This project is licensed under [Apache License 2.0](LICENSE).
 **Q**: Quilt?  
 **A**: Should already work, but I won't support it if it doesn't work.
 
-**Q**: 1.14.4, 1.12.2, etc.?  
+**Q**: 1.17.1, 1.15.2, 1.14.4, 1.12.2, etc.?  
 **A**: Later. (or help me by contributing)
