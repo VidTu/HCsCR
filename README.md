@@ -6,7 +6,9 @@ This Fabric mod removes end crystals client-side on hit unlike vanilla client wa
 You can contact me via [Discord](https://dsc.gg/femboypve).
 
 ## Download
-[GitHub](https://github.com/Offenderify/HCsCR/releases/latest)
+[ModRinth](https://modrinth.com/mod/hcscr)
+
+[GitHub](https://github.com/FemboyPvE/HCsCR/releases/latest)
 
 ## Building
 You will need:
@@ -30,7 +32,7 @@ This project is licensed under [Apache License 2.0](LICENSE).
 **A**: [Discord](https://dsc.gg/femboypve).
 
 **Q**: How to download?  
-**A**: Releases are available [here](https://github.com/Offenderify/HCsCR/releases/latest), snapshots should be available [here](https://github.com/Offenderify/HCsCR/actions).
+**A**: Releases are available [on ModRinth](https://modrinth.com/mod/hcscr), [on GitHub Releases](https://github.com/FemboyPvE/HCsCR/releases/latest), snapshots are available [on GitHub Actions](https://github.com/FemboyPvE/HCsCR/actions).
 
 **Q**: Is that a hack?  
 **A**: Not by design, but can be considered so and can be blocked by server. Please check your server rules before using this mod.
@@ -39,7 +41,7 @@ This project is licensed under [Apache License 2.0](LICENSE).
 **A**: Client-side only, can be blocked by server.
 
 **Q**: How to block this mod as a server owner?  
-**A**: Read more [here](HOW_TO_BLOCK.md).
+**A**: Read more [here](https://github.com/FemboyPvE/HCsCR/blob/master/HOW_TO_BLOCK.md).
 
 **Q**: Your mod's name is offensive.  
 **A**: Accept it, report it or fork it. IDC.
