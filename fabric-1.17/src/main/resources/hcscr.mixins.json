@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "ru.offenderify.hcscr.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "client": [
+    "EndCrystalMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

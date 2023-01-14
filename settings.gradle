@@ -9,5 +9,6 @@ pluginManagement {
 
 rootProject.name = 'HaramClientsideCrystalRemover'
 include 'fabric-1.16'
+include 'fabric-1.17'
 include 'fabric-1.18'
 include 'fabric-1.19'

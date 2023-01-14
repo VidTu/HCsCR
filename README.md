@@ -32,7 +32,7 @@ This project is licensed under [Apache License 2.0](https://github.com/FemboyPvE
 **A**: [Discord](https://dsc.gg/femboypve).
 
 **Q**: How to download?  
-**A**: Releases are available [on ModRinth](https://modrinth.com/mod/hcscr), [on GitHub Releases](https://github.com/FemboyPvE/HCsCR/releases/latest), snapshots are available [on GitHub Actions](https://github.com/FemboyPvE/HCsCR/actions).
+**A**: Releases are available [on ModRinth](https://modrinth.com/mod/hcscr), [on GitHub Releases](https://github.com/FemboyPvE/HCsCR/releases/latest), snapshots are available [on GitHub Actions](https://github.com/FemboyPvE/HCsCR/actions) if you have a GitHub account.
 
 **Q**: Is that a hack?  
 **A**: Not by design, but can be considered so and can be blocked by server. Please check your server rules before using this mod.
@@ -52,5 +52,5 @@ This project is licensed under [Apache License 2.0](https://github.com/FemboyPvE
 **Q**: Quilt?  
 **A**: Should already work, but I won't support it if it doesn't work.
 
-**Q**: 1.17.1, 1.15.2, 1.14.4, 1.12.2, etc.?  
+**Q**: 1.15.2, 1.14.4, 1.12.2, etc.?  
 **A**: Later. (or help me by contributing)

@@ -141,7 +141,7 @@ public class HCsCR implements ClientModInitializer {
             for (MobEffectInstance instance : player.getActiveEffects()) {
                 instance.getEffect().removeAttributeModifiers(player, map, instance.getAmplifier());
             }
-            return !(amount <= 0);
+            return amount > 0;
         }
 
         return true;

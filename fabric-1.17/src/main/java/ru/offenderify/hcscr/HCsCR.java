@@ -37,9 +37,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.player.Player;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -54,7 +54,7 @@ public class HCsCR implements ClientModInitializer {
     /**
      * Main mod logger named <code>HCSCR</code>.
      */
-    public static final Logger LOG = LoggerFactory.getLogger("HCsCR");
+    public static final Logger LOG = LogManager.getLogger("HCsCR");
 
     /**
      * Mod's resource location <code>hcscr:haram</code> to inform the server.
