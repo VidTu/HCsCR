@@ -1,0 +1,35 @@
+plugins {
+	id 'fabric-loom' version '1.0-SNAPSHOT'
+}
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+group = 'ru.offenderify.hcscr'
+archivesBaseName = 'HaramClientsideCrystalRemover-Fabric-1.18.2'
+version = project.mod_version
+
+repositories {
+	maven { url 'https://api.modrinth.com/maven' }
+	maven { url 'https://maven.terraformersmc.com/releases/' }
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:1.18.2"
+	mappings loom.officialMojangMappings()
+	modImplementation "net.fabricmc:fabric-loader:${project.fabric_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:0.67.0+1.18.2"
+	modApi "com.terraformersmc:modmenu:3.2.5"
+	modRuntimeOnly "maven.modrinth:lazydfu:0.1.2"
+}
+
+processResources {
+	inputs.property 'version', project.version
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 17
+}
