@@ -24,5 +24,6 @@ jobs:
           name: Artifacts
           path: |
             fabric-1.16/build/libs/
+            fabric-1.17/build/libs/
             fabric-1.18/build/libs/
             fabric-1.19/build/libs/
