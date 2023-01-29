@@ -1,0 +1,13 @@
+{
+  "hcscr.server.disabled": "Le serveur a désactivé le mod.",
+  "hcscr.server.enabled": "Le serveur a activé le mod.",
+  "hcscr.key.toggle": "Activer Clientside Crystal Removing",
+  "hcscr.key.category": "HaramClientsideCrystalRemover",
+  "hcscr.toggle.enabled": "HCsCR est activé maintenant !",
+  "hcscr.toggle.enabledBut": "HCsCR est activé maintenant, mais est bloqué par le serveur !",
+  "hcscr.toggle.disabled": "HCsCR est désactivé maintenant !",
+  "hcscr.screen.title": "Configuration de HaramClientsideCrystalRemover",
+  "hcscr.screen.enabled": "Activé",
+  "hcscr.screen.serverDisabled": "Le mod a été désactivé par le serveur actuel.",
+  "modmenu.descriptionTranslation.hcscr": "Retirez vos cristaux de l'End avant même que le serveur ne sache que vous les avez touchés !"
+}
