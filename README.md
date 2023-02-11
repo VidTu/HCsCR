@@ -19,7 +19,7 @@ You will need:
 
 How to:
 - Ensure your JDK is set up properly. (i.e. JDK path is in `JAVA_HOME` environment variable)
-- Clone this repo or download it. (e.g. via `git clone https://github.com/Offenderify/HCsCR`)
+- Clone this repo or download it. (e.g. via `git clone https://github.com/FemboyPvE/HCsCR`)
 - Open the terminal (command prompt) there.
 - Run `./gradlew build`.
 - Grab JARs from `/fabric-1.[your_version]/build/libs/`
@@ -28,7 +28,7 @@ How to:
 This project is licensed under [Apache License 2.0](https://github.com/FemboyPvE/HCsCR/blob/master/LICENSE).
 
 ## FAQ
-**Q**: _HELP! ME!!!!! PLEASEEEEEEEEEE!_  
+**Q**: I don't understand [insert something here].  
 **A**: [Discord](https://dsc.gg/femboypve).
 
 **Q**: How to download?  
