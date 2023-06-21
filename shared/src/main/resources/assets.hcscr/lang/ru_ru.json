@@ -1,0 +1,19 @@
+{
+  "hcscr.server.disabled": "Сервер выключил мод.",
+  "hcscr.server.enabled": "Сервер включил мод.",
+  "hcscr.key.toggle": "Переключить клиентское удаление кристаллов",
+  "hcscr.key.category": "HaramClientsideCrystalRemover",
+  "hcscr.toggle.enabled": "HCsCR теперь включён!",
+  "hcscr.toggle.enabledBut": "HCsCR теперь включён, но заблокирован сервером!",
+  "hcscr.toggle.disabled": "HCsCR теперь отключён!",
+  "hcscr.screen.title": "Конфиг HaramClientsideCrystalRemover",
+  "hcscr.screen.enabled": "Включено",
+  "hcscr.screen.removeCrystals": "Удалять кристаллы",
+  "hcscr.screen.removeSlimes": "Удалять слизней",
+  "hcscr.screen.removeInteractions": "Удалять взаимодействия",
+  "hcscr.screen.removeAnchors": "Удалять якори",
+  "hcscr.screen.delay": "Задержка",
+  "hcscr.screen.absolutePrecision": "Абсолютная временная точность",
+  "hcscr.screen.serverDisabled": "Мод был отключён данным сервером.",
+  "modmenu.descriptionTranslation.hcscr": "Удаляй свои кристаллы края, прежде чем сервер даже узнает, что ты ударил их!"
+}

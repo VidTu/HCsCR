@@ -27,9 +27,9 @@
     "hcscr.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.14.11",
+    "fabricloader": "*",
     "fabric-api": "*",
-    "minecraft": "1.18.x"
+    "minecraft": "1.19.x"
   },
   "recommends": {
     "modmenu": "*"

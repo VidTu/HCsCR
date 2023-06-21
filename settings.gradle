@@ -8,8 +8,9 @@ pluginManagement {
 
 
 rootProject.name = 'HaramClientsideCrystalRemover'
-include 'fabric-1.16.5'
-include 'fabric-1.17.1'
-include 'fabric-1.18.2'
-include 'fabric-1.19.2'
-include 'fabric-1.19.3'
+include 'shared'
+// include 'fabric-1.18.2'
+// include 'fabric-1.19.2'
+// include 'fabric-1.19.3'
+// include 'fabric-1.19.4'
+include 'fabric-1.20.1'

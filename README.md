@@ -2,13 +2,11 @@
 **H**aram**C**lient**s**ide**C**rystal**R**emover.
 
 *Remove your end crystals before the server even knows you hit 'em!*  
-This Fabric mod removes end crystals client-side on hit unlike vanilla client waiting for an "EntityDestroy" packet from the server.  
-You can contact me via [Discord](https://dsc.gg/femboypve).
+This Fabric mod removes end crystals client-side on hit unlike vanilla client waiting for an "EntityDestroy" packet from the server.
 
 ## Download
-[ModRinth](https://modrinth.com/mod/hcscr)
-
-[GitHub](https://github.com/FemboyPvE/HCsCR/releases/latest)
+- [ModRinth](https://modrinth.com/mod/hcscr)
+- [GitHub](https://github.com/FemboyPvE/HCsCR/releases/latest)
 
 ## Building
 You will need:
@@ -47,10 +45,10 @@ This project is licensed under [Apache License 2.0](https://github.com/FemboyPvE
 **A**: Accept it, report it or fork it. IDC unless some moderators tell me about it.
 
 **Q**: Forge?  
-**A**: Later. (or help me by contributing)
+**A**: No.
 
 **Q**: Quilt?  
 **A**: Should already work, but I won't support it if it doesn't work.
 
-**Q**: 1.15.2, 1.14.4, 1.12.2, etc.?  
-**A**: Later. (or help me by contributing)
+**Q**: 1.17.1 or older?  
+**A**: No.

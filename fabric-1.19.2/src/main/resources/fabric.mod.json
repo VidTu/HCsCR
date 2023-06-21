@@ -17,10 +17,10 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "ru.offenderify.hcscr.HCsCR"
+      "ru.femboypve.hcscr.HCsCRFabric"
     ],
     "modmenu": [
-      "ru.offenderify.hcscr.HCsCRModMenu"
+      "ru.femboypve.hcscr.HCsCRModMenu"
     ]
   },
   "mixins": [
