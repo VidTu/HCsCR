@@ -27,7 +27,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
-import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
@@ -41,10 +40,8 @@ import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
 import org.lwjgl.glfw.GLFW;
 
-import java.time.Duration;
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
@@ -54,7 +51,7 @@ import java.util.function.Consumer;
  * @author VidTu
  */
 public final class HCsCRFabric implements ClientModInitializer {
-    private static final ResourceLocation LOCATION = new ResourceLocation("assets.hcscr", "haram");
+    private static final ResourceLocation LOCATION = new ResourceLocation("hcscr", "haram");
     private static final KeyMapping TOGGLE_BIND = new KeyMapping("hcscr.key.toggle", GLFW.GLFW_KEY_UNKNOWN, "hcscr.key.category");
     private static final Map<Entity, Long> SCHEDULE_REMOVAL = new WeakHashMap<>();
 
@@ -66,14 +63,17 @@ public final class HCsCRFabric implements ClientModInitializer {
             if (!TOGGLE_BIND.consumeClick()) return;
             HCsCR.enabled = !HCsCR.enabled;
             if (!HCsCR.enabled) {
-                client.gui.setOverlayMessage(Component.translatable("hcscr.toggle.disabled")
-                        .withStyle(ChatFormatting.RED, ChatFormatting.BOLD), false);
+                SystemToast.addOrUpdate(client.getToasts(), SystemToast.SystemToastIds.NARRATOR_TOGGLE,
+                        Component.literal("HaramClientsideCrystalRemover"),
+                        Component.translatable("hcscr.toggle.disabled").withStyle(ChatFormatting.RED));
             } else if (HCsCR.serverDisabled) {
-                client.gui.setOverlayMessage(Component.translatable("hcscr.toggle.enabledBut")
-                        .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD), false);
+                SystemToast.addOrUpdate(client.getToasts(), SystemToast.SystemToastIds.NARRATOR_TOGGLE,
+                        Component.literal("HaramClientsideCrystalRemover"),
+                        Component.translatable("hcscr.toggle.enabledBut").withStyle(ChatFormatting.GOLD));
             } else {
-                client.gui.setOverlayMessage(Component.translatable("hcscr.toggle.enabled")
-                        .withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD), false);
+                SystemToast.addOrUpdate(client.getToasts(), SystemToast.SystemToastIds.NARRATOR_TOGGLE,
+                        Component.literal("HaramClientsideCrystalRemover"),
+                        Component.translatable("hcscr.toggle.enabled").withStyle(ChatFormatting.GREEN));
             }
             HCsCR.saveConfig(FabricLoader.getInstance().getConfigDir());
         });
@@ -87,7 +87,8 @@ public final class HCsCRFabric implements ClientModInitializer {
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> HCsCR.serverDisabled = false);
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> HCsCR.serverDisabled = false);
         Consumer<Minecraft> tick = client -> {
-            if (client.level == null) {
+            if (client.level == null || HCsCR.delay == 0) {
+                if (SCHEDULE_REMOVAL.isEmpty()) return;
                 SCHEDULE_REMOVAL.clear();
                 return;
             }

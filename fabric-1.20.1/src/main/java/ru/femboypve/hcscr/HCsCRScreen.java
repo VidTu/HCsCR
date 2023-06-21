@@ -75,7 +75,7 @@ public final class HCsCRScreen extends Screen {
                 value -> CommonComponents.optionNameValue(Component.translatable("hcscr.screen.delay"),
                         Component.literal(Integer.toString(value)))));
         addRenderableWidget(absolutePrecision = new Checkbox(
-                width / 2 - 12 - font.width(Component.translatable("hcscr.screen.absolutePrecision")) / 2, 136,
+                width / 2 - 12 - font.width(Component.translatable("hcscr.screen.absolutePrecision")) / 2, 184,
                 24 + font.width(Component.translatable("hcscr.screen.absolutePrecision")), 20,
                 Component.translatable("hcscr.screen.absolutePrecision"), HCsCR.absolutePrecision));
         addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> minecraft.setScreen(parent)).bounds(width / 2 - 75, height - 24, 150, 20).build());
