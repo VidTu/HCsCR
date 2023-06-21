@@ -16,163 +16,136 @@
 
 package ru.femboypve.hcscr;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
-import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
+import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
 import org.lwjgl.glfw.GLFW;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.function.Consumer;
 
 /**
- * Main mod class.
+ * Main HCsCR class.
  *
  * @author Offenderify
+ * @author VidTu
  */
-public class HCsCRFabric implements ClientModInitializer {
-    /**
-     * Main mod logger named <code>HCSCR</code>.
-     */
-    public static final Logger LOG = LoggerFactory.getLogger("HCsCR");
-
-    /**
-     * Mod's resource location <code>hcscr:haram</code> to inform the server.
-     */
-    public static final ResourceLocation LOCATION = new ResourceLocation("hcscr", "haram");
-
-    /**
-     * Keybinding for mod toggling.
-     */
-    public static final KeyMapping TOGGLE_BIND = new KeyMapping("hcscr.key.toggle", GLFW.GLFW_KEY_UNKNOWN, "hcscr.key.category");
-
-    /**
-     * Shared GSON instance.
-     */
-    public static final Gson GSON = new Gson();
-
-    /**
-     * Is the mod enabled via configuration? Default value: <code>true</code>
-     */
-    public static boolean enabled = true;
-
-    /**
-     * Is this mod disabled by current server via sending packets on {@link #LOCATION}? Default value: <code>false</code>
-     */
-    public static boolean disabledByCurrentServer;
+public final class HCsCRFabric implements ClientModInitializer {
+    private static final ResourceLocation LOCATION = new ResourceLocation("hcscr", "haram");
+    private static final KeyMapping TOGGLE_BIND = new KeyMapping("hcscr.key.toggle", GLFW.GLFW_KEY_UNKNOWN, "hcscr.key.category");
+    private static final Map<Entity, Long> SCHEDULE_REMOVAL = new WeakHashMap<>();
 
     @Override
     public void onInitializeClient() {
-        loadConfig();
+        HCsCR.loadConfig(FabricLoader.getInstance().getConfigDir());
         KeyBindingHelper.registerKeyBinding(TOGGLE_BIND);
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (TOGGLE_BIND.consumeClick()) {
-                enabled = !enabled;
-                if (!enabled) {
-                    client.gui.setOverlayMessage(new TranslatableComponent("hcscr.toggle.disabled")
-                            .withStyle(ChatFormatting.RED, ChatFormatting.BOLD), false);
-                } else if (disabledByCurrentServer) {
-                    client.gui.setOverlayMessage(new TranslatableComponent("hcscr.toggle.enabledBut")
-                            .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD), false);
-                } else {
-                    client.gui.setOverlayMessage(new TranslatableComponent("hcscr.toggle.enabled")
-                            .withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD), false);
-                }
-                saveConfig();
+            if (!TOGGLE_BIND.consumeClick()) return;
+            HCsCR.enabled = !HCsCR.enabled;
+            if (!HCsCR.enabled) {
+                SystemToast.addOrUpdate(client.getToasts(), SystemToast.SystemToastIds.NARRATOR_TOGGLE,
+                        new TextComponent("HaramClientsideCrystalRemover"),
+                        new TranslatableComponent("hcscr.toggle.disabled").withStyle(ChatFormatting.RED));
+            } else if (HCsCR.serverDisabled) {
+                SystemToast.addOrUpdate(client.getToasts(), SystemToast.SystemToastIds.NARRATOR_TOGGLE,
+                        new TextComponent("HaramClientsideCrystalRemover"),
+                        new TranslatableComponent("hcscr.toggle.enabledBut").withStyle(ChatFormatting.GOLD));
+            } else {
+                SystemToast.addOrUpdate(client.getToasts(), SystemToast.SystemToastIds.NARRATOR_TOGGLE,
+                        new TextComponent("HaramClientsideCrystalRemover"),
+                        new TranslatableComponent("hcscr.toggle.enabled").withStyle(ChatFormatting.GREEN));
             }
+            HCsCR.saveConfig(FabricLoader.getInstance().getConfigDir());
         });
-
-        // "It's not homo if it's a femboy." - VidTu, 2022.
-        // "It's not a hack if it can be disabled by the server." - VidTu, 2023.
         ClientPlayNetworking.registerGlobalReceiver(LOCATION, (client, handler, buf, responseSender) -> {
-            disabledByCurrentServer = buf.readBoolean();
-            client.execute(() -> client.getToasts().addToast(SystemToast.multiline(client, SystemToast.SystemToastIds.TUTORIAL_HINT,
+            HCsCR.serverDisabled = buf.readBoolean();
+            client.execute(() -> SystemToast.addOrUpdate(client.getToasts(), SystemToast.SystemToastIds.TUTORIAL_HINT,
                     new TextComponent("HaramClientsideCrystalRemover"),
-                    new TranslatableComponent(disabledByCurrentServer ? "hcscr.server.disabled" : "hcscr.server.enabled"))));
+                    new TranslatableComponent(HCsCR.serverDisabled ? "hcscr.server.disabled" : "hcscr.server.enabled")));
         });
-        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> disabledByCurrentServer = false);
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> disabledByCurrentServer = false);
-
-        LOG.info("I'm ready to remove any end crystals you have!");
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> HCsCR.serverDisabled = false);
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> HCsCR.serverDisabled = false);
+        Consumer<Minecraft> tick = client -> {
+            if (client.level == null || HCsCR.delay == 0) {
+                if (SCHEDULE_REMOVAL.isEmpty()) return;
+                SCHEDULE_REMOVAL.clear();
+                return;
+            }
+            SCHEDULE_REMOVAL.entrySet().removeIf(en -> {
+                Entity entity = en.getKey();
+                if (entity.isRemoved()) return true;
+                long time = en.getValue();
+                if (System.nanoTime() > time) {
+                    entity.discard();
+                    return true;
+                }
+                return false;
+            });
+        };
+        if (HCsCR.absolutePrecision) {
+            WorldRenderEvents.END.register(context -> tick.accept(Minecraft.getInstance()));
+            HCsCR.LOG.info("HCsCR is using absolute precision! (using: rendering ticks)");
+        } else {
+            ClientTickEvents.END_CLIENT_TICK.register(tick::accept);
+            HCsCR.LOG.info("HCsCR is NOT using absolute precision! (using: game ticks)");
+        }
+        HCsCR.LOG.info("HCsCR is ready to remove any end crystals you have!");
     }
 
     /**
-     * Checks if the crystal can be removed client-side.
+     * Removes the entity client-side, if required.
      *
-     * @param crystal Target crystal
-     * @param source  Damage source of crystal (first arg from {@link EndCrystal#hurt(DamageSource, float)})
-     * @param amount  Amount of damage (second arg from {@link EndCrystal#hurt(DamageSource, float)}))
-     * @return <code>true</code> if explosion all conditions are met and the mod is {@link #enabled} and not {@link #disabledByCurrentServer}
-     * @apiNote This method may be (and designed to be) modified by any third-party mods via bytecode manipulation (e.g. Mixins).
+     * @param entity Target entity
+     * @param source Damage source
+     * @param amount Amount of damage
+     * @return Whether the entity has been removed
      */
-    public static boolean explodesClientSide(EndCrystal crystal, DamageSource source, float amount) {
-        if (!HCsCRFabric.enabled || HCsCRFabric.disabledByCurrentServer || !crystal.level.isClientSide() || crystal.isRemoved() ||
-                crystal.isInvulnerableTo(source) || source.getEntity() instanceof EnderDragon || amount <= 0) return false;
-
-        // Hrukjang Studios Moment.
-        if (source.getEntity() instanceof Player) {
-            Player player = (Player) source.getEntity();
-            if (player.getAttributeValue(Attributes.ATTACK_DAMAGE) <= 0) return false;
-            AttributeMap map = player.getAttributes();
-            for (MobEffectInstance instance : player.getActiveEffects()) {
-                instance.getEffect().addAttributeModifiers(player, map, instance.getAmplifier());
-            }
-            amount = Math.min(amount, (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE));
-            for (MobEffectInstance instance : player.getActiveEffects()) {
-                instance.getEffect().removeAttributeModifiers(player, map, instance.getAmplifier());
-            }
-            return amount > 0;
+    public static boolean removeClientSide(Entity entity, DamageSource source, float amount) {
+        if (!HCsCR.enabled || HCsCR.serverDisabled || amount <= 0F || entity.isRemoved()
+                || !entity.level.isClientSide() || !(source.getEntity() instanceof Player player)
+                || entity.isInvulnerableTo(source)) return false;
+        if (entity instanceof EndCrystal) {
+            if (!HCsCR.removeCrystals) return false;
+        } else if (entity instanceof Slime slime) {
+            if (!HCsCR.removeSlimes || !slime.isInvisible()) return false;
+        } else {
+            return false;
         }
-
+        if (player.getAttributeValue(Attributes.ATTACK_DAMAGE) <= 0) return false;
+        AttributeMap map = player.getAttributes();
+        for (MobEffectInstance instance : player.getActiveEffects()) {
+            instance.getEffect().addAttributeModifiers(player, map, instance.getAmplifier());
+        }
+        amount = Math.min(amount, (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE));
+        for (MobEffectInstance instance : player.getActiveEffects()) {
+            instance.getEffect().removeAttributeModifiers(player, map, instance.getAmplifier());
+        }
+        if (amount < 0) return false;
+        if (HCsCR.delay > 0) {
+            SCHEDULE_REMOVAL.put(entity, System.nanoTime() + HCsCR.delay * 1_000_000L);
+            return true;
+        }
+        entity.discard();
         return true;
-    }
-
-    /**
-     * Loads mod config.
-     */
-    public static void loadConfig() {
-        try {
-            Path file = FabricLoader.getInstance().getConfigDir().resolve("hcscr.json");
-            if (!Files.isRegularFile(file)) return;
-            JsonObject json = GSON.fromJson(new String(Files.readAllBytes(file), StandardCharsets.UTF_8), JsonObject.class);
-            enabled = json.get("enabled").getAsBoolean();
-        } catch (Exception e) {
-            LOG.warn("Unable to load HCsCR config.", e);
-        }
-    }
-
-    /**
-     * Saves mod config.
-     */
-    public static void saveConfig() {
-        try {
-            Path file = FabricLoader.getInstance().getConfigDir().resolve("hcscr.json");
-            Files.createDirectories(file.getParent());
-            JsonObject json = new JsonObject();
-            json.addProperty("enabled", enabled);
-            Files.write(file, GSON.toJson(json).getBytes(StandardCharsets.UTF_8));
-        } catch (Exception e) {
-            LOG.warn("Unable to load HCsCR config.", e);
-        }
     }
 }

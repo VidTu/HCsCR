@@ -77,12 +77,11 @@ public final class HCsCRFabric implements ClientModInitializer {
             }
             HCsCR.saveConfig(FabricLoader.getInstance().getConfigDir());
         });
-
         ClientPlayNetworking.registerGlobalReceiver(LOCATION, (client, handler, buf, responseSender) -> {
             HCsCR.serverDisabled = buf.readBoolean();
-            client.execute(() -> client.getToasts().addToast(SystemToast.multiline(client, SystemToast.SystemToastIds.TUTORIAL_HINT,
+            client.execute(() -> SystemToast.addOrUpdate(client.getToasts(), SystemToast.SystemToastIds.TUTORIAL_HINT,
                     Component.literal("HaramClientsideCrystalRemover"),
-                    Component.translatable(HCsCR.serverDisabled ? "hcscr.server.disabled" : "hcscr.server.enabled"))));
+                    Component.translatable(HCsCR.serverDisabled ? "hcscr.server.disabled" : "hcscr.server.enabled")));
         });
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> HCsCR.serverDisabled = false);
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> HCsCR.serverDisabled = false);
@@ -105,11 +104,12 @@ public final class HCsCRFabric implements ClientModInitializer {
         };
         if (HCsCR.absolutePrecision) {
             WorldRenderEvents.END.register(context -> tick.accept(Minecraft.getInstance()));
+            HCsCR.LOG.info("HCsCR is using absolute precision! (using: rendering ticks)");
         } else {
             ClientTickEvents.END_CLIENT_TICK.register(tick::accept);
+            HCsCR.LOG.info("HCsCR is NOT using absolute precision! (using: game ticks)");
         }
-
-        HCsCR.LOG.info("I'm ready to remove any end crystals you have!");
+        HCsCR.LOG.info("HCsCR is ready to remove any end crystals you have!");
     }
 
     /**

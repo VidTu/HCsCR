@@ -11,6 +11,7 @@
   "hcscr.screen.removeCrystals": "Удалять кристаллы",
   "hcscr.screen.removeSlimes": "Удалять слизней",
   "hcscr.screen.removeInteractions": "Удалять взаимодействия",
+  "hcscr.screen.removeInteractions.version": "Это опция не влияет на версии до 1.19.4.",
   "hcscr.screen.removeAnchors": "Удалять якори",
   "hcscr.screen.delay": "Задержка",
   "hcscr.screen.absolutePrecision": "Абсолютная временная точность",

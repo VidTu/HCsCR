@@ -11,6 +11,7 @@
   "hcscr.screen.removeCrystals": "Remove Crystals",
   "hcscr.screen.removeSlimes": "Remove Slimes",
   "hcscr.screen.removeInteractions": "Remove Interactions",
+  "hcscr.screen.removeInteractions.version": "This option has no effect on versions prior to 1.19.4.",
   "hcscr.screen.removeAnchors": "Remove Anchors",
   "hcscr.screen.delay": "Delay",
   "hcscr.screen.absolutePrecision": "Absolute Time Precision",

@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "ru.femboypve.hcscr.mixin",
+  "client": [
+    "InteractionMixin",
+    "PlayerMixin",
+    "RespawnAnchorBlockMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

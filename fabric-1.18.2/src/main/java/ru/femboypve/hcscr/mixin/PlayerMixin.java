@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Offenderify
+ * Copyright (c) 2023 Offenderify, VidTu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,31 +18,25 @@ package ru.femboypve.hcscr.mixin;
 
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
+import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import ru.femboypve.hcscr.HCsCRFabric;
 
 /**
- * Mixin that overwrites end crystal hit removing.
+ * Mixin that speeds up entity removing.
  *
- * @author Offenderify
+ * @author VidTu
  */
-@Mixin(EndCrystal.class)
-public abstract class EndCrystalMixin extends Entity {
-    private EndCrystalMixin() {
-        super(null, null);
+@Mixin(Player.class)
+public abstract class PlayerMixin {
+    private PlayerMixin() {
         throw new AssertionError("The life is hard, but initializing @Mixin is harder.");
     }
 
-    @Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
-    public void hcscr$hurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        if (!HCsCRFabric.explodesClientSide((EndCrystal) (Object) this, source, amount)) {
-            return;
-        }
-        remove(RemovalReason.KILLED);
-        cir.setReturnValue(true);
+    @Redirect(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
+    public boolean hcscr$attack$hurt(Entity entity, DamageSource source, float amount) {
+        return entity.hurt(source, amount) || HCsCRFabric.removeClientSide(entity, source, amount);
     }
 }

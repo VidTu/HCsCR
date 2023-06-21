@@ -1,5 +1,5 @@
 # How to block this mod?
-If you are the server owner and you don't want your players to use this mod, you can detect
+If you are the server owner, and you don't want your players to use this mod, you can detect
 them by channel `hcscr:haram` and block by sending a single boolean  to the client on this channel.
 `true` (byte: `1`) means the mod should be blocked, `false` (byte: `0`) means the mod should be unblocked,
 this can be changed in-game multiple times per one session.
@@ -27,7 +27,7 @@ public class ExampleBlocker extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerChangedWorld(PlayerChangedWorldEvent e) {
-        if (e.getWorld().getName().equals("example_mod_where_we_should_unblock_the_mod")) { // Example usage case.
+        if (e.getWorld().getName().equals("example_world_where_we_should_unblock_the_mod")) { // Example usage case.
             e.getPlayer().sendPluginMessage(this, "hcscr:haram", new byte[] {0}); // Unblock the mod via '0' (`false`) byte.
         } else {
             e.getPlayer().sendPluginMessage(this, "hcscr:haram", new byte[] {1}); // Block the mod via '1' (`true`) byte.

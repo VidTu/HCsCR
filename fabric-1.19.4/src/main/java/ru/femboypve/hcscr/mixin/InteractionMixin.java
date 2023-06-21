@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Offenderify
+ * Copyright (c) 2023 Offenderify, VidTu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,33 +16,28 @@
 
 package ru.femboypve.hcscr.mixin;
 
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
+import net.minecraft.world.entity.Interaction;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import ru.femboypve.hcscr.HCsCRFabric;
+import ru.femboypve.hcscr.HCsCR;
 
 /**
- * Mixin that overwrites end crystal hit removing.
+ * Mixin that allows interactions to be removed.
  *
- * @author Offenderify
+ * @author VidTu
  */
-@Mixin(EndCrystal.class)
-public abstract class EndCrystalMixin extends Entity {
-    private EndCrystalMixin() {
-        super(null, null);
+@Mixin(Interaction.class)
+public abstract class InteractionMixin {
+    private InteractionMixin() {
         throw new AssertionError("The life is hard, but initializing @Mixin is harder.");
     }
 
-    @Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
-    public void hcscr$hurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        if (!HCsCRFabric.explodesClientSide((EndCrystal) (Object) this, source, amount)) {
-            return;
-        }
-        remove(RemovalReason.KILLED);
-        cir.setReturnValue(true);
+    @Inject(method = "skipAttackInteraction", at = @At("HEAD"), cancellable = true)
+    public void hcscr$skipAttackInteraction$head(Entity entity, CallbackInfoReturnable<Boolean> cir) {
+        if (!HCsCR.enabled || HCsCR.serverDisabled || !HCsCR.removeInteractions) return;
+        cir.setReturnValue(false);
     }
 }

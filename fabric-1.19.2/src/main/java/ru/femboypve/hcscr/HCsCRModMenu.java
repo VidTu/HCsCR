@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Offenderify
+ * Copyright (c) 2023 Offenderify, VidTu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import com.terraformersmc.modmenu.api.ModMenuApi;
  *
  * @author Offenderify
  */
-public class HCsCRModMenu implements ModMenuApi {
+public final class HCsCRModMenu implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return HCsCRScreen::new;
