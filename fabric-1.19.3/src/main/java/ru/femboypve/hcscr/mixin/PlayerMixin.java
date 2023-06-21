@@ -37,6 +37,6 @@ public abstract class PlayerMixin {
 
     @Redirect(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
     public boolean hcscr$attack$hurt(Entity entity, DamageSource source, float amount) {
-        return entity.hurt(source, amount) || HCsCRFabric.removeClientSide(entity, source, amount);
+        return entity.hurt(source, amount) | HCsCRFabric.removeClientSide(entity, source, amount);
     }
 }
