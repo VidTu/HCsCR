@@ -3,7 +3,7 @@ on: [ pull_request, push ]
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: checkout repository
         uses: actions/checkout@v3
@@ -14,6 +14,7 @@ jobs:
         with:
           java-version: 17
           distribution: 'microsoft'
+          cache: gradle
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
       - name: build
