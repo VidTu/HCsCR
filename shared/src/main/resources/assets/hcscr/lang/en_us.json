@@ -15,6 +15,11 @@
   "hcscr.screen.removeAnchors": "Remove Anchors",
   "hcscr.screen.delay": "Delay",
   "hcscr.screen.absolutePrecision": "Absolute Time Precision",
+  "hcscr.screen.batching": "Batching",
+  "hcscr.screen.batching.disabled": "Disabled",
+  "hcscr.screen.batching.containing": "Containing",
+  "hcscr.screen.batching.containingContained": "Containing or Contained",
+  "hcscr.screen.batching.intersecting": "Intersecting",
   "hcscr.screen.serverDisabled": "The mod has been disabled by the current server.",
   "modmenu.descriptionTranslation.hcscr": "Remove your end crystals before the server even knows you hit 'em!"
 }

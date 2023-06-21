@@ -38,10 +38,10 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.AABB;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -115,15 +115,16 @@ public final class HCsCRFabric implements ClientModInitializer {
     /**
      * Removes the entity client-side, if required.
      *
-     * @param entity Target entity
-     * @param source Damage source
-     * @param amount Amount of damage
+     * @param entity  Target entity
+     * @param source  Damage source
+     * @param amount  Amount of damage
+     * @param checked Set of already tested entities
      * @return Whether the entity has been removed
      */
-    public static boolean removeClientSide(Entity entity, DamageSource source, float amount) {
+    public static boolean removeClientSide(Entity entity, DamageSource source, float amount, Set<Entity> checked) {
         if (!HCsCR.enabled || HCsCR.serverDisabled || amount <= 0F || entity.isRemoved()
                 || !entity.level().isClientSide() || !(source.getEntity() instanceof Player player)
-                || entity.isInvulnerableTo(source)) return false;
+                || entity.isInvulnerableTo(source) || !checked.add(entity)) return false;
         if (entity instanceof EndCrystal) {
             if (!HCsCR.removeCrystals) return false;
         } else if (entity instanceof Slime slime) {
@@ -143,6 +144,23 @@ public final class HCsCRFabric implements ClientModInitializer {
             instance.getEffect().removeAttributeModifiers(player, map, instance.getAmplifier());
         }
         if (amount < 0) return false;
+        if (HCsCR.batching != Batching.DISABLED) {
+            List<Entity> entities = new ArrayList<>(entity.level().getEntities(entity, entity.getBoundingBox()));
+            if (HCsCR.batching != Batching.INTERSECTING) {
+                AABB box = entity.getBoundingBox();
+                entities.removeIf(e -> {
+                    AABB other = e.getBoundingBox();
+                    if (other.minX >= box.minX && other.minY >= box.minY && other.minZ >= box.minZ &&
+                            other.maxX <= box.maxX && other.maxY <= box.maxY && other.maxZ <= box.maxZ) return false;
+                    return HCsCR.batching != Batching.CONTAINING_CONTAINED ||
+                            !(box.minX >= other.minX) || !(box.minY >= other.minY) || !(box.minZ >= other.minZ) ||
+                            !(box.maxX <= other.maxX) || !(box.maxY <= other.maxY) || !(box.maxZ <= other.maxZ);
+                });
+            }
+            for (Entity e : entities) {
+                removeClientSide(e, source, amount, checked);
+            }
+        }
         if (HCsCR.delay > 0) {
             SCHEDULE_REMOVAL.put(entity, System.nanoTime() + HCsCR.delay * 1_000_000L);
             return true;

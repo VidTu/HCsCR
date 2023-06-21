@@ -79,6 +79,18 @@ public final class HCsCRScreen extends Screen {
                 width / 2 - 12 - font.width(Component.translatable("hcscr.screen.absolutePrecision")) / 2, 184,
                 24 + font.width(Component.translatable("hcscr.screen.absolutePrecision")), 20,
                 Component.translatable("hcscr.screen.absolutePrecision"), HCsCR.absolutePrecision));
+        addRenderableWidget(new Button(width / 2 - 100, 208, 200, 20, CommonComponents.optionNameValue(
+                Component.translatable("hcscr.screen.batching"),
+                Component.translatable("hcscr.screen.batching.".concat(HCsCR.batching.id()))
+        ), button -> {
+            int i = HCsCR.batching.ordinal() + 1;
+            if (i >= Batching.values().length) i = 0;
+            HCsCR.batching = Batching.values()[i];
+            button.setMessage(CommonComponents.optionNameValue(
+                    Component.translatable("hcscr.screen.batching"),
+                    Component.translatable("hcscr.screen.batching.".concat(HCsCR.batching.id()))
+            ));
+        }));
         addRenderableWidget(new Button(width / 2 - 75, height - 24, 150, 20, CommonComponents.GUI_DONE, button -> minecraft.setScreen(parent)));
     }
 

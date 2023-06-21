@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 /**
  * Shared HCsCR class.
@@ -43,6 +44,7 @@ public final class HCsCR {
     public static boolean removeAnchors = false;
     public static int delay = 0;
     public static boolean absolutePrecision = false;
+    public static Batching batching = Batching.DISABLED;
 
     // Server config
     public static boolean serverDisabled;
@@ -68,6 +70,7 @@ public final class HCsCR {
             removeAnchors = json.has("removeAnchors") ? json.get("removeAnchors").getAsBoolean() : removeAnchors;
             delay = json.has("delay") ? json.get("delay").getAsInt() : delay;
             absolutePrecision = json.has("absolutePrecision") ? json.get("absolutePrecision").getAsBoolean() : absolutePrecision;
+            batching = json.has("batching") ? Objects.requireNonNullElse(Batching.byId(json.get("batching").getAsString()), batching) : batching;
         } catch (Exception e) {
             LOG.warn("Unable to load HCsCR config.", e);
         }
@@ -90,6 +93,7 @@ public final class HCsCR {
             json.addProperty("removeAnchors", removeAnchors);
             json.addProperty("delay", delay);
             json.addProperty("absolutePrecision", absolutePrecision);
+            json.addProperty("batching", batching.id());
             Files.writeString(file, GSON.toJson(json));
         } catch (Exception e) {
             LOG.warn("Unable to save HCsCR config.", e);
