@@ -29,3 +29,4 @@ jobs:
             fabric-1.19.3/build/libs/
             fabric-1.19.4/build/libs/
             fabric-1.20.1/build/libs/
+            fabric-1.20.2/build/libs/
