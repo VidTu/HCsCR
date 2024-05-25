@@ -6,24 +6,23 @@ sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
 group = 'ru.femboypve.hcscr'
-archivesBaseName = 'HaramClientsideCrystalRemover-Fabric-1.20.2'
-evaluationDependsOn(':shared')
+archivesBaseName = 'HaramClientsideCrystalRemover-Fabric-1.19.4'
 
 repositories {
 	maven { url 'https://maven.terraformersmc.com/releases/' }
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:1.20.2"
+	minecraft "com.mojang:minecraft:1.19.4"
 	mappings loom.officialMojangMappings()
 	modImplementation "net.fabricmc:fabric-loader:${project.fabric_version}"
-	modImplementation "net.fabricmc.fabric-api:fabric-api:0.91.6+1.20.2"
-	modApi "com.terraformersmc:modmenu:8.0.1"
-	compileOnly project(":shared")
+	modImplementation "net.fabricmc.fabric-api:fabric-api:0.87.2+1.19.4"
+	modApi "com.terraformersmc:modmenu:6.3.1"
+	compileOnly rootProject
 }
 
 processResources {
-	from project(":shared").sourceSets.main.resources
+	from rootProject.sourceSets.main.resources
 	inputs.property 'version', project.version
 	filesMatching("fabric.mod.json") {
 		expand "version": project.version
@@ -31,7 +30,7 @@ processResources {
 }
 
 compileJava {
-	source project(':shared').sourceSets.main.allSource
+	source rootProject.sourceSets.main.allSource
 }
 
 tasks.withType(JavaCompile).configureEach {
