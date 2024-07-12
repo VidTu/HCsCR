@@ -1,0 +1,11 @@
+[versions]
+jetbrains_annotations = "24.1.0"
+error_prone_annotations = "2.28.0"
+fabric-loader = "0.16.0"
+mixin = "0.8.7"
+
+[libraries]
+jetbrains_annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains_annotations" }
+error_prone_annotations = { module = "com.google.errorprone:error_prone_annotations", version.ref = "error_prone_annotations" }
+fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader" }
+mixin = { module = "org.spongepowered:mixin", version.ref = "mixin" }

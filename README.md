@@ -1,54 +1,44 @@
 # HCsCR
-**H**aram**C**lient**s**ide**C**rystal**R**emover.
 
-*Remove your end crystals before the server even knows you hit 'em!*  
-This Fabric mod removes end crystals client-side on hit unlike vanilla client waiting for an "EntityDestroy" packet from the server.
+This Fabric mod removes end crystals client-side on hit, unlike vanilla
+client that is waiting for an "entity destroy" packet from the server.
 
-## Download
-- [ModRinth](https://modrinth.com/mod/hcscr)
-- [GitHub](https://github.com/FemboyPvE/HCsCR/releases/latest)
+## Dependencies
 
-## Building
-You will need:
-
-- Java JDK 17 or higher. (e.g. [Temurin](https://adoptium.net/))
-- 3 GB of available RAM.
-- A bit of storage.
-
-How to:
-- Ensure your JDK is set up properly. (i.e. JDK path is in `JAVA_HOME` environment variable)
-- Clone this repo or download it. (e.g. via `git clone https://github.com/FemboyPvE/HCsCR`)
-- Open the terminal (command prompt) there.
-- Run `./gradlew build`.
-- Grab JARs from `/fabric-1.[your_version]/build/libs/`
-
-## License
-This project is licensed under [Apache License 2.0](https://github.com/FemboyPvE/HCsCR/blob/master/LICENSE).
+**Fabric**: [Fabric API](https://modrinth.com/mod/fabric-api) (Required), [Mod Menu](https://modrinth.com/mod/modmenu) (Optional)  
+**Quilt**: [QFAPI/QSL](https://modrinth.com/mod/qsl) (Required), [Mod Menu](https://modrinth.com/mod/modmenu) (Optional)
 
 ## FAQ
-**Q**: I don't understand [insert something here].  
-**A**: [Discord](https://dsc.gg/femboypve).
 
-**Q**: How to download?  
-**A**: Releases are available [on ModRinth](https://modrinth.com/mod/hcscr), [on GitHub Releases](https://github.com/FemboyPvE/HCsCR/releases/latest), snapshots are available [on GitHub Actions](https://github.com/FemboyPvE/HCsCR/actions) if you have a GitHub account.
+**Q**: I need help, have some questions, or something else.  
+**A**: You can join the [Discord server](https://discord.gg/Q6saSVSuYQ).
+
+**Q**: Where can I download this mod?  
+**A**: [GitHub](https://github.com/VidTu/HCsCR). (currently only here)
+
+**Q**: Which mod loaders are supported?  
+**A**: Fabric.
+
+**Q**: Which versions are supported?  
+**A**: Minecraft 1.18.2, 1.19.2, 1.19.4, 1.20.1, 1.20.2.
+
+**Q**: When Forge or 1.20.6 or 1.21?  
+**A**: Later.
+
+**Q**: Do I need Fabric API or Quilt Standard Libraries?  
+**A**: Yes, you'll need Fabric API for Fabric and QFAPI/QSL for Quilt.
+
+**Q**: Is it open source?  
+**A**: [Yes.](https://github.com/VidTu/HCsCR) (Licensed
+under [Apache-2.0](https://github.com/VidTu/HCsCR/blob/main/LICENSE))
+
+**Q**: Is this mod client-side or server-side?  
+**A**: This mod works on the client-side. There's a way to block it as a server,
+but there do exist alternative mods, which cannot be blocked that way.
 
 **Q**: Is that a hack?  
 **A**: Not by design, but can be considered so and can be blocked by server. Please check your server rules before using this mod.
 
-**Q**: Is this mod client-side or server-side?  
-**A**: Client-side only, can be blocked by server.
-
-**Q**: How to block this mod as a server owner?  
-**A**: Read more [here](https://github.com/FemboyPvE/HCsCR/blob/master/HOW_TO_BLOCK.md).
-
-**Q**: Your mod's name is offensive.  
-**A**: Accept it, report it or fork it. IDC unless some moderators tell me about it.
-
-**Q**: Forge?  
-**A**: No.
-
-**Q**: Quilt?  
-**A**: Should already work, but I won't support it if it doesn't work.
-
-**Q**: 1.17.1 or older?  
-**A**: No.
+**Q**: I found a bug.  
+**A**: Report it [here](https://github.com/VidTu/HCsCR/issues). If you are not sure if this is a bug, you can join
+the [Discord](https://discord.gg/Q6saSVSuYQ).
