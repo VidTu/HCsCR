@@ -14,7 +14,7 @@ plugins {
 }
 
 rootProject.name = "HCsCR"
-val versions = listOf("1.18.2", "1.19.2", "1.19.4", "1.20.1", "1.20.2", "1.20.4", "1.20.6", "1.21")
+val versions = listOf("1.18.2", "1.19.2", "1.19.4", "1.20.1", "1.20.2", "1.20.4", "1.20.6", "1.21.1")
 for (version in versions) {
     include("$version")
 }

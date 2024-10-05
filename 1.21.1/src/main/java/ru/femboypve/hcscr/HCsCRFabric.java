@@ -23,12 +23,14 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworkin
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -56,7 +58,9 @@ import java.util.function.Consumer;
  * @author VidTu
  */
 public final class HCsCRFabric implements ClientModInitializer {
-    private static final ResourceLocation LOCATION = new ResourceLocation("hcscr", "haram");
+    public static final CustomPacketPayload.Type<DisablingPayload> LOCATION = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath("hcscr", "haram"));
+    private static final SystemToast.SystemToastId BIND_TOAST = new SystemToast.SystemToastId();
+    private static final SystemToast.SystemToastId SERVER_TOAST = new SystemToast.SystemToastId();
     private static final KeyMapping TOGGLE_BIND = new KeyMapping("hcscr.key.toggle", GLFW.GLFW_KEY_UNKNOWN, "hcscr.key.category");
     private static final Map<Entity, Long> SCHEDULE_REMOVAL = new WeakHashMap<>();
 
@@ -68,29 +72,33 @@ public final class HCsCRFabric implements ClientModInitializer {
             if (!TOGGLE_BIND.consumeClick()) return;
             HCsCR.enabled = !HCsCR.enabled;
             if (!HCsCR.enabled) {
-                SystemToast.addOrUpdate(client.getToasts(), SystemToast.SystemToastIds.NARRATOR_TOGGLE,
+                SystemToast.addOrUpdate(client.getToasts(), BIND_TOAST,
                         Component.literal("HaramClientsideCrystalRemover"),
                         Component.translatable("hcscr.toggle.disabled").withStyle(ChatFormatting.RED));
             } else if (HCsCR.serverDisabled) {
-                SystemToast.addOrUpdate(client.getToasts(), SystemToast.SystemToastIds.NARRATOR_TOGGLE,
+                SystemToast.addOrUpdate(client.getToasts(), BIND_TOAST,
                         Component.literal("HaramClientsideCrystalRemover"),
                         Component.translatable("hcscr.toggle.enabledBut").withStyle(ChatFormatting.GOLD));
             } else {
-                SystemToast.addOrUpdate(client.getToasts(), SystemToast.SystemToastIds.NARRATOR_TOGGLE,
+                SystemToast.addOrUpdate(client.getToasts(), BIND_TOAST,
                         Component.literal("HaramClientsideCrystalRemover"),
                         Component.translatable("hcscr.toggle.enabled").withStyle(ChatFormatting.GREEN));
             }
             HCsCR.saveConfig(FabricLoader.getInstance().getConfigDir());
         });
-        ClientConfigurationNetworking.registerGlobalReceiver(LOCATION, (client, handler, buf, responseSender) -> {
-            HCsCR.serverDisabled = buf.readBoolean();
-            client.execute(() -> SystemToast.addOrUpdate(client.getToasts(), SystemToast.SystemToastIds.TUTORIAL_HINT,
+        PayloadTypeRegistry.configurationS2C().register(LOCATION, DisablingPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playS2C().register(LOCATION, DisablingPayload.STREAM_CODEC);
+        ClientConfigurationNetworking.registerGlobalReceiver(LOCATION, (payload, context) -> {
+            HCsCR.serverDisabled = payload.disabled();
+            Minecraft client = context.client();
+            client.execute(() -> SystemToast.addOrUpdate(client.getToasts(), SERVER_TOAST,
                     Component.literal("HaramClientsideCrystalRemover"),
                     Component.translatable(HCsCR.serverDisabled ? "hcscr.server.disabled" : "hcscr.server.enabled")));
         });
-        ClientPlayNetworking.registerGlobalReceiver(LOCATION, (client, handler, buf, responseSender) -> {
-            HCsCR.serverDisabled = buf.readBoolean();
-            client.execute(() -> SystemToast.addOrUpdate(client.getToasts(), SystemToast.SystemToastIds.TUTORIAL_HINT,
+        ClientPlayNetworking.registerGlobalReceiver(LOCATION, (payload, context) -> {
+            HCsCR.serverDisabled = payload.disabled();
+            Minecraft client = context.client();
+            client.execute(() -> SystemToast.addOrUpdate(client.getToasts(), SERVER_TOAST,
                     Component.literal("HaramClientsideCrystalRemover"),
                     Component.translatable(HCsCR.serverDisabled ? "hcscr.server.disabled" : "hcscr.server.enabled")));
         });
@@ -148,11 +156,11 @@ public final class HCsCRFabric implements ClientModInitializer {
         if (player.getAttributeValue(Attributes.ATTACK_DAMAGE) <= 0) return false;
         AttributeMap map = player.getAttributes();
         for (MobEffectInstance instance : player.getActiveEffects()) {
-            instance.getEffect().addAttributeModifiers(map, instance.getAmplifier());
+            instance.getEffect().value().addAttributeModifiers(map, instance.getAmplifier());
         }
         amount = Math.min(amount, (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE));
         for (MobEffectInstance instance : player.getActiveEffects()) {
-            instance.getEffect().removeAttributeModifiers(map);
+            instance.getEffect().value().removeAttributeModifiers(map);
         }
         if (amount <= 0) return false;
         if (HCsCR.batching != Batching.DISABLED) {

@@ -41,7 +41,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.function.Consumer;
 
 /**
@@ -143,7 +147,7 @@ public final class HCsCRFabric implements ClientModInitializer {
         for (MobEffectInstance instance : player.getActiveEffects()) {
             instance.getEffect().removeAttributeModifiers(player, map, instance.getAmplifier());
         }
-        if (amount < 0) return false;
+        if (amount <= 0) return false;
         if (HCsCR.batching != Batching.DISABLED) {
             List<Entity> entities = new ArrayList<>(entity.level().getEntities(entity, entity.getBoundingBox()));
             if (HCsCR.batching != Batching.INTERSECTING) {

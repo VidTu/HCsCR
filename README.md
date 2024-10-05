@@ -1,12 +1,11 @@
 # HCsCR
 
-This Fabric mod removes end crystals client-side on hit, unlike vanilla
-client that is waiting for an "entity destroy" packet from the server.
+Remove your end crystals before the server even knows you hit 'em!
 
 ## Dependencies
 
 **Fabric**: [Fabric API](https://modrinth.com/mod/fabric-api) (Required), 
-Mod Menu](https://modrinth.com/mod/modmenu) (Optional)  
+[Mod Menu](https://modrinth.com/mod/modmenu) (Optional)  
 **Quilt**: [QFAPI/QSL](https://modrinth.com/mod/qsl) (Required),
 [Mod Menu](https://modrinth.com/mod/modmenu) (Optional)
 
@@ -22,7 +21,7 @@ Mod Menu](https://modrinth.com/mod/modmenu) (Optional)
 **A**: Fabric and Quilt are supported. Forge and NeoForge are currently NOT supported and may never will be.
 
 **Q**: Which versions are supported?  
-**A**: Minecraft 1.18.2, 1.19.2, 1.19.4, 1.20.1, 1.20.2.
+**A**: Minecraft 1.18.2, 1.19.2, 1.19.4, 1.20.1, 1.20.2, 1.20.4.
 There are no plans to backport this mod to older versions.
 
 **Q**: Do I need Fabric API or Quilt Standard Libraries?  
@@ -37,7 +36,8 @@ under [Apache-2.0](https://github.com/VidTu/HCsCR/blob/main/LICENSE))
 but there do exist alternative mods, which cannot be blocked that way.
 
 **Q**: Is this a hack?  
-**A**: Yes, no, it depends, as your server admin decides. Check your server rules for something like "Crystal Optimizer".
+**A**: Yes, no, it depends, as your server admin decides, and everything in-between.
+Check your server rules for something like "Crystal Optimizer".
 
 **Q**: I've found a bug.  
 **A**: Report it [here](https://github.com/VidTu/HCsCR/issues). If you are

@@ -57,6 +57,8 @@ import java.util.function.Consumer;
  */
 public final class HCsCRFabric implements ClientModInitializer {
     private static final ResourceLocation LOCATION = new ResourceLocation("hcscr", "haram");
+    private static final SystemToast.SystemToastId BIND_TOAST = new SystemToast.SystemToastId();
+    private static final SystemToast.SystemToastId SERVER_TOAST = new SystemToast.SystemToastId();
     private static final KeyMapping TOGGLE_BIND = new KeyMapping("hcscr.key.toggle", GLFW.GLFW_KEY_UNKNOWN, "hcscr.key.category");
     private static final Map<Entity, Long> SCHEDULE_REMOVAL = new WeakHashMap<>();
 
@@ -68,15 +70,15 @@ public final class HCsCRFabric implements ClientModInitializer {
             if (!TOGGLE_BIND.consumeClick()) return;
             HCsCR.enabled = !HCsCR.enabled;
             if (!HCsCR.enabled) {
-                SystemToast.addOrUpdate(client.getToasts(), SystemToast.SystemToastIds.NARRATOR_TOGGLE,
+                SystemToast.addOrUpdate(client.getToasts(), BIND_TOAST,
                         Component.literal("HaramClientsideCrystalRemover"),
                         Component.translatable("hcscr.toggle.disabled").withStyle(ChatFormatting.RED));
             } else if (HCsCR.serverDisabled) {
-                SystemToast.addOrUpdate(client.getToasts(), SystemToast.SystemToastIds.NARRATOR_TOGGLE,
+                SystemToast.addOrUpdate(client.getToasts(), BIND_TOAST,
                         Component.literal("HaramClientsideCrystalRemover"),
                         Component.translatable("hcscr.toggle.enabledBut").withStyle(ChatFormatting.GOLD));
             } else {
-                SystemToast.addOrUpdate(client.getToasts(), SystemToast.SystemToastIds.NARRATOR_TOGGLE,
+                SystemToast.addOrUpdate(client.getToasts(), BIND_TOAST,
                         Component.literal("HaramClientsideCrystalRemover"),
                         Component.translatable("hcscr.toggle.enabled").withStyle(ChatFormatting.GREEN));
             }
@@ -84,13 +86,13 @@ public final class HCsCRFabric implements ClientModInitializer {
         });
         ClientConfigurationNetworking.registerGlobalReceiver(LOCATION, (client, handler, buf, responseSender) -> {
             HCsCR.serverDisabled = buf.readBoolean();
-            client.execute(() -> SystemToast.addOrUpdate(client.getToasts(), SystemToast.SystemToastIds.TUTORIAL_HINT,
+            client.execute(() -> SystemToast.addOrUpdate(client.getToasts(), SERVER_TOAST,
                     Component.literal("HaramClientsideCrystalRemover"),
                     Component.translatable(HCsCR.serverDisabled ? "hcscr.server.disabled" : "hcscr.server.enabled")));
         });
         ClientPlayNetworking.registerGlobalReceiver(LOCATION, (client, handler, buf, responseSender) -> {
             HCsCR.serverDisabled = buf.readBoolean();
-            client.execute(() -> SystemToast.addOrUpdate(client.getToasts(), SystemToast.SystemToastIds.TUTORIAL_HINT,
+            client.execute(() -> SystemToast.addOrUpdate(client.getToasts(), SERVER_TOAST,
                     Component.literal("HaramClientsideCrystalRemover"),
                     Component.translatable(HCsCR.serverDisabled ? "hcscr.server.disabled" : "hcscr.server.enabled")));
         });
