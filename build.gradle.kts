@@ -14,13 +14,13 @@ repositories {
 }
 
 dependencies {
-    // Annotations
+    // Annotations (Compile)
     compileOnly(libs.jetbrains.annotations)
     compileOnly(libs.error.prone.annotations)
 
-    // Bundled with MC
-    implementation("com.google.code.gson:gson:2.11.0")
-    implementation("org.slf4j:slf4j-api:2.0.13")
+    // Generic (Provided)
+    implementation(libs.gson)
+    implementation(libs.slf4j)
 }
 
 tasks.withType<JavaCompile> {
@@ -39,8 +39,7 @@ tasks.withType<Jar> {
             "Specification-Vendor" to "VidTu, Offenderify",
             "Implementation-Title" to "HCsCR-Root",
             "Implementation-Version" to project.version,
-            "Implementation-Vendor" to "VidTu, Offenderify",
-            "MixinConfigs" to "hcscr.mixins.json"
+            "Implementation-Vendor" to "VidTu, Offenderify"
         )
     }
 }

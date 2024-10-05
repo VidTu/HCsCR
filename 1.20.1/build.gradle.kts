@@ -1,5 +1,5 @@
 plugins {
-    id("dev.architectury.loom") version "1.7-SNAPSHOT"
+    alias(libs.plugins.architectury.loom)
 }
 
 java.sourceCompatibility = JavaVersion.VERSION_17
@@ -22,6 +22,7 @@ loom {
             "-XX:+IgnoreUnrecognizedVMOptions",
             "-Xmx2G",
             "-XX:+AllowEnhancedClassRedefinition",
+            "-XX:+AllowRedefinitionToAddDeleteMethods",
             "-XX:HotswapAgent=fatjar",
             "-Dfabric.debug.disableClassPathIsolation=true"
         )
@@ -33,18 +34,18 @@ loom {
 }
 
 dependencies {
-    // Annotations
+    // Annotations (Compile)
     compileOnlyApi(libs.jetbrains.annotations)
     compileOnlyApi(libs.error.prone.annotations)
 
-    // Minecraft
-    minecraft("com.mojang:minecraft:1.20.1")
+    // Minecraft (Provided)
+    minecraft(libs.minecraft.mc1201)
     mappings(loom.officialMojangMappings())
 
-    // Fabric
+    // Fabric (Provided)
     modImplementation(libs.fabric.loader)
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.92.2+1.20.1")
-    modImplementation("com.terraformersmc:modmenu:7.2.2")
+    modImplementation(libs.fabric.mc1201)
+    modImplementation(libs.modmenu.mc1201)
 
     // Root
     compileOnly(rootProject)
