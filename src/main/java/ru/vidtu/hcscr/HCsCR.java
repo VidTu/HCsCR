@@ -18,10 +18,10 @@
 package ru.vidtu.hcscr;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.vidtu.hcscr.config.HConfig;
 
 /**
@@ -35,7 +35,7 @@ public final class HCsCR {
      * Logger for this class.
      */
     @NotNull
-    private static final Logger LOGGER = LoggerFactory.getLogger("HCsCR");
+    private static final Logger LOGGER = LogManager.getLogger("HCsCR");
 
     /***
      * Whether the mod is enabled by the current server, {@code true} by default.

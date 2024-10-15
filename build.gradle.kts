@@ -19,9 +19,9 @@ plugins {
     id("java")
 }
 
-java.sourceCompatibility = JavaVersion.VERSION_17
-java.targetCompatibility = JavaVersion.VERSION_17
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+java.targetCompatibility = JavaVersion.VERSION_1_8
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 group = "ru.vidtu.hcscr"
 base.archivesName = "HCsCR-Root"
 description = "Remove your end crystals before the server even knows you hit 'em!"
@@ -37,15 +37,14 @@ dependencies {
     compileOnly(libs.error.prone.annotations)
 
     // Generic (Provided)
-    implementation(libs.gson)
-    implementation(libs.slf4j)
     implementation(libs.fabric.loader)
+    implementation(libs.gson)
+    implementation(libs.log4j)
 }
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
     options.compilerArgs.addAll(listOf("-g", "-parameters"))
-    options.release = 17
 }
 
 tasks.withType<Jar> {

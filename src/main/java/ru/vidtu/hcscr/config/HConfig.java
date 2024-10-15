@@ -21,16 +21,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import net.fabricmc.loader.api.FabricLoader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Modifier;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.Objects;
 
 /**
  * HCsCR config.
@@ -50,7 +50,7 @@ public final class HConfig {
      * Logger for this class.
      */
     @NotNull
-    public static final Logger LOGGER = LoggerFactory.getLogger("HCsCR/HConfig");
+    public static final Logger LOGGER = LogManager.getLogger("HCsCR/HConfig");
 
     /**
      * Whether the mod is enabled, {@code true} by default.
@@ -140,7 +140,8 @@ public final class HConfig {
             }
 
             // Read the file.
-            String value = Files.readString(file);
+            byte[] data = Files.readAllBytes(file);
+            String value = new String(data, StandardCharsets.UTF_8);
 
             // Read JSON.
             JsonObject json = GSON.fromJson(value, JsonObject.class);
@@ -156,7 +157,7 @@ public final class HConfig {
         } finally {
             // NPE protection.
             delay = Math.max(0, Math.min(200, delay));
-            batching = Objects.requireNonNullElse(batching, Batching.DISABLED);
+            batching = (batching == null ? Batching.DISABLED : batching);
         }
     }
 
@@ -185,7 +186,7 @@ public final class HConfig {
 
             // NPE protection.
             delay = Math.max(0, Math.min(200, delay));
-            batching = Objects.requireNonNullElse(batching, Batching.DISABLED);
+            batching = (batching == null ? Batching.DISABLED : batching);
 
             // Get the file.
             Path file = path.resolve("hcscr.json");
@@ -196,12 +197,13 @@ public final class HConfig {
 
             // Write JSON.
             String value = GSON.toJson(json);
+            byte[] data = value.getBytes(StandardCharsets.UTF_8);
 
             // Create parent directories.
             Files.createDirectories(file.getParent());
 
             // Write the file.
-            Files.writeString(file, value, StandardOpenOption.CREATE,
+            Files.write(file, data, StandardOpenOption.CREATE,
                     StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE,
                     StandardOpenOption.SYNC, StandardOpenOption.DSYNC);
 

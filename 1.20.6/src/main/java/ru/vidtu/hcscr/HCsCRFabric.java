@@ -40,12 +40,12 @@ import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.vidtu.hcscr.config.Batching;
 import ru.vidtu.hcscr.config.HConfig;
 
@@ -69,7 +69,7 @@ public final class HCsCRFabric implements ClientModInitializer {
      * Logger for this class.
      */
     @NotNull
-    private static final Logger LOGGER = LoggerFactory.getLogger("HCsCR/HCsCRFabric");
+    private static final Logger LOGGER = LogManager.getLogger("HCsCR/HCsCRFabric");
 
     /**
      * Type for toggle bind toasts.

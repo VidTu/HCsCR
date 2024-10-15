@@ -14,6 +14,7 @@ fabric-mc1212 = "0.105.4+1.21.2"
 gson = "2.11.0"
 jetbrains_annotations = "26.0.1"
 ksyxis = "1.3.2"
+log4j = "2.24.1"
 lazydfu-mc1182 = "0.1.2"
 lazydfu-mc1192 = "0.1.3"
 minecraft-mc1182 = "1.18.2"
@@ -34,7 +35,6 @@ modmenu-mc1204 = "9.2.0"
 modmenu-mc1206 = "10.0.0"
 modmenu-mc1211 = "11.0.3"
 modmenu-mc1212 = "12.0.0-beta.1"
-slf4j = "2.0.16"
 
 [plugins]
 architectury-loom = { id = "dev.architectury.loom", version.ref = "architectury-loom" }
@@ -54,6 +54,7 @@ fabric-mc1212 = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 jetbrains_annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains_annotations" }
 ksyxis = { module = "maven.modrinth:ksyxis", version.ref = "ksyxis" }
+log4j = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
 lazydfu-mc1182 = { module = "maven.modrinth:lazydfu", version.ref = "lazydfu-mc1182" }
 lazydfu-mc1192 = { module = "maven.modrinth:lazydfu", version.ref = "lazydfu-mc1192" }
 minecraft-mc1182 = { module = "com.mojang:minecraft", version.ref = "minecraft-mc1182" }
@@ -74,4 +75,3 @@ modmenu-mc1204 = { module = "com.terraformersmc:modmenu", version.ref = "modmenu
 modmenu-mc1206 = { module = "com.terraformersmc:modmenu", version.ref = "modmenu-mc1206" }
 modmenu-mc1211 = { module = "com.terraformersmc:modmenu", version.ref = "modmenu-mc1211" }
 modmenu-mc1212 = { module = "com.terraformersmc:modmenu", version.ref = "modmenu-mc1212" }
-slf4j = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
