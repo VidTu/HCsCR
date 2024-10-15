@@ -5,8 +5,10 @@
   "name": "HCsCR",
   "description": "Remove your end crystals before the server even knows you hit 'em!",
   "authors": [
-    "Offenderify",
     "VidTu"
+  ],
+  "contributors": [
+    "Offenderify"
   ],
   "contact": {
     "homepage": "https://github.com/VidTu/HCsCR",
@@ -20,10 +22,10 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "ru.femboypve.hcscr.HCsCRFabric"
+      "ru.vidtu.hcscr.HCsCRFabric"
     ],
     "modmenu": [
-      "ru.femboypve.hcscr.HCsCRModMenu"
+      "ru.vidtu.hcscr.HCsCRModMenu"
     ]
   },
   "mixins": [

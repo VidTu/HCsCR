@@ -1,13 +1,13 @@
 {
-  "hcscr.server.disabled": "Le serveur a désactivé le mod.",
-  "hcscr.server.enabled": "Le serveur a activé le mod.",
+  "hcscr.toggle.true": "HCsCR est activé maintenant !",
+  "hcscr.toggle.server": "HCsCR est activé maintenant, mais est bloqué par le serveur !",
+  "hcscr.toggle.false": "HCsCR est désactivé maintenant !",
+  "hcscr.server.true": "Le serveur a activé le mod.",
+  "hcscr.server.false": "Le serveur a désactivé le mod.",
+  "hcscr.key.category": "HCsCR",
   "hcscr.key.toggle": "Activer Clientside Crystal Removing",
-  "hcscr.key.category": "CsCR",
-  "hcscr.toggle.enabled": "HCsCR est activé maintenant !",
-  "hcscr.toggle.enabledBut": "HCsCR est activé maintenant, mais est bloqué par le serveur !",
-  "hcscr.toggle.disabled": "HCsCR est désactivé maintenant !",
-  "hcscr.screen.title": "Configuration de HCsCR",
-  "hcscr.screen.enabled": "Activé",
-  "hcscr.screen.serverDisabled": "Le mod a été désactivé par le serveur actuel.",
+  "hcscr.config": "Configuration de HCsCR",
+  "hcscr.config.enabled": "Activé",
+  "hcscr.config.disabled": "Le mod a été désactivé par le serveur actuel.",
   "modmenu.descriptionTranslation.hcscr": "Retirez vos cristaux de l'End avant même que le serveur ne sache que vous les avez touchés !"
 }

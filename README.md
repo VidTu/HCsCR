@@ -4,7 +4,7 @@ Remove your end crystals before the server even knows you hit 'em!
 
 ## Dependencies
 
-**Fabric**: [Fabric API](https://modrinth.com/mod/fabric-api) (Required), 
+**Fabric**: [Fabric API](https://modrinth.com/mod/fabric-api) (Required),
 [Mod Menu](https://modrinth.com/mod/modmenu) (Optional)  
 **Quilt**: [QFAPI/QSL](https://modrinth.com/mod/qsl) (Required),
 [Mod Menu](https://modrinth.com/mod/modmenu) (Optional)
@@ -42,3 +42,17 @@ Check your server rules for something like "Crystal Optimizer".
 **Q**: I've found a bug.  
 **A**: Report it [here](https://github.com/VidTu/HCsCR/issues). If you are
 not sure if this is a bug, you can join the [Discord](https://discord.gg/Q6saSVSuYQ).
+
+**Q**: Can I use this in my modpack?  
+**A**: Sure. Credit (e.g. a link to mod's GitHub page) is appreciated, but is not required.
+Monetization and redistributing is allowed as per the [Apache 2.0 License](https://github.com/VidTu/HCsCR/blob/main/LICENSE).
+Beware: This mod may be considered a hack by some people.
+
+**Q**: Why this mod is not on the Modrinth or CurseForge?  
+**A**:
+
+1. *Modrinth*: As per [this message](https://github.com/user-attachments/assets/437df1a1-3331-499c-ac49-6ec114494bd4),
+   this mod violates the section "3.3d" of [Modrinth Content Rules](https://modrinth.com/legal/rules) and will require
+   a server-side opt-in to be allowed on Modrinth. I can see why Modrinth moderators don't want to have a mod like this
+   on their platform, but I (personally) don't want to implement a server-side opt-in.
+2. *CurseForge*: I don't really like it, but I might publish this mod there in the future. 
