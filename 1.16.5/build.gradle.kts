@@ -19,11 +19,11 @@ plugins {
     alias(libs.plugins.architectury.loom)
 }
 
-java.sourceCompatibility = JavaVersion.VERSION_17
-java.targetCompatibility = JavaVersion.VERSION_17
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+java.targetCompatibility = JavaVersion.VERSION_1_8
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 group = "ru.vidtu.hcscr"
-base.archivesName = "HCsCR-1.18.2"
+base.archivesName = "HCsCR-1.16.5"
 description = "Remove your end crystals before the server even knows you hit 'em!"
 
 repositories {
@@ -57,18 +57,19 @@ dependencies {
     compileOnlyApi(libs.error.prone.annotations)
 
     // Minecraft (Provided)
-    minecraft(libs.minecraft.mc1182)
+    minecraft(libs.minecraft.mc1165)
     mappings(loom.officialMojangMappings())
 
     // Fabric (Provided)
     modImplementation(libs.fabric.loader)
-    modImplementation(libs.fabric.mc1182)
-    modImplementation(libs.modmenu.mc1182)
+    modImplementation(libs.fabric.mc1165)
+    modImplementation(libs.modmenu.mc1165)
 
     // Root
     compileOnly(rootProject)
 
     // Testing
+    modRuntimeOnly(libs.enablemultiplayermode)
     modRuntimeOnly(libs.lazydfu.old)
     modRuntimeOnly(libs.ksyxis)
 }
@@ -77,7 +78,6 @@ tasks.withType<JavaCompile> {
     source(rootProject.sourceSets.main.get().java)
     options.encoding = "UTF-8"
     options.compilerArgs.addAll(listOf("-g", "-parameters"))
-    options.release = 17
 }
 
 tasks.withType<ProcessResources> {
@@ -96,7 +96,7 @@ tasks.withType<Jar> {
             "Specification-Title" to "HCsCR",
             "Specification-Version" to project.version,
             "Specification-Vendor" to "VidTu, Offenderify",
-            "Implementation-Title" to "HCsCR-1.18.2",
+            "Implementation-Title" to "HCsCR-1.16.5",
             "Implementation-Version" to project.version,
             "Implementation-Vendor" to "VidTu, Offenderify"
         )

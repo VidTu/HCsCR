@@ -5,6 +5,7 @@
   "package": "ru.vidtu.hcscr.mixins",
   "refmap": "hcscr.mixins.refmap.json",
   "client": [
+    "AbstractWidgetAccessor",
     "MinecraftMixin",
     "PlayerMixin",
     "RespawnAnchorBlockMixin",

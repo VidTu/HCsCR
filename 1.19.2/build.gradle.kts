@@ -69,7 +69,7 @@ dependencies {
     compileOnly(rootProject)
 
     // Testing
-    modRuntimeOnly(libs.lazydfu.mc1192)
+    modRuntimeOnly(libs.lazydfu.new)
     modRuntimeOnly(libs.ksyxis)
 }
 

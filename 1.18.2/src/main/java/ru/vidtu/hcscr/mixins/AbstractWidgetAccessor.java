@@ -15,23 +15,19 @@
  * limitations under the License.
  */
 
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        maven("https://maven.fabricmc.net/")
-        maven("https://maven.architectury.dev/")
-        maven("https://maven.quiltmc.org/repository/release/")
-        maven("https://maven.minecraftforge.net/")
-        maven("https://maven.neoforged.net/releases/")
-    }
-}
+package ru.vidtu.hcscr.mixins;
 
-plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
-}
+import net.minecraft.client.gui.components.AbstractWidget;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-rootProject.name = "HCsCR"
-val versions = listOf("1.16.5", "1.17.1", "1.18.2", "1.19.2", "1.19.4", "1.20.1", "1.20.2", "1.20.4", "1.20.6", "1.21.1", "1.21.2")
-for (version in versions) {
-    include(version)
+/**
+ * Accessor for {@code isHovered}.
+ *
+ * @author VidTu
+ */
+@Mixin(AbstractWidget.class)
+public interface AbstractWidgetAccessor {
+    @Accessor("isHovered")
+    boolean hcscr$isHovered();
 }

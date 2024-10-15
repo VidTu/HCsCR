@@ -27,6 +27,7 @@ import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
@@ -38,7 +39,6 @@ import ru.vidtu.hcscr.config.HConfig;
 import ru.vidtu.hcscr.mixins.AbstractWidgetAccessor;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
 
@@ -59,7 +59,7 @@ final class ConfigScreen extends Screen {
      * Disabled by server.
      */
     @NotNull
-    private final Component disabled = Component.translatable("hcscr.config.disabled");
+    private final Component disabled = new TranslatableComponent("hcscr.config.disabled");
 
     /**
      * Tooltip to render at the last pass.
@@ -74,7 +74,7 @@ final class ConfigScreen extends Screen {
      */
     @Contract(pure = true)
     ConfigScreen(@Nullable Screen parent) {
-        super(Component.translatable("hcscr.config"));
+        super(new TranslatableComponent("hcscr.config"));
         this.parent = parent;
     }
 
@@ -82,63 +82,72 @@ final class ConfigScreen extends Screen {
     @Override
     protected void init() {
         // Enabled.
-        Checkbox box = new CallbackCheckbox(this.font, (this.width - this.font.width(Component.translatable("hcscr.config.enabled")) - 24) / 2, 20,
-                Component.translatable("hcscr.config.enabled"), new Tooltip(this, this.font, Component.translatable("hcscr.config.enabled.tip")),
+        Checkbox box = new CallbackCheckbox(this.font, (this.width - this.font.width(new TranslatableComponent("hcscr.config.enabled")) - 24) / 2, 20,
+                new TranslatableComponent("hcscr.config.enabled"), new Tooltip(this, this.font, new TranslatableComponent("hcscr.config.enabled.tip")),
                 HConfig.enabled, value -> HConfig.enabled = value);
-        this.addRenderableWidget(box);
+        this.addButton(box);
 
         // Remove Crystals.
-        box = new CallbackCheckbox(this.font, (this.width - this.font.width(Component.translatable("hcscr.config.removeCrystals")) - 24) / 2, 44,
-                Component.translatable("hcscr.config.removeCrystals"), new Tooltip(this, this.font, Component.translatable("hcscr.config.removeCrystals.tip")),
+        box = new CallbackCheckbox(this.font, (this.width - this.font.width(new TranslatableComponent("hcscr.config.removeCrystals")) - 24) / 2, 44,
+                new TranslatableComponent("hcscr.config.removeCrystals"), new Tooltip(this, this.font, new TranslatableComponent("hcscr.config.removeCrystals.tip")),
                 HConfig.removeCrystals, value -> HConfig.removeCrystals = value);
-        this.addRenderableWidget(box);
+        this.addButton(box);
 
         // Remove Slimes.
-        box = new CallbackCheckbox(this.font, (this.width - this.font.width(Component.translatable("hcscr.config.removeSlimes")) - 24) / 2, 68,
-                Component.translatable("hcscr.config.removeSlimes"), new Tooltip(this, this.font, Component.translatable("hcscr.config.removeSlimes.tip")),
+        box = new CallbackCheckbox(this.font, (this.width - this.font.width(new TranslatableComponent("hcscr.config.removeSlimes")) - 24) / 2, 68,
+                new TranslatableComponent("hcscr.config.removeSlimes"), new Tooltip(this, this.font, new TranslatableComponent("hcscr.config.removeSlimes.tip")),
                 HConfig.removeSlimes, value -> HConfig.removeSlimes = value);
-        this.addRenderableWidget(box);
+        this.addButton(box);
 
         // Remove Interactions.
-        box = new CallbackCheckbox(this.font, (this.width - this.font.width(Component.translatable("hcscr.config.removeInteractions")) - 24) / 2, 92,
-                Component.translatable("hcscr.config.removeInteractions"), new Tooltip(this, this.font, Component.translatable("hcscr.config.removeInteractions.tip")),
+        box = new CallbackCheckbox(this.font, (this.width - this.font.width(new TranslatableComponent("hcscr.config.removeInteractions")) - 24) / 2, 92,
+                new TranslatableComponent("hcscr.config.removeInteractions"), new Tooltip(this, this.font, new TranslatableComponent("hcscr.config.removeInteractions.tip")),
                 HConfig.removeInteractions, value -> HConfig.removeInteractions = value);
-        this.addRenderableWidget(box);
+        this.addButton(box);
 
         // Remove Anchors.
-        box = new CallbackCheckbox(this.font, (this.width - this.font.width(Component.translatable("hcscr.config.removeAnchors")) - 24) / 2, 116,
-                Component.translatable("hcscr.config.removeAnchors"), new Tooltip(this, this.font, Component.translatable("hcscr.config.removeAnchors.tip")),
+        box = new CallbackCheckbox(this.font, (this.width - this.font.width(new TranslatableComponent("hcscr.config.removeAnchors")) - 24) / 2, 116,
+                new TranslatableComponent("hcscr.config.removeAnchors"), new Tooltip(this, this.font, new TranslatableComponent("hcscr.config.removeAnchors.tip")),
                 HConfig.removeAnchors, value -> HConfig.removeAnchors = value);
-        this.addRenderableWidget(box);
+        this.addButton(box);
 
         // Delay.
         int delay = Math.max(0, Math.min(200, HConfig.delay));
         CallbackSlider slider = new CallbackSlider(this.width / 2 - 100, 140, 200, 20, delay, 0, 200,
-                new Tooltip(this, this.font, Component.translatable("hcscr.config.delay.tip")),
+                new Tooltip(this, this.font, new TranslatableComponent("hcscr.config.delay.tip")),
                 value -> HConfig.delay = value,
-                value -> CommonComponents.optionNameValue(Component.translatable("hcscr.config.delay"), value > 0 ? Component.translatable("hcscr.config.delay.format", value) : Component.translatable("hcscr.config.delay.false")));
-        this.addRenderableWidget(slider);
+                value -> new TranslatableComponent("options.generic_value", new TranslatableComponent("hcscr.config.delay"), value > 0 ? new TranslatableComponent("hcscr.config.delay.format", value) : new TranslatableComponent("hcscr.config.delay.false")));
+        this.addButton(slider);
 
         // Batching.
-        Batching batching = Objects.requireNonNullElse(HConfig.batching, Batching.DISABLED);
-        Tooltip tooltip = new Tooltip(this, this.font, Component.translatable(batching + ".tip"));
-        Button button = new Button(this.width / 2 - 100, 164, 200, 20, CommonComponents.optionNameValue(Component.translatable("hcscr.config.batching"), Component.translatable(batching.toString())), btn -> {
+        Batching batching = HConfig.batching == null ? Batching.DISABLED : HConfig.batching;
+        Tooltip tooltip = new Tooltip(this, this.font, new TranslatableComponent(batching + ".tip"));
+        Button button = new Button(this.width / 2 - 100, 164, 200, 20, new TranslatableComponent("options.generic_value",new TranslatableComponent("hcscr.config.batching"), new TranslatableComponent(batching.toString())), btn -> {
             // Update the value.
-            Batching newBatching = HConfig.batching = switch (HConfig.batching) {
-                case DISABLED -> Batching.CONTAINING;
-                case CONTAINING -> Batching.CONTAINING_CONTAINED;
-                case CONTAINING_CONTAINED -> Batching.INTERSECTING;
-                default -> Batching.DISABLED;
-            };
+            Batching newBatching;
+            switch (HConfig.batching) {
+                case DISABLED:
+                    newBatching = HConfig.batching = Batching.CONTAINING;
+                    break;
+                case CONTAINING:
+                    newBatching = HConfig.batching = Batching.CONTAINING_CONTAINED;
+                    break;
+                case CONTAINING_CONTAINED:
+                    newBatching = HConfig.batching = Batching.INTERSECTING;
+                    break;
+                default:
+                    newBatching = HConfig.batching = Batching.DISABLED;
+                    break;
+            }
 
             // Set the message and tooltip.
-            btn.setMessage(CommonComponents.optionNameValue(Component.translatable("hcscr.config.batching"), Component.translatable(newBatching.toString())));
-            tooltip.tooltip(Component.translatable(newBatching + ".tip"));
+            btn.setMessage(new TranslatableComponent("options.generic_value", new TranslatableComponent("hcscr.config.batching"), new TranslatableComponent(newBatching.toString())));
+            tooltip.tooltip(new TranslatableComponent(newBatching + ".tip"));
         }, tooltip);
-        this.addRenderableWidget(button);
+        this.addButton(button);
 
         // Add done button.
-        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height - 24, 200, 20,
+        this.addButton(new Button(this.width / 2 - 100, this.height - 24, 200, 20,
                 CommonComponents.GUI_DONE, btn -> this.onClose()));
     }
 

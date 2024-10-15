@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "id": "hcscr",
+  "version": "${version}",
+  "name": "HCsCR",
+  "description": "Remove your end crystals before the server even knows you hit 'em!",
+  "authors": [
+    "VidTu"
+  ],
+  "contributors": [
+    "Offenderify"
+  ],
+  "contact": {
+    "homepage": "https://github.com/VidTu/HCsCR",
+    "sources": "https://github.com/VidTu/HCsCR",
+    "issues": "https://github.com/VidTu/HCsCR/issues",
+    "email": "pig@vidtu.ru",
+    "discord": "https://discord.gg/Q6saSVSuYQ"
+  },
+  "license": "Apache-2.0",
+  "icon": "hcscr.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "ru.vidtu.hcscr.HCsCRFabric"
+    ],
+    "modmenu": [
+      "ru.vidtu.hcscr.HCsCRModMenu"
+    ]
+  },
+  "mixins": [
+    "hcscr.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "1.16.5",
+    "fabric": ">=0.41.0",
+    "java": ">=8"
+  },
+  "recommends": {
+    "modmenu": ">=1.16.0"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.github_releases": "https://github.com/VidTu/HCsCR",
+        "modmenu.discord": "https://discord.gg/Q6saSVSuYQ"
+      }
+    }
+  }
+}
