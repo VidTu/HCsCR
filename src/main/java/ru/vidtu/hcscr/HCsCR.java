@@ -60,7 +60,7 @@ public final class HCsCR {
     @CanIgnoreReturnValue
     public static boolean toggle() {
         boolean newState = (HConfig.enabled = !HConfig.enabled);
-        HConfig.saveOrThrow();
+        HConfig.saveOrLog();
         return newState;
     }
 
