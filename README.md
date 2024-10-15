@@ -39,6 +39,11 @@ but there do exist alternative mods, which cannot be blocked that way.
 **A**: Yes, no, it depends, as your server admin decides, and everything in-between.
 Check your server rules for something like "Crystal Optimizer".
 
+**Q**: Is this designed to be a hack, does this mod contain hacks?  
+**A**: No. This mod is not designed to be a hack and shouldn't contain anything that can be considered a hack.
+It does affect your gameplay by reducing the effects the ping (latency) has on you.
+Whether this is a hack or not is up to you and your server admin to decide.
+
 **Q**: I've found a bug.  
 **A**: Report it [here](https://github.com/VidTu/HCsCR/issues). If you are
 not sure if this is a bug, you can join the [Discord](https://discord.gg/Q6saSVSuYQ).

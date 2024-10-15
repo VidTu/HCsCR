@@ -229,20 +229,19 @@ public final class HCsCRFabric implements ClientModInitializer {
             case CONTAINING_CONTAINED:
                 filter = (other -> {
                     if (entity == other) return true;
-                    if (other.removed || !shouldProcessEntityType(other) || other.isInvulnerableTo(source))
-                        return false;
+                    if (other.removed || !shouldProcessEntityType(other) || other.isInvulnerableTo(source)) return false;
                     AABB otherBox = other.getBoundingBox();
                     return contains(box, otherBox) || contains(otherBox, box);
                 });
                 break;
             default: // Shouldn't happen really.
-                filter = (ignored -> (entity == ignored));
+                filter = (other -> (entity == other));
                 break;
         }
 
         // Get filtered entities, skip if none.
         List<Entity> entities = entity.level.getEntities((Entity) null, entity.getBoundingBox(), filter);
-        if (!entities.isEmpty()) return false;
+        if (entities.isEmpty()) return false;
 
         // Just remove the entities, if there's no delay.
         int delay = HConfig.delay;
@@ -279,8 +278,8 @@ public final class HCsCRFabric implements ClientModInitializer {
      */
     @Contract(pure = true)
     private static boolean shouldProcessEntityType(@NotNull Entity entity) {
-        if (entity instanceof EndCrystal) return HConfig.removeAnchors;
-        if (entity instanceof Slime) return HConfig.removeSlimes && ((Slime) entity).isInvisible();
+        if (entity instanceof EndCrystal) return HConfig.removeCrystals;
+        if (entity instanceof Slime) return HConfig.removeSlimes && entity.isInvisible();
         return false;
     }
 

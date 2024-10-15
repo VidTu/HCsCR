@@ -237,7 +237,7 @@ public final class HCsCRFabric implements ClientModInitializer {
                 AABB otherBox = other.getBoundingBox();
                 return contains(box, otherBox) || contains(otherBox, box);
             });
-            default -> (ignored -> (entity == ignored)); // Shouldn't happen really.
+            default -> (other -> (entity == other)); // Shouldn't happen really.
         };
 
         // Get filtered entities, skip if none.

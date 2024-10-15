@@ -228,12 +228,12 @@ public final class HCsCRFabric implements ClientModInitializer {
                 AABB otherBox = other.getBoundingBox();
                 return contains(box, otherBox) || contains(otherBox, box);
             });
-            default -> (ignored -> (entity == ignored)); // Shouldn't happen really.
+            default -> (other -> (entity == other)); // Shouldn't happen really.
         };
 
         // Get filtered entities, skip if none.
         List<Entity> entities = entity.level().getEntities((Entity) null, entity.getBoundingBox(), filter);
-        if (!entities.isEmpty()) return false;
+        if (entities.isEmpty()) return false;
 
         // Just remove the entities, if there's no delay.
         int delay = HConfig.delay;
