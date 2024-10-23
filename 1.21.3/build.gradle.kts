@@ -23,7 +23,7 @@ java.sourceCompatibility = JavaVersion.VERSION_21
 java.targetCompatibility = JavaVersion.VERSION_21
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 group = "ru.vidtu.hcscr"
-base.archivesName = "HCsCR-1.21.2"
+base.archivesName = "HCsCR-1.21.3"
 description = "Remove your end crystals before the server even knows you hit 'em!"
 
 repositories {
@@ -57,13 +57,13 @@ dependencies {
     compileOnlyApi(libs.error.prone.annotations)
 
     // Minecraft (Provided)
-    minecraft(libs.minecraft.mc1212)
+    minecraft(libs.minecraft.mc1213)
     mappings(loom.officialMojangMappings())
 
     // Fabric (Provided)
     modImplementation(libs.fabric.loader)
-    modImplementation(libs.fabric.mc1212)
-    modImplementation(libs.modmenu.mc1212)
+    modImplementation(libs.fabric.mc1213)
+    modImplementation(libs.modmenu.mc1213)
 
     // Root
     compileOnly(rootProject)
@@ -95,7 +95,7 @@ tasks.withType<Jar> {
             "Specification-Title" to "HCsCR",
             "Specification-Version" to project.version,
             "Specification-Vendor" to "VidTu, Offenderify",
-            "Implementation-Title" to "HCsCR-1.21.2",
+            "Implementation-Title" to "HCsCR-1.21.3",
             "Implementation-Version" to project.version,
             "Implementation-Vendor" to "VidTu, Offenderify"
         )
