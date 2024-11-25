@@ -17,7 +17,7 @@ Remove your end crystals before the server even knows you hit 'em!
 **Q**: Where can I download this mod?  
 **A**: [GitHub](https://github.com/VidTu/HCsCR). (currently only here)
 You can also find unstable builds at [GitHub Actions](https://github.com/VidTu/HCsCR/actions),
-to download them you'll need a GitHub account.
+you'll need a GitHub account to download them.
 
 **Q**: Which mod loaders are supported?  
 **A**: Fabric and Quilt are supported. Forge and NeoForge are currently NOT supported and may never will be.
