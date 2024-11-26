@@ -63,3 +63,22 @@ Beware: This mod may be considered a hack by some people.
    a server-side opt-in to be allowed on Modrinth. I can see why Modrinth moderators don't want to have a mod like this
    on their platform, but I (personally) don't want to implement a server-side opt-in.
 2. *CurseForge*: I don't really like it, but I might publish this mod there in the future. 
+
+## License
+
+This project provided under the [Apache 2.0](LICENSE) license.
+
+## Building
+
+### Preparation
+
+- Ensure JDK 21 (e.g. [Azul Zulu](https://www.azul.com/downloads/)) is installed and is on `PATH`
+  or/and in `JAVA_HOME` environmental variables. (you can have multiple JDKs on path, it'll pick up the correct one)
+- Anti-malware services may slow down building, but won't break it. If you want it,
+  exclude this folder at your own risk.
+- You must have at least 4 GB of available RAM, 10 GB of available disk space, and an active internet connection.
+
+### Building
+
+1. Run `./gradlew build` (`gradlew build` for Windows).
+2. Grab JARs from `[game_version]/build/libs` folders.

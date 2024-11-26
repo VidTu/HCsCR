@@ -3,7 +3,7 @@
 The only supported versions are:
 
 - The latest release published to the GitHub.
-- The latest pre-release published to the GitHub **only** if it's newer than the latest published release.
+- The latest pre-release published to the GitHub only if it's newer than the latest published release.
 - The latest Git commit build.
 
 # Reporting
