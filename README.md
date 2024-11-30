@@ -66,8 +66,8 @@ Beware: This mod may be considered a hack by some people.
 
 ## License
 
-This project is provided under the "Apache 2.0" license.
-Check out [NOTICE](NOTICE) and [LICENSE](LICENSE) for more information.
+This project is provided under the Apache 2.0 License.
+Check out [NOTICE](https://github.com/VidTu/HCsCR/blob/main/NOTICE) and [LICENSE](https://github.com/VidTu/HCsCR/blob/main/LICENSE) for more information.
 
 ## Building
 
