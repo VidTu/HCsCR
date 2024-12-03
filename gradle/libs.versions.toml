@@ -1,5 +1,5 @@
 [versions]
-architectury-loom = "1.7-SNAPSHOT"
+architectury-loom = "1.7.416"
 enablemultiplayermode = "1.0.0+Fabric1.16.X"
 error_prone_annotations = "2.36.0"
 fabric-loader = "0.16.9"

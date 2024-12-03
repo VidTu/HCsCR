@@ -47,6 +47,11 @@ tasks.withType<JavaCompile> {
     options.compilerArgs.addAll(listOf("-g", "-parameters"))
 }
 
+tasks.withType<AbstractArchiveTask>().configureEach {
+    isPreserveFileTimestamps = false
+    isReproducibleFileOrder = true
+}
+
 tasks.withType<Jar> {
     from(rootDir.resolve("LICENSE"))
     from(rootDir.resolve("NOTICE"))

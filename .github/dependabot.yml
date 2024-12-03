@@ -12,5 +12,4 @@ updates:
       - dependency-name: "*minecraft*"
       - dependency-name: "*fabric-api*"
       - dependency-name: "*modmenu*"
-      - dependency-name: "*architectury.loom*"
       - dependency-name: "*lazydfu*"
