@@ -48,7 +48,7 @@ tasks.withType<JavaCompile> {
     options.compilerArgs.addAll(listOf("-g", "-parameters"))
 }
 
-tasks.withType<AbstractArchiveTask>().configureEach {
+tasks.withType<AbstractArchiveTask> {
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
 }
