@@ -22,6 +22,7 @@ plugins {
 java.sourceCompatibility = JavaVersion.VERSION_16
 java.targetCompatibility = JavaVersion.VERSION_16
 java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+
 group = "ru.vidtu.hcscr"
 base.archivesName = "HCsCR-1.17.1"
 description = "Remove your end crystals before the server even knows you hit 'em!"
