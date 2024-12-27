@@ -73,8 +73,9 @@ Check out [NOTICE](https://github.com/VidTu/HCsCR/blob/main/NOTICE) and [LICENSE
 
 ### Preparation
 
-1. Install Java 8 or newer<sup>*</sup> and dump it into [PATH](https://en.wikipedia.org/wiki/PATH_(variable)) and/or JAVA_HOME.
-2. Run `./gradlew build` from the terminal/PowerShell.
-3. Grab the JARs from the `./[version]/build/libs/` folders.
+1. Have 4 GB of free RAM, 10 GB of free disk space, and an active internet connection.
+2. Install Java 8 or newer<sup>*</sup> and dump it into PATH and/or JAVA_HOME.
+3. Run `./gradlew build` from the terminal/PowerShell.
+4. Grab the JARs from the `./[version]/build/libs/` folders.
 
-<sup>* Actual Java versions used currently is 8, 16, 17, and 21. Gradle will automatically download them.</sup>
+<sup>* Actual Java versions used currently are 8, 16, 17, and 21. Gradle will automatically download them.</sup>

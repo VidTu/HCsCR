@@ -82,9 +82,9 @@ tasks.withType<JavaCompile> {
 
 tasks.withType<ProcessResources> {
     from(rootProject.sourceSets.main.get().resources)
-    inputs.property("version", project.version)
+    inputs.property("version", version)
     filesMatching("fabric.mod.json") {
-        expand("version" to project.version)
+        expand("version" to version)
     }
 }
 
@@ -99,10 +99,10 @@ tasks.withType<Jar> {
     manifest {
         attributes(
             "Specification-Title" to "HCsCR",
-            "Specification-Version" to project.version,
+            "Specification-Version" to version,
             "Specification-Vendor" to "VidTu, Offenderify",
             "Implementation-Title" to "HCsCR-1.19.4",
-            "Implementation-Version" to project.version,
+            "Implementation-Version" to version,
             "Implementation-Vendor" to "VidTu, Offenderify"
         )
     }

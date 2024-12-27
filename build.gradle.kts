@@ -59,10 +59,10 @@ tasks.withType<Jar> {
     manifest {
         attributes(
             "Specification-Title" to "HCsCR",
-            "Specification-Version" to project.version,
+            "Specification-Version" to version,
             "Specification-Vendor" to "VidTu, Offenderify",
             "Implementation-Title" to "HCsCR-Root",
-            "Implementation-Version" to project.version,
+            "Implementation-Version" to version,
             "Implementation-Vendor" to "VidTu, Offenderify"
         )
     }
