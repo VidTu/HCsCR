@@ -17,7 +17,7 @@
 architectury-loom = "1.9.424"
 enablemultiplayermode = "1.0.0+Fabric1.16.X"
 error_prone_annotations = "2.36.0"
-fabric-loader = "0.16.9"
+fabric-loader = "0.16.10"
 fabric-mc1165 = "0.42.0+1.16"
 fabric-mc1171 = "0.46.1+1.17"
 fabric-mc1182 = "0.77.0+1.18.2"
