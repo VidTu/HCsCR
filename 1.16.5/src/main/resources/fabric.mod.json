@@ -43,7 +43,7 @@
   "custom": {
     "modmenu": {
       "links": {
-        "modmenu.github_releases": "https://github.com/VidTu/HCsCR",
+        "modmenu.github_releases": "https://github.com/VidTu/HCsCR/releases",
         "modmenu.discord": "https://discord.gg/Q6saSVSuYQ"
       }
     }
