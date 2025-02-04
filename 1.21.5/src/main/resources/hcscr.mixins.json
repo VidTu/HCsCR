@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_21",
+  "package": "ru.vidtu.hcscr.mixins",
+  "refmap": "hcscr.mixins.refmap.json",
+  "client": [
+    "EntityAccessor",
+    "InteractionMixin",
+    "MinecraftMixin",
+    "PlayerMixin",
+    "RespawnAnchorBlockMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
