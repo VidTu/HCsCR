@@ -52,7 +52,8 @@
         "image": "hcscr_64.png",
         "item": "minecraft:end_crystal"
       },
-      "banner": "hcscr_240.png"
+      "banner": "hcscr_240.png",
+      "background": "hcscr_background.png"
     }
   }
 }
