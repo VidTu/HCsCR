@@ -115,4 +115,4 @@ modmenu-mc1206 = { module = "com.terraformersmc:modmenu", version.ref = "modmenu
 modmenu-mc1211 = { module = "com.terraformersmc:modmenu", version.ref = "modmenu-mc1211" }
 modmenu-mc1213 = { module = "com.terraformersmc:modmenu", version.ref = "modmenu-mc1213" }
 modmenu-mc1214 = { module = "com.terraformersmc:modmenu", version.ref = "modmenu-mc1214" }
-modmenu-mc1215 = { module = "com.terraformersmc:modmenu", version.ref = "modmenu-mc1214" }
+modmenu-mc1215 = { module = "com.terraformersmc:modmenu", version.ref = "modmenu-mc1215" }
