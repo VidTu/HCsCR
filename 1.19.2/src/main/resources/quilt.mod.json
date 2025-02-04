@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "ru.vidtu.hcscr",
+    "id": "hcscr",
+    "version": "${version}",
+    "metadata": {
+      "name": "HCsCR",
+      "description": "Remove your end crystals before the server even knows you hit 'em!",
+      "license": "Apache-2.0",
+      "contributors": {
+        "VidTu": "Current Maintainer",
+        "Offenderify": "Original Mod Author"
+      },
+      "contact": {
+        "homepage": "https://github.com/VidTu/HCsCR",
+        "sources": "https://github.com/VidTu/HCsCR",
+        "issues": "https://github.com/VidTu/HCsCR/issues",
+        "email": "pig@vidtu.ru",
+        "discord": "https://discord.gg/Q6saSVSuYQ"
+      },
+      "icon": "hcscr.png"
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "depends": [
+      {
+        "id": "quilt_loader",
+        "versions": ">=0.27.0",
+        "reason": "HCsCR requires Quilt Mod Loader to be loaded."
+      },
+      {
+        "id": "minecraft",
+        "versions": "1.19.2",
+        "reason": "HCsCR works only with Minecraft 1.19.2."
+      },
+      {
+        "id": "fabric-api",
+        "versions": ">=0.76.0",
+        "reason": "HCsCR requires Fabric API to properly implement its functionality."
+      },
+      {
+        "id": "modmenu",
+        "versions": ">=4.1.0",
+        "reason": "HCsCR recommends ModMenu for configuration access.",
+        "optional": true
+      },
+      {
+        "id": "java",
+        "versions": ">=17",
+        "reason": "HCsCR makes use of Java 17 in its code."
+      }
+    ],
+    "entrypoints": {
+      "client": "ru.vidtu.hcscr.HCsCRFabric",
+      "modmenu": "ru.vidtu.hcscr.HCsCRModMenu"
+    }
+  },
+  "minecraft": {
+    "environment": "client"
+  },
+  "mixin": "hcscr.mixins.json",
+  "modmenu": {
+    "links": {
+      "modmenu.github_releases": "https://github.com/VidTu/HCsCR/releases",
+      "modmenu.discord": "https://discord.gg/Q6saSVSuYQ"
+    }
+  },
+  "catalogue": {
+    "icon": {
+      "image": "hcscr_64.png",
+      "item": "minecraft:end_crystal"
+    },
+    "banner": "hcscr_240.png"
+  }
+}

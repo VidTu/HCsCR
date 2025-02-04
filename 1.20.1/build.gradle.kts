@@ -83,7 +83,7 @@ tasks.withType<JavaCompile> {
 tasks.withType<ProcessResources> {
     from(rootProject.sourceSets.main.get().resources)
     inputs.property("version", version)
-    filesMatching("fabric.mod.json") {
+    filesMatching(listOf("fabric.mod.json", "quilt.mod.json")) {
         expand("version" to version)
     }
 }

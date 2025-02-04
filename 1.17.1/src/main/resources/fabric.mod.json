@@ -46,6 +46,13 @@
         "modmenu.github_releases": "https://github.com/VidTu/HCsCR/releases",
         "modmenu.discord": "https://discord.gg/Q6saSVSuYQ"
       }
+    },
+    "catalogue": {
+      "icon": {
+        "image": "hcscr_64.png",
+        "item": "minecraft:end_crystal"
+      },
+      "banner": "hcscr_240.png"
     }
   }
 }
