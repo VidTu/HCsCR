@@ -52,20 +52,20 @@ loom {
 }
 
 dependencies {
-    // Annotations (Compile)
+    // Annotations
     compileOnlyApi(libs.jetbrains.annotations)
     compileOnlyApi(libs.error.prone.annotations)
 
-    // Minecraft (Provided)
+    // Minecraft
     minecraft(libs.minecraft.mc1202)
     mappings(loom.officialMojangMappings())
 
-    // Fabric (Provided)
+    // Fabric
     modImplementation(libs.fabric.loader)
     modImplementation(libs.fabric.mc1202)
     modImplementation(libs.modmenu.mc1202)
 
-    // Root
+    // Shared
     compileOnly(rootProject)
 }
 

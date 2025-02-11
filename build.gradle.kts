@@ -33,11 +33,11 @@ repositories {
 }
 
 dependencies {
-    // Annotations (Compile)
+    // Annotations
     compileOnly(libs.jetbrains.annotations)
     compileOnly(libs.error.prone.annotations)
 
-    // Generic (Provided)
+    // Dependencies
     implementation(libs.fabric.loader)
     implementation(libs.gson)
     implementation(libs.log4j)
