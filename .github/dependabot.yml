@@ -24,7 +24,6 @@ updates:
     schedule:
       interval: daily
     ignore:
-      - dependency-name: "*minecraft*"
-      - dependency-name: "*fabric-api*"
-      - dependency-name: "*modmenu*"
-      - dependency-name: "*lazydfu*"
+      - dependency-name: "com.mojang:minecraft"
+      - dependency-name: "net.fabricmc.fabric-api:fabric-api"
+      - dependency-name: "com.terraformersmc:modmenu"

@@ -31,7 +31,6 @@ repositories {
     mavenCentral()
     maven("https://maven.fabricmc.net/")
     maven("https://maven.terraformersmc.com/releases/")
-    maven("https://api.modrinth.com/maven/")
 }
 
 loom {
@@ -68,11 +67,6 @@ dependencies {
 
     // Root
     compileOnly(rootProject)
-
-    // Testing
-    modRuntimeOnly(libs.enablemultiplayermode)
-    modRuntimeOnly(libs.lazydfu.old)
-    modRuntimeOnly(libs.ksyxis)
 }
 
 tasks.withType<JavaCompile> {
