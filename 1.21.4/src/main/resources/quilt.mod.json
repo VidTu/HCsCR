@@ -35,7 +35,7 @@
       },
       {
         "id": "fabric-api",
-        "versions": ">=0.115.0",
+        "versions": ">=0.116.0",
         "reason": "HCsCR requires Fabric API to properly implement its functionality."
       },
       {
