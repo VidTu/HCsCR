@@ -24,7 +24,7 @@ java.targetCompatibility = JavaVersion.VERSION_21
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 group = "ru.vidtu.hcscr"
-base.archivesName = "HCsCR-1.21.3"
+base.archivesName = "HCsCR-Fabric-1.21.3"
 description = "Remove your end crystals before the server even knows you hit 'em!"
 
 repositories {
@@ -37,8 +37,13 @@ loom {
     silentMojangMappingsLicense()
     runs.named("client") {
         vmArgs(
+            // Allow JVM without hotswap to work.
             "-XX:+IgnoreUnrecognizedVMOptions",
+
+            // Set up RAM.
             "-Xmx2G",
+
+            // Allow hot swapping on supported JVM.
             "-XX:+AllowEnhancedClassRedefinition",
             "-XX:+AllowRedefinitionToAddDeleteMethods",
             "-XX:HotswapAgent=fatjar",
@@ -80,7 +85,7 @@ tasks.withType<ProcessResources> {
     from(rootProject.sourceSets.main.get().resources)
     inputs.property("version", version)
     filesMatching(listOf("fabric.mod.json", "quilt.mod.json")) {
-        expand("version" to version)
+        expand(inputs.properties)
     }
 }
 
@@ -97,7 +102,7 @@ tasks.withType<Jar> {
             "Specification-Title" to "HCsCR",
             "Specification-Version" to version,
             "Specification-Vendor" to "VidTu, Offenderify",
-            "Implementation-Title" to "HCsCR-1.21.3",
+            "Implementation-Title" to "HCsCR-Fabric-1.21.3",
             "Implementation-Version" to version,
             "Implementation-Vendor" to "VidTu, Offenderify"
         )
