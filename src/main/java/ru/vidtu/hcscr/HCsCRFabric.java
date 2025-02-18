@@ -28,8 +28,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -48,6 +46,7 @@ import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 import ru.vidtu.hcscr.config.Batching;
 import ru.vidtu.hcscr.config.HConfig;
+import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -63,7 +62,7 @@ public final class HCsCRFabric implements ClientModInitializer {
      * Component containing the mod name, "HCsCR".
      */
     @NotNull
-    public static final Component NAME = new TextComponent("HCsCR");
+    public static final Component NAME = HStonecutter.newLiteralComponent("HCsCR");
 
     /**
      * Logger for this class.
@@ -130,13 +129,13 @@ public final class HCsCRFabric implements ClientModInitializer {
             // Show the toast.
             if (!newState) {
                 SystemToast.addOrUpdate(client.getToasts(), TOGGLE_TOAST, NAME,
-                        new TranslatableComponent("hcscr.toggle.false").withStyle(ChatFormatting.RED));
+                        HStonecutter.newTranslatableComponent("hcscr.toggle.false").withStyle(ChatFormatting.RED));
             } else if (!HCsCR.serverEnabled()) {
                 SystemToast.addOrUpdate(client.getToasts(), TOGGLE_TOAST, NAME,
-                        new TranslatableComponent("hcscr.toggle.server").withStyle(ChatFormatting.GOLD));
+                        HStonecutter.newTranslatableComponent("hcscr.toggle.server").withStyle(ChatFormatting.GOLD));
             } else {
                 SystemToast.addOrUpdate(client.getToasts(), TOGGLE_TOAST, NAME,
-                        new TranslatableComponent("hcscr.toggle.true").withStyle(ChatFormatting.GREEN));
+                        HStonecutter.newTranslatableComponent("hcscr.toggle.true").withStyle(ChatFormatting.GREEN));
             }
         });
 
@@ -151,8 +150,8 @@ public final class HCsCRFabric implements ClientModInitializer {
             long now = System.nanoTime();
             SCHEDULE_REMOVAL.object2LongEntrySet().removeIf(entry -> {
                 Entity entity = entry.getKey();
-                if (!entity.removed && entry.getLongValue() >= now) return false;
-                entity.remove();
+                if (!isEntityRemoved(entity) && entry.getLongValue() >= now) return false;
+                removeEntity(entity);
                 return true;
             });
             profiler.pop();
@@ -185,7 +184,7 @@ public final class HCsCRFabric implements ClientModInitializer {
         // - The damaging entity is not a player.
         // - The damaged entity is invulnerable.
         // - The damaged entity has already been processed. (by checked set)
-        if (!HConfig.enabled || !HCsCR.serverEnabled() || entity.removed || amount <= 0.0F ||
+        if (!HConfig.enabled || !HCsCR.serverEnabled() || isEntityRemoved(entity) || amount <= 0.0F ||
                 !shouldProcessEntityType(entity) || !entity.level.isClientSide() ||
                 !(source.getEntity() instanceof Player) || entity.isInvulnerableTo(source)) return false;
 
@@ -207,7 +206,7 @@ public final class HCsCRFabric implements ClientModInitializer {
             // Just remove the entity, if there's no delay.
             int delay = HConfig.delay;
             if (delay <= 0) {
-                entity.remove();
+                removeEntity(entity);
                 return true;
             }
 
@@ -221,15 +220,15 @@ public final class HCsCRFabric implements ClientModInitializer {
         Predicate<? super Entity> filter;
         switch (batching) {
             case INTERSECTING:
-                filter = (other -> (entity == other || !other.removed && shouldProcessEntityType(other) && !other.isInvulnerableTo(source)));
+                filter = (other -> (entity == other || !isEntityRemoved(other) && shouldProcessEntityType(other) && !other.isInvulnerableTo(source)));
                 break;
             case CONTAINING:
-                filter = (other -> (entity == other || !other.removed && shouldProcessEntityType(other) && !other.isInvulnerableTo(source) && contains(box, other.getBoundingBox())));
+                filter = (other -> (entity == other || !isEntityRemoved(other) && shouldProcessEntityType(other) && !other.isInvulnerableTo(source) && contains(box, other.getBoundingBox())));
                 break;
             case CONTAINING_CONTAINED:
                 filter = (other -> {
                     if (entity == other) return true;
-                    if (other.removed || !shouldProcessEntityType(other) || other.isInvulnerableTo(source)) return false;
+                    if (isEntityRemoved(other) || !shouldProcessEntityType(other) || other.isInvulnerableTo(source)) return false;
                     AABB otherBox = other.getBoundingBox();
                     return contains(box, otherBox) || contains(otherBox, box);
                 });
@@ -246,9 +245,9 @@ public final class HCsCRFabric implements ClientModInitializer {
         // Just remove the entities, if there's no delay.
         int delay = HConfig.delay;
         if (delay <= 0) {
-            entity.remove();
+            removeEntity(entity);
             for (Entity other : entities) {
-                other.remove();
+                removeEntity(other);
             }
             return true;
         }
@@ -267,6 +266,22 @@ public final class HCsCRFabric implements ClientModInitializer {
      */
     public static void clearScheduledRemovals() {
         SCHEDULE_REMOVAL.clear();
+    }
+
+    private static void removeEntity(Entity entity) {
+        //? if >=1.17.1 {
+        /*entity.discard();
+        *///?} else {
+        entity.remove();
+         //?}
+    }
+
+    private static boolean isEntityRemoved(Entity entity) {
+        //? if >=1.17.1 {
+        /*return entity.isRemoved();
+        *///?} else {
+        return entity.removed;
+         //?}
     }
 
     /**

@@ -18,6 +18,7 @@
 package ru.vidtu.hcscr;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import net.minecraft.network.chat.MutableComponent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Contract;

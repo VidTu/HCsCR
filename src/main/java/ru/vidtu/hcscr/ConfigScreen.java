@@ -27,7 +27,6 @@ import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
@@ -37,6 +36,7 @@ import org.jetbrains.annotations.Unmodifiable;
 import ru.vidtu.hcscr.config.Batching;
 import ru.vidtu.hcscr.config.HConfig;
 import ru.vidtu.hcscr.mixins.AbstractWidgetAccessor;
+import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.util.List;
 import java.util.function.IntConsumer;
@@ -59,7 +59,7 @@ final class ConfigScreen extends Screen {
      * Disabled by server.
      */
     @NotNull
-    private final Component disabled = new TranslatableComponent("hcscr.config.disabled");
+    private final Component disabled = HStonecutter.newTranslatableComponent("hcscr.config.disabled");
 
     /**
      * Tooltip to render at the last pass.
@@ -74,7 +74,7 @@ final class ConfigScreen extends Screen {
      */
     @Contract(pure = true)
     ConfigScreen(@Nullable Screen parent) {
-        super(new TranslatableComponent("hcscr.config"));
+        super(HStonecutter.newTranslatableComponent("hcscr.config"));
         this.parent = parent;
     }
 
@@ -82,47 +82,47 @@ final class ConfigScreen extends Screen {
     @Override
     protected void init() {
         // Enabled.
-        Checkbox box = new CallbackCheckbox(this.font, (this.width - this.font.width(new TranslatableComponent("hcscr.config.enabled")) - 24) / 2, 20,
-                new TranslatableComponent("hcscr.config.enabled"), new Tooltip(this, this.font, new TranslatableComponent("hcscr.config.enabled.tip")),
+        Checkbox box = new CallbackCheckbox(this.font, (this.width - this.font.width(HStonecutter.newTranslatableComponent("hcscr.config.enabled")) - 24) / 2, 20,
+                HStonecutter.newTranslatableComponent("hcscr.config.enabled"), new Tooltip(this, this.font, HStonecutter.newTranslatableComponent("hcscr.config.enabled.tip")),
                 HConfig.enabled, value -> HConfig.enabled = value);
-        this.addButton(box);
+        this.addButtonOrWidget(box);
 
         // Remove Crystals.
-        box = new CallbackCheckbox(this.font, (this.width - this.font.width(new TranslatableComponent("hcscr.config.removeCrystals")) - 24) / 2, 44,
-                new TranslatableComponent("hcscr.config.removeCrystals"), new Tooltip(this, this.font, new TranslatableComponent("hcscr.config.removeCrystals.tip")),
+        box = new CallbackCheckbox(this.font, (this.width - this.font.width(HStonecutter.newTranslatableComponent("hcscr.config.removeCrystals")) - 24) / 2, 44,
+                HStonecutter.newTranslatableComponent("hcscr.config.removeCrystals"), new Tooltip(this, this.font, HStonecutter.newTranslatableComponent("hcscr.config.removeCrystals.tip")),
                 HConfig.removeCrystals, value -> HConfig.removeCrystals = value);
-        this.addButton(box);
+        this.addButtonOrWidget(box);
 
         // Remove Slimes.
-        box = new CallbackCheckbox(this.font, (this.width - this.font.width(new TranslatableComponent("hcscr.config.removeSlimes")) - 24) / 2, 68,
-                new TranslatableComponent("hcscr.config.removeSlimes"), new Tooltip(this, this.font, new TranslatableComponent("hcscr.config.removeSlimes.tip")),
+        box = new CallbackCheckbox(this.font, (this.width - this.font.width(HStonecutter.newTranslatableComponent("hcscr.config.removeSlimes")) - 24) / 2, 68,
+                HStonecutter.newTranslatableComponent("hcscr.config.removeSlimes"), new Tooltip(this, this.font, HStonecutter.newTranslatableComponent("hcscr.config.removeSlimes.tip")),
                 HConfig.removeSlimes, value -> HConfig.removeSlimes = value);
-        this.addButton(box);
+        this.addButtonOrWidget(box);
 
         // Remove Interactions.
-        box = new CallbackCheckbox(this.font, (this.width - this.font.width(new TranslatableComponent("hcscr.config.removeInteractions")) - 24) / 2, 92,
-                new TranslatableComponent("hcscr.config.removeInteractions"), new Tooltip(this, this.font, new TranslatableComponent("hcscr.config.removeInteractions.tip")),
+        box = new CallbackCheckbox(this.font, (this.width - this.font.width(HStonecutter.newTranslatableComponent("hcscr.config.removeInteractions")) - 24) / 2, 92,
+                HStonecutter.newTranslatableComponent("hcscr.config.removeInteractions"), new Tooltip(this, this.font, HStonecutter.newTranslatableComponent("hcscr.config.removeInteractions.tip")),
                 HConfig.removeInteractions, value -> HConfig.removeInteractions = value);
-        this.addButton(box);
+        this.addButtonOrWidget(box);
 
         // Remove Anchors.
-        box = new CallbackCheckbox(this.font, (this.width - this.font.width(new TranslatableComponent("hcscr.config.removeAnchors")) - 24) / 2, 116,
-                new TranslatableComponent("hcscr.config.removeAnchors"), new Tooltip(this, this.font, new TranslatableComponent("hcscr.config.removeAnchors.tip")),
+        box = new CallbackCheckbox(this.font, (this.width - this.font.width(HStonecutter.newTranslatableComponent("hcscr.config.removeAnchors")) - 24) / 2, 116,
+                HStonecutter.newTranslatableComponent("hcscr.config.removeAnchors"), new Tooltip(this, this.font, HStonecutter.newTranslatableComponent("hcscr.config.removeAnchors.tip")),
                 HConfig.removeAnchors, value -> HConfig.removeAnchors = value);
-        this.addButton(box);
+        this.addButtonOrWidget(box);
 
         // Delay.
         int delay = Math.max(0, Math.min(200, HConfig.delay));
         CallbackSlider slider = new CallbackSlider(this.width / 2 - 100, 140, 200, 20, delay, 0, 200,
-                new Tooltip(this, this.font, new TranslatableComponent("hcscr.config.delay.tip")),
+                new Tooltip(this, this.font, HStonecutter.newTranslatableComponent("hcscr.config.delay.tip")),
                 value -> HConfig.delay = value,
-                value -> new TranslatableComponent("options.generic_value", new TranslatableComponent("hcscr.config.delay"), value > 0 ? new TranslatableComponent("hcscr.config.delay.format", value) : new TranslatableComponent("hcscr.config.delay.false")));
-        this.addButton(slider);
+                value -> this.createValueComponent(HStonecutter.newTranslatableComponent("hcscr.config.delay"), value > 0 ? HStonecutter.newTranslatableComponent("hcscr.config.delay.format", value) : HStonecutter.newTranslatableComponent("hcscr.config.delay.false")));
+        this.addButtonOrWidget(slider);
 
         // Batching.
         Batching batching = HConfig.batching == null ? Batching.DISABLED : HConfig.batching;
-        Tooltip tooltip = new Tooltip(this, this.font, new TranslatableComponent(batching + ".tip"));
-        Button button = new Button(this.width / 2 - 100, 164, 200, 20, new TranslatableComponent("options.generic_value",new TranslatableComponent("hcscr.config.batching"), new TranslatableComponent(batching.toString())), btn -> {
+        Tooltip tooltip = new Tooltip(this, this.font, HStonecutter.newTranslatableComponent(batching + ".tip"));
+        Button button = new Button(this.width / 2 - 100, 164, 200, 20, this.createValueComponent(HStonecutter.newTranslatableComponent("hcscr.config.batching"), HStonecutter.newTranslatableComponent(batching.toString())), btn -> {
             // Update the value.
             Batching newBatching;
             switch (HConfig.batching) {
@@ -141,14 +141,30 @@ final class ConfigScreen extends Screen {
             }
 
             // Set the message and tooltip.
-            btn.setMessage(new TranslatableComponent("options.generic_value", new TranslatableComponent("hcscr.config.batching"), new TranslatableComponent(newBatching.toString())));
-            tooltip.tooltip(new TranslatableComponent(newBatching + ".tip"));
+            btn.setMessage(this.createValueComponent(HStonecutter.newTranslatableComponent("hcscr.config.batching"), HStonecutter.newTranslatableComponent(newBatching.toString())));
+            tooltip.tooltip(HStonecutter.newTranslatableComponent(newBatching + ".tip"));
         }, tooltip);
-        this.addButton(button);
+        this.addButtonOrWidget(button);
 
         // Add done button.
-        this.addButton(new Button(this.width / 2 - 100, this.height - 24, 200, 20,
+        this.addButtonOrWidget(new Button(this.width / 2 - 100, this.height - 24, 200, 20,
                 CommonComponents.GUI_DONE, btn -> this.onClose()));
+    }
+
+    private void addButtonOrWidget(AbstractWidget button) {
+        //? if >=1.17.1 {
+        /*this.addRenderableWidget(button);
+        *///?} else {
+        this.addButton(button);
+        //?}
+    }
+
+    private Component createValueComponent(Component name, Component value) {
+        //? if >=1.17.1 {
+        /*return CommonComponents.optionNameValue(name, value);
+        *///?} else {
+        return HStonecutter.newTranslatableComponent("options.generic_value", name, value);
+         //?}
     }
 
     @ApiStatus.Internal

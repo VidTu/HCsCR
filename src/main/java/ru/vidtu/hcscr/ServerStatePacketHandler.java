@@ -22,10 +22,10 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
  * Mod server state custom payload packet.
@@ -80,7 +80,7 @@ final class ServerStatePacketHandler {
         // Display the toast.
         Minecraft client = Minecraft.getInstance();
         client.execute(() -> SystemToast.addOrUpdate(client.getToasts(), SERVER_TOAST, HCsCRFabric.NAME,
-                new TranslatableComponent("hcscr.server." + enabled)
+                HStonecutter.newTranslatableComponent("hcscr.server." + enabled)
                         .withStyle(enabled ? ChatFormatting.GREEN : ChatFormatting.RED)));
     }
 
@@ -96,6 +96,6 @@ final class ServerStatePacketHandler {
 
         // Display the toast.
         client.execute(() -> SystemToast.addOrUpdate(client.getToasts(), SERVER_TOAST, HCsCRFabric.NAME,
-                new TranslatableComponent("hcscr.server.reset").withStyle(ChatFormatting.GREEN)));
+                HStonecutter.newTranslatableComponent("hcscr.server.reset").withStyle(ChatFormatting.GREEN)));
     }
 }
