@@ -58,13 +58,12 @@ public abstract class RespawnAnchorBlockMixin {
                                BlockHitResult result, CallbackInfoReturnable<InteractionResult> cir) {
         // Do NOT process anchors if any of the following conditions is met:
         // - The mod is disabled via config or keybind.
-        // - The mod is disabled by the current server.
         // - The "remove anchors" feature is disabled.
         // - The current level (world) is not client-side. (e.g. integrated server world)
         // - The anchor doesn't have any charges.
         // - The anchor doesn't explode in the current dimension.
         // - The anchor is currently being charged.
-        if (!HConfig.enabled || !HCsCR.serverEnabled() || !HConfig.removeAnchors || !level.isClientSide()
+        if (!HConfig.enabled || !HConfig.removeAnchors || !level.isClientSide()
                 || state.getValue(RespawnAnchorBlock.CHARGE) == 0 || RespawnAnchorBlock.canSetSpawn(level)) return;
         ItemStack stack = player.getItemInHand(hand);
         if ((hand == InteractionHand.MAIN_HAND && !isRespawnFuel(stack) &&

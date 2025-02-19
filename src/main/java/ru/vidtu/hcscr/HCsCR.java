@@ -18,7 +18,6 @@
 package ru.vidtu.hcscr;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import net.minecraft.network.chat.MutableComponent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Contract;
@@ -37,11 +36,6 @@ public final class HCsCR {
      */
     @NotNull
     private static final Logger LOGGER = LogManager.getLogger("HCsCR");
-
-    /***
-     * Whether the mod is enabled by the current server, {@code true} by default.
-     */
-    private static boolean serverEnabled = true;
 
     /**
      * An instance of this class cannot be created.
@@ -63,42 +57,5 @@ public final class HCsCR {
         boolean newState = (HConfig.enabled = !HConfig.enabled);
         HConfig.saveOrLog();
         return newState;
-    }
-
-    /**
-     * Gets the server enabled state.
-     *
-     * @return Whether the mod is enabled by the current server, {@code true} by default
-     */
-    @Contract(pure = true)
-    public static boolean serverEnabled() {
-        return serverEnabled;
-    }
-
-    /**
-     * Sets the server enabled state.
-     *
-     * @param serverEnabled Whether the mod should be enabled by the current server, {@code true} by default
-     * @return Whether the state has been changed
-     */
-    @CanIgnoreReturnValue
-    public static boolean serverEnabled(boolean serverEnabled) {
-        if (HCsCR.serverEnabled == serverEnabled) return false;
-        HCsCR.serverEnabled = serverEnabled;
-        LOGGER.info("HCsCR: The current server has {} the mod.", serverEnabled ? "enabled" : "disabled");
-        return true;
-    }
-
-    /**
-     * Resets the server enabled state to {@code true}.
-     *
-     * @return Whether the state has been changed
-     */
-    @CanIgnoreReturnValue
-    public static boolean serverEnabledReset() {
-        if (serverEnabled) return false;
-        serverEnabled = true;
-        LOGGER.info("HCsCR: The current server has been changed. The mod is now enabled.");
-        return true;
     }
 }

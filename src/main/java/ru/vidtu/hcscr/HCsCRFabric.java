@@ -23,11 +23,13 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -62,7 +64,7 @@ public final class HCsCRFabric implements ClientModInitializer {
      * Component containing the mod name, "HCsCR".
      */
     @NotNull
-    public static final Component NAME = HStonecutter.newLiteralComponent("HCsCR");
+    public static final Component NAME = HStonecutter.stonecutter_newLiteralComponent("HCsCR");
 
     /**
      * Logger for this class.
@@ -104,8 +106,8 @@ public final class HCsCRFabric implements ClientModInitializer {
         // Load the config.
         HConfig.loadOrLog();
 
-        // Register the network.
-        ServerStatePacketHandler.init();
+        // Register the packet handler.
+        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation("hcscr", "v2"), (client, handler, buf, responseSender) -> handler.getConnection().disconnect(HStonecutter.stonecutter_newTranslatableComponent("bscfsio.false")));
 
         // Register the config bind.
         KeyBindingHelper.registerKeyBinding(CONFIG_BIND);
@@ -124,18 +126,15 @@ public final class HCsCRFabric implements ClientModInitializer {
             if (!TOGGLE_BIND.consumeClick()) return;
 
             // Toggle.
-            boolean newState = HCsCR.toggle();
+            boolean newState = (HConfig.enabled);
 
             // Show the toast.
             if (!newState) {
                 SystemToast.addOrUpdate(client.getToasts(), TOGGLE_TOAST, NAME,
-                        HStonecutter.newTranslatableComponent("hcscr.toggle.false").withStyle(ChatFormatting.RED));
-            } else if (!HCsCR.serverEnabled()) {
-                SystemToast.addOrUpdate(client.getToasts(), TOGGLE_TOAST, NAME,
-                        HStonecutter.newTranslatableComponent("hcscr.toggle.server").withStyle(ChatFormatting.GOLD));
+                        HStonecutter.stonecutter_newTranslatableComponent("hcscr.toggle.false").withStyle(ChatFormatting.RED));
             } else {
                 SystemToast.addOrUpdate(client.getToasts(), TOGGLE_TOAST, NAME,
-                        HStonecutter.newTranslatableComponent("hcscr.toggle.true").withStyle(ChatFormatting.GREEN));
+                        HStonecutter.stonecutter_newTranslatableComponent("hcscr.toggle.true").withStyle(ChatFormatting.GREEN));
             }
         });
 
@@ -162,7 +161,7 @@ public final class HCsCRFabric implements ClientModInitializer {
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> clearScheduledRemovals());
 
         // Done.
-        LOGGER.info("HCsCR: HCsCR is ready to remove 'em crystals.");
+        LOGGER.info("HCsCR: Ready to remove 'em crystals.");
     }
 
     /**
@@ -176,7 +175,6 @@ public final class HCsCRFabric implements ClientModInitializer {
     public static boolean handleEntityHit(@NotNull Entity entity, @NotNull DamageSource source, float amount) {
         // Do NOT process hit if any of the following conditions is met:
         // - The mod is disabled via config or keybind.
-        // - The mod is disabled by the current server.
         // - The damaged entity is already scheduled for removal.
         // - The amount of dealt damage is zero or below.
         // - This entity type shouldn't be processed at all (e.g. any living entity) or by the current config (e.g. slime).
@@ -184,7 +182,7 @@ public final class HCsCRFabric implements ClientModInitializer {
         // - The damaging entity is not a player.
         // - The damaged entity is invulnerable.
         // - The damaged entity has already been processed. (by checked set)
-        if (!HConfig.enabled || !HCsCR.serverEnabled() || isEntityRemoved(entity) || amount <= 0.0F ||
+        if (!HConfig.enabled || isEntityRemoved(entity) || amount <= 0.0F ||
                 !shouldProcessEntityType(entity) || !entity.level.isClientSide() ||
                 !(source.getEntity() instanceof Player) || entity.isInvulnerableTo(source)) return false;
 

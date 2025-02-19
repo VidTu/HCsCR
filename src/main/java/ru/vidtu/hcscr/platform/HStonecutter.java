@@ -3,7 +3,7 @@ package ru.vidtu.hcscr.platform;
 import net.minecraft.network.chat.MutableComponent;
 
 public class HStonecutter {
-    public static MutableComponent newLiteralComponent(String text) {
+    public static MutableComponent stonecutter_newLiteralComponent(String text) {
         //? if >=1.19.2 {
         /*return net.minecraft.network.chat.Component.literal(text);
          *///?} else {
@@ -11,7 +11,7 @@ public class HStonecutter {
         //?}
     }
 
-    public static MutableComponent newTranslatableComponent(String key, Object... args) {
+    public static MutableComponent stonecutter_newTranslatableComponent(String key, Object... args) {
         //? if >=1.19.2 {
         /*return net.minecraft.network.chat.Component.translatable(key, args);
          *///?} else {

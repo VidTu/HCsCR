@@ -1,10 +1,6 @@
 {
-  "hcscr.toggle.true": "HCsCR is enabled now!",
-  "hcscr.toggle.server": "HCsCR is enabled now, but is blocked by the server!",
-  "hcscr.toggle.false": "HCsCR is disabled now!",
-  "hcscr.server.true": "The server has enabled the mod.",
-  "hcscr.server.false": "The server has disabled the mod.",
-  "hcscr.server.reset": "You've left the server. Mod is enabled.",
+  "hcscr.true": "HCsCR enabled.",
+  "hcscr.false": "HCsCR disabled.",
   "hcscr.key.category": "HCsCR",
   "hcscr.key.config": "Open Config",
   "hcscr.key.toggle": "Toggle",
@@ -32,7 +28,6 @@
   "hcscr.config.batching.containingContained.tip": "Current batching mode: Batching (more aggressive) will remove entities that are fully inside or fully outside the hit entity. This option exists to may combat various protection techniques against crystal optimizers, but it may mistakenly remove entities.",
   "hcscr.config.batching.intersecting": "Intersecting",
   "hcscr.config.batching.intersecting.tip": "Current batching mode: Batching (most aggressive) will remove entities that intersect with the hit entity. This option exists to may combat various protection techniques against crystal optimizers, but it may mistakenly remove all adjacent entities.",
-  "hcscr.config.disabled": "The mod has been disabled by the current server.",
   "modmenu.descriptionTranslation.hcscr": "Remove your end crystals before the server even knows you hit 'em!",
   "modmenu.summaryTranslation.hcscr": "Remove your end crystals faster!"
 }
