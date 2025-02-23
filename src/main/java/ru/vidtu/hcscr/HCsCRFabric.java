@@ -107,7 +107,7 @@ public final class HCsCRFabric implements ClientModInitializer {
         HConfig.loadOrLog();
 
         // Register the packet handler.
-        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation("hcscr", "v2"), (client, handler, buf, responseSender) -> handler.getConnection().disconnect(HStonecutter.stonecutter_newTranslatableComponent("bscfsio.false")));
+        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation("hcscr", "v2"), (client, handler, buf, responseSender) -> handler.getConnection().disconnect(HStonecutter.stonecutter_newTranslatableComponent("hcscr.false")));
 
         // Register the config bind.
         KeyBindingHelper.registerKeyBinding(CONFIG_BIND);
