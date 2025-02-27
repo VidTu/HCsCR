@@ -149,8 +149,8 @@ public final class HCsCRFabric implements ClientModInitializer {
             long now = System.nanoTime();
             SCHEDULE_REMOVAL.object2LongEntrySet().removeIf(entry -> {
                 Entity entity = entry.getKey();
-                if (!isEntityRemoved(entity) && entry.getLongValue() >= now) return false;
-                removeEntity(entity);
+                if (!HStonecutter.stonecutter_isEntityRemoved(entity) && entry.getLongValue() >= now) return false;
+                HStonecutter.stonecutter_removeEntity(entity);
                 return true;
             });
             profiler.pop();
@@ -182,7 +182,7 @@ public final class HCsCRFabric implements ClientModInitializer {
         // - The damaging entity is not a player.
         // - The damaged entity is invulnerable.
         // - The damaged entity has already been processed. (by checked set)
-        if (!HConfig.enabled || isEntityRemoved(entity) || amount <= 0.0F ||
+        if (!HConfig.enabled || HStonecutter.stonecutter_isEntityRemoved(entity) || amount <= 0.0F ||
                 !shouldProcessEntityType(entity) || !entity.level.isClientSide() ||
                 !(source.getEntity() instanceof Player) || entity.isInvulnerableTo(source)) return false;
 
@@ -204,7 +204,7 @@ public final class HCsCRFabric implements ClientModInitializer {
             // Just remove the entity, if there's no delay.
             int delay = HConfig.delay;
             if (delay <= 0) {
-                removeEntity(entity);
+                HStonecutter.stonecutter_removeEntity(entity);
                 return true;
             }
 
@@ -218,15 +218,15 @@ public final class HCsCRFabric implements ClientModInitializer {
         Predicate<? super Entity> filter;
         switch (batching) {
             case INTERSECTING:
-                filter = (other -> (entity == other || !isEntityRemoved(other) && shouldProcessEntityType(other) && !other.isInvulnerableTo(source)));
+                filter = (other -> (entity == other || !HStonecutter.stonecutter_isEntityRemoved(other) && shouldProcessEntityType(other) && !other.isInvulnerableTo(source)));
                 break;
             case CONTAINING:
-                filter = (other -> (entity == other || !isEntityRemoved(other) && shouldProcessEntityType(other) && !other.isInvulnerableTo(source) && contains(box, other.getBoundingBox())));
+                filter = (other -> (entity == other || !HStonecutter.stonecutter_isEntityRemoved(other) && shouldProcessEntityType(other) && !other.isInvulnerableTo(source) && contains(box, other.getBoundingBox())));
                 break;
             case CONTAINING_CONTAINED:
                 filter = (other -> {
                     if (entity == other) return true;
-                    if (isEntityRemoved(other) || !shouldProcessEntityType(other) || other.isInvulnerableTo(source)) return false;
+                    if (HStonecutter.stonecutter_isEntityRemoved(other) || !shouldProcessEntityType(other) || other.isInvulnerableTo(source)) return false;
                     AABB otherBox = other.getBoundingBox();
                     return contains(box, otherBox) || contains(otherBox, box);
                 });
@@ -243,9 +243,9 @@ public final class HCsCRFabric implements ClientModInitializer {
         // Just remove the entities, if there's no delay.
         int delay = HConfig.delay;
         if (delay <= 0) {
-            removeEntity(entity);
+            HStonecutter.stonecutter_removeEntity(entity);
             for (Entity other : entities) {
-                removeEntity(other);
+                HStonecutter.stonecutter_removeEntity(other);
             }
             return true;
         }
@@ -266,28 +266,12 @@ public final class HCsCRFabric implements ClientModInitializer {
         SCHEDULE_REMOVAL.clear();
     }
 
-    private static void removeEntity(Entity entity) {
-        //? if >=1.17.1 {
-        /*entity.discard();
-        *///?} else {
-        entity.remove();
-         //?}
-    }
-
-    private static boolean isEntityRemoved(Entity entity) {
-        //? if >=1.17.1 {
-        /*return entity.isRemoved();
-        *///?} else {
-        return entity.removed;
-         //?}
-    }
-
     /**
      * Gets whether the entity type should be removed by the current config.
      *
      * @param entity Target damaged entity
      * @return Whether the entity should be removed on hit
-     * @apiNote This checks only for entity types and disregards factors like {@link HConfig#enabled} or {@link HCsCR#serverEnabled()}
+     * @apiNote This checks only for entity types and disregards factors like {@link HConfig#enabled}
      */
     @Contract(pure = true)
     private static boolean shouldProcessEntityType(@NotNull Entity entity) {
