@@ -15,19 +15,20 @@
  * limitations under the License.
  */
 
-package ru.vidtu.hcscr;
+package ru.vidtu.hcscr.platform;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import ru.vidtu.hcscr.config.ConfigScreen;
 
 /**
  * Class for integration with ModMenu.
  *
  * @author Offenderify
  */
-public final class HCsCRModMenu implements ModMenuApi {
+public final class HModMenu implements ModMenuApi {
     @Contract(pure = true)
     @Override
     @NotNull

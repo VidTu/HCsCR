@@ -22,10 +22,10 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "ru.vidtu.hcscr.HCsCRFabric"
+      "ru.vidtu.hcscr.platform.HFabric"
     ],
     "modmenu": [
-      "ru.vidtu.hcscr.HCsCRModMenu"
+      "ru.vidtu.hcscr.platform.HModMenu"
     ]
   },
   "mixins": [

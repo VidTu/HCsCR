@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package ru.vidtu.hcscr;
+package ru.vidtu.hcscr.config;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
@@ -33,8 +33,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
-import ru.vidtu.hcscr.config.Batching;
-import ru.vidtu.hcscr.config.HConfig;
 import ru.vidtu.hcscr.mixins.AbstractWidgetAccessor;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
@@ -48,7 +46,7 @@ import java.util.function.IntFunction;
  * @author Offenderify
  * @author VidTu
  */
-final class ConfigScreen extends Screen {
+public final class ConfigScreen extends Screen {
     /**
      * Parent screen, {@code null} if none.
      */
@@ -67,7 +65,7 @@ final class ConfigScreen extends Screen {
      * @param parent Parent screen, {@code null} if none
      */
     @Contract(pure = true)
-    ConfigScreen(@Nullable Screen parent) {
+    public ConfigScreen(@Nullable Screen parent) {
         super(HStonecutter.stonecutter_newTranslatableComponent("hcscr.config"));
         this.parent = parent;
     }

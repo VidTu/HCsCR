@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package ru.vidtu.hcscr;
+package ru.vidtu.hcscr.platform;
 
 import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
@@ -27,9 +27,9 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.gui.components.toasts.SystemToast;
-import net.minecraft.network.chat.Component;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -47,8 +47,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 import ru.vidtu.hcscr.config.Batching;
+import ru.vidtu.hcscr.config.ConfigScreen;
 import ru.vidtu.hcscr.config.HConfig;
-import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -59,24 +59,12 @@ import java.util.function.Predicate;
  * @author Offenderify
  * @author VidTu
  */
-public final class HCsCRFabric implements ClientModInitializer {
-    /**
-     * Component containing the mod name, "HCsCR".
-     */
-    @NotNull
-    public static final Component NAME = HStonecutter.stonecutter_newLiteralComponent("HCsCR");
-
+public final class HFabric implements ClientModInitializer {
     /**
      * Logger for this class.
      */
     @NotNull
     private static final Logger LOGGER = LogManager.getLogger("HCsCR/HCsCRFabric");
-
-    /**
-     * Type for toggle bind toasts.
-     */
-    @NotNull
-    private static final SystemToast.SystemToastIds TOGGLE_TOAST = SystemToast.SystemToastIds.valueOf("HCSCR$TOGGLE_TOAST");
 
     /**
      * Config keybind. Not bound by default.
@@ -106,8 +94,8 @@ public final class HCsCRFabric implements ClientModInitializer {
         // Load the config.
         HConfig.loadOrLog();
 
-        // Register the packet handler.
-        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation("hcscr", "v2"), (client, handler, buf, responseSender) -> handler.getConnection().disconnect(HStonecutter.stonecutter_newTranslatableComponent("hcscr.false")));
+        // Register the network.
+        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation("hcscr", "imhere"), (client, handler, buf, responseSender) -> handler.getConnection().disconnect(HStonecutter.stonecutter_newTranslatableComponent("hcscr.false")));
 
         // Register the config bind.
         KeyBindingHelper.registerKeyBinding(CONFIG_BIND);
@@ -126,16 +114,13 @@ public final class HCsCRFabric implements ClientModInitializer {
             if (!TOGGLE_BIND.consumeClick()) return;
 
             // Toggle.
-            boolean newState = (HConfig.enabled);
+            boolean newState = (HConfig.enabled = !HConfig.enabled);
 
             // Show the toast.
-            if (!newState) {
-                SystemToast.addOrUpdate(client.getToasts(), TOGGLE_TOAST, NAME,
-                        HStonecutter.stonecutter_newTranslatableComponent("hcscr.toggle.false").withStyle(ChatFormatting.RED));
-            } else {
-                SystemToast.addOrUpdate(client.getToasts(), TOGGLE_TOAST, NAME,
-                        HStonecutter.stonecutter_newTranslatableComponent("hcscr.toggle.true").withStyle(ChatFormatting.GREEN));
-            }
+            client.gui.setOverlayMessage(HStonecutter.stonecutter_newTranslatableComponent("hcscr.toggle." + newState)
+                    .withStyle(newState ? ChatFormatting.GREEN : ChatFormatting.RED)
+                    .withStyle(ChatFormatting.BOLD), /*rainbow=*/false);
+            client.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING, newState ? 2.0F : 0.0F));
         });
 
         // Register the crystal remover.

@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import ru.vidtu.hcscr.HCsCRFabric;
+import ru.vidtu.hcscr.platform.HFabric;
 
 /**
  * Mixin that removes scheduled entities on world load and unload.
@@ -46,6 +46,6 @@ public final class MinecraftMixin {
     // Removes the entities on level update. This gets called in setLevel() and disconnect().
     @Inject(method = "updateLevelInEngines", at = @At("HEAD"))
     public void hcscr$updateLevelInEngines$head(ClientLevel level, CallbackInfo ci) {
-        HCsCRFabric.clearScheduledRemovals();
+        HFabric.clearScheduledRemovals();
     }
 }

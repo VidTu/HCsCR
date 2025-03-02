@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Contract;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import ru.vidtu.hcscr.HCsCRFabric;
+import ru.vidtu.hcscr.platform.HFabric;
 
 /**
  * Mixin that speeds up entity removing.
@@ -47,6 +47,6 @@ public final class PlayerMixin {
     @SuppressWarnings("NonShortCircuitBooleanExpression") // <- Designed that way.
     @Redirect(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
     public boolean hcscr$attack$hurt(Entity entity, DamageSource source, float amount) {
-        return entity.hurt(source, amount) | HCsCRFabric.handleEntityHit(entity, source, amount);
+        return entity.hurt(source, amount) | HFabric.handleEntityHit(entity, source, amount);
     }
 }
