@@ -18,9 +18,9 @@
 pluginManagement {
     repositories {
         gradlePluginPortal()
-        maven("https://maven.fabricmc.net/")
-        maven("https://maven.architectury.dev/")
-        maven("https://maven.minecraftforge.net/")
+        maven("https://maven.fabricmc.net/") // Architectury Loom. (Fabric dependencies)
+        maven("https://maven.architectury.dev/") // Architectury Loom.
+        maven("https://maven.minecraftforge.net/") // Architectury Loom. (Forge dependencies)
     }
 }
 

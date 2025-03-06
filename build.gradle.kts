@@ -29,7 +29,7 @@ description = "Remove your end crystals before the server even knows you hit 'em
 
 repositories {
     mavenCentral()
-    maven("https://maven.fabricmc.net/")
+    maven("https://maven.fabricmc.net/") // Fabric Loader.
 }
 
 dependencies {

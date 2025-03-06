@@ -24,30 +24,20 @@
     "intermediate_mappings": "net.fabricmc:intermediary",
     "depends": [
       {
-        "id": "quilt_loader",
-        "versions": ">=0.27.0",
-        "reason": "HCsCR requires Quilt Mod Loader to be loaded."
-      },
-      {
         "id": "minecraft",
         "versions": "1.20.2",
         "reason": "HCsCR works only with Minecraft 1.20.2."
       },
       {
         "id": "fabric-api",
-        "versions": ">=0.91.0",
+        "versions": "*",
         "reason": "HCsCR requires Fabric API to properly implement its functionality."
       },
       {
         "id": "modmenu",
-        "versions": ">=8.0.0",
+        "versions": "*",
         "reason": "HCsCR recommends ModMenu for configuration access.",
         "optional": true
-      },
-      {
-        "id": "java",
-        "versions": ">=17",
-        "reason": "HCsCR makes use of Java 17 in its code."
       }
     ],
     "entrypoints": {

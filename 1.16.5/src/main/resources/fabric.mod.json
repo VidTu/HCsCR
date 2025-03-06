@@ -32,13 +32,11 @@
     "hcscr.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.16.0",
     "minecraft": "1.16.5",
-    "fabric": ">=0.41.0",
-    "java": ">=8"
+    "fabric": "*"
   },
   "recommends": {
-    "modmenu": ">=1.16.0"
+    "modmenu": "*"
   },
   "custom": {
     "modmenu": {
