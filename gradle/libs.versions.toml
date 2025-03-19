@@ -14,8 +14,8 @@
 # limitations under the License.
 
 [versions]
-architectury-loom = "1.9.426"
-error_prone_annotations = "2.36.0"
+architectury-loom = "1.9.428"
+error_prone_annotations = "2.37.0"
 fabric-loader = "0.16.10"
 gson = "2.12.1"
 jetbrains_annotations = "26.0.2"
