@@ -32,7 +32,7 @@
     "hcscr.mixins.json"
   ],
   "depends": {
-    "minecraft": ">=1.21.5-alpha <=1.21.5",
+    "minecraft": "1.21.5",
     "fabric-api": "*"
   },
   "recommends": {

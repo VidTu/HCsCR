@@ -25,7 +25,7 @@
     "depends": [
       {
         "id": "minecraft",
-        "versions": ">=1.21.5-alpha <=1.21.5",
+        "versions": "1.21.5",
         "reason": "HCsCR works only with Minecraft 1.21.5."
       },
       {
