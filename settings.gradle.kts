@@ -26,7 +26,7 @@ pluginManagement {
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
-    id("dev.kikugie.stonecutter") version "0.5.1"
+    id("dev.kikugie.stonecutter") version "0.5.2"
 }
 
 rootProject.name = "HCsCR"
