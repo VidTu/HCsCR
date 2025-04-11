@@ -24,7 +24,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.config.HConfig;
 
 /**
@@ -52,8 +51,7 @@ public final class InteractionMixin {
         // - The mod is disabled by the current server.
         // - The "remove interactions" feature is disabled.
         // - The current level (world) is not client-side. (e.g. integrated server world)
-        if (!HConfig.enabled || !HCsCR.serverEnabled() || !HConfig.removeInteractions ||
-                !entity.level.isClientSide()) return;
+        if (!HConfig.enabled || !HConfig.removeInteractions || !entity.level.isClientSide()) return;
 
         // Forcefully allow interactions.
         cir.setReturnValue(false);

@@ -32,7 +32,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.config.HConfig;
 
 /**
@@ -64,7 +63,7 @@ public abstract class RespawnAnchorBlockMixin {
         // - The anchor doesn't have any charges.
         // - The anchor doesn't explode in the current dimension.
         // - The anchor is currently being charged.
-        if (!HConfig.enabled || !HCsCR.serverEnabled() || !HConfig.removeAnchors || !level.isClientSide()
+        if (!HConfig.enabled || !HConfig.removeAnchors || !level.isClientSide()
                 || state.getValue(RespawnAnchorBlock.CHARGE) == 0 || RespawnAnchorBlock.canSetSpawn(level)) return;
         ItemStack stack = player.getItemInHand(hand);
         if ((hand == InteractionHand.MAIN_HAND && !isRespawnFuel(stack) &&

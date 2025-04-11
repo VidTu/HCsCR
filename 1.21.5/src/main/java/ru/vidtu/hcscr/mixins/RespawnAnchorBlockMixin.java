@@ -29,7 +29,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.config.HConfig;
 
 /**
@@ -60,7 +59,7 @@ public final class RespawnAnchorBlockMixin {
         // - The current level (world) is not client-side. (e.g. integrated server world)
         // - The anchor doesn't have any charges.
         // - The anchor doesn't explode in the current dimension.
-        if (!HConfig.enabled || !HCsCR.serverEnabled() || !HConfig.removeAnchors || !level.isClientSide()
+        if (!HConfig.enabled || !HConfig.removeAnchors || !level.isClientSide()
                 || state.getValue(RespawnAnchorBlock.CHARGE) == 0 || RespawnAnchorBlock.canSetSpawn(level)) return;
 
         // Remove the anchor.

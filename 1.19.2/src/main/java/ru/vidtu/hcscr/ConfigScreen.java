@@ -56,12 +56,6 @@ final class ConfigScreen extends Screen {
     private final Screen parent;
 
     /**
-     * Disabled by server.
-     */
-    @NotNull
-    private final Component disabled = Component.translatable("hcscr.config.disabled");
-
-    /**
      * Tooltip to render at the last pass.
      */
     @Nullable
@@ -164,11 +158,6 @@ final class ConfigScreen extends Screen {
 
         // Render title.
         drawCenteredString(pose, this.font, this.title, this.width / 2, 5, 0xFF_FF_FF_FF);
-
-        // Render the "disabled" label.
-        if (!HCsCR.serverEnabled()) {
-            drawCenteredString(pose, this.font, this.disabled, this.width / 2, this.height - 34, 0xFFFF0000);
-        }
 
         // Last pass tooltip.
         if (this.tooltip == null) return;

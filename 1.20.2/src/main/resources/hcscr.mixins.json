@@ -8,8 +8,7 @@
     "InteractionMixin",
     "MinecraftMixin",
     "PlayerMixin",
-    "RespawnAnchorBlockMixin",
-    "SystemToastIdsMixin"
+    "RespawnAnchorBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1

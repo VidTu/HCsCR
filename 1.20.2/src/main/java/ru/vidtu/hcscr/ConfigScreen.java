@@ -52,12 +52,6 @@ final class ConfigScreen extends Screen {
     private final Screen parent;
 
     /**
-     * Disabled by server.
-     */
-    @NotNull
-    private final Component disabled = Component.translatable("hcscr.config.disabled");
-
-    /**
      * Creates a new screen.
      *
      * @param parent Parent screen, {@code null} if none
@@ -161,10 +155,6 @@ final class ConfigScreen extends Screen {
 
         // Render title.
         graphics.drawCenteredString(this.font, this.title, this.width / 2, 5, 0xFF_FF_FF_FF);
-
-        // Render the "disabled" label.
-        if (HCsCR.serverEnabled()) return;
-        graphics.drawCenteredString(this.font, this.disabled, this.width / 2, this.height - 34, 0xFFFF0000);
     }
 
     /**

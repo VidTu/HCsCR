@@ -22,12 +22,14 @@ import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.gui.components.toasts.SystemToast;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -59,22 +61,10 @@ import java.util.function.Predicate;
  */
 public final class HCsCRFabric implements ClientModInitializer {
     /**
-     * Component containing the mod name, "HCsCR".
-     */
-    @NotNull
-    public static final Component NAME = Component.literal("HCsCR");
-
-    /**
      * Logger for this class.
      */
     @NotNull
     private static final Logger LOGGER = LogManager.getLogger("HCsCR/HCsCRFabric");
-
-    /**
-     * Type for toggle bind toasts.
-     */
-    @NotNull
-    private static final SystemToast.SystemToastIds TOGGLE_TOAST = SystemToast.SystemToastIds.valueOf("HCSCR$TOGGLE_TOAST");
 
     /**
      * Config keybind. Not bound by default.
@@ -105,7 +95,8 @@ public final class HCsCRFabric implements ClientModInitializer {
         HConfig.loadOrLog();
 
         // Register the network.
-        ServerStatePacket.init();
+        ResourceLocation id = new ResourceLocation("hcscr", "imhere");
+        ClientPlayNetworking.registerGlobalReceiver(id, (client, handler, buf, responseSender) -> handler.getConnection().disconnect(Component.translatable("hcscr.toggle.false")));
 
         // Register the config bind.
         KeyBindingHelper.registerKeyBinding(CONFIG_BIND);
@@ -126,17 +117,10 @@ public final class HCsCRFabric implements ClientModInitializer {
             // Toggle.
             boolean newState = HCsCR.toggle();
 
-            // Show the toast.
-            if (!newState) {
-                SystemToast.addOrUpdate(client.getToasts(), TOGGLE_TOAST, NAME,
-                        Component.translatable("hcscr.toggle.false").withStyle(ChatFormatting.RED));
-            } else if (!HCsCR.serverEnabled()) {
-                SystemToast.addOrUpdate(client.getToasts(), TOGGLE_TOAST, NAME,
-                        Component.translatable("hcscr.toggle.server").withStyle(ChatFormatting.GOLD));
-            } else {
-                SystemToast.addOrUpdate(client.getToasts(), TOGGLE_TOAST, NAME,
-                        Component.translatable("hcscr.toggle.true").withStyle(ChatFormatting.GREEN));
-            }
+            // Show the bar, play the sound.
+            client.gui.setOverlayMessage(Component.translatable("hcscr." + newState)
+                    .withStyle(newState ? ChatFormatting.GREEN : ChatFormatting.RED), /*rainbow=*/false);
+            client.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING, newState ? 2.0F : 0.0F));
         });
 
         // Register the crystal remover.
@@ -156,10 +140,6 @@ public final class HCsCRFabric implements ClientModInitializer {
             });
             profiler.pop();
         });
-
-        // Register the crystal remover cleaners.
-        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> clearScheduledRemovals());
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> clearScheduledRemovals());
 
         // Done.
         LOGGER.info("HCsCR: HCsCR is ready to remove 'em crystals.");
@@ -184,9 +164,9 @@ public final class HCsCRFabric implements ClientModInitializer {
         // - The damaging entity is not a player.
         // - The damaged entity is invulnerable.
         // - The damaged entity has already been processed. (by checked set)
-        if (!HConfig.enabled || !HCsCR.serverEnabled() || entity.isRemoved() || amount <= 0.0F ||
-                !shouldProcessEntityType(entity) || !entity.level.isClientSide() ||
-                !(source.getEntity() instanceof Player player) || entity.isInvulnerableTo(source)) return false;
+        if (!HConfig.enabled || entity.isRemoved() || amount <= 0.0F || !shouldProcessEntityType(entity) ||
+                !entity.level.isClientSide() || !(source.getEntity() instanceof Player player) ||
+                entity.isInvulnerableTo(source)) return false;
 
         // Don't process player hits that deal zero damage, e.g. with the weakness effect.
         AttributeMap map = player.getAttributes();
@@ -263,7 +243,7 @@ public final class HCsCRFabric implements ClientModInitializer {
      *
      * @param entity Target damaged entity
      * @return Whether the entity should be removed on hit
-     * @apiNote This checks only for entity types and disregards factors like {@link HConfig#enabled} or {@link HCsCR#serverEnabled()}
+     * @apiNote This checks only for entity types and disregards factors like {@link HConfig#enabled}
      */
     @Contract(pure = true)
     private static boolean shouldProcessEntityType(@NotNull Entity entity) {
