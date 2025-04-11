@@ -27,6 +27,7 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -37,6 +38,7 @@ import ru.vidtu.hcscr.config.HConfig;
 import java.util.Objects;
 import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
+import java.util.function.Supplier;
 
 /**
  * HCsCR config screen.
@@ -101,10 +103,24 @@ final class ConfigScreen extends Screen {
         this.addRenderableWidget(box);
 
         // Delay.
-        int delay = Math.max(0, Math.min(200, HConfig.delay));
-        CallbackSlider slider = new CallbackSlider(this.width / 2 - 100, 140, 200, 20, delay, 0, 200,
-                value -> HConfig.delay = value,
-                value -> CommonComponents.optionNameValue(Component.translatable("hcscr.config.delay"), value > 0 ? Component.translatable("hcscr.config.delay.format", value) : Component.translatable("hcscr.config.delay.false")));
+        Supplier<Component> message = () -> {
+            int delay = HConfig.delay;
+            return CommonComponents.optionNameValue(Component.translatable("hcscr.config.delay"), delay > 0 ? Component.translatable("hcscr.config.delay.format", delay) : Component.translatable("hcscr.config.delay.false"));
+        };
+        double delay = Mth.clamp(HConfig.delay / 200.0D, 0, 1);
+        AbstractSliderButton slider = new AbstractSliderButton(this.width / 2 - 100, 140, 200, 20, message.get(), delay) {
+            @Override
+            protected void updateMessage() {
+                this.setMessage(message.get());
+            }
+
+            @Override
+            protected void applyValue() {
+                // Apply the value.
+                double value = Mth.clamp(this.value, 0.0D, 1.0D);
+                HConfig.delay = (int) (value * 200);
+            }
+        };
         slider.setTooltip(Tooltip.create(Component.translatable("hcscr.config.delay.tip")));
         slider.setTooltipDelay(250);
         this.addRenderableWidget(slider);

@@ -36,6 +36,7 @@ import java.time.Duration;
 import java.util.Objects;
 import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
+import java.util.function.Supplier;
 
 /**
  * HCsCR config screen.
@@ -115,10 +116,24 @@ final class ConfigScreen extends Screen {
         this.addRenderableWidget(box);
 
         // Delay.
-        int delay = Math.clamp(HConfig.delay, 0, 200);
-        CallbackSlider slider = new CallbackSlider(this.width / 2 - 100, 140, 200, 20, delay, 0, 200,
-                value -> HConfig.delay = value,
-                value -> CommonComponents.optionNameValue(Component.translatable("hcscr.config.delay"), value > 0 ? Component.translatable("hcscr.config.delay.format", value) : Component.translatable("hcscr.config.delay.false")));
+        Supplier<Component> message = () -> {
+            int delay = HConfig.delay;
+            return CommonComponents.optionNameValue(Component.translatable("hcscr.config.delay"), delay > 0 ? Component.translatable("hcscr.config.delay.format", delay) : Component.translatable("hcscr.config.delay.false"));
+        };
+        double delay = Math.clamp(HConfig.delay / 200.0D, 0, 1);
+        AbstractSliderButton slider = new AbstractSliderButton(this.width / 2 - 100, 140, 200, 20, message.get(), delay) {
+            @Override
+            protected void updateMessage() {
+                this.setMessage(message.get());
+            }
+
+            @Override
+            protected void applyValue() {
+                // Apply the value.
+                double value = Math.clamp(this.value, 0.0D, 1.0D);
+                HConfig.delay = (int) (value * 200);
+            }
+        };
         slider.setTooltip(Tooltip.create(Component.translatable("hcscr.config.delay.tip")));
         slider.setTooltipDelay(Duration.ofMillis(250L));
         this.addRenderableWidget(slider);
@@ -169,83 +184,5 @@ final class ConfigScreen extends Screen {
 
         // Render title.
         graphics.drawCenteredString(this.font, this.title, this.width / 2, 5, 0xFF_FF_FF_FF);
-    }
-
-    /**
-     * Dynamic slider implementation with handler and message provider.
-     *
-     * @author VidTu
-     */
-    static final class CallbackSlider extends AbstractSliderButton {
-        /**
-         * Minimum slider value.
-         */
-        private final int min;
-
-        /**
-         * Maximum slider value.
-         */
-        private final int max;
-
-        /**
-         * Slider change handler.
-         */
-        @NotNull
-        private final IntConsumer handler;
-
-        /**
-         * Slider message provider.
-         */
-        @NotNull
-        private final IntFunction<Component> provider;
-
-        /**
-         * Creates a new slider.
-         *
-         * @param x        Slider X position
-         * @param y        Slider Y position
-         * @param width    Slider width
-         * @param height   Slider height
-         * @param value    Slider value
-         * @param min      Minimum slider value
-         * @param max      Maximum slider value
-         * @param handler  Slider change handler
-         * @param provider Slider message provider
-         */
-        @Contract(pure = true)
-        CallbackSlider(int x, int y, int width, int height, int value, int min, int max,
-                       @NotNull IntConsumer handler, @NotNull IntFunction<Component> provider) {
-            // Call.
-            super(x, y, width, height, provider.apply(value), (Math.clamp(value, min, max) - min) / (double) (max - min));
-
-            // Assign.
-            this.min = min;
-            this.max = max;
-            this.handler = handler;
-            this.provider = provider;
-        }
-
-        @ApiStatus.Internal
-        @Override
-        protected void updateMessage() {
-            // Calculate the value.
-            int value = (int) (this.min + this.value * (this.max - this.min));
-            int clamped = Math.clamp(value, this.min, this.max);
-
-            // Generate and apply the message.
-            Component message = this.provider.apply(clamped);
-            this.setMessage(message);
-        }
-
-        @ApiStatus.Internal
-        @Override
-        protected void applyValue() {
-            // Calculate the value.
-            int value = (int) (this.min + this.value * (this.max - this.min));
-            int clamped = Math.clamp(value, this.min, this.max);
-
-            // Apply the value.
-            this.handler.accept(clamped);
-        }
     }
 }
