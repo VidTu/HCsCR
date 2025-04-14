@@ -13,6 +13,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 pluginManagement {
@@ -26,7 +28,16 @@ pluginManagement {
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.10.0"
+    id("dev.kikugie.stonecutter") version "0.5.2"
 }
 
 rootProject.name = "HCsCR"
-include("1.16.5", "1.17.1", "1.18.2", "1.19.2", "1.19.4", "1.20.1", "1.20.2", "1.20.4", "1.20.6", "1.21.1", "1.21.3", "1.21.4", "1.21.5")
+
+stonecutter {
+    kotlinController = true
+    centralScript = "build.gradle.kts"
+    create(rootProject) {
+        versions("1.21.5", "1.21.4", "1.21.3", "1.21.1", "1.20.6", "1.20.4", "1.20.2", "1.20.1", "1.19.4", "1.19.2", "1.18.2", "1.17.1", "1.16.5")
+        vcsVersion = "1.21.5"
+    }
+}

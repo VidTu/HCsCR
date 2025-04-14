@@ -111,20 +111,6 @@ public final class HConfig {
      */
     public static void loadOrLog() {
         try {
-            loadOrThrow();
-        } catch (Throwable t) {
-            // Log.
-            LOGGER.error("Unable to load HCsCR config.", t);
-        }
-    }
-
-    /**
-     * Loads the config.
-     *
-     * @throws RuntimeException If unable to load the config
-     */
-    public static void loadOrThrow() {
-        try {
             // Log.
             Path path = FabricLoader.getInstance().getConfigDir();
             LOGGER.debug("HCsCR: Loading config for {}...", path);
@@ -135,7 +121,7 @@ public final class HConfig {
             // Skip if it doesn't exist.
             if (!Files.isRegularFile(file)) {
                 LOGGER.debug("HCsCR: Config not found. Saving...");
-                saveOrThrow();
+                saveOrLog();
                 return;
             }
 
@@ -152,8 +138,8 @@ public final class HConfig {
             // Log it.
             LOGGER.debug("HCsCR: Config loaded.");
         } catch (Throwable t) {
-            // Rethrow.
-            throw new RuntimeException("Unable to load HCsCR config.", t);
+            // Log.
+            LOGGER.error("Unable to load HCsCR config.", t);
         } finally {
             // NPE protection.
             delay = Math.max(0, Math.min(200, delay));
@@ -165,20 +151,6 @@ public final class HConfig {
      * Saves the config, suppressing and logging any errors.
      */
     public static void saveOrLog() {
-        try {
-            saveOrThrow();
-        } catch (Throwable t) {
-            // Log.
-            LOGGER.error("Unable to save HCsCR config.", t);
-        }
-    }
-
-    /**
-     * Saves the config.
-     *
-     * @throws RuntimeException If unable to save the config
-     */
-    public static void saveOrThrow() {
         try {
             // Log.
             Path path = FabricLoader.getInstance().getConfigDir();
@@ -210,8 +182,8 @@ public final class HConfig {
             // Log.
             LOGGER.debug("HCsCR: Config saved to {}.", file);
         } catch (Throwable t) {
-            // Rethrow.
-            throw new RuntimeException("Unable to save HCsCR config.", t);
+            // Log.
+            LOGGER.error("Unable to save HCsCR config.", t);
         }
     }
 }

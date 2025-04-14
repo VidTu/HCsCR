@@ -1,9 +1,6 @@
 {
-  "hcscr.toggle.true": "HCsCR est activé maintenant !",
-  "hcscr.toggle.server": "HCsCR est activé maintenant, mais est bloqué par le serveur !",
-  "hcscr.toggle.false": "HCsCR est désactivé maintenant !",
-  "hcscr.server.true": "Le serveur a activé le mod.",
-  "hcscr.server.false": "Le serveur a désactivé le mod.",
+  "hcscr.true": "HCsCR est activé maintenant !",
+  "hcscr.false": "HCsCR est désactivé maintenant !",
   "hcscr.key.category": "HCsCR",
   "hcscr.key.toggle": "Activer Clientside Crystal Removing",
   "hcscr.config": "Configuration de HCsCR",

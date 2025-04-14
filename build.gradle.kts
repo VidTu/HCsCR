@@ -13,39 +13,120 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
  */
 
+import com.google.gson.Gson
+import com.google.gson.JsonElement
+import net.fabricmc.loom.task.RemapJarTask
+import net.fabricmc.loom.util.ZipUtils
+import net.fabricmc.loom.util.ZipUtils.UnsafeUnaryOperator
+
 plugins {
-    id("java")
+    alias(libs.plugins.architectury.loom)
 }
 
-java.sourceCompatibility = JavaVersion.VERSION_1_8
-java.targetCompatibility = JavaVersion.VERSION_1_8
-java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+val mcVersion = stonecutter.current.version
+val javaMajor = if (stonecutter.eval(mcVersion, ">=1.20.6")) 21
+else if (stonecutter.eval(mcVersion, ">=1.18.2")) 17
+else if (stonecutter.eval(mcVersion, ">=1.17.1")) 16
+else 8
+val javaVersion = JavaVersion.toVersion(javaMajor)
+java.sourceCompatibility = javaVersion
+java.targetCompatibility = javaVersion
+java.toolchain.languageVersion = JavaLanguageVersion.of(javaMajor)
 
 group = "ru.vidtu.hcscr"
-base.archivesName = "HCsCR-Root"
+base.archivesName = "HCsCR"
+version = "$version+$mcVersion-fabric"
 description = "Remove your end crystals before the server even knows you hit 'em!"
+
+loom {
+    log4jConfigs.setFrom("log4j2.xml")
+    silentMojangMappingsLicense()
+    runs.named("client") {
+        vmArgs(
+            // Allow JVM without hotswap to work.
+            "-XX:+IgnoreUnrecognizedVMOptions",
+
+            // Set up RAM.
+            "-Xmx2G",
+
+            // Debug arguments.
+            "-ea",
+            "-esa",
+            "-Dmixin.debug=true",
+            "-Dmixin.debug.strict=true",
+            "-Dmixin.checks=true",
+            "-Dio.netty.tryReflectionSetAccessible=true",
+            "-Dio.netty.leakDetection.level=PARANOID",
+
+            // Allow hot swapping on supported JVM.
+            "-XX:+AllowEnhancedClassRedefinition",
+            "-XX:+AllowRedefinitionToAddDeleteMethods",
+            "-XX:HotswapAgent=fatjar",
+            "-Dfabric.debug.disableClassPathIsolation=true",
+
+            // Open modules for Netty.
+            "--add-opens",
+            "java.base/java.nio=ALL-UNNAMED",
+            "--add-opens",
+            "java.base/jdk.internal.misc=ALL-UNNAMED"
+        )
+    }
+    @Suppress("UnstableApiUsage") // <- I want the fancy refmap name. It's completely optional and can be removed anytime.
+    mixin {
+        defaultRefmapName = "hcscr.mixins.refmap.json"
+    }
+}
 
 repositories {
     mavenCentral()
-    maven("https://maven.fabricmc.net/") // Fabric Loader.
+    maven("https://maven.fabricmc.net/") // Fabric.
+    maven("https://maven.terraformersmc.com/releases/") // ModMenu.
+    if (mcVersion == "1.20.4") { // Fix for ModMenu not shading Text Placeholder API.
+        maven("https://maven.nucleoid.xyz/") // ModMenu. (Text Placeholder API)
+    }
 }
 
 dependencies {
     // Annotations
+    compileOnly(libs.jspecify)
     compileOnly(libs.jetbrains.annotations)
-    compileOnly(libs.error.prone.annotations)
 
-    // Dependencies
-    implementation(libs.fabric.loader)
-    implementation(libs.gson)
-    implementation(libs.log4j)
+    // Minecraft
+    minecraft("com.mojang:minecraft:$mcVersion")
+    mappings(loom.officialMojangMappings())
+
+    // Fabric
+    modImplementation(libs.fabric.loader)
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${property("stonecutter.fabric-api")}")
+    modImplementation("com.terraformersmc:modmenu:${property("stonecutter.modmenu")}")
 }
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
     options.compilerArgs.addAll(listOf("-g", "-parameters"))
+    if (javaVersion.isJava9Compatible) {
+        options.release = javaMajor
+    }
+}
+
+tasks.withType<ProcessResources> {
+    inputs.property("version", version)
+    inputs.property("minecraft", mcVersion)
+    inputs.property("java", javaMajor)
+    filesMatching(listOf("fabric.mod.json", "quilt.mod.json", "hcscr.mixins.json")) {
+        expand(inputs.properties)
+    }
+    fileTree(outputs.files.asPath).forEach {
+        if (it.name.endsWith(".json")) {
+            doLast {
+                it.writeText(Gson().fromJson(it.readText(), JsonElement::class.java).toString())
+            }
+        }
+    }
 }
 
 tasks.withType<AbstractArchiveTask> {
@@ -60,10 +141,20 @@ tasks.withType<Jar> {
         attributes(
             "Specification-Title" to "HCsCR",
             "Specification-Version" to version,
-            "Specification-Vendor" to "VidTu, Offenderify",
-            "Implementation-Title" to "HCsCR-Root",
+            "Specification-Vendor" to "VidTu",
+            "Implementation-Title" to "HCsCR",
             "Implementation-Version" to version,
             "Implementation-Vendor" to "VidTu, Offenderify"
         )
+    }
+}
+
+tasks.withType<RemapJarTask> {
+    val minifier = UnsafeUnaryOperator<String> { Gson().fromJson(it, JsonElement::class.java).toString() }
+    doLast {
+        ZipUtils.transformString(archiveFile.get().asFile.toPath(), mapOf(
+            "hcscr.mixins.json" to minifier,
+            "hcscr.mixins.refmap.json" to minifier,
+        ))
     }
 }
