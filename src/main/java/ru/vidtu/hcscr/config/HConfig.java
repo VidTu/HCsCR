@@ -13,90 +13,73 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 package ru.vidtu.hcscr.config;
 
+import com.google.common.base.MoreObjects;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.util.Mth;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.lang.reflect.Modifier;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 
 /**
- * HCsCR config.
+ * HCsCR config storage.
  *
  * @author VidTu
  */
+@ApiStatus.Internal
+@NullMarked
 public final class HConfig {
+    /**
+     * Logger for this class.
+     */
+    public static final Logger LOGGER = LogManager.getLogger("HCsCR/HConfig");
+
     /**
      * Config GSON.
      */
-    @NotNull
     private static final Gson GSON = new GsonBuilder()
             .excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.FINAL)
             .create();
 
     /**
-     * Logger for this class.
+     * Enable the mod, {@code true} by default.
      */
-    @NotNull
-    public static final Logger LOGGER = LogManager.getLogger("HCsCR/HConfig");
+    public static boolean enable = true;
 
     /**
-     * Whether the mod is enabled, {@code true} by default.
+     * Crystals removal mode, {@link CrystalMode#DIRECT} by default.
      */
-    public static boolean enabled = true;
+    public static CrystalMode crystals = CrystalMode.DIRECT;
 
     /**
-     * Whether the crystals are removed on left click, {@code true} by default.
+     * Crystals removal delay in milliseconds, {@code 0} by default. Some users report that setting the delay
+     * to the server's MSPT value actually makes crystal spamming a bit faster.
      */
-    public static boolean removeCrystals = true;
+    public static int crystalsDelay = 0;
 
     /**
-     * Whether the invisible slimes and magma cubes are removed on left click, {@code false} by default.
-     *
-     * @apiNote Some servers use invisible slimes to prevent crystal optimizers from working
+     * Anchors removal mode, {@link AnchorMode#COLLISION} by default.
      */
-    public static boolean removeSlimes = false;
+    public static AnchorMode anchors = AnchorMode.COLLISION;
 
     /**
-     * Whether the "interaction" entities are removed on left click, {@code false} by default.
-     *
-     * @apiNote Some servers use interaction entities to prevent crystal optimizers from working
-     * @implNote Works only on 1.19.4 and higher
+     * Anchors removal delay in milliseconds, {@code 0} by default.
      */
-    public static boolean removeInteractions = false;
-
-    /**
-     * Whether the anchor blocks are removed on right click, {@code false} by default.
-     *
-     * @apiNote This will prevent the "air place" mechanic from working
-     * @implNote Block removal is not affected by the {@link #delay}
-     */
-    public static boolean removeAnchors = false;
-
-    /**
-     * Entity removal delay in milliseconds, {@code 0} by default.
-     * Set to {@code 0} to disable.
-     *
-     * @apiNote Some users report that setting this to server's MSPT value actually makes crystal spamming faster
-     */
-    public static int delay = 0;
-
-    /**
-     * Current batching mode, {@link Batching#DISABLED} by default.
-     */
-    public static Batching batching = Batching.DISABLED;
+    public static int anchorsDelay = 0;
 
     /**
      * Creates a new config for GSON.
@@ -108,82 +91,61 @@ public final class HConfig {
 
     /**
      * Loads the config, suppressing and logging any errors.
+     *
+     * @param directory Directory where all the configs are stored
      */
-    public static void loadOrLog() {
+    public static void load(Path directory) {
         try {
-            // Log.
-            Path path = FabricLoader.getInstance().getConfigDir();
-            LOGGER.debug("HCsCR: Loading config for {}...", path);
+            // Log. (**TRACE**)
+            LOGGER.trace("HCsCR: Loading the config... (directory: {})", directory);
 
-            // Get the file.
-            Path file = path.resolve("hcscr.json");
+            // Resolve the file.
+            Path file = directory.resolve("hcscr.json");
 
-            // Skip if it doesn't exist.
-            if (!Files.isRegularFile(file)) {
-                LOGGER.debug("HCsCR: Config not found. Saving...");
-                saveOrLog();
-                return;
+            // Read the config.
+            try (BufferedReader reader = Files.newBufferedReader(file)) {
+                GSON.fromJson(reader, HConfig.class);
             }
 
-            // Read the file.
-            byte[] data = Files.readAllBytes(file);
-            String value = new String(data, StandardCharsets.UTF_8);
-
-            // Read JSON.
-            JsonObject json = GSON.fromJson(value, JsonObject.class);
-
-            // Hacky JSON reading.
-            GSON.fromJson(json, HConfig.class);
-
-            // Log it.
-            LOGGER.debug("HCsCR: Config loaded.");
+            // Log. (**DEBUG**)
+            LOGGER.debug("HCsCR: Config has been loaded. (directory: {}, file: {})", directory, file);
         } catch (Throwable t) {
             // Log.
-            LOGGER.error("Unable to load HCsCR config.", t);
+            LOGGER.error("HCsCR: Unable to load the HCsCR config.", t);
         } finally {
             // NPE protection.
-            delay = Math.max(0, Math.min(200, delay));
-            batching = (batching == null ? Batching.DISABLED : batching);
+            crystals = MoreObjects.firstNonNull(crystals, CrystalMode.DIRECT);
+            crystalsDelay = Mth.clamp(crystalsDelay, 0, 200);
+            anchors = MoreObjects.firstNonNull(anchors, AnchorMode.COLLISION);
+            anchorsDelay = Mth.clamp(anchorsDelay, 0, 200);
         }
     }
 
     /**
      * Saves the config, suppressing and logging any errors.
+     *
+     * @param directory Directory where all the configs are stored
      */
-    public static void saveOrLog() {
+    public static void saveOrLog(Path directory) {
         try {
-            // Log.
-            Path path = FabricLoader.getInstance().getConfigDir();
-            LOGGER.debug("HCsCR: Saving config into {}...", path);
+            // Log. (**TRACE**)
+            LOGGER.trace("HCsCR: Saving the config... (directory: {})", directory);
 
-            // NPE protection.
-            delay = Math.max(0, Math.min(200, delay));
-            batching = (batching == null ? Batching.DISABLED : batching);
+            // Resolve the file.
+            Path file = directory.resolve("hcscr.json");
 
-            // Get the file.
-            Path file = path.resolve("hcscr.json");
+            // Write the config.
+            Files.createDirectories(directory);
+            try (BufferedWriter writer = Files.newBufferedWriter(file)) {
+                //noinspection InstantiationOfUtilityClass
+                GSON.toJson(new HConfig(), writer);
+            }
 
-            // Hacky JSON writing.
-            @SuppressWarnings("InstantiationOfUtilityClass") // <- Hack.
-            JsonObject json = (JsonObject) GSON.toJsonTree(new HConfig());
-
-            // Write JSON.
-            String value = GSON.toJson(json);
-            byte[] data = value.getBytes(StandardCharsets.UTF_8);
-
-            // Create parent directories.
-            Files.createDirectories(file.getParent());
-
-            // Write the file.
-            Files.write(file, data, StandardOpenOption.CREATE,
-                    StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE,
-                    StandardOpenOption.SYNC, StandardOpenOption.DSYNC);
-
-            // Log.
-            LOGGER.debug("HCsCR: Config saved to {}.", file);
+            // Log. (**DEBUG**)
+            LOGGER.debug("HCsCR: Config has been saved. (directory: {}, file: {})", directory, file);
         } catch (Throwable t) {
             // Log.
-            LOGGER.error("Unable to save HCsCR config.", t);
+            LOGGER.error("HCsCR: Unable to save the HCsCR config.", t);
         }
     }
 }

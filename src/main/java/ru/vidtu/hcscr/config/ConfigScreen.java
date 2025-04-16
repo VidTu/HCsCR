@@ -17,6 +17,8 @@
 
 package ru.vidtu.hcscr.config;
 
+import com.google.common.base.MoreObjects;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
@@ -26,16 +28,11 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
-
-//? if >=1.20.1 {
-import net.minecraft.client.gui.GuiGraphics;
-//?} else
-/*import com.mojang.blaze3d.vertex.PoseStack;*/
-import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
  * HCsCR config screen.
@@ -65,73 +62,81 @@ public final class ConfigScreen extends Screen implements Consumer<List<Formatte
      */
     @Contract(pure = true)
     public ConfigScreen(@Nullable Screen parent) {
-        super(HStonecutter.translate("hcscr.config"));
+        super(HStonecutter.translate("hcscr.title"));
         this.parent = parent;
     }
 
     @ApiStatus.Internal
     @Override
     protected void init() {
-        // Enabled.
+        // Enable.
         int centerX = (this.width / 2);
-        this.sc_add(HStonecutter.guiCheckbox(this.font, centerX, 20, HStonecutter.translate("hcscr.config.enabled"),
-                HStonecutter.translate("hcscr.config.enabled.tip"), HConfig.enabled,
-                value -> HConfig.enabled = value, this));
+        this.sc_add(HStonecutter.guiCheckbox(this.font, centerX, 20, HStonecutter.translate("hcscr.enable"),
+                HStonecutter.translate("hcscr.enable.tip"), HConfig.enable,
+                value -> HConfig.enable = value, this));
 
-        // Remove Crystals.
-        this.sc_add(HStonecutter.guiCheckbox(this.font, centerX, 20 + 24, HStonecutter.translate("hcscr.config.removeCrystals"),
-                HStonecutter.translate("hcscr.config.removeCrystals.tip"), HConfig.removeCrystals,
-                value -> HConfig.removeCrystals = value, this));
-
-        // Remove Slimes.
-        this.sc_add(HStonecutter.guiCheckbox(this.font, centerX, 20 + (24 * 2), HStonecutter.translate("hcscr.config.removeSlimes"),
-                HStonecutter.translate("hcscr.config.removeSlimes.tip"), HConfig.removeSlimes,
-                value -> HConfig.removeSlimes = value, this));
-
-        // Remove Interactions.
-        this.sc_add(HStonecutter.guiCheckbox(this.font, centerX, 20 + (24 * 3), HStonecutter.translate("hcscr.config.removeInteractions"),
-                HStonecutter.translate("hcscr.config.removeInteractions.tip"), HConfig.removeInteractions,
-                value -> HConfig.removeInteractions = value, this));
-
-        // Remove Anchors.
-        this.sc_add(HStonecutter.guiCheckbox(this.font, centerX, 20 + (24 * 4),HStonecutter.translate("hcscr.config.removeAnchors"),
-                HStonecutter.translate("hcscr.config.removeAnchors.tip"), HConfig.removeAnchors,
-                value -> HConfig.removeAnchors = value, this));
-
-        // Delay.
-        int buttonX = (this.width / 2) - 100;
-        IntFunction<Component> message = delay -> HStonecutter.translate("options.generic_value", HStonecutter.translate("hcscr.config.delay"),
-                delay > 0 ? HStonecutter.translate("hcscr.config.delay.format", delay) : HStonecutter.translate("hcscr.config.delay.false"));
-        this.sc_add(HStonecutter.guiSlider(this.font, buttonX, 20 + (24 * 5), 200, 20, message,
-                HStonecutter.translate("hcscr.config.delay.tip"), HConfig.delay, 0, 200,
-                value -> HConfig.delay = value, this));
-
-        // Batching.
-        Batching batching = HConfig.batching == null ? Batching.DISABLED : HConfig.batching;
-        this.sc_add(HStonecutter.guiButton(this.font, buttonX, 20 + (24 * 6), 200, 20, HStonecutter.translate("options.generic_value", HStonecutter.translate("hcscr.config.batching"), HStonecutter.translate(batching.toString())), HStonecutter.translate(batching + ".tip"), btn -> {
-            // Update the value.
-            switch (HConfig.batching) {
-                case DISABLED:
-                    HConfig.batching = Batching.CONTAINING;
+        // Crystals.
+        int buttonX = (centerX - 100);
+        CrystalMode crystals = MoreObjects.firstNonNull(HConfig.crystals, CrystalMode.OFF);
+        this.sc_add(HStonecutter.guiButton(this.font, buttonX, 20 + 24, 200, 20, crystals.buttonLabel(), crystals.buttonTip(), (button, tipSetter) -> {
+            // Update the crystals.
+            CrystalMode newCrystals;
+            switch (crystals) {
+                case OFF:
+                    HConfig.crystals = newCrystals = CrystalMode.DIRECT;
                     break;
-                case CONTAINING:
-                    HConfig.batching = Batching.CONTAINING_CONTAINED;
-                    break;
-                case CONTAINING_CONTAINED:
-                    HConfig.batching = Batching.INTERSECTING;
+                case DIRECT:
+                    HConfig.crystals = newCrystals = CrystalMode.ENVELOPING;
                     break;
                 default:
-                    HConfig.batching = Batching.DISABLED;
-                    break;
+                    HConfig.crystals = newCrystals = CrystalMode.OFF;
             }
 
-            // Set the message and tooltip.
-            this.minecraft.setScreen(this);
+            // Update the label and tooltip.
+            button.setMessage(newCrystals.buttonLabel());
+            tipSetter.accept(newCrystals.buttonTip());
         }, this));
+
+        // Crystals Delay.
+        IntFunction<Component> crystalsDelayMessage = delay -> HStonecutter.translate("options.generic_value",
+                HStonecutter.translate("hcscr.crystalsDelay"), delay > 0 ? HStonecutter.translate(
+                        "hcscr.delay.format", delay) : HStonecutter.translate("hcscr.delay.off"));
+        this.sc_add(HStonecutter.guiSlider(this.font, buttonX, 20 + (24 * 2), 200, 20, crystalsDelayMessage,
+                HStonecutter.translate("hcscr.crystalsDelay.tip"), HConfig.crystalsDelay, 0, 200,
+                value -> HConfig.crystalsDelay = value, this));
+
+        // Anchors.
+        AnchorMode anchors = MoreObjects.firstNonNull(HConfig.anchors, AnchorMode.OFF);
+        this.sc_add(HStonecutter.guiButton(this.font, buttonX, 20 + (24 * 3), 200, 20, anchors.buttonLabel(), anchors.buttonTip(), (button, tipSetter) -> {
+            // Update the crystals.
+            AnchorMode newAnchors;
+            switch (anchors) {
+                case OFF:
+                    newAnchors = HConfig.anchors = AnchorMode.COLLISION;
+                    break;
+                case COLLISION:
+                    newAnchors = HConfig.anchors = AnchorMode.FULL;
+                    break;
+                default:
+                    newAnchors = HConfig.anchors = AnchorMode.OFF;
+            }
+
+            // Update the label and tooltip.
+            button.setMessage(newAnchors.buttonLabel());
+            tipSetter.accept(newAnchors.buttonTip());
+        }, this));
+
+        // Anchors Delay.
+        IntFunction<Component> anchorsDelayMessage = delay -> HStonecutter.translate("options.generic_value",
+                HStonecutter.translate("hcscr.anchorsDelay"), delay > 0 ? HStonecutter.translate(
+                        "hcscr.delay.format", delay) : HStonecutter.translate("hcscr.delay.off"));
+        this.sc_add(HStonecutter.guiSlider(this.font, buttonX, 20 + (24 * 4), 200, 20, anchorsDelayMessage,
+                HStonecutter.translate("hcscr.anchorsDelay.tip"), HConfig.anchorsDelay, 0, 200,
+                value -> HConfig.anchorsDelay = value, this));
 
         // Add done button.
         this.sc_add(HStonecutter.guiButton(this.font, buttonX, this.height - 24, 200, 20,
-                CommonComponents.GUI_DONE, null, btn -> this.onClose(), this));
+                CommonComponents.GUI_DONE, null, (btn, tipSetter) -> this.onClose(), this));
     }
 
     @ApiStatus.Internal
@@ -141,7 +146,7 @@ public final class ConfigScreen extends Screen implements Consumer<List<Formatte
         assert this.minecraft != null;
 
         // Save config.
-        HConfig.saveOrLog();
+        HConfig.saveOrLog(FabricLoader.getInstance().getConfigDir());
 
         // Close to parent.
         this.minecraft.setScreen(this.parent);
@@ -150,9 +155,9 @@ public final class ConfigScreen extends Screen implements Consumer<List<Formatte
     @ApiStatus.Internal
     @Override
     //? if >=1.20.1 {
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void render(@NotNull net.minecraft.client.gui.GuiGraphics graphics, int mouseX, int mouseY, float delta) {
     //?} else
-    /*public void render(@NotNull PoseStack graphics, int mouseX, int mouseY, float delta) {*/
+    /*public void render(@NotNull com.mojang.blaze3d.vertex.PoseStack graphics, int mouseX, int mouseY, float delta) {*/
         // Render background and widgets.
         //? if <1.20.2
         /*this.renderBackground(graphics);*/

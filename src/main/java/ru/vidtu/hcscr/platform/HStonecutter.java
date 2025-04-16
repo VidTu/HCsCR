@@ -38,10 +38,10 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.CheckReturnValue;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
 import ru.vidtu.hcscr.config.ConfigScreen;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
@@ -195,31 +195,25 @@ public final class HStonecutter {
      * @param width           Button width in scaled pixels
      * @param height          Button height in scaled pixels
      * @param message         Button label
-     * @param tooltip         Button tooltip, {@code null} if button shouldn't have any tooltip
-     * @param handler         Button click handler
+     * @param tooltip         Button tooltip
+     * @param handler         Button click handler (button itself and tooltip setter)
      * @param tooltipRenderer Last pass tooltip renderer, typically {@link ConfigScreen}
      * @return A new button instance
      */
     @Contract(value = "_, _, _, _, _, _, _, _, _ -> new", pure = true)
     public static Button guiButton(@SuppressWarnings("unused") Font font, int x, int y, int width, int height, // <- Used before 1.19.4.
-                                   Component message, @Nullable Component tooltip, Button.OnPress handler,
+                                   Component message, Component tooltip, BiConsumer<Button, Consumer<Component>> handler,
                                    @SuppressWarnings("unused") Consumer<List<FormattedCharSequence>> tooltipRenderer) { // <- Used before 1.19.4.
         //? if >=1.19.4 {
-        Button button = Button.builder(message, handler)
-                .bounds(x, y, width, height)
-                .build();
-        if (tooltip == null) return button;
-        button.setTooltip(net.minecraft.client.gui.components.Tooltip.create(tooltip));
+        Button button = Button.builder(message, btn -> handler.accept(btn, tip -> {
+            btn.setTooltip(net.minecraft.client.gui.components.Tooltip.create(tip));
+            btn.setTooltipDelay(TOOLTIP_DURATION);
+        })).tooltip(net.minecraft.client.gui.components.Tooltip.create(tooltip)).bounds(x, y, width, height).build();
         button.setTooltipDelay(TOOLTIP_DURATION);
         return button;
         //?} else {
-        /*if (tooltip == null) return new Button(x, y, width, height, message, handler);
-        return new Button(x, y, width, height, message, handler) {
-            /^*
-             * A tooltip split to {@code 170} scaled pixels wide, a value used in modern versions
-             ^/
-            private final List<FormattedCharSequence> tip = font.split(tooltip, 170);
-
+        /*org.apache.commons.lang3.mutable.Mutable<List<FormattedCharSequence>> tipHolder = new org.apache.commons.lang3.mutable.MutableObject<>(font.split(tooltip, 170));
+        return new Button(x, y, width, height, message, btn -> handler.accept(btn, tip -> tipHolder.setValue(font.split(tip, 170)))) {
             /^*
              * Last time when the mouse was NOT over this element in units of {@link System#nanoTime()}.
              ^/
@@ -240,7 +234,7 @@ public final class HStonecutter {
                 if ((System.nanoTime() - this.lastAway) < TOOLTIP_DURATION) return;
 
                 // Render the tooltip.
-                tooltipRenderer.accept(this.tip);
+                tooltipRenderer.accept(tipHolder.getValue());
             }
         };
         *///?}

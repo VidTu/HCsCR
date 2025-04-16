@@ -60,7 +60,6 @@ public final class MinecraftMixin {
      */
     @Inject(method = "updateLevelInEngines", at = @At("RETURN"))
     private void hcscr_updateLevelInEngines_return(@Nullable ClientLevel level, CallbackInfo ci) {
-        // Delegate.
         HCsCR.handleWorldSwitch((Minecraft) (Object) this);
     }
 }

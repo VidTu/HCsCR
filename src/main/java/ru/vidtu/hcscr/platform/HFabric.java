@@ -24,6 +24,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,7 +55,7 @@ public final class HFabric implements ClientModInitializer {
         LOGGER.info("HCsCR: Loading...");
 
         // Load the config.
-        HConfig.loadOrLog();
+        HConfig.load(FabricLoader.getInstance().getConfigDir());
 
         // Register the network.
         //? if >=1.20.6 {

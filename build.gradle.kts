@@ -43,7 +43,7 @@ version = "$version+$mcVersion-fabric"
 description = "Remove your end crystals before the server even knows you hit 'em!"
 
 loom {
-    log4jConfigs.setFrom("log4j2.xml")
+    log4jConfigs.setFrom(rootDir.resolve("log4j2.xml"))
     silentMojangMappingsLicense()
     runs.named("client") {
         vmArgs(
@@ -57,7 +57,7 @@ loom {
             "-ea",
             "-esa",
             "-Dmixin.debug=true",
-            "-Dmixin.debug.strict=true",
+            "-Dmixin.debug.strict=false", // TODO
             "-Dmixin.checks=true",
             "-Dio.netty.tryReflectionSetAccessible=true",
             "-Dio.netty.leakDetection.level=PARANOID",

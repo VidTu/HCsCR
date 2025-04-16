@@ -22,6 +22,7 @@ package ru.vidtu.hcscr;
 import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -45,13 +46,12 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NullMarked;
 import org.lwjgl.glfw.GLFW;
-import ru.vidtu.hcscr.config.Batching;
 import ru.vidtu.hcscr.config.ConfigScreen;
+import ru.vidtu.hcscr.config.CrystalMode;
 import ru.vidtu.hcscr.config.HConfig;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * Main HCsCR class.
@@ -144,10 +144,10 @@ public final class HCsCR {
         LOGGER.trace("HCsCR: Toggle keybind was consumed, toggling the mode. (game: {}, keybind: {})", game, TOGGLE_BIND);
 
         // Toggle the mod.
-        boolean newState = (HConfig.enabled = !HConfig.enabled);
+        boolean newState = (HConfig.enable = !HConfig.enable);
 
         // Save the config.
-        HConfig.saveOrLog();
+        HConfig.saveOrLog(FabricLoader.getInstance().getConfigDir());
 
         // Show the bar, play the sound.
         game.gui.setOverlayMessage(HStonecutter.translate("hcscr." + newState) // Implicit NPE for 'game'
@@ -182,20 +182,19 @@ public final class HCsCR {
 
         // Remove all entities that have expired or no longer in the world.
         long now = System.nanoTime();
-        long timeout = (HConfig.delay * 1_000_000L);
         ObjectIterator<Object2LongMap.Entry<Entity>> iterator = SCHEDULE_REMOVAL.object2LongEntrySet().iterator();
         while (iterator.hasNext()) {
             // Extract.
             Object2LongMap.Entry<Entity> entry = iterator.next();
             Entity entity = entry.getKey();
-            long start = entry.getLongValue();
+            long expiry = entry.getLongValue();
 
             // Skip if entry is still in the world and hasn't reached the timeout.
-            if (!HStonecutter.isEntityRemoved(entity) && ((now - start) < timeout)) continue;
+            if (!HStonecutter.isEntityRemoved(entity) && (expiry - now) >= 0) continue;
 
             // Log. (**TRACE**)
             if (LOGGER.isTraceEnabled()) {
-                LOGGER.trace("HCsCR: Removing entity scheduled for removal... (now: {}, timeout: {}, entity: {}, start: {}, map: {})", now, timeout, entity, start, SCHEDULE_REMOVAL);
+                LOGGER.trace("HCsCR: Removing entity scheduled for removal... (now: {}, entity: {}, expiry: {}, map: {})", now, entity, expiry, SCHEDULE_REMOVAL);
             }
 
             // Remove the entity from the world and from the map.
@@ -204,7 +203,7 @@ public final class HCsCR {
 
             // Log. (**DEBUG**)
             if (!LOGGER.isDebugEnabled()) continue;
-            LOGGER.trace("HCsCR: Removed entity scheduled for removal. (now: {}, timeout: {}, entity: {}, start: {}, map: {})", now, timeout, entity, start, SCHEDULE_REMOVAL);
+            LOGGER.trace("HCsCR: Removed entity scheduled for removal. (now: {}, entity: {}, expiry: {}, map: {})", now, entity, expiry, SCHEDULE_REMOVAL);
         }
 
         // Pop the profile.
@@ -252,7 +251,7 @@ public final class HCsCR {
         // - The damaging entity is not a player.
         // - The damaged entity is invulnerable.
         // - The damaged entity has already been processed. (by checked set)
-        if (!HConfig.enabled || HStonecutter.isEntityRemoved(entity) || amount <= 0.0F ||
+        if (!HConfig.enable || HStonecutter.isEntityRemoved(entity) || amount <= 0.0F ||
                 !shouldProcessEntityType(entity) || !HStonecutter.levelOf(entity).isClientSide() ||
                 !(source.getEntity() instanceof Player)) return false;
 
@@ -280,10 +279,10 @@ public final class HCsCR {
         if (attributeAmount <= 0.0D) return false;
 
         // Fast-remove one entity, if batching is disabled.
-        Batching batching = HConfig.batching;
-        if (batching == Batching.DISABLED) {
+        CrystalMode mode = HConfig.crystals;
+        if (mode == CrystalMode.DIRECT) {
             // Just remove the entity, if there's no delay.
-            int delay = HConfig.delay;
+            int delay = HConfig.crystalsDelay;
             if (delay <= 0) {
                 HStonecutter.removeEntity(entity);
                 return true;
@@ -294,35 +293,18 @@ public final class HCsCR {
             return true;
         }
 
-        // Create the filter based on batching mode.
-        AABB box = entity.getBoundingBox();
-        Predicate<? super Entity> filter;
-        switch (batching) {
-            case INTERSECTING:
-                filter = (other -> (entity == other || !HStonecutter.isEntityRemoved(other) && shouldProcessEntityType(other)));
-                break;
-            case CONTAINING:
-                filter = (other -> (entity == other || !HStonecutter.isEntityRemoved(other) && shouldProcessEntityType(other) && contains(box, other.getBoundingBox())));
-                break;
-            case CONTAINING_CONTAINED:
-                filter = (other -> {
-                    if (entity == other) return true;
-                    if (HStonecutter.isEntityRemoved(other) || !shouldProcessEntityType(other)) return false;
-                    AABB otherBox = other.getBoundingBox();
-                    return contains(box, otherBox) || contains(otherBox, box);
-                });
-                break;
-            default: // Shouldn't happen really.
-                filter = (other -> (entity == other));
-                break;
-        }
-
-        // Get filtered entities, skip if none.
-        List<Entity> entities = HStonecutter.levelOf(entity).getEntities((Entity) null, entity.getBoundingBox(), filter);
-        if (entities.isEmpty()) return false;
+        // Get filtered entities.
+        AABB entityBox = entity.getBoundingBox();
+        List<Entity> entities = HStonecutter.levelOf(entity).getEntities(entity, entity.getBoundingBox(), other -> {
+            if (HStonecutter.isEntityRemoved(other) || !shouldProcessEntityType(entity)) return false;
+            AABB otherBox = other.getBoundingBox();
+            return entityBox.minX >= otherBox.minX && entityBox.minY >= otherBox.minY &&
+                    entityBox.minZ >= otherBox.minZ && entityBox.maxX <= otherBox.maxX &&
+                    entityBox.maxY <= otherBox.maxY && entityBox.maxZ <= otherBox.maxZ;
+        });
 
         // Just remove the entities, if there's no delay.
-        int delay = HConfig.delay;
+        int delay = HConfig.crystalsDelay;
         if (delay <= 0) {
             HStonecutter.removeEntity(entity);
             for (Entity other : entities) {
@@ -345,28 +327,18 @@ public final class HCsCR {
      *
      * @param entity Target damaged entity
      * @return Whether the entity should be removed on hit
-     * @apiNote This checks only for entity types and disregards factors like {@link HConfig#enabled}
+     * @apiNote This checks only for entity types and disregards factors like {@link HConfig#enable}
      */
     @Contract(pure = true)
     private static boolean shouldProcessEntityType(@NotNull Entity entity) {
-        if (entity instanceof EndCrystal) return HConfig.removeCrystals;
-        if (entity instanceof Slime) return HConfig.removeSlimes && entity.isInvisible();
-        //? if >=1.19.4
-        if (entity instanceof net.minecraft.world.entity.Interaction) return HConfig.removeInteractions;
+        switch (HConfig.crystals) {
+            case DIRECT:
+                return entity instanceof EndCrystal;
+            case ENVELOPING:
+                //? if >=1.19.4
+                if (entity instanceof net.minecraft.world.entity.Interaction) return true;
+                return entity instanceof EndCrystal || (entity instanceof Slime && entity.isInvisible());
+        };
         return false;
-    }
-
-    /**
-     * Checks whether the first (@{code containing}) bounding box fully contains the second ({@code contained}) box.
-     *
-     * @param containing Containing box
-     * @param contained  Contained box
-     * @return Whether the first bounding box fully contains the second box
-     */
-    @Contract(pure = true)
-    private static boolean contains(@NotNull AABB containing, @NotNull AABB contained) {
-        return contained.minX >= containing.minX && contained.minY >= containing.minY &&
-                contained.minZ >= containing.minZ && contained.maxX <= containing.maxX &&
-                contained.maxY <= containing.maxY && contained.maxZ <= containing.maxZ;
     }
 }
