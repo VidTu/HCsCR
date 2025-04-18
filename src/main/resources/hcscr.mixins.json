@@ -5,6 +5,7 @@
   "package": "ru.vidtu.hcscr.mixins",
   "refmap": "hcscr.mixins.refmap.json",
   "client": [
+    "EntityMixin",
     //? if >=1.19.4
     "InteractionMixin",
     "MinecraftMixin",

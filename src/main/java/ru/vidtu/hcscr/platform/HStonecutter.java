@@ -20,6 +20,7 @@
 package ru.vidtu.hcscr.platform;
 
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractSliderButton;
@@ -38,8 +39,9 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.CheckReturnValue;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
-import ru.vidtu.hcscr.config.ConfigScreen;
+import ru.vidtu.hcscr.config.HScreen;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -72,6 +74,11 @@ public final class HStonecutter {
     public static final ResourceLocation CHANNEL_IDENTIFIER = ResourceLocation.fromNamespaceAndPath("hcscr", "imhere");
     //?} else
     /*public static final ResourceLocation CHANNEL_IDENTIFIER = new ResourceLocation("hcscr", "imhere");*/
+
+    /**
+     * Game config directory.
+     */
+    public static final Path CONFIG_DIRECTORY = FabricLoader.getInstance().getConfigDir();
 
     /**
      * An instance of this class cannot be created.
@@ -197,7 +204,7 @@ public final class HStonecutter {
      * @param message         Button label
      * @param tooltip         Button tooltip
      * @param handler         Button click handler (button itself and tooltip setter)
-     * @param tooltipRenderer Last pass tooltip renderer, typically {@link ConfigScreen}
+     * @param tooltipRenderer Last pass tooltip renderer, typically {@link HScreen}
      * @return A new button instance
      */
     @Contract(value = "_, _, _, _, _, _, _, _, _ -> new", pure = true)
@@ -250,7 +257,7 @@ public final class HStonecutter {
      * @param tooltip         Checkbox tooltip
      * @param check           Whether the checkbox is checked
      * @param handler         Checkbox click handler
-     * @param tooltipRenderer Last pass tooltip renderer, typically {@link ConfigScreen}
+     * @param tooltipRenderer Last pass tooltip renderer, typically {@link HScreen}
      * @return A new checkbox instance
      */
     @Contract(value = "_, _, _, _, _, _, _, _ -> new", pure = true)
@@ -327,7 +334,7 @@ public final class HStonecutter {
      * @param min             Slider minimum allowed value
      * @param max             Slider maximum value
      * @param handler         Slider move handler
-     * @param tooltipRenderer Last pass tooltip renderer, typically {@link ConfigScreen}
+     * @param tooltipRenderer Last pass tooltip renderer, typically {@link HScreen}
      * @return A new slider instance
      */
     public static AbstractSliderButton guiSlider(@SuppressWarnings("unused") Font font, int x, int y, int width, int height, // <- Used before 1.19.4.

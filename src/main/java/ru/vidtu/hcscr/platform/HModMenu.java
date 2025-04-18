@@ -24,7 +24,7 @@ import com.terraformersmc.modmenu.api.ModMenuApi;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
-import ru.vidtu.hcscr.config.ConfigScreen;
+import ru.vidtu.hcscr.config.HScreen;
 
 /**
  * HCsCR entrypoint for the ModMenu API.
@@ -46,7 +46,7 @@ public final class HModMenu implements ModMenuApi {
     @Contract(pure = true)
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return ConfigScreen::new;
+        return HScreen::new;
     }
 
     @Contract(pure = true)

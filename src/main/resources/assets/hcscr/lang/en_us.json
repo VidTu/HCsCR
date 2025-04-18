@@ -16,6 +16,8 @@
   "hcscr.crystals.enveloping.tip": "Direct crystal hits as well as hitting some invisible entities enveloping the crystals will cause crystals to be instantly removed. This can be used on a server which uses those entities to combat hacks. BEWARE: May cause issues with anti-cheat plugins.",
   "hcscr.crystalsDelay": "Crystals Delay",
   "hcscr.crystalsDelay.tip": "Crystals removal delay. Some users report that setting the delay to the server's MSPT value actually makes crystal spamming a bit faster.",
+  "hcscr.crystalsResync": "Crystals Resync",
+  "hcscr.crystalsResync.tip": "Crystals resync delay. This is the delay after which the crystal will reappear again, if the server hasn't actually removed it. Useful to prevent ghost crystals, when a crystal hit is not registered by the server.",
   "hcscr.anchors": "Anchors",
   "hcscr.anchors.off": "Off",
   "hcscr.anchors.off.tip": "Anchors won't be instantly removed via right mouse click.",

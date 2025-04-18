@@ -28,7 +28,7 @@ import ru.vidtu.hcscr.platform.HStonecutter;
 import java.util.Locale;
 
 /**
- * Anchor removal mode.
+ * Anchors removal mode.
  *
  * @author VidTu
  * @apiNote Internal use only
@@ -67,6 +67,7 @@ public enum AnchorMode {
      */
     @Contract(pure = true)
     AnchorMode() {
+        // Create the translation keys.
         this.key = ("hcscr.anchors." + this.name().toLowerCase(Locale.ROOT)).intern();
         this.tip = (this.key + ".tip").intern();
     }
@@ -77,7 +78,7 @@ public enum AnchorMode {
      * @return A new button label for this mode
      */
     @Contract(value = "-> new", pure = true)
-    public Component buttonLabel() {
+    Component buttonLabel() {
         return HStonecutter.translate("options.generic_value", HStonecutter.translate("hcscr.anchors"), HStonecutter.translate(this.key));
     }
 
@@ -87,7 +88,18 @@ public enum AnchorMode {
      * @return A new button tip for this mode
      */
     @Contract(value = "-> new", pure = true)
-    public Component buttonTip() {
+    Component buttonTip() {
         return HStonecutter.translate(this.tip);
+    }
+
+    @Contract(pure = true)
+    @Override
+    public String toString() {
+        return "HCsCR/AnchorMode{" +
+                "name='" + this.name() + '\'' +
+                ", ordinal=" + this.ordinal() +
+                ", key='" + this.key + '\'' +
+                ", tip='" + this.tip + '\'' +
+                '}';
     }
 }

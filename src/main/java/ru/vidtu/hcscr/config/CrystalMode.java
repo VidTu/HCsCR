@@ -69,6 +69,7 @@ public enum CrystalMode {
      */
     @Contract(pure = true)
     CrystalMode() {
+        // Create the translation keys.
         this.key = ("hcscr.crystals." + this.name().toLowerCase(Locale.ROOT)).intern();
         this.tip = (this.key + ".tip").intern();
     }
@@ -79,7 +80,7 @@ public enum CrystalMode {
      * @return A new button label for this mode
      */
     @Contract(value = "-> new", pure = true)
-    public Component buttonLabel() {
+    Component buttonLabel() {
         return HStonecutter.translate("options.generic_value", HStonecutter.translate("hcscr.crystals"), HStonecutter.translate(this.key));
     }
 
@@ -89,7 +90,18 @@ public enum CrystalMode {
      * @return A new button tip for this mode
      */
     @Contract(value = "-> new", pure = true)
-    public Component buttonTip() {
+    Component buttonTip() {
         return HStonecutter.translate(this.tip);
+    }
+
+    @Contract(pure = true)
+    @Override
+    public String toString() {
+        return "HCsCR/CrystalMode{" +
+                "name='" + this.name() + '\'' +
+                ", ordinal=" + this.ordinal() +
+                ", key='" + this.key + '\'' +
+                ", tip='" + this.tip + '\'' +
+                '}';
     }
 }

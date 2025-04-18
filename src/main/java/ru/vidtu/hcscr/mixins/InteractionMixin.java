@@ -33,9 +33,10 @@ import ru.vidtu.hcscr.config.HConfig;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
- * Mixin that allows {@link Interaction} entities to be hit when using {@link CrystalMode#ENVELOPING} hit mode.
+ * Mixin that allows {@link Interaction} entities to be hit if {@link HConfig#allowHittingInteractions()} is allowed.
  *
  * @author VidTu
+ * @apiNote Internal use only
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(Interaction.class)
@@ -50,7 +51,7 @@ public final class InteractionMixin {
     // @ApiStatus.ScheduledForRemoval // Can't annotate this without logging in the console.
     @Deprecated
     @Contract(value = "-> fail", pure = true)
-    public InteractionMixin() {
+    private InteractionMixin() {
         throw new AssertionError("No instances.");
     }
 
@@ -66,8 +67,7 @@ public final class InteractionMixin {
         // - The mod is disabled via config or keybind.
         // - The current crystal removal mode is not ENVELOPING.
         // - The current level (world) is not client-side. (e.g. integrated server world)
-        if (!HConfig.enable || (HConfig.crystals != CrystalMode.ENVELOPING) ||
-                !HStonecutter.levelOf(entity).isClientSide()) return;
+        if (!HConfig.allowHittingInteractions() && !HStonecutter.levelOf(entity).isClientSide()) return;
 
         // Forcefully allow interactions.
         cir.setReturnValue(false);

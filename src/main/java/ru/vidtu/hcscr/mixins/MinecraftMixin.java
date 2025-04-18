@@ -31,9 +31,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import ru.vidtu.hcscr.HCsCR;
 
 /**
- * Mixin that clears entities scheduled for removal on world switching.
+ * Mixin that clears scheduled tasks on world switching.
  *
  * @author VidTu
+ * @apiNote Internal use only
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(Minecraft.class)
@@ -48,12 +49,12 @@ public final class MinecraftMixin {
     // @ApiStatus.ScheduledForRemoval // Can't annotate this without logging in the console.
     @Deprecated
     @Contract(value = "-> fail", pure = true)
-    public MinecraftMixin() {
+    private MinecraftMixin() {
         throw new AssertionError("No instances.");
     }
 
     /**
-     * Clears entities schedules for removal.
+     * Clears scheduled tasks.
      *
      * @param level New level, {@code null} if was unloaded, ignored
      * @param ci    Callback data, ignored

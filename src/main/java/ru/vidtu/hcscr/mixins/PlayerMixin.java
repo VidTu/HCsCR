@@ -31,9 +31,10 @@ import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
- * Mixin that speeds up entity removing.
+ * Mixin that speeds up entity removing via {@link HCsCR#handleEntityHit(Entity, DamageSource, float)}.
  *
  * @author VidTu
+ * @apiNote Internal use only
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(Player.class)
@@ -43,7 +44,10 @@ public final class PlayerMixin {
      * An instance of this class cannot be created.
      *
      * @throws AssertionError Always
+     * @deprecated Always throws
      */
+    // @ApiStatus.ScheduledForRemoval // Can't annotate this without logging in the console.
+    @Deprecated
     @Contract(value = "-> fail", pure = true)
     private PlayerMixin() {
         throw new AssertionError("No instances.");
@@ -55,7 +59,7 @@ public final class PlayerMixin {
     @Redirect(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurtOrSimulate(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
     //?} else
     /*@Redirect(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))*/
-    public boolean hcscr_attack_hurt(Entity entity, DamageSource source, float amount) {
+    private boolean hcscr_attack_hurtOrSimulate(Entity entity, DamageSource source, float amount) {
         return HStonecutter.hurt(entity, source, amount) | HCsCR.handleEntityHit(entity, source, amount);
     }
 }
