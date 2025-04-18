@@ -47,11 +47,19 @@ public final class HFabric implements ClientModInitializer {
      */
     private static final Logger LOGGER = LogManager.getLogger("HCsCR/HFabric");
 
+    /**
+     * Creates a new mod.
+     */
+    @Contract(pure = true)
+    public HFabric() {
+        // Empty
+    }
+
     @Override
     public void onInitializeClient() {
         // Log.
         long start = System.nanoTime();
-        LOGGER.info("HCsCR: Loading...");
+        LOGGER.info("HCsCR: Loading... (platform: fabric)");
 
         // Load the config.
         HConfig.load();

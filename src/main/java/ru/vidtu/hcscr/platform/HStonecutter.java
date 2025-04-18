@@ -35,10 +35,12 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.CheckReturnValue;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import ru.vidtu.hcscr.config.HScreen;
 
 import java.nio.file.Path;
@@ -162,6 +164,23 @@ public final class HStonecutter {
         return entity.isRemoved();
         //?} else
         /*return entity.removed;*/
+    }
+
+    /**
+     * Gets the entity involved in the collision context.
+     *
+     * @param ctx Target context
+     * @return Entity involving in the context, {@code null} if none
+     */
+    @Contract(pure = true)
+    @Nullable
+    public static Entity collisionContextEntity(EntityCollisionContext ctx) {
+        //? if >=1.18.2 {
+        return ctx.getEntity();
+        //?} else if >=1.17.1 {
+        /*return ctx.getEntity().orElse(null);
+        *///?} else
+        /*return ((ru.vidtu.hcscr.HEntityCollisionContext) ctx).hcscr_entity();*/
     }
 
     /**

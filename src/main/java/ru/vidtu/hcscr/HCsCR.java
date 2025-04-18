@@ -23,12 +23,15 @@ import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.damagesource.DamageSource;
@@ -37,6 +40,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,9 +53,13 @@ import org.lwjgl.glfw.GLFW;
 import ru.vidtu.hcscr.config.CrystalMode;
 import ru.vidtu.hcscr.config.HConfig;
 import ru.vidtu.hcscr.config.HScreen;
+import ru.vidtu.hcscr.mixins.BlockStateBaseMixin;
+import ru.vidtu.hcscr.mixins.EntityMixin;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Main HCsCR class.
@@ -72,21 +81,43 @@ public final class HCsCR {
     public static final KeyMapping TOGGLE_BIND = new KeyMapping("hcscr.key.toggle", GLFW.GLFW_KEY_UNKNOWN, "hcscr.key");
 
     /**
+     * Hit entities mapped to their time of removal/hiding time in units of {@link System#nanoTime()}. As soon as
+     * current time will reach the removal time, {@link #handleFrame(ProfilerFiller)} will either remove them
+     * via {@link HStonecutter#removeEntity(Entity)} or mark them as hidden entities into {@link #HIDDEN_ENTITIES}.
+     *
+     * @see #handleFrame(ProfilerFiller)
+     * @see HStonecutter#removeEntity(Entity)
+     * @see #HIDDEN_ENTITIES
+     */
+    // This map is not expected to grow more than a few elements, so it's an array-baked map, not a hash-baked one.
+    // Moreover, it's being iterated linearly anyway in handleFrame(...).
+    public static final Object2LongMap<Entity> SCHEDULED_ENTITIES = new Object2LongArrayMap<>(0);
+
+    /**
+     * Hidden entities mapped to their remaining resync ticks. These entities won't appear in the world as their
+     * hitbox will be removed via {@link EntityMixin}. They are counted down in {@link #handleTick(Minecraft)}.
+     *
+     * @see EntityMixin
+     * @see #handleTick(Minecraft)
+     */
+    // This map is not expected to grow more than a few elements, so it's an array-baked map, not a hash-baked one.
+    // Moreover, it's being iterated linearly anyway in handleTick(...).
+    public static final Object2IntMap<Entity> HIDDEN_ENTITIES = new Object2IntArrayMap<>(0);
+
+    /**
+     * Clipping anchors mapped. These anchors won't collide in the world as their hitbox will be removed via
+     * {@link BlockStateBaseMixin}. They are checkin in {@link #handleTick(Minecraft)}.
+     *
+     * @see #handleTick(Minecraft)
+     */
+    // This map is not expected to grow more than a few elements, so it's an array-baked map, not a hash-baked one.
+    // Moreover, it's being iterated linearly anyway in handleTick(...).
+    public static final Set<BlockPos> CLIPPING_ANCHORS = new ObjectArraySet<>(0);
+
+    /**
      * Logger for this class.
      */
     private static final Logger LOGGER = LogManager.getLogger("HCsCR");
-
-    /**
-     * Hit entities mapped to their time of removal/hiding time in units of {@link System#nanoTime()}.
-     */
-    // This map is not expected to grow more than a few elements, so it's an array-baked map, not a hash-baked one.
-    private static final Object2LongMap<Entity> SCHEDULED_ENTITIES = new Object2LongArrayMap<>(0);
-
-    /**
-     * Hidden entities mapped to their remaining resync ticks.
-     */
-    // This map is not expected to grow more than a few elements, so it's an array-baked map, not a hash-baked one.
-    private static final Object2IntMap<Entity> HIDDEN_ENTITIES = new Object2IntArrayMap<>(0);
 
     /**
      * An instance of this class cannot be created.
@@ -112,76 +143,15 @@ public final class HCsCR {
 
         // Get and push the profiler.
         ProfilerFiller profiler = HStonecutter.profilerOf(game); // Implicit NPE for 'game'
-        profiler.push("hcscr:handle_tick");
+        profiler.push("hcscr:tick");
 
         // Keybinds.
-        if (CONFIG_BIND.consumeClick()) {
-            // Log. (**TRACE**)
-            LOGGER.trace("HCsCR: Config keybind was consumed, opening the config screen. (game: {}, keybind: {})", game, CONFIG_BIND);
+        handleConfigBind(game, profiler);
+        handleToggleBind(game, profiler);
 
-            // Check the open screen.
-            Screen prev = game.screen;
-            if (prev == null) {
-                // Open the screen.
-                HScreen screen = new HScreen(null);
-                game.setScreen(screen); // Implicit NPE for 'game'
-
-                // Log. (**DEBUG**)
-                LOGGER.debug("HCsCR: Opened the config screen via the keybind. (game: {}, screen: {}, keybind: {})", game, screen, CONFIG_BIND);
-            } else {
-                // Log. (**DEBUG**)
-                LOGGER.debug("HCsCR: Can't open the config screen via the keybind, screen is open. (game: {}, prev: {}, keybind: {})", game, prev, CONFIG_BIND);
-            }
-        } else if (TOGGLE_BIND.consumeClick()) {
-            // Log. (**TRACE**)
-            LOGGER.trace("HCsCR: Toggle keybind was consumed, toggling the mode. (game: {}, keybind: {})", game, TOGGLE_BIND);
-
-            // Toggle the mod.
-            boolean newState = HConfig.toggle();
-
-            // Show the bar, play the sound.
-            game.gui.setOverlayMessage(HStonecutter.translate("hcscr." + newState) // Implicit NPE for 'game'
-                    .withStyle(newState ? ChatFormatting.GREEN : ChatFormatting.RED), /*rainbow=*/false);
-            game.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING, newState ? 2.0F : 0.0F));
-
-            // Log. (**DEBUG**)
-            LOGGER.debug("HCsCR: Mod has been toggled via the keybind. (game: {}, newState: {}, keybind: {})", game, newState, TOGGLE_BIND);
-        }
-
-        // Process hidden entities.
-        ObjectIterator<Object2IntMap.Entry<Entity>> iterator = HIDDEN_ENTITIES.object2IntEntrySet().iterator();
-        while (iterator.hasNext()) {
-            // Extract.
-            Object2IntMap.Entry<Entity> entry = iterator.next();
-            Entity entity = entry.getKey();
-            int left = entry.getIntValue();
-
-            // Log. (**TRACE**)
-            if (LOGGER.isTraceEnabled()) {
-                LOGGER.trace("HCsCR: Ticking hidden entity... (entity: {}, left: {})", entity, left);
-            }
-
-            // Entity has been removed.
-            if (HStonecutter.isEntityRemoved(entity)) {
-                // Log, remove. (**DEBUG**)
-                if (!LOGGER.isDebugEnabled()) continue;
-                iterator.remove();
-                LOGGER.debug("HCscR: Removed hidden entity. (entity: {}, left: {})", entity, left);
-                continue;
-            }
-
-            // Entity should be resynced.
-            if (left <= 0) {
-                // Log, remove. (**DEBUG**)
-                if (!LOGGER.isDebugEnabled()) continue;
-                iterator.remove();
-                LOGGER.debug("HCscR: Resynced hidden entity. (entity: {}, left: {})", entity, left);
-                continue;
-            }
-
-            // Countdown.
-            entry.setValue(left - 1);
-        }
+        // Entities/anchors.
+        handleHiddenEntities(game, profiler);
+        handleClippingAnchors(game, profiler);
 
         // Pop the profiler.
         profiler.pop();
@@ -250,33 +220,6 @@ public final class HCsCR {
     }
 
     /**
-     * Handles the world switch. Clears the {@link #SCHEDULED_ENTITIES} and {@link #HIDDEN_ENTITIES} maps.
-     *
-     * @param game Current game instance
-     */
-    public static void handleWorldSwitch(Minecraft game) {
-        // Validate.
-        assert game != null : "Parameter 'game' is null.";
-
-        // Get and push the profiler.
-        ProfilerFiller profiler = HStonecutter.profilerOf(game); // Implicit NPE for 'game'
-        profiler.push("hcscr:clear_data");
-
-        // Log. (**TRACE**)
-        LOGGER.trace("HCsCR: Clearing data... (game: {})", game);
-
-        // Clear the maps.
-        SCHEDULED_ENTITIES.clear();
-        HIDDEN_ENTITIES.clear();
-
-        // Log. (**DEBUG**)
-        LOGGER.debug("HCsCR: Cleared data. (game: {})", game);
-
-        // Pop the profiler.
-        profiler.pop();
-    }
-
-    /**
      * Handles the entity hit. Removes the entity client-side, if required.
      *
      * @param entity  Target hit entity
@@ -323,7 +266,7 @@ public final class HCsCR {
         CrystalMode mode = HConfig.crystals();
         if (mode == CrystalMode.DIRECT) {
             // Remove/hide the entity, if there's no delay.
-            long delay = HConfig.crystalsDelayNanos();
+            long delay = HConfig.crystalsDelay();
             if (delay == 0) {
                 // Remove the entity instantly, if there's no resync.
                 int resync = HConfig.crystalsResync();
@@ -357,7 +300,7 @@ public final class HCsCR {
         });
 
         // Remove/hide the entities, if there's no delay.
-        long delay = HConfig.crystalsDelayNanos();
+        long delay = HConfig.crystalsDelay();
         if (delay == 0) {
             // Remove the entities instantly, if there's no resync.
             int resync = HConfig.crystalsResync();
@@ -386,7 +329,212 @@ public final class HCsCR {
         return true;
     }
 
-    public static boolean allowPicking(Entity entity) {
-        return !HIDDEN_ENTITIES.containsKey(entity);
+    /**
+     * Handles the config keybind.
+     *
+     * @param game     Current game instance
+     * @param profiler Game profiler
+     */
+    private static void handleConfigBind(Minecraft game, ProfilerFiller profiler) {
+        // Push the profiler.
+        profiler.push("hcscr:config_bind");
+
+        // Consume the bind.
+        if (!CONFIG_BIND.consumeClick()) {
+            // Pop, stop.
+            profiler.pop();
+            return;
+        }
+
+        // Log. (**TRACE**)
+        LOGGER.trace("HCsCR: Config keybind was consumed, opening the config screen. (game: {}, keybind: {})", game, CONFIG_BIND);
+
+        // Check the open screen.
+        Screen prev = game.screen;
+        if (prev != null) {
+            // Log, pop, stop. (**DEBUG**)
+            LOGGER.debug("HCsCR: Can't open the config screen via the keybind, screen is open. (game: {}, prev: {}, keybind: {})", game, prev, CONFIG_BIND);
+            profiler.pop();
+            return;
+        }
+
+        // Open the screen.
+        HScreen screen = new HScreen(null);
+        game.setScreen(screen); // Implicit NPE for 'game'
+
+        // Log. (**DEBUG**)
+        LOGGER.debug("HCsCR: Opened the config screen via the keybind. (game: {}, screen: {}, keybind: {})", game, screen, CONFIG_BIND);
+
+        // Pop the profiler.
+        profiler.pop();
+    }
+
+    /**
+     * Handles the toggle keybind.
+     *
+     * @param game     Current game instance
+     * @param profiler Game profiler
+     */
+    private static void handleToggleBind(Minecraft game, ProfilerFiller profiler) {
+        // Push the profiler.
+        profiler.push("hcscr:toggle_bind");
+
+        // Consume the bind.
+        if (!TOGGLE_BIND.consumeClick()) {
+            // Pop, stop.
+            profiler.pop();
+            return;
+        }
+
+        // Log. (**TRACE**)
+        LOGGER.trace("HCsCR: Toggle keybind was consumed, toggling the mode. (game: {}, keybind: {})", game, TOGGLE_BIND);
+
+        // Toggle the mod.
+        boolean newState = HConfig.toggle();
+
+        // Show the bar, play the sound.
+        game.gui.setOverlayMessage(HStonecutter.translate("hcscr." + newState) // Implicit NPE for 'game'
+                .withStyle(newState ? ChatFormatting.GREEN : ChatFormatting.RED), /*rainbow=*/false);
+        game.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING, newState ? 2.0F : 0.0F));
+
+        // Log. (**DEBUG**)
+        LOGGER.debug("HCsCR: Mod has been toggled via the keybind. (game: {}, newState: {}, keybind: {})", game, newState, TOGGLE_BIND);
+
+        // Pop the profiler.
+        profiler.pop();
+    }
+
+    /**
+     * Handles the hidden entities.
+     *
+     * @param game     Current game instance
+     * @param profiler Game profiler
+     */
+    private static void handleHiddenEntities(Minecraft game, ProfilerFiller profiler) {
+        // Push the profiler.
+        profiler.push("hcscr:hidden_entities");
+
+        // Skip if no hidden entities.
+        if (HIDDEN_ENTITIES.isEmpty()) {
+            // Pop, stop.
+            profiler.pop();
+            return;
+        }
+
+        // Nuke all entities, if level is empty.
+        if (game.level == null) {
+            // Log. (**TRACE**)
+            LOGGER.trace("HCscR: Level has been unloaded, nuking hidden entities...");
+
+            // Clear.
+            HIDDEN_ENTITIES.clear();
+
+            // Log, pop, stop. (**DEBUG**)
+            LOGGER.debug("HCscR: Level has been unloaded, nuked hidden entities.");
+            profiler.pop();
+            return;
+        }
+
+        // Iterate.
+        ObjectIterator<Object2IntMap.Entry<Entity>> iterator = HIDDEN_ENTITIES.object2IntEntrySet().iterator();
+        while (iterator.hasNext()) {
+            // Extract.
+            Object2IntMap.Entry<Entity> entry = iterator.next();
+            Entity entity = entry.getKey();
+            int left = entry.getIntValue();
+
+            // Log. (**TRACE**)
+            if (LOGGER.isTraceEnabled()) {
+                LOGGER.trace("HCsCR: Ticking hidden entity... (entity: {}, left: {})", entity, left);
+            }
+
+            // Entity has been removed.
+            if (HStonecutter.isEntityRemoved(entity)) {
+                // Remove.
+                iterator.remove();
+
+                // Log, continue. (**DEBUG**)
+                if (!LOGGER.isDebugEnabled()) continue;
+                LOGGER.debug("HCscR: Removed hidden entity. (entity: {}, left: {})", entity, left);
+                continue;
+            }
+
+            // Entity should be resynced.
+            if (left <= 0) {
+                // Remove.
+                iterator.remove();
+
+                // Log, continue. (**DEBUG**)
+                if (!LOGGER.isDebugEnabled()) continue;
+                LOGGER.debug("HCscR: Resynced hidden entity. (entity: {}, left: {})", entity, left);
+                continue;
+            }
+
+            // Countdown.
+            entry.setValue(left - 1);
+        }
+
+        // Pop the profiler.
+        profiler.pop();
+    }
+
+    /**
+     * Handles the clipping anchors.
+     *
+     * @param game     Current game instance
+     * @param profiler Game profiler
+     */
+    private static void handleClippingAnchors(Minecraft game, ProfilerFiller profiler) {
+        // Push the profiler.
+        profiler.push("hcscr:clipping_anchors");
+
+        // Skip if no clipping anchors.
+        if (CLIPPING_ANCHORS.isEmpty()) {
+            // Pop, stop.
+            profiler.pop();
+            return;
+        }
+
+        // Nuke all anchors, if level is empty.
+        ClientLevel level = game.level;
+        if (level == null) {
+            // Log. (**TRACE**)
+            LOGGER.trace("HCscR: Level has been unloaded, nuking clipping anchors...");
+
+            // Clear.
+            CLIPPING_ANCHORS.clear();
+
+            // Log, pop, stop. (**DEBUG**)
+            LOGGER.debug("HCscR: Level has been unloaded, nuked clipping anchors.");
+            profiler.pop();
+            return;
+        }
+
+        // Iterate.
+        Iterator<BlockPos> iterator = CLIPPING_ANCHORS.iterator();
+        while (iterator.hasNext()) {
+            // Extract.
+            BlockPos pos = iterator.next();
+
+            // Log. (**TRACE**)
+            if (LOGGER.isTraceEnabled()) {
+                LOGGER.trace("HCsCR: Ticking clipping anchor... (pos: {})", pos);
+            }
+
+            // Anchor is still there.
+            BlockState state = level.getBlockState(pos);
+            if (state.is(Blocks.RESPAWN_ANCHOR)) continue;
+
+            // Remove.
+            iterator.remove();
+
+            // Log, continue. (**DEBUG**)
+            if (!LOGGER.isDebugEnabled()) continue;
+            LOGGER.debug("HCscR: Removed clipping anchor. (pos: {}, state: {})", pos, state);
+            continue;
+        }
+
+        // Pop the profiler.
+        profiler.pop();
     }
 }

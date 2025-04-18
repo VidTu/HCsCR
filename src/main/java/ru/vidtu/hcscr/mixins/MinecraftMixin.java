@@ -21,17 +21,22 @@ package ru.vidtu.hcscr.mixins;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.util.profiling.ProfilerFiller;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import ru.vidtu.hcscr.HCsCR;
+import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
- * Mixin that clears scheduled tasks on world switching.
+ * Mixin that clears {@link HCsCR#SCHEDULED_ENTITIES} and {@link HCsCR#HIDDEN_ENTITIES} on world switching.
  *
  * @author VidTu
  * @apiNote Internal use only
@@ -40,6 +45,12 @@ import ru.vidtu.hcscr.HCsCR;
 @Mixin(Minecraft.class)
 @NullMarked
 public final class MinecraftMixin {
+    /**
+     * Logger for this class.
+     */
+    @Unique
+    private static final Logger HCSCR_LOGGER = LogManager.getLogger("HCsCR/MinecraftMixin");
+
     /**
      * An instance of this class cannot be created.
      *
@@ -54,13 +65,29 @@ public final class MinecraftMixin {
     }
 
     /**
-     * Clears scheduled tasks.
+     * Clears the {@link HCsCR#SCHEDULED_ENTITIES} and {@link HCsCR#HIDDEN_ENTITIES}.
      *
      * @param level New level, {@code null} if was unloaded, ignored
      * @param ci    Callback data, ignored
      */
     @Inject(method = "updateLevelInEngines", at = @At("RETURN"))
     private void hcscr_updateLevelInEngines_return(@Nullable ClientLevel level, CallbackInfo ci) {
-        HCsCR.handleWorldSwitch((Minecraft) (Object) this);
+        // Get and push the profiler.
+        ProfilerFiller profiler = HStonecutter.profilerOf((Minecraft) (Object) this);
+        profiler.push("hcscr:clear_data");
+
+        // Log. (**TRACE**)
+        HCSCR_LOGGER.trace("HCsCR: Clearing data... (level: {}, game: {})", level, this);
+
+        // Clear the maps.
+        HCsCR.SCHEDULED_ENTITIES.clear();
+        HCsCR.HIDDEN_ENTITIES.clear();
+        HCsCR.CLIPPING_ANCHORS.clear();
+
+        // Log. (**DEBUG**)
+        HCSCR_LOGGER.debug("HCsCR: Cleared data. (level: {}, game: {})", level, this);
+
+        // Pop the profiler.
+        profiler.pop();
     }
 }

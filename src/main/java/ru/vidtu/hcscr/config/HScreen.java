@@ -19,6 +19,7 @@
 
 package ru.vidtu.hcscr.config;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
@@ -39,6 +40,7 @@ import java.util.function.IntFunction;
  *
  * @author VidTu
  * @apiNote Internal use only
+ * @see HConfig
  */
 @ApiStatus.Internal
 @NullMarked
@@ -69,7 +71,7 @@ public final class HScreen extends Screen {
     }
 
     /**
-     * Adds the widgets.
+     * Adds the config widgets.
      */
     @Override
     protected void init() {
@@ -82,21 +84,21 @@ public final class HScreen extends Screen {
         // Crystals.
         int buttonX = (centerX - 100);
         CrystalMode crystals = HConfig.crystals();
-        this.add(HStonecutter.guiButton(this.font, buttonX, 20 + 24, 200, 20, crystals.buttonLabel(), crystals.buttonTip(), (button, tipSetter) -> {
+        this.add(HStonecutter.guiButton(this.font, buttonX, 20 + 24, 200, 20, crystals.label(), crystals.tip(), (button, tipSetter) -> {
             // Update the crystals.
             CrystalMode newCrystals = HConfig.cycleCrystals(/*back=*/hasShiftDown());
 
             // Update the label and tooltip.
-            button.setMessage(newCrystals.buttonLabel());
-            tipSetter.accept(newCrystals.buttonTip());
+            button.setMessage(newCrystals.label());
+            tipSetter.accept(newCrystals.tip());
         }, this::tooltip));
 
         // Crystals Delay.
         IntFunction<Component> crystalsDelayMessage = delay -> HStonecutter.translate("options.generic_value",
                 HStonecutter.translate("hcscr.crystalsDelay"), delay > 0 ? HStonecutter.translate(
-                        "hcscr.delay.format", delay) : HStonecutter.translate("hcscr.delay.off"));
+                        "hcscr.delay.format", delay / 1_000_000) : HStonecutter.translate("hcscr.delay.off"));
         this.add(HStonecutter.guiSlider(this.font, buttonX, 20 + (24 * 2), 200, 20, crystalsDelayMessage,
-                HStonecutter.translate("hcscr.crystalsDelay.tip"), HConfig.crystalsDelay(), 0, 200,
+                HStonecutter.translate("hcscr.crystalsDelay.tip"), HConfig.crystalsDelay(), 0, 200_000_000,
                 HConfig::crystalsDelay, this::tooltip));
 
         // Crystals Resync.
@@ -109,26 +111,18 @@ public final class HScreen extends Screen {
 
         // Anchors.
         AnchorMode anchors = HConfig.anchors();
-        this.add(HStonecutter.guiButton(this.font, buttonX, 20 + (24 * 4), 200, 20, anchors.buttonLabel(), anchors.buttonTip(), (button, tipSetter) -> {
+        this.add(HStonecutter.guiButton(this.font, buttonX, 20 + (24 * 4), 200, 20, anchors.label(), anchors.tip(), (button, tipSetter) -> {
             // Update the anchors.
             AnchorMode newAnchors = HConfig.cycleAnchors(/*back=*/hasShiftDown());
 
             // Update the label and tooltip.
-            button.setMessage(newAnchors.buttonLabel());
-            tipSetter.accept(newAnchors.buttonTip());
+            button.setMessage(newAnchors.label());
+            tipSetter.accept(newAnchors.tip());
         }, this::tooltip));
 
-        // Anchors Delay.
-        IntFunction<Component> anchorsDelayMessage = delay -> HStonecutter.translate("options.generic_value",
-                HStonecutter.translate("hcscr.anchorsDelay"), delay > 0 ? HStonecutter.translate(
-                        "hcscr.delay.format", delay) : HStonecutter.translate("hcscr.delay.off"));
-        this.add(HStonecutter.guiSlider(this.font, buttonX, 20 + (24 * 5), 200, 20, anchorsDelayMessage,
-                HStonecutter.translate("hcscr.anchorsDelay.tip"), HConfig.anchorsDelay(), 0, 200,
-                HConfig::anchorsDelay, this::tooltip));
-
         // Add done button.
-        this.add(HStonecutter.guiButton(this.font, buttonX, this.height - 24, 98, 20,
-                CommonComponents.GUI_DONE, HStonecutter.translate("hcscr.save.tip"),
+        this.add(HStonecutter.guiButton(this.font, buttonX, this.height - 24, 200, 20,
+                CommonComponents.GUI_DONE, HStonecutter.translate("hcscr.close"),
                 (btn, tipSetter) -> this.onClose(), this::tooltip));
     }
 
@@ -137,11 +131,15 @@ public final class HScreen extends Screen {
      */
     @Override
     public void onClose() {
+        // Validate.
+        Minecraft minecraft = this.minecraft;
+        assert minecraft != null : "HCsCR: Minecraft client instance is not initialized at config screen closing. (screen: " + this + ')';
+
         // Save.
         HConfig.save();
 
         // Close.
-        this.minecraft.setScreen(this.parent);
+        minecraft.setScreen(this.parent);
     }
 
     @Override
@@ -162,9 +160,9 @@ public final class HScreen extends Screen {
 
         // Render the last pass tooltip.
         //? if < 1.19.4 {
-        /*if (this.sc_tooltip == null) return;
-        renderTooltip(graphics, this.sc_tooltip, mouseX, mouseY);
-        this.sc_tooltip = null;
+        /*if (this.tooltip == null) return;
+        renderTooltip(graphics, this.tooltip, mouseX, mouseY);
+        this.tooltip = null;
         *///?}
     }
 

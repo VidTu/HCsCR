@@ -38,6 +38,7 @@ import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -46,6 +47,7 @@ import java.nio.file.Path;
  *
  * @author VidTu
  * @apiNote Internal use only
+ * @see HScreen
  */
 @ApiStatus.Internal
 @NullMarked
@@ -60,6 +62,7 @@ public final class HConfig implements Cloneable {
      */
     private static final Gson GSON = new GsonBuilder()
             .excludeFieldsWithoutExposeAnnotation()
+            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT)
             .create();
 
     /**
@@ -75,21 +78,12 @@ public final class HConfig implements Cloneable {
     private static CrystalMode crystals = CrystalMode.DIRECT;
 
     /**
-     * Crystals removal delay in milliseconds, {@code 0} by default. Some users report that setting the delay
+     * Crystals removal delay in nanos, {@code 0} by default. Some users report that setting the delay
      * to the server's MSPT value actually makes crystal spamming a bit faster.
-     *
-     * @see #crystalsDelayNanos
      */
     @Expose
-    @Range(from = 0L, to = 200L)
+    @Range(from = 0L, to = 200_000_000L)
     private static int crystalsDelay = 0;
-
-    /**
-     * A projection of {@link #crystalsDelay} in nanos.
-     *
-     * @see #crystalsDelay
-     */
-    private static long crystalsDelayNanos = 0;
 
     /**
      * Crystals resync delay in ticks, {@code 20} by default. This is the delay after which the crystal
@@ -107,13 +101,6 @@ public final class HConfig implements Cloneable {
     private static AnchorMode anchors = AnchorMode.COLLISION;
 
     /**
-     * Anchors removal delay in milliseconds, {@code 0} by default.
-     */
-    @Expose
-    @Range(from = 0L, to = 200L)
-    private static int anchorsDelay = 0;
-
-    /**
      * Creates a new config via GSON.
      */
     @Contract(pure = true)
@@ -123,6 +110,8 @@ public final class HConfig implements Cloneable {
 
     /**
      * Loads the config, suppressing and logging any errors.
+     *
+     * @see #save()
      */
     public static void load() {
         try {
@@ -146,17 +135,15 @@ public final class HConfig implements Cloneable {
         } finally {
             // Clamp.
             crystals = MoreObjects.firstNonNull(crystals, CrystalMode.DIRECT);
-            crystalsDelay = Mth.clamp(crystalsDelay, 0, 200);
+            crystalsDelay = Mth.clamp(crystalsDelay / 1_000_000 * 1_000_000, 0, 200_000_000);
             anchors = MoreObjects.firstNonNull(anchors, AnchorMode.COLLISION);
-            anchorsDelay = Mth.clamp(anchorsDelay, 0, 200);
-
-            // Calculate.
-            crystalsDelayNanos = (crystalsDelay * 1_000_000L);
         }
     }
 
     /**
      * Saves the config, suppressing and logging any errors.
+     *
+     * @see #load()
      */
     static void save() {
         try {
@@ -180,10 +167,18 @@ public final class HConfig implements Cloneable {
         }
     }
 
+    @Contract(pure = true)
+    @Override
+    public String toString() {
+        return "HCsCR/HConfig{}";
+    }
+
     /**
      * Gets the enabled state.
      *
      * @return Enable the mod, {@code true} by default
+     * @see #enable(boolean)
+     * @see #toggle()
      */
     @Contract(pure = true)
     public static boolean enable() {
@@ -194,6 +189,8 @@ public final class HConfig implements Cloneable {
      * Sets the enabled state.
      *
      * @param enable Enable the mod, {@code true} by default
+     * @see #enable()
+     * @see #toggle()
      */
     static void enable(boolean enable) {
         HConfig.enable = enable;
@@ -203,6 +200,7 @@ public final class HConfig implements Cloneable {
      * Gets the crystals.
      *
      * @return Crystals removal mode, {@link CrystalMode#DIRECT} by default.
+     * @see #cycleCrystals(boolean)
      */
     @Contract(pure = true)
     public static CrystalMode crystals() {
@@ -214,6 +212,7 @@ public final class HConfig implements Cloneable {
      *
      * @param back Whether to cycle backwards
      * @return New crystal mode
+     * @see #crystals()
      */
     @CheckReturnValue
     static CrystalMode cycleCrystals(boolean back) {
@@ -228,33 +227,23 @@ public final class HConfig implements Cloneable {
     /**
      * Gets the crystals delay.
      *
-     * @return Crystals removal delay in milliseconds, {@code 0} by default
-     */
-    @Contract(pure = true)
-    @Range(from = 0L, to = 200L)
-    static int crystalsDelay() {
-        return crystalsDelay;
-    }
-
-    /**
-     * Gets the {@link #crystalsDelay()} in nanos.
-     *
      * @return Crystals removal delay in nanos, {@code 0} by default
-     * @see #crystalsDelay()
+     * @see #crystalsDelay(int)
      */
     @Contract(pure = true)
-    public static long crystalsDelayNanos() {
-        return crystalsDelayNanos;
+    @Range(from = 0L, to = 200_000_000L)
+    public static int crystalsDelay() {
+        return crystalsDelay;
     }
 
     /**
      * Sets the crystals delay.
      *
-     * @param crystalsDelay Crystals removal delay in milliseconds, {@code 0} by default
+     * @param crystalsDelay Crystals removal delay in nanos, {@code 0} by default
+     * @see #crystalsDelay()
      */
-    static void crystalsDelay(@Range(from = 0L, to = 200L) int crystalsDelay) {
-        HConfig.crystalsDelay = Mth.clamp(crystalsDelay, 0, 200);
-        crystalsDelayNanos = Mth.clamp(crystalsDelay * 1_000_000L, 0, 200_000_000L);
+    static void crystalsDelay(@Range(from = 0L, to = 200_000_000L) int crystalsDelay) {
+        HConfig.crystalsDelay = Mth.clamp(crystalsDelay / 1_000_000 * 1_000_000, 0, 200_000_000);
     }
 
     /**
@@ -263,7 +252,7 @@ public final class HConfig implements Cloneable {
      * @return Crystals resync delay in ticks, {@code 20} by default
      */
     @Contract(pure = true)
-    @Range(from = 0L, to = 50)
+    @Range(from = 0L, to = 50L)
     public static int crystalsResync() {
         return crystalsResync;
     }
@@ -273,7 +262,7 @@ public final class HConfig implements Cloneable {
      *
      * @param crystalsResync Crystals resync delay in ticks, {@code 20} by default
      */
-    static void crystalsResync(@Range(from = 0L, to = 50) int crystalsResync) {
+    static void crystalsResync(@Range(from = 0L, to = 50L) int crystalsResync) {
         HConfig.crystalsResync = Mth.clamp(crystalsResync, 0, 50);
     }
 
@@ -283,7 +272,7 @@ public final class HConfig implements Cloneable {
      * @return Anchors removal mode, {@link AnchorMode#COLLISION} by default
      */
     @Contract(pure = true)
-    static AnchorMode anchors() {
+    public static AnchorMode anchors() {
         return anchors;
     }
 
@@ -304,26 +293,6 @@ public final class HConfig implements Cloneable {
     }
 
     /**
-     * Gets the anchors delay.
-     *
-     * @return Anchors removal delay in milliseconds, {@code 0} by default
-     */
-    @Contract(pure = true)
-    @Range(from = 0L, to = 200L)
-    static int anchorsDelay() {
-        return anchorsDelay;
-    }
-
-    /**
-     * Sets the anchors delay.
-     *
-     * @param anchorsDelay Anchors removal delay in milliseconds, {@code 0} by default
-     */
-    static void anchorsDelay(@Range(from = 0L, to = 200L) int anchorsDelay) {
-        HConfig.anchorsDelay = Mth.clamp(anchorsDelay, 0, 200);
-    }
-
-    /**
      * Checks whether the entity should be processed. This doesn't check the {@link #enable()} state.
      *
      * @param entity Entity to check
@@ -332,7 +301,7 @@ public final class HConfig implements Cloneable {
     @Contract(pure = true)
     public static boolean shouldProcess(Entity entity) {
         // Validate.
-        assert entity != null : "Parameter 'entity' is null.";
+        assert entity != null : "HCsCR: Parameter 'entity' is null.";
 
         // Fast way for disabled mod.
         switch (crystals) {
@@ -348,19 +317,12 @@ public final class HConfig implements Cloneable {
     }
 
     /**
-     * Gets whether hitting the interactions should be allowed and the mod is {@link #enable()}.
-     *
-     * @return Whether hitting the interaction entities is allowed by the current config
-     */
-    @Contract(pure = true)
-    public static boolean allowHittingInteractions() {
-        return enable && (crystals == CrystalMode.ENVELOPING);
-    }
-
-    /**
-     * Toggles the current config enable state.
+     * Toggles the current config enable state and saves the config.
      *
      * @return New (current) enabled state
+     * @see #enable()
+     * @see #enable(boolean)
+     * @see #save()
      */
     @CheckReturnValue
     public static boolean toggle() {

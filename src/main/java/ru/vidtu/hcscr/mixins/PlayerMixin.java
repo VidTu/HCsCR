@@ -53,13 +53,21 @@ public final class PlayerMixin {
         throw new AssertionError("No instances.");
     }
 
-    // Removes the entities on hit.
-    @SuppressWarnings("NonShortCircuitBooleanExpression") // <- Designed that way.
+    /**
+     * Processes the entity attacking. Calls original attack method as well as
+     * {@link HCsCR#handleEntityHit(Entity, DamageSource, float)}, returns {@code true} if any succeeded.
+     *
+     * @param entity Entity being attacked
+     * @param source Attack source
+     * @param amount Attack amount
+     * @return Whether the attack has succeeded
+     */
     //? if >=1.21.3 {
     @Redirect(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurtOrSimulate(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
     //?} else
     /*@Redirect(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))*/
     private boolean hcscr_attack_hurtOrSimulate(Entity entity, DamageSource source, float amount) {
+        // TODO(VidTu): Use more compatible methods from MixinExtras if it's provided by the platform.
         return HStonecutter.hurt(entity, source, amount) | HCsCR.handleEntityHit(entity, source, amount);
     }
 }

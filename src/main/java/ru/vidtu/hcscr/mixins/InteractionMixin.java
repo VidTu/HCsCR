@@ -22,9 +22,13 @@ package ru.vidtu.hcscr.mixins;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Interaction;
+import net.minecraft.world.level.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -33,7 +37,8 @@ import ru.vidtu.hcscr.config.HConfig;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
- * Mixin that allows {@link Interaction} entities to be hit if {@link HConfig#allowHittingInteractions()} is allowed.
+ * Mixin that allows {@link Interaction} entities to be hit if {@link HConfig#enable()} is {@code true}
+ * and {@link HConfig#crystals()} is {@link CrystalMode#ENVELOPING}. (1.19.4+)
  *
  * @author VidTu
  * @apiNote Internal use only
@@ -41,7 +46,13 @@ import ru.vidtu.hcscr.platform.HStonecutter;
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(Interaction.class)
 @NullMarked
-public final class InteractionMixin {
+public abstract class InteractionMixin extends Entity {
+    /**
+     * Logger for this class.
+     */
+    @Unique
+    private static final Logger HCSCR_LOGGER = LogManager.getLogger("HCsCR/InteractionMixin");
+
     /**
      * An instance of this class cannot be created.
      *
@@ -52,25 +63,40 @@ public final class InteractionMixin {
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private InteractionMixin() {
+        super(null, null);
         throw new AssertionError("No instances.");
     }
 
     /**
-     * Enables attack interaction, if mod is enabled and {@link CrystalMode#ENVELOPING} is active.
+     * Forcefully enables attack interaction, if mod is enabled and {@link CrystalMode#ENVELOPING} is active.
      *
-     * @param entity Interacting entity
-     * @param cir    Callback data
+     * @param attacker Attacking entity
+     * @param cir      Callback data
      */
     @Inject(method = "skipAttackInteraction", at = @At("HEAD"), cancellable = true)
-    private void hcscr_skipAttackInteraction_head(Entity entity, CallbackInfoReturnable<Boolean> cir) {
+    private void hcscr_skipAttackInteraction_head(Entity attacker, CallbackInfoReturnable<Boolean> cir) {
+        // Log. (**TRACE**)
+        HCSCR_LOGGER.trace("HCsCR: Received attack in Interaction entity. (attacker: {}, cir: {}, interaction: {})", attacker, cir, this);
+
+        // Validate.
+        Level level = HStonecutter.levelOf(this);
+        assert level != null : "HCsCR: Interaction entity has null level. (attacker: " + attacker + ", cir: " + cir + ", entity: " + this + ')';
+
         // Do NOT process interactions if any of the following conditions is met:
-        // - The mod is disabled via config or keybind.
-        // - The current crystal removal mode is not ENVELOPING.
         // - The current level (world) is not client-side. (e.g. integrated server world)
-        if (!HConfig.allowHittingInteractions() && !HStonecutter.levelOf(entity).isClientSide()) return;
+        // - The mod is disabled via config/keybind.
+        // - The current crystal removal mode is not ENVELOPING.
+        if (!level.isClientSide() || !HConfig.enable() || (HConfig.crystals() != CrystalMode.ENVELOPING)) {
+            // Log, stop. (**DEBUG**)
+            HCSCR_LOGGER.debug("HCsCR: Ignored Interaction entity attack overriding. (attacker: {}, cir: {}, interaction: {})", attacker, cir, this);
+            return;
+        }
 
         // Forcefully allow interactions.
         cir.setReturnValue(false);
+
+        // Log. (**DEBUG**)
+        HCSCR_LOGGER.debug("HCsCR: Forcefully allowed Interaction to be attacked. (attacker: {}, cir: {}, interaction: {})", attacker, cir, this);
     }
 }
 //?}

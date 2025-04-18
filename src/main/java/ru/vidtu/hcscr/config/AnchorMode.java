@@ -32,6 +32,8 @@ import java.util.Locale;
  *
  * @author VidTu
  * @apiNote Internal use only
+ * @see CrystalMode
+ * @see HConfig#anchors()
  */
 @ApiStatus.Internal
 @NullMarked
@@ -53,43 +55,50 @@ public enum AnchorMode {
     FULL;
 
     /**
-     * Mode translation key.
+     * Mode button label.
      */
-    private final String key;
+    private final Component label;
 
     /**
-     * Mode tip translation key.
+     * Mode button tip.
      */
-    private final String tip;
+    private final Component tip;
 
     /**
      * Creates a new mode.
      */
     @Contract(pure = true)
     AnchorMode() {
-        // Create the translation keys.
-        this.key = ("hcscr.anchors." + this.name().toLowerCase(Locale.ROOT)).intern();
-        this.tip = (this.key + ".tip").intern();
+        // Create the translation key.
+        String key = ("hcscr.anchors." + this.name().toLowerCase(Locale.ROOT));
+
+        // Create the components.
+        this.label = HStonecutter.translate("options.generic_value", HStonecutter.translate("hcscr.anchors"), HStonecutter.translate(key.intern()));
+        this.tip = HStonecutter.translate((key + ".tip").intern());
     }
 
     /**
-     * Creates a button label for this mode.
+     * Gets the button label for this mode.
      *
-     * @return A new button label for this mode
+     * @return Mode button label
+     * @see #tip()
+     * @see HScreen
      */
-    @Contract(value = "-> new", pure = true)
-    Component buttonLabel() {
-        return HStonecutter.translate("options.generic_value", HStonecutter.translate("hcscr.anchors"), HStonecutter.translate(this.key));
+    @Contract(pure = true)
+    Component label() {
+        return this.label;
     }
 
     /**
-     * Creates a button tooltip for this mode.
+     * Gets the button tooltip for this mode.
      *
-     * @return A new button tip for this mode
+     * @return Mode button tip
+     * @see #label()
+     * @see HScreen
      */
-    @Contract(value = "-> new", pure = true)
-    Component buttonTip() {
-        return HStonecutter.translate(this.tip);
+    @Contract(pure = true)
+    Component tip() {
+        return this.tip;
     }
 
     @Contract(pure = true)
@@ -98,7 +107,7 @@ public enum AnchorMode {
         return "HCsCR/AnchorMode{" +
                 "name='" + this.name() + '\'' +
                 ", ordinal=" + this.ordinal() +
-                ", key='" + this.key + '\'' +
+                ", label='" + this.label + '\'' +
                 ", tip='" + this.tip + '\'' +
                 '}';
     }

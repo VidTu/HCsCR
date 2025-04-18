@@ -19,42 +19,26 @@
 
 package ru.vidtu.hcscr.mixins;
 
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import ru.vidtu.hcscr.HCsCR;
 
 /**
- * Mixin that disables the bounding box for entities marked as {@link HCsCR#HIDDEN_ENTITIES}.
+ * Mixin that nukes blocks from {@link HCsCR#CLIPPING_ANCHORS} on block update.
  *
  * @author VidTu
  * @apiNote Internal use only
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
-@Mixin(Entity.class)
+@Mixin(ClientPacketListener.class)
 @NullMarked
-public final class EntityMixin {
-    /**
-     * Empty bounding box, provided by implementation.
-     */
-    @Shadow
-    @Final
-    private static AABB INITIAL_AABB;
-
-    /**
-     * Entity level (world).
-     */
-    @Shadow
-    private Level level;
-
+public final class ClientPacketListenerMixin {
     /**
      * An instance of this class cannot be created.
      *
@@ -64,27 +48,22 @@ public final class EntityMixin {
     // @ApiStatus.ScheduledForRemoval // Can't annotate this without logging in the console.
     @Deprecated
     @Contract(value = "-> fail", pure = true)
-    private EntityMixin() {
+    private ClientPacketListenerMixin() {
         throw new AssertionError("No instances.");
     }
 
     /**
-     * Sets the bounding box to {@link #INITIAL_AABB} if this entity is {@link HCsCR#HIDDEN_ENTITIES}.
+     * Nukes the packet block position from {@link HCsCR#CLIPPING_ANCHORS}.
      *
-     * @param cir Callback data
+     * @param packet Block update packet
+     * @param ci     Callback data, ignored
      */
-    @Inject(method = "getBoundingBox", at = @At("HEAD"), cancellable = true)
-    private void hcscr_getBoundingBox_head(CallbackInfoReturnable<AABB> cir) {
+    @Inject(method = "handleBlockUpdate", at = @At("RETURN"))
+    private void hcscr_handleBlockUpdate_return(ClientboundBlockUpdatePacket packet, CallbackInfo ci) {
         // Validate.
-        Level level = this.level;
-        assert level != null : "HCscR: Getting entity bounding box with null level. (cir: " + cir + ", entity: " + this + ')';
+        assert packet != null : "Parameter 'packet' is null. (handler: " + this + ')';
 
-        // Do NOT hide entity if any of the following conditions is met:
-        // - The current level (world) is not client-side. (e.g. integrated server world)
-        // - The entity is not actually hidden.
-        if (!level.isClientSide() || !HCsCR.HIDDEN_ENTITIES.containsKey(this)) return;
-
-        // Set to empty hitbox.
-        cir.setReturnValue(INITIAL_AABB);
+        // Nuke.
+        HCsCR.CLIPPING_ANCHORS.remove(packet.getPos());
     }
 }
