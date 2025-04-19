@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+./gradlew "Set active project to $1" --no-configuration-cache

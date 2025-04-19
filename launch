@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+./gradlew "Set active project to $1" --no-configuration-cache
+./gradlew "$1:runClient" --no-configuration-cache

@@ -17,23 +17,24 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-plugins {
-    id("dev.kikugie.stonecutter")
-}
+//? if forge {
+/*package ru.vidtu.hcscr.platform;
 
-stonecutter active "1.21.5-fabric" /* [SC] DO NOT EDIT */
+import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.NullMarked;
 
-stonecutter registerChiseled tasks.register("chiseledBuild", stonecutter.chiseled) {
-    group = "project"
-    ofTask("build")
+/^*
+ * Main HCsCR for Forge.
+ *
+ * @author VidTu
+ * @apiNote Internal use only
+ ^/
+@ApiStatus.Internal
+@Mod("hcscr")
+@NullMarked
+public final class HForge {
+    // DO this.
 }
-
-stonecutter registerChiseled tasks.register("chiseledAssemble", stonecutter.chiseled) {
-    group = "project"
-    ofTask("assemble")
-}
-
-stonecutter registerChiseled tasks.register("chiseledClean", stonecutter.chiseled) {
-    group = "project"
-    ofTask("clean")
-}
+*///?}

@@ -17,6 +17,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+//? if fabric {
 package ru.vidtu.hcscr.platform;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
@@ -55,3 +56,4 @@ public final class HModMenu implements ModMenuApi {
         return "HCsCR/HModMenu{}";
     }
 }
+//?}

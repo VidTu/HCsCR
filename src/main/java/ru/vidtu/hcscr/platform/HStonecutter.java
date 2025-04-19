@@ -20,7 +20,6 @@
 package ru.vidtu.hcscr.platform;
 
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractSliderButton;
@@ -65,8 +64,8 @@ public final class HStonecutter {
     //? if >=1.20.6 {
     public static final java.time.Duration TOOLTIP_DURATION = java.time.Duration.ofMillis(250L);
     //?} else if >=1.19.4 {
-    /*public static final int TOOLTIP_DURATION = 250; // Millis.*/
-    //?} else
+    /*public static final int TOOLTIP_DURATION = 250; // Millis.
+    *///?} else
     /*public static final long TOOLTIP_DURATION = 250_000_000L;*/ // Nanos.
 
     /**
@@ -80,7 +79,12 @@ public final class HStonecutter {
     /**
      * Game config directory.
      */
-    public static final Path CONFIG_DIRECTORY = FabricLoader.getInstance().getConfigDir();
+    //? if fabric {
+    public static final Path CONFIG_DIRECTORY = net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir();
+    //?} else if neoforge {
+    /*public static final Path CONFIG_DIRECTORY = net.neoforged.fml.loading.FMLPaths.CONFIGDIR.get();
+    *///?} else
+    /*public static final Path CONFIG_DIRECTORY = net.minecraftforge.fml.loading.FMLPaths.CONFIGDIR.get();*/
 
     /**
      * An instance of this class cannot be created.

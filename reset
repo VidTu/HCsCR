@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+./gradlew "Reset active project" --no-configuration-cache

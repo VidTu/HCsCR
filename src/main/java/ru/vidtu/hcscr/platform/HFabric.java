@@ -17,6 +17,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+//? if fabric {
 package ru.vidtu.hcscr.platform;
 
 import net.fabricmc.api.ClientModInitializer;
@@ -104,3 +105,4 @@ public final class HFabric implements ClientModInitializer {
         return "HCsCR/HFabric";
     }
 }
+//?}

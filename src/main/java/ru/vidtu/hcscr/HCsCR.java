@@ -19,7 +19,6 @@
 
 package ru.vidtu.hcscr;
 
-import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
@@ -100,9 +99,12 @@ public final class HCsCR {
      * @see EntityMixin
      * @see #handleTick(Minecraft)
      */
-    // This map is not expected to grow more than a few elements, so it's an array-baked map, not a hash-baked one.
-    // Moreover, it's being iterated linearly anyway in handleTick(...).
-    public static final Object2IntMap<Entity> HIDDEN_ENTITIES = new Object2IntArrayMap<>(0);
+    // Ideally, an array-baked map should be always used here too. Due to a bug in fastutil, setValue(int) is not
+    // supported until 8.5.12: https://github.com/vigna/fastutil/blob/fcac58f7d3df8e7d903fad533f4caada7f4937cf/CHANGES#L41
+    //? if >=1.21.4 {
+    public static final Object2IntMap<Entity> HIDDEN_ENTITIES = new it.unimi.dsi.fastutil.objects.Object2IntArrayMap<>(0);
+    //?} else
+    /*public static final Object2IntMap<Entity> HIDDEN_ENTITIES = new it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap<>(0);*/
 
     /**
      * Clipping anchors mapped. These anchors won't collide in the world as their hitbox will be removed via
