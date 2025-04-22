@@ -85,6 +85,13 @@ their [rules](https://modrinth.com/legal/rules). CurseForge has a terrible API a
 has a server-side crystal optimizer. Thirdly, I have updated it in 2025, because I needed to learn the
 [Stonecutter](https://stonecutter.kikugie.dev/) framework. Now it's not hard to maintain, so why not.
 
+**Q**: How fast is it?  
+**A**: It should be pretty fast. No precise numbers, it depends on the ping, server MSPT, etc.
+<details>
+<summary>Totally Real™ Reviews From Happy Users</summary>
+<img alt="grandma happy with crystal optimizer" src="https://i.imgur.com/Iz9GGfP.png"/>
+</details>
+
 ## License
 
 This project is provided under the Apache 2.0 License.
