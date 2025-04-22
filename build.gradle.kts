@@ -213,6 +213,7 @@ tasks.withType<Jar> {
 }
 
 tasks.withType<RemapJarTask> {
+    destinationDirectory = rootProject.layout.buildDirectory.asFile
     val minifier = UnsafeUnaryOperator<String> { Gson().fromJson(it, JsonElement::class.java).toString() }
     doLast {
         ZipUtils.transformString(archiveFile.get().asFile.toPath(), mapOf(

@@ -41,23 +41,10 @@ jobs:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
       - name: 'Build'
         timeout-minutes: 30
-        run: './gradlew assemble'
+        run: './gradlew chiseledAssemble'
       - name: 'Upload'
         timeout-minutes: 5
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: 'Artifacts'
-          path: |
-            1.16.5/build/libs/
-            1.17.1/build/libs/
-            1.18.2/build/libs/
-            1.19.2/build/libs/
-            1.19.4/build/libs/
-            1.20.1/build/libs/
-            1.20.2/build/libs/
-            1.20.4/build/libs/
-            1.20.6/build/libs/
-            1.21.1/build/libs/
-            1.21.3/build/libs/
-            1.21.4/build/libs/
-            1.21.5/build/libs/
+          path: 'build/libs'
