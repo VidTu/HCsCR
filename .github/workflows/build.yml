@@ -21,7 +21,7 @@ jobs:
   build:
     name: 'Build'
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - name: 'Checkout'
         timeout-minutes: 1
@@ -40,7 +40,7 @@ jobs:
         with:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
       - name: 'Build'
-        timeout-minutes: 30
+        timeout-minutes: 60
         run: './gradlew chiseledAssemble'
       - name: 'Upload'
         timeout-minutes: 5
