@@ -1,6 +1,10 @@
 {
   "pack": {
     "description": "HCsCR",
-    "pack_format": 5
+    "pack_format": 6,
+    "supported_formats": {
+      "min_inclusive": 6,
+      "max_inclusive": 55
+    }
   }
 }
