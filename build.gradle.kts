@@ -47,6 +47,7 @@ base.archivesName = "HCsCR"
 version = "$version+$mcVersion-$versionSuffix"
 description = "Remove your end crystals before the server even knows you hit 'em!"
 
+stonecutter.const("legacyNeoForge", legacyNeoForge)
 ModPlatform.values().forEach {
     stonecutter.const(it.id(), it == loomPlatform)
 }
@@ -83,6 +84,7 @@ loom {
             "--add-opens",
             "java.base/jdk.internal.misc=ALL-UNNAMED"
         )
+        programArgs("--username", "VidTu")
     }
     @Suppress("UnstableApiUsage")
     mixin {
@@ -168,7 +170,7 @@ tasks.withType<ProcessResources> {
     inputs.property("version", version)
     inputs.property("minecraft", mcVersion)
     inputs.property("java", javaMajor)
-    inputs.property("platform", versionSuffix)
+    inputs.property("platform", loomPlatform.id())
     filesMatching(listOf("fabric.mod.json", "quilt.mod.json", "hcscr.mixins.json", "META-INF/mods.toml", "META-INF/neoforge.mods.toml")) {
         expand(inputs.properties)
     }

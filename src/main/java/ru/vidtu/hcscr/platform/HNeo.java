@@ -21,10 +21,8 @@
 /*package ru.vidtu.hcscr.platform;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.Unit;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.IExtensionPoint;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
@@ -32,6 +30,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.config.HConfig;
@@ -56,7 +55,7 @@ public final class HNeo {
     private static final Logger LOGGER = LogManager.getLogger("HCsCR/HNeo");
 
     /^*
-     * Creates a new mod.
+     * Creates and loads a new mod.
      *
      * @param dist      Current physical side
      * @param container Mod container
@@ -78,11 +77,57 @@ public final class HNeo {
 
         // Register the networking.
         //? if >=1.20.6 {
-        bus.addListener(net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent.class, event -> event.registrar("hcscr").commonToClient(new net.minecraft.network.protocol.common.custom.CustomPacketPayload.Type<>(HStonecutter.CHANNEL_IDENTIFIER), net.minecraft.network.codec.StreamCodec.unit(null), (payload, context) -> context.disconnect(HStonecutter.translate("hcscr.false"))));
+        var type = new net.minecraft.network.protocol.common.custom.CustomPacketPayload.Type<>(HStonecutter.CHANNEL_IDENTIFIER);
+        var instance = new net.minecraft.network.protocol.common.custom.CustomPacketPayload() {
+            @Contract(pure = true)
+            @Override
+            public Type<? extends net.minecraft.network.protocol.common.custom.CustomPacketPayload> type() {
+                return type;
+            }
+
+            @Contract(pure = true)
+            @Override
+            public String toString() {
+                return "HCsCR/HNeo$CustomPacketPayload{}";
+            }
+        };
+        bus.addListener(net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent.class, event -> event.registrar("hcscr").optional().commonToClient(type, net.minecraft.network.codec.StreamCodec.of((buf, payload) -> {}, buf -> {
+            buf.skipBytes(buf.readableBytes());
+            return instance;
+        }), (payload, context) -> context.disconnect(HStonecutter.translate("hcscr.false"))));
         //?} else if >=1.20.4 {
-        /^bus.addListener(net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent.class, event -> event.registrar("hcscr").common(HStonecutter.CHANNEL_IDENTIFIER, buf -> null, (arg, context) -> context.replyHandler().disconnect(HStonecutter.translate("hcscr.false"))));
-        ^///?} else
-        /^net.neoforged.neoforge.network.NetworkRegistry.newSimpleChannel(HStonecutter.CHANNEL_IDENTIFIER, () -> "hcscr:imhere", s -> true, s -> true).registerMessage(0, Unit.class, (unit, buf) -> {}, buf -> null, (unit, context) -> context.getNetworkManager().disconnect(HStonecutter.translate("hcscr.false")));^/
+        /^var instance = new net.minecraft.network.protocol.common.custom.CustomPacketPayload() {
+            @Contract(pure = true)
+            @Override
+            public void write(net.minecraft.network.FriendlyByteBuf buf) {
+
+            }
+
+            @Contract(pure = true)
+            @Override
+            public net.minecraft.resources.ResourceLocation id() {
+                return HStonecutter.CHANNEL_IDENTIFIER;
+            }
+
+            @Contract(pure = true)
+            @Override
+            public String toString() {
+                return "HCsCR/HNeo$CustomPacketPayload{}";
+            }
+        };
+        bus.addListener(net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent.class, event -> event.registrar("hcscr").optional().common(HStonecutter.CHANNEL_IDENTIFIER, buf -> {
+            buf.skipBytes(buf.readableBytes());
+            return instance;
+        }, (payload, context) -> context.replyHandler().disconnect(HStonecutter.translate("hcscr.false"))));
+        ^///?} else {
+        /^net.neoforged.neoforge.network.NetworkRegistry.newEventChannel(HStonecutter.CHANNEL_IDENTIFIER, () -> "hcscr", version -> true, version -> true).addListener(event -> {
+            if (event.getPayload() == null) return;
+            var src = event.getSource();
+            if (src.getDirection().getReceptionSide() != net.neoforged.fml.LogicalSide.CLIENT) return;
+            src.getNetworkManager().disconnect(HStonecutter.translate("hcscr.false"));
+            src.setPacketHandled(true);
+        });
+        ^///?}
 
         // Register the binds.
         bus.addListener(RegisterKeyMappingsEvent.class, event -> {
@@ -113,11 +158,17 @@ public final class HNeo {
         container.registerExtensionPoint(net.neoforged.neoforge.client.gui.IConfigScreenFactory.class, (modOrGame, parent) -> new HScreen(parent));
         //?} else {
         /^container.registerExtensionPoint(net.neoforged.neoforge.client.ConfigScreenHandler.ConfigScreenFactory.class, () -> new net.neoforged.neoforge.client.ConfigScreenHandler.ConfigScreenFactory((game, screen) -> new HScreen(screen)));
-        container.registerExtensionPoint(net.neoforged.fml.IExtensionPoint.DisplayTest.class, () -> new net.neoforged.fml.IExtensionPoint.DisplayTest(() -> IExtensionPoint.DisplayTest.IGNORESERVERONLY, (version, fromServer) -> true));
+        container.registerExtensionPoint(net.neoforged.fml.IExtensionPoint.DisplayTest.class, () -> new net.neoforged.fml.IExtensionPoint.DisplayTest(() -> net.neoforged.fml.IExtensionPoint.DisplayTest.IGNORESERVERONLY, (version, fromServer) -> true));
         ^///?}
 
         // Done.
         LOGGER.info("HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / 1_000_000L);
+    }
+
+    @Contract(pure = true)
+    @Override
+    public String toString() {
+        return "HCsCR/HNeo{}";
     }
 }
 *///?}

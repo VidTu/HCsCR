@@ -68,8 +68,25 @@ public final class HFabric implements ClientModInitializer {
         // Register the network.
         //? if >=1.20.6 {
         var type = new net.minecraft.network.protocol.common.custom.CustomPacketPayload.Type<>(HStonecutter.CHANNEL_IDENTIFIER);
-        net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry.configurationS2C().register(type, net.minecraft.network.codec.StreamCodec.unit(null));
-        net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry.playS2C().register(type, net.minecraft.network.codec.StreamCodec.unit(null));
+        var instance = new net.minecraft.network.protocol.common.custom.CustomPacketPayload() {
+            @Contract(pure = true)
+            @Override
+            public Type<? extends net.minecraft.network.protocol.common.custom.CustomPacketPayload> type() {
+                return type;
+            }
+
+            @Contract(pure = true)
+            @Override
+            public String toString() {
+                return "HCsCR/HFabric$CustomPacketPayload{}";
+            }
+        };
+        var codec = net.minecraft.network.codec.StreamCodec.<net.minecraft.network.FriendlyByteBuf, net.minecraft.network.protocol.common.custom.CustomPacketPayload>of((buf, payload) -> {}, buf -> {
+            buf.skipBytes(buf.readableBytes());
+            return instance;
+        });
+        net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry.configurationS2C().register(type, codec);
+        net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry.playS2C().register(type, codec);
         net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking.registerGlobalReceiver(type, (payload, context) -> context.responseSender().disconnect(HStonecutter.translate("hcscr.false")));
         ClientPlayNetworking.registerGlobalReceiver(type, (payload, context) -> context.responseSender().disconnect(HStonecutter.translate("hcscr.false")));
         //?} else if >=1.20.2 {
