@@ -2,78 +2,98 @@
 
 Remove your end crystals before the server even knows you hit 'em!
 
+## Downloads
+
+- [GitHub Releases](https://github.com/VidTu/HCsCR/releases)
+
 ## Dependencies
 
-**Fabric**: [Fabric API](https://modrinth.com/mod/fabric-api) (Required),
-[Mod Menu](https://modrinth.com/mod/modmenu) (Optional)  
-**Quilt**: [QFAPI/QSL](https://modrinth.com/mod/qsl) (Required),
-[Mod Menu](https://modrinth.com/mod/modmenu) (Optional)
+- Fabric Loader, Quilt Loader, Forge, or NeoForge
+- Minecraft (1.16.5, 1.17.1, 1.18.2, 1.19.2, 1.19.4, 1.20.1, 1.20.2, 1.20.4, 1.20.6, 1.21.1, 1.21.3, 1.21.4, or 1.21.5)
+- **Fabric/Quilt only**: [Fabric API](https://modrinth.com/mod/fabric-api) or
+  [QFAPI/QSL](https://modrinth.com/mod/qsl) (*Required*)
+- **Fabric/Quilt only**: [Mod Menu](https://modrinth.com/mod/modmenu) (*Optional*)
+
+## About
+
+Crystal PvP has become a pretty popular combat mode in Minecraft. Crystals themselves were never designed to be
+used in combat. Because of that, a client ping (latency) plays a significant role in a crystal PvP fight, affecting
+how fast you can spam. This mod helps to reduce (but does NOT fully remove) the ping factor from crystal PvP fights.
+This is commonly called a *client-side crystal optimizer* mod. It also removes the ping factor for PvP with anchors,
+though the ping doesn't play a big role in anchor fights, and it might even be beneficial to have high ping in these
+fights. This is not the only crystal optimizer mod available, but it's the most configurable out there.
+
+*Note*: A server-side crystal optimizer plugin (not this one) is much more effective. Consider checking the
+`/fastcrystals` command or similar commands on your server. Ask the admins to install one if the command doesn't exist.
 
 ## FAQ
 
-**Q**: I need help, have some questions, or something else.  
+**Q**: I need help, have some questions, or have some other feedback.  
 **A**: You can join the [Discord server](https://discord.gg/Q6saSVSuYQ).
 
 **Q**: Where can I download this mod?  
-**A**: [GitHub](https://github.com/VidTu/HCsCR). (currently only here)
-You can also find unstable builds at [GitHub Actions](https://github.com/VidTu/HCsCR/actions),
-you'll need a GitHub account to download them.
+**A**: [GitHub Releases](https://github.com/VidTu/HCsCR/releases).
+You can also find unstable builds at [GitHub Actions](https://github.com/VidTu/HCsCR/actions).
+You'll need a GitHub account to download these.
 
 **Q**: Which mod loaders are supported?  
-**A**: Fabric and Quilt are supported. Forge and NeoForge are currently NOT supported and may never will be.
+**A**: Fabric, Forge, and NeoForge are supported. Quilt should work too.
 
-**Q**: Which versions are supported?  
+**Q**: Which Minecraft versions are supported?  
 **A**: Minecraft 1.16.5, 1.17.1, 1.18.2, 1.19.2, 1.19.4, 1.20.1, 1.20.2, 1.20.4, 1.20.6, 1.21.1, 1.21.3, 1.21.4, 1.21.5.
-There are no plans to backport this mod to older versions.
 
 **Q**: Do I need Fabric API or Quilt Standard Libraries?  
 **A**: Yes, you'll need Fabric API for Fabric and QFAPI/QSL for Quilt.
+Obviously, you don't need them for Forge or NeoForge.
 
 **Q**: Is this mod open source?  
 **A**: [Yes.](https://github.com/VidTu/HCsCR) (Licensed
 under [Apache-2.0](https://github.com/VidTu/HCsCR/blob/main/LICENSE))
 
 **Q**: Is this mod client-side or server-side?  
-**A**: This mod works on the client-side. There's a way to block it as a server,
-but there do exist alternative mods, which cannot be blocked that way.
+**A**: This mod works on the client-side.
 
 **Q**: Is this a hack?  
-**A**: Yes, no, it depends, as your server admin decides, and everything in-between.
-Check your server rules for something like "Crystal Optimizer".
+**A**: It depends on your opinion on what's hack and what's not. This mod reduces the role that ping (latency) plays
+in combat with crystals. Specifically, it does affect how fast the crystals are removed. Crystal placement is NOT
+affected. It cannot be affected in a way that's considered legitimate.
 
-**Q**: Is this designed to be a hack, does this mod contain hacks?  
-**A**: No. This mod is not designed to be a hack and shouldn't contain anything that can be considered a hack.
-It does affect your gameplay by reducing the effects the ping (latency) has on you.
-Whether this is a hack or not is up to you and your server admin to decide.
+**Q**: Is this designed to be a hack?  
+**A**: No.
+
+**Q**: I want to block this mod as a server owner, can I do this?  
+**A**: A [plugin channel](https://minecraft.wiki/w/Minecraft_Wiki:Projects/wiki.vg_merge/Plugin_channels) called
+`hcscr:imhere` is registered by this mod. *Beware*: Other mods like this one don't offer a way to block them.
+Consider investing your time/resources into an anti-cheat plugin, if you want to block all of them.
 
 **Q**: I've found a bug.  
-**A**: Report it [here](https://github.com/VidTu/HCsCR/issues). If you are
-not sure if this is a bug, you can join the [Discord](https://discord.gg/Q6saSVSuYQ).
+**A**: Report it [here](https://github.com/VidTu/HCsCR/issues). If you are not sure whether this is a bug or a
+simple question, you can join the [Discord](https://discord.gg/Q6saSVSuYQ).
 
 **Q**: Can I use this in my modpack?  
-**A**: Sure. Credit (e.g. a link to mod's GitHub page) is appreciated, but is not required.
-Monetization and redistributing is allowed as per the [Apache 2.0 License](https://github.com/VidTu/HCsCR/blob/main/LICENSE).
-Beware: This mod may be considered a hack by some people.
+**A**: Sure. Credit (e.g., a link to the mod's GitHub page) is appreciated but is not required.
+Monetization and redistribution are allowed as per the
+[Apache 2.0 License](https://github.com/VidTu/HCsCR/blob/main/LICENSE).
+*Beware*: This mod may be considered a hack by some people.
 
-**Q**: Why this mod is not on the Modrinth or CurseForge?  
-**A**:
+**Q**: Why is this mod not on the Modrinth or CurseForge?  
+**A**: Modrinth [says](https://github.com/user-attachments/assets/437df1a1-3331-499c-ac49-6ec114494bd4) it violates
+their [rules](https://modrinth.com/legal/rules). CurseForge has a terrible API and I don't want to deal with it.
 
-1. *Modrinth*: As per [this message](https://github.com/user-attachments/assets/437df1a1-3331-499c-ac49-6ec114494bd4),
-   this mod violates the section "3.3d" of [Modrinth Content Rules](https://modrinth.com/legal/rules) and will require
-   a server-side opt-in to be allowed on Modrinth. I can see why Modrinth moderators don't want to have a mod like this
-   on their platform, but I (personally) don't want to implement a server-side opt-in.
-2. *CurseForge*: I don't really like it, but I might publish this mod there in the future. 
+**Q**: Why does this mod exist, when there are server-side crystal optimizers?  
+**A**: Firstly, this mod was created in 2023 before the server-side crystal optimizers. Secondly, not every server
+has a server-side crystal optimizer. Thirdly, I have updated it in 2025, because I needed to learn the
+[Stonecutter](https://stonecutter.kikugie.dev/) framework. Now it's not hard to maintain, so why not.
 
 ## License
 
 This project is provided under the Apache 2.0 License.
-Check out [NOTICE](https://github.com/VidTu/HCsCR/blob/main/NOTICE) and [LICENSE](https://github.com/VidTu/HCsCR/blob/main/LICENSE) for more information.
+Check out [NOTICE](https://github.com/VidTu/HCsCR/blob/main/NOTICE) and
+[LICENSE](https://github.com/VidTu/HCsCR/blob/main/LICENSE) for more information.
 
 ## Building
 
-### Preparation
-
-1. Have 4 GB of free RAM, 10 GB of free disk space, and an active internet connection.
+1. Have 8 GB of free RAM, 20 GB of free disk space, and an active internet connection.
 2. Install Java 21 and dump it into PATH and/or JAVA_HOME.
-3. Run `./gradlew build` from the terminal/PowerShell.
-4. Grab the JARs from the `./[version]/build/libs/` folders.
+3. Run `./gradlew chiseledBuild` from the terminal/PowerShell.
+4. Grab all the JARs from the `build/libs/` folder.
