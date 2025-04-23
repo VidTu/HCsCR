@@ -40,7 +40,9 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 /**
  * HCsCR config storage.
@@ -129,6 +131,9 @@ public final class HConfig implements Cloneable {
 
             // Log. (**DEBUG**)
             LOGGER.debug("HCsCR: Config has been loaded. (directory: {}, file: {})", HStonecutter.CONFIG_DIRECTORY, file);
+        } catch (NoSuchFileException nsfe) {
+            // Log. (**DEBUG**)
+            LOGGER.debug("HCsCR: Ignoring missing HCsCR config.", nsfe);
         } catch (Throwable t) {
             // Log.
             LOGGER.error("HCsCR: Unable to load the HCsCR config.", t);
@@ -155,7 +160,7 @@ public final class HConfig implements Cloneable {
 
             // Write the config.
             Files.createDirectories(file.getParent());
-            try (BufferedWriter writer = Files.newBufferedWriter(file)) {
+            try (BufferedWriter writer = Files.newBufferedWriter(file, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.SYNC)) {
                 GSON.toJson(new HConfig(), writer);
             }
 
