@@ -49,7 +49,6 @@ import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NullMarked;
 import ru.vidtu.hcscr.config.CrystalMode;
 import ru.vidtu.hcscr.config.HConfig;
@@ -148,7 +147,7 @@ public final class HCsCR {
      */
     public static void handleTick(Minecraft game) {
         // Validate.
-        assert game != null : "Parameter 'game' is null.";
+        assert game != null : "HCsCR: Parameter 'game' is null.";
 
         // Get and push the profiler.
         ProfilerFiller profiler = HStonecutter.profilerOf(game); // Implicit NPE for 'game'
@@ -173,7 +172,7 @@ public final class HCsCR {
      */
     public static void handleFrame(ProfilerFiller profiler) {
         // Validate.
-        assert profiler != null : "Parameter 'profiler' is null.";
+        assert profiler != null : "HCsCR: Parameter 'profiler' is null.";
 
         // Push the profiler.
         profiler.push("hcscr:handle_frame"); // Implicit NPE for 'profiler'
@@ -236,7 +235,7 @@ public final class HCsCR {
      * @param amount  Amount of dealt damage
      * @return Whether the entity has been removed
      */
-    public static boolean handleEntityHit(@NotNull Entity entity, @NotNull DamageSource source, float amount) {
+    public static boolean handleEntityHit(Entity entity, DamageSource source, float amount) {
         // Do NOT process hit if any of the following conditions is met:
         // - The mod is disabled via config or keybind.
         // - The damaged entity is already scheduled for removal.
@@ -433,13 +432,13 @@ public final class HCsCR {
         // Nuke all entities, if level is empty.
         if (game.level == null) {
             // Log. (**TRACE**)
-            LOGGER.trace(HCSCR_MARKER, "HCscR: Level has been unloaded, nuking hidden entities...");
+            LOGGER.trace(HCSCR_MARKER, "HCsCR: Level has been unloaded, nuking hidden entities...");
 
             // Clear.
             HIDDEN_ENTITIES.clear();
 
             // Log, pop, stop. (**DEBUG**)
-            LOGGER.debug(HCSCR_MARKER, "HCscR: Level has been unloaded, nuked hidden entities.");
+            LOGGER.debug(HCSCR_MARKER, "HCsCR: Level has been unloaded, nuked hidden entities.");
             profiler.pop();
             return;
         }
@@ -464,7 +463,7 @@ public final class HCsCR {
 
                 // Log, continue. (**DEBUG**)
                 if (!LOGGER.isDebugEnabled(HCSCR_MARKER)) continue;
-                LOGGER.debug(HCSCR_MARKER, "HCscR: Removed hidden entity. (entity: {}, left: {})", entity, left);
+                LOGGER.debug(HCSCR_MARKER, "HCsCR: Removed hidden entity. (entity: {}, left: {})", entity, left);
                 continue;
             }
 
@@ -475,7 +474,7 @@ public final class HCsCR {
 
                 // Log, continue. (**DEBUG**)
                 if (!LOGGER.isDebugEnabled(HCSCR_MARKER)) continue;
-                LOGGER.debug(HCSCR_MARKER, "HCscR: Resynced hidden entity. (entity: {}, left: {})", entity, left);
+                LOGGER.debug(HCSCR_MARKER, "HCsCR: Resynced hidden entity. (entity: {}, left: {})", entity, left);
                 continue;
             }
 
@@ -508,13 +507,13 @@ public final class HCsCR {
         ClientLevel level = game.level;
         if (level == null) {
             // Log. (**TRACE**)
-            LOGGER.trace(HCSCR_MARKER, "HCscR: Level has been unloaded, nuking clipping anchors...");
+            LOGGER.trace(HCSCR_MARKER, "HCsCR: Level has been unloaded, nuking clipping anchors...");
 
             // Clear.
             CLIPPING_ANCHORS.clear();
 
             // Log, pop, stop. (**DEBUG**)
-            LOGGER.debug(HCSCR_MARKER, "HCscR: Level has been unloaded, nuked clipping anchors.");
+            LOGGER.debug(HCSCR_MARKER, "HCsCR: Level has been unloaded, nuked clipping anchors.");
             profiler.pop();
             return;
         }
@@ -536,7 +535,7 @@ public final class HCsCR {
             iterator.remove();
 
             // Log, continue. (**DEBUG**)
-            LOGGER.debug(HCSCR_MARKER, "HCscR: Removed clipping anchor. (pos: {}, state: {})", pos, state);
+            LOGGER.debug(HCSCR_MARKER, "HCsCR: Removed clipping anchor. (pos: {}, state: {})", pos, state);
             continue;
         }
 

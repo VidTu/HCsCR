@@ -77,7 +77,7 @@ public final class EntityMixin {
     private void hcscr_getBoundingBox_head(CallbackInfoReturnable<AABB> cir) {
         // Validate.
         Level level = this.level;
-        assert level != null : "HCscR: Getting entity bounding box with null level. (cir: " + cir + ", entity: " + this + ')';
+        assert level != null : "HCsCR: Getting entity bounding box with null level. (cir: " + cir + ", entity: " + this + ')';
 
         // Do NOT hide entity if any of the following conditions is met:
         // - The current level (world) is not client-side. (e.g. integrated server world)

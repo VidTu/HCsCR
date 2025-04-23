@@ -61,7 +61,7 @@ public final class ClientPacketListenerMixin {
     @Inject(method = "handleBlockUpdate", at = @At("RETURN"))
     private void hcscr_handleBlockUpdate_return(ClientboundBlockUpdatePacket packet, CallbackInfo ci) {
         // Validate.
-        assert packet != null : "Parameter 'packet' is null. (handler: " + this + ')';
+        assert packet != null : "HCsCR: Parameter 'packet' is null. (handler: " + this + ')';
 
         // Nuke.
         HCsCR.CLIPPING_ANCHORS.remove(packet.getPos());

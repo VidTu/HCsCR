@@ -27,9 +27,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.util.List;
@@ -144,9 +143,9 @@ public final class HScreen extends Screen {
 
     @Override
     //? if >=1.20.1 {
-    public void render(@NotNull net.minecraft.client.gui.GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void render(net.minecraft.client.gui.GuiGraphics graphics, int mouseX, int mouseY, float delta) {
     //?} else
-    /*public void render(@NotNull com.mojang.blaze3d.vertex.PoseStack graphics, int mouseX, int mouseY, float delta) {*/
+    /*public void render(com.mojang.blaze3d.vertex.PoseStack graphics, int mouseX, int mouseY, float delta) {*/
         // Render background and widgets.
         //? if <1.20.2
         /*this.renderBackground(graphics);*/
