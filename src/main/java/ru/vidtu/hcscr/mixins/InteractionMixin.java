@@ -32,6 +32,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.config.CrystalMode;
 import ru.vidtu.hcscr.config.HConfig;
 import ru.vidtu.hcscr.platform.HStonecutter;
@@ -76,7 +77,7 @@ public abstract class InteractionMixin extends Entity {
     @Inject(method = "skipAttackInteraction", at = @At("HEAD"), cancellable = true)
     private void hcscr_skipAttackInteraction_head(Entity attacker, CallbackInfoReturnable<Boolean> cir) {
         // Log. (**TRACE**)
-        HCSCR_LOGGER.trace("HCsCR: Received attack in Interaction entity. (attacker: {}, cir: {}, interaction: {})", attacker, cir, this);
+        HCSCR_LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Received attack in Interaction entity. (attacker: {}, cir: {}, interaction: {})", attacker, cir, this);
 
         // Validate.
         Level level = HStonecutter.levelOf(this);
@@ -88,7 +89,7 @@ public abstract class InteractionMixin extends Entity {
         // - The current crystal removal mode is not ENVELOPING.
         if (!level.isClientSide() || !HConfig.enable() || (HConfig.crystals() != CrystalMode.ENVELOPING)) {
             // Log, stop. (**DEBUG**)
-            HCSCR_LOGGER.debug("HCsCR: Ignored Interaction entity attack overriding. (attacker: {}, cir: {}, interaction: {})", attacker, cir, this);
+            HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Ignored Interaction entity attack overriding. (attacker: {}, cir: {}, interaction: {})", attacker, cir, this);
             return;
         }
 
@@ -96,7 +97,7 @@ public abstract class InteractionMixin extends Entity {
         cir.setReturnValue(false);
 
         // Log. (**DEBUG**)
-        HCSCR_LOGGER.debug("HCsCR: Forcefully allowed Interaction to be attacked. (attacker: {}, cir: {}, interaction: {})", attacker, cir, this);
+        HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Forcefully allowed Interaction to be attacked. (attacker: {}, cir: {}, interaction: {})", attacker, cir, this);
     }
 }
 //?}

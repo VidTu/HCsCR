@@ -62,7 +62,7 @@ public final class HForge {
     /^public HForge() {^/
         // Log.
         long start = System.nanoTime();
-        LOGGER.info("HCsCR: Loading... (platform: neoforge)");
+        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Loading... (platform: neoforge)");
 
         // Load the config.
         HConfig.load();
@@ -165,7 +165,7 @@ public final class HForge {
         ^///?}
 
         // Done.
-        LOGGER.info("HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / 1_000_000L);
+        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / 1_000_000L);
     }
 
     @Contract(pure = true)

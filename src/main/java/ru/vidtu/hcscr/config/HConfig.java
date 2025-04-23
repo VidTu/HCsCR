@@ -34,6 +34,7 @@ import org.jetbrains.annotations.CheckReturnValue;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Range;
 import org.jspecify.annotations.NullMarked;
+import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.io.BufferedReader;
@@ -118,7 +119,7 @@ public final class HConfig implements Cloneable {
     public static void load() {
         try {
             // Log. (**TRACE**)
-            LOGGER.trace("HCsCR: Loading the config... (directory: {})", HStonecutter.CONFIG_DIRECTORY);
+            LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Loading the config... (directory: {})", HStonecutter.CONFIG_DIRECTORY);
 
             // Resolve the file.
             Path file = HStonecutter.CONFIG_DIRECTORY.resolve("hcscr.json");
@@ -130,13 +131,13 @@ public final class HConfig implements Cloneable {
             }
 
             // Log. (**DEBUG**)
-            LOGGER.debug("HCsCR: Config has been loaded. (directory: {}, file: {})", HStonecutter.CONFIG_DIRECTORY, file);
+            LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Config has been loaded. (directory: {}, file: {})", HStonecutter.CONFIG_DIRECTORY, file);
         } catch (NoSuchFileException nsfe) {
             // Log. (**DEBUG**)
-            LOGGER.debug("HCsCR: Ignoring missing HCsCR config.", nsfe);
+            LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Ignoring missing HCsCR config.", nsfe);
         } catch (Throwable t) {
             // Log.
-            LOGGER.error("HCsCR: Unable to load the HCsCR config.", t);
+            LOGGER.error(HCsCR.HCSCR_MARKER, "HCsCR: Unable to load the HCsCR config.", t);
         } finally {
             // Clamp.
             crystals = MoreObjects.firstNonNull(crystals, CrystalMode.DIRECT);
@@ -153,7 +154,7 @@ public final class HConfig implements Cloneable {
     static void save() {
         try {
             // Log. (**TRACE**)
-            LOGGER.trace("HCsCR: Saving the config... (directory: {})", HStonecutter.CONFIG_DIRECTORY);
+            LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Saving the config... (directory: {})", HStonecutter.CONFIG_DIRECTORY);
 
             // Resolve the file.
             Path file = HStonecutter.CONFIG_DIRECTORY.resolve("hcscr.json");
@@ -165,10 +166,10 @@ public final class HConfig implements Cloneable {
             }
 
             // Log. (**DEBUG**)
-            LOGGER.debug("HCsCR: Config has been saved. (directory: {}, file: {})", HStonecutter.CONFIG_DIRECTORY, file);
+            LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Config has been saved. (directory: {}, file: {})", HStonecutter.CONFIG_DIRECTORY, file);
         } catch (Throwable t) {
             // Log.
-            LOGGER.error("HCsCR: Unable to save the HCsCR config.", t);
+            LOGGER.error(HCsCR.HCSCR_MARKER, "HCsCR: Unable to save the HCsCR config.", t);
         }
     }
 

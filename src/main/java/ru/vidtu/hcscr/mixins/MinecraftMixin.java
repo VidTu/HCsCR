@@ -77,7 +77,7 @@ public final class MinecraftMixin {
         profiler.push("hcscr:clear_data");
 
         // Log. (**TRACE**)
-        HCSCR_LOGGER.trace("HCsCR: Clearing data... (level: {}, game: {})", level, this);
+        HCSCR_LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Clearing data... (level: {}, game: {})", level, this);
 
         // Clear the maps.
         HCsCR.SCHEDULED_ENTITIES.clear();
@@ -85,7 +85,7 @@ public final class MinecraftMixin {
         HCsCR.CLIPPING_ANCHORS.clear();
 
         // Log. (**DEBUG**)
-        HCSCR_LOGGER.debug("HCsCR: Cleared data. (level: {}, game: {})", level, this);
+        HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Cleared data. (level: {}, game: {})", level, this);
 
         // Pop the profiler.
         profiler.pop();

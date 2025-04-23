@@ -60,7 +60,7 @@ public final class HFabric implements ClientModInitializer {
     public void onInitializeClient() {
         // Log.
         long start = System.nanoTime();
-        LOGGER.info("HCsCR: Loading... (platform: fabric)");
+        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Loading... (platform: fabric)");
 
         // Load the config.
         HConfig.load();
@@ -113,7 +113,7 @@ public final class HFabric implements ClientModInitializer {
         });
 
         // Done.
-        LOGGER.info("HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / 1_000_000L);
+        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / 1_000_000L);
     }
 
     @Contract(pure = true)

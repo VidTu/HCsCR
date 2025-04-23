@@ -87,7 +87,7 @@ public final class RespawnAnchorBlockMixin {
         assert result != null : "HCsCR: Parameter 'result' is null. (state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", anchor: " + this + ')';
 
         // Log. (**TRACE**)
-        HCSCR_LOGGER.trace("HCsCR: Detected anchor right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
+        HCSCR_LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Detected anchor right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
 
         // Do NOT process anchors if any of the following conditions is met:
         // - The current level (world) is not client-side. (e.g. integrated server world)
@@ -98,7 +98,7 @@ public final class RespawnAnchorBlockMixin {
         if (!level.isClientSide() || state.getValue(RespawnAnchorBlock.CHARGE) == 0 ||
                 RespawnAnchorBlock.canSetSpawn(level) || !HConfig.enable()) {
             // Log, stop. (**DEBUG**)
-            HCSCR_LOGGER.debug("HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
+            HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
             return;
         }
 
@@ -109,19 +109,18 @@ public final class RespawnAnchorBlockMixin {
                 HCsCR.CLIPPING_ANCHORS.add(pos);
 
                 // Log, break. (**DEBUG**)
-                if (!HCSCR_LOGGER.isDebugEnabled()) break;
-                HCSCR_LOGGER.debug("HCsCR: Clipping anchor via right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
+                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Clipping anchor via right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
                 break;
             case FULL:
                 // Remove.
                 level.removeBlock(pos, false);
 
                 // Log, break. (**DEBUG**)
-                HCSCR_LOGGER.debug("HCsCR: Removed anchor via right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
+                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Removed anchor via right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
                 break;
             default:
                 // Log. (**DEBUG**)
-                HCSCR_LOGGER.debug("HCsCR: Ignored anchor right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
+                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Ignored anchor right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
         }
     }
     //?} else {
@@ -158,7 +157,7 @@ public final class RespawnAnchorBlockMixin {
         if (!level.isClientSide() || state.getValue(RespawnAnchorBlock.CHARGE) == 0 ||
                 RespawnAnchorBlock.canSetSpawn(level) || !HConfig.enable()) {
             // Log, stop. (**DEBUG**)
-            HCSCR_LOGGER.debug("HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, result: {}, anchor: {})", state, level, pos, player, hand, result, this);
+            HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, result: {}, anchor: {})", state, level, pos, player, hand, result, this);
             return;
         }
 
@@ -168,7 +167,7 @@ public final class RespawnAnchorBlockMixin {
                 isRespawnFuel(player.getItemInHand(net.minecraft.world.InteractionHand.OFF_HAND))) ||
                 (isRespawnFuel(stack) && canBeCharged(state))) {
             // Log, stop. (**DEBUG**)
-            HCSCR_LOGGER.debug("HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, result: {}, stack: {}, anchor: {})", state, level, pos, player, hand, result, stack, this);
+            HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, result: {}, stack: {}, anchor: {})", state, level, pos, player, hand, result, stack, this);
             return;
         }
 
@@ -179,19 +178,18 @@ public final class RespawnAnchorBlockMixin {
                 HCsCR.CLIPPING_ANCHORS.add(pos);
 
                 // Log, break. (**DEBUG**)
-                if (!HCSCR_LOGGER.isDebugEnabled()) break;
-                HCSCR_LOGGER.debug("HCsCR: Clipping anchor via right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
+                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Clipping anchor via right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
                 break;
             case FULL:
                 // Remove.
                 level.removeBlock(pos, false);
 
                 // Log, break. (**DEBUG**)
-                HCSCR_LOGGER.debug("HCsCR: Removed anchor via right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
+                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Removed anchor via right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
                 break;
             default:
                 // Log. (**DEBUG**)
-                HCSCR_LOGGER.debug("HCsCR: Ignored anchor right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
+                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Ignored anchor right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
         }
     }
 
