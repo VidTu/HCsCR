@@ -67,7 +67,7 @@ loom {
             "-ea",
             "-esa",
             "-Dmixin.debug=true",
-            "-Dmixin.debug.strict=false", // TODO
+            "-Dmixin.debug.strict.unique=true",
             "-Dmixin.checks=true",
             "-Dio.netty.tryReflectionSetAccessible=true",
             "-Dio.netty.leakDetection.level=PARANOID",
@@ -84,7 +84,6 @@ loom {
             "--add-opens",
             "java.base/jdk.internal.misc=ALL-UNNAMED"
         )
-        programArgs("--username", "VidTu")
     }
     @Suppress("UnstableApiUsage")
     mixin {

@@ -102,9 +102,9 @@ public final class HForge {
 
         // Register the binds.
         //? if 1.20.2 {
-        /^var bus = FMLJavaModLoadingContext.get().getModEventBus();^/
-        //? } else >=1.19.2 && !legacyNeoForge
-        /^var bus = ctx.getModEventBus();^/
+        /^var bus = FMLJavaModLoadingContext.get().getModEventBus();
+        ^///?} else >=1.19.2 && !legacyNeoForge
+        var bus = ctx.getModEventBus();
         //? if >=1.19.2 {
         bus.addListener((net.minecraftforge.client.event.RegisterKeyMappingsEvent event) -> {
             event.register(HCsCR.CONFIG_BIND);

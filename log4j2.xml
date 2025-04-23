@@ -5,11 +5,14 @@
             <Filters>
                 <RegexFilter regex="^Failed to verify authentication$" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <RegexFilter regex="^Failed to fetch Realms feature flags$" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <RegexFilter regex="^Failed to retrieve profile key pair$" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <RegexFilter regex="^Couldn't connect to realms$" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <RegexFilter regex="^Could not authorize you against Realms server: Invalid session id$" onMatch="DENY" onMismatch="NEUTRAL"/>
             </Filters>
-            <PatternLayout pattern="%style{[%d{HH:mm:ss}]}{blue} %highlight{[%t/%level]}{FATAL=bright_red, ERROR=red, WARN=yellow, INFO=green, DEBUG=bright_white, TRACE=white}: %style{(%logger{0})}{cyan} %msg{nolookups}%n%xEx{full}" disableAnsi="false"/>
+            <PatternLayout pattern="%style{[%d{HH:mm:ss}]}{blue} %highlight{[%t/%level]}{FATAL=bright_red, ERROR=red, WARN=yellow, INFO=green, DEBUG=bright_white, TRACE=white}: %style{(%logger{0})}{cyan} %style{&lt;%marker&gt;}{magenta} %msg{nolookups}%n%xEx{full}" disableAnsi="false"/>
         </Console>
         <RollingRandomAccessFile name="File" fileName="logs/latest.log" filePattern="logs/%d{yyyy-MM-dd}-%i.log.gz" immediateFlush="false">
-            <PatternLayout pattern="[%d{HH:mm:ss}] [%t/%level]: (%logger{0}) %msg{nolookups}%n%xEx{full}"/>
+            <PatternLayout pattern="[%d{HH:mm:ss}] [%t/%level]: (%logger{0}) &lt;%marker&gt; %msg{nolookups}%n%xEx{full}"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
                 <OnStartupTriggeringPolicy/>
@@ -21,6 +24,10 @@
         <Root level="TRACE">
             <filters>
                 <MarkerFilter marker="NETWORK_PACKETS" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <MarkerFilter marker="SCAN" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <MarkerFilter marker="REGISTRIES" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <MarkerFilter marker="REGISTRY_DUMP" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <MarkerFilter marker="SOUNDS" onMatch="DENY" onMismatch="NEUTRAL"/>
             </filters>
             <AppenderRef ref="Console"/>
             <AppenderRef ref="File" level="INFO"/>
