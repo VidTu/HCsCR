@@ -3,11 +3,11 @@
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <Filters>
-                <RegexFilter regex="^Failed to verify authentication$" onMatch="DENY" onMismatch="NEUTRAL"/>
-                <RegexFilter regex="^Failed to fetch Realms feature flags$" onMatch="DENY" onMismatch="NEUTRAL"/>
-                <RegexFilter regex="^Failed to retrieve profile key pair$" onMatch="DENY" onMismatch="NEUTRAL"/>
-                <RegexFilter regex="^Couldn't connect to realms$" onMatch="DENY" onMismatch="NEUTRAL"/>
-                <RegexFilter regex="^Could not authorize you against Realms server: Invalid session id$" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <RegexFilter regex="^Failed to verify authentication$" useRawMsg="true" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <RegexFilter regex="^Failed to fetch Realms feature flags$" useRawMsg="true" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <RegexFilter regex="^Failed to retrieve profile key pair$" useRawMsg="true" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <RegexFilter regex="^Couldn't connect to realms$" useRawMsg="true" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <RegexFilter regex="^Could not authorize you against Realms server: {}$" useRawMsg="true" onMatch="DENY" onMismatch="NEUTRAL"/>
             </Filters>
             <PatternLayout pattern="%style{[%d{HH:mm:ss}]}{blue} %highlight{[%t/%level]}{FATAL=bright_red, ERROR=red, WARN=yellow, INFO=green, DEBUG=bright_white, TRACE=white}: %style{(%logger{0})}{cyan} %style{&lt;%marker&gt;}{magenta} %msg{nolookups}%n%xEx{full}" disableAnsi="false"/>
         </Console>
