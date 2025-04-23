@@ -19,6 +19,7 @@
 
 package ru.vidtu.hcscr;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
@@ -48,7 +49,6 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NullMarked;
-import org.lwjgl.glfw.GLFW;
 import ru.vidtu.hcscr.config.CrystalMode;
 import ru.vidtu.hcscr.config.HConfig;
 import ru.vidtu.hcscr.config.HScreen;
@@ -72,12 +72,12 @@ public final class HCsCR {
     /**
      * Open config screen keybind. Not bound by default.
      */
-    public static final KeyMapping CONFIG_BIND = new KeyMapping("hcscr.key.config", GLFW.GLFW_KEY_UNKNOWN, "hcscr.key");
+    public static final KeyMapping CONFIG_BIND = new KeyMapping("hcscr.key.config", InputConstants.UNKNOWN.getValue(), "hcscr.key");
 
     /**
      * Toggle the mod keybind. Not bound by default.
      */
-    public static final KeyMapping TOGGLE_BIND = new KeyMapping("hcscr.key.toggle", GLFW.GLFW_KEY_UNKNOWN, "hcscr.key");
+    public static final KeyMapping TOGGLE_BIND = new KeyMapping("hcscr.key.toggle", InputConstants.UNKNOWN.getValue(), "hcscr.key");
 
     /**
      * Hit entities mapped to their time of removal/hiding time in units of {@link System#nanoTime()}. As soon as
