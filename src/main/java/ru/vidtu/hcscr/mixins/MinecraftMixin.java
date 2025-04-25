@@ -73,7 +73,7 @@ public final class MinecraftMixin {
     @Inject(method = "updateLevelInEngines", at = @At("RETURN"))
     private void hcscr_updateLevelInEngines_return(@Nullable ClientLevel level, CallbackInfo ci) {
         // Get and push the profiler.
-        ProfilerFiller profiler = HStonecutter.profilerOf((Minecraft) (Object) this);
+        ProfilerFiller profiler = this.hcscr_profiler();
         profiler.push("hcscr:clear_data");
 
         // Log. (**TRACE**)
@@ -89,5 +89,17 @@ public final class MinecraftMixin {
 
         // Pop the profiler.
         profiler.pop();
+    }
+
+    /**
+     * A hacky method to call the {@link HStonecutter#profilerOf(Minecraft)}
+     * with IntelliJ not marking it as unreachable code.
+     *
+     * @return Game profiler
+     */
+    @Contract(pure = true)
+    @Unique
+    private ProfilerFiller hcscr_profiler() {
+        return HStonecutter.profilerOf((Minecraft) (Object) this);
     }
 }

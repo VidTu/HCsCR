@@ -30,6 +30,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -39,7 +40,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -136,7 +136,7 @@ public final class HCsCR {
     @ApiStatus.ScheduledForRemoval
     @Deprecated
     @Contract(value = "-> fail", pure = true)
-    public HCsCR() {
+    private HCsCR() {
         throw new AssertionError("No instances.");
     }
 
@@ -206,7 +206,7 @@ public final class HCsCR {
             }
 
             // Skip if entry is still in the world and hasn't reached the timeout.
-            if ((expiry - now) >= 0) continue;
+            if ((expiry - now) >= 0L) continue;
 
             // Remove from iterator.
             iterator.remove();
@@ -236,6 +236,12 @@ public final class HCsCR {
      * @return Whether the entity has been removed
      */
     public static boolean handleEntityHit(Entity entity, DamageSource source, float amount) {
+        // Validate.
+        assert entity != null : "HCsCR: Parameter 'entity' is null. (source: " + source + ", amount: " + amount + ')';
+        assert source != null : "HCsCR: Parameter 'source' is null. (entity: " + entity + ", amount: " + amount + ')';
+        assert Float.isFinite(amount) : "HCsCR: Parameter 'amount' is not finite. (entity: " + entity + ", source: " + source + ", amount: " + amount + ')';
+        assert (source.getEntity() instanceof LocalPlayer) && (source.getDirectEntity() instanceof LocalPlayer) : "HCsCR: Source entity is not LocalPlayer. (entity: " + entity + ", source: " + source + ", amount: " + amount + ", sourceEntity: " + source.getEntity() + ", sourceDirectEntity: " + source.getDirectEntity() + ')';
+
         // Do NOT process hit if any of the following conditions is met:
         // - The mod is disabled via config or keybind.
         // - The damaged entity is already scheduled for removal.
@@ -243,19 +249,19 @@ public final class HCsCR {
         // - The current level (world) is not client-side. (e.g. integrated server world)
         // - This entity type shouldn't be processed at all (e.g. any living entity) or by the current config (e.g. slime).
         // - The damaging entity is not a player.
-        if (!HConfig.enable() || HStonecutter.isEntityRemoved(entity) || amount <= 0.0F ||
+        if (!HConfig.enable() || HStonecutter.isEntityRemoved(entity) || (amount <= 0.0F) ||
                 !HStonecutter.levelOf(entity).isClientSide() || !HConfig.shouldProcess(entity) ||
-                !(source.getEntity() instanceof Player)) return false;
+                !(source.getEntity() instanceof LocalPlayer)) return false; // Implicit NPE for 'source'
 
         // Don't process player hits that deal zero damage, e.g. with the weakness effect.
-        Player player = (Player) source.getEntity();
+        LocalPlayer player = (LocalPlayer) source.getEntity();
         AttributeMap map = player.getAttributes();
         for (MobEffectInstance instance : player.getActiveEffects()) {
             //? if >=1.20.6 {
             instance.getEffect().value().addAttributeModifiers(map, instance.getAmplifier());
-             //?} else if >=1.20.2 {
+            //?} else if >=1.20.2 {
             /*instance.getEffect().addAttributeModifiers(map, instance.getAmplifier());
-             *///?} else {
+            *///?} else {
             /*instance.getEffect().addAttributeModifiers(player, map, instance.getAmplifier());
             *///?}
         }
@@ -263,7 +269,7 @@ public final class HCsCR {
         for (MobEffectInstance instance : player.getActiveEffects()) {
             //? if >=1.20.6 {
             instance.getEffect().value().removeAttributeModifiers(map);
-             //?} else if >=1.20.2 {
+            //?} else if >=1.20.2 {
             /*instance.getEffect().removeAttributeModifiers(map);
              *///?} else
             /*instance.getEffect().removeAttributeModifiers(player, map, instance.getAmplifier());*/
@@ -274,7 +280,7 @@ public final class HCsCR {
         CrystalMode mode = HConfig.crystals();
         if (mode == CrystalMode.DIRECT) {
             // Remove/hide the entity, if there's no delay.
-            long delay = HConfig.crystalsDelay();
+            int delay = HConfig.crystalsDelay();
             if (delay == 0) {
                 // Remove the entity instantly, if there's no resync.
                 int resync = HConfig.crystalsResync();
@@ -302,13 +308,13 @@ public final class HCsCR {
             // - The other entity is not fully contained inside the enveloping entity.
             if (HStonecutter.isEntityRemoved(other) || !HConfig.shouldProcess(other)) return false;
             AABB otherBox = other.getBoundingBox();
-            return otherBox.minX >= entityBox.minX && otherBox.maxX <= entityBox.maxX &&
-                    otherBox.minY >= entityBox.minY && otherBox.maxY <= entityBox.maxY &&
-                    otherBox.minZ >= entityBox.minZ && otherBox.maxZ <= entityBox.maxZ;
+            return (otherBox.minX >= entityBox.minX) && (otherBox.maxX <= entityBox.maxX) &&
+                    (otherBox.minY >= entityBox.minY) && (otherBox.maxY <= entityBox.maxY) &&
+                    (otherBox.minZ >= entityBox.minZ) && (otherBox.maxZ <= entityBox.maxZ);
         });
 
         // Remove/hide the entities, if there's no delay.
-        long delay = HConfig.crystalsDelay();
+        int delay = HConfig.crystalsDelay();
         if (delay == 0) {
             // Remove the entities instantly, if there's no resync.
             int resync = HConfig.crystalsResync();
@@ -345,7 +351,7 @@ public final class HCsCR {
      */
     private static void handleConfigBind(Minecraft game, ProfilerFiller profiler) {
         // Push the profiler.
-        profiler.push("hcscr:config_bind");
+        profiler.push("hcscr:config_bind"); // Implicit NPE for 'profiler'
 
         // Consume the bind.
         if (!CONFIG_BIND.consumeClick()) {
@@ -385,7 +391,7 @@ public final class HCsCR {
      */
     private static void handleToggleBind(Minecraft game, ProfilerFiller profiler) {
         // Push the profiler.
-        profiler.push("hcscr:toggle_bind");
+        profiler.push("hcscr:toggle_bind"); // Implicit NPE for 'profiler'
 
         // Consume the bind.
         if (!TOGGLE_BIND.consumeClick()) {
@@ -420,7 +426,7 @@ public final class HCsCR {
      */
     private static void handleHiddenEntities(Minecraft game, ProfilerFiller profiler) {
         // Push the profiler.
-        profiler.push("hcscr:hidden_entities");
+        profiler.push("hcscr:hidden_entities"); // Implicit NPE for 'profiler'
 
         // Skip if no hidden entities.
         if (HIDDEN_ENTITIES.isEmpty()) {
@@ -430,7 +436,7 @@ public final class HCsCR {
         }
 
         // Nuke all entities, if level is empty.
-        if (game.level == null) {
+        if (game.level == null) { // Implicit NPE for 'game'
             // Log. (**TRACE**)
             LOGGER.trace(HCSCR_MARKER, "HCsCR: Level has been unloaded, nuking hidden entities...");
 
@@ -494,7 +500,7 @@ public final class HCsCR {
      */
     private static void handleClippingAnchors(Minecraft game, ProfilerFiller profiler) {
         // Push the profiler.
-        profiler.push("hcscr:clipping_anchors");
+        profiler.push("hcscr:clipping_anchors"); // Implicit NPE for 'profiler'
 
         // Skip if no clipping anchors.
         if (CLIPPING_ANCHORS.isEmpty()) {
@@ -504,7 +510,7 @@ public final class HCsCR {
         }
 
         // Nuke all anchors, if level is empty.
-        ClientLevel level = game.level;
+        ClientLevel level = game.level; // Implicit NPE for 'game'
         if (level == null) {
             // Log. (**TRACE**)
             LOGGER.trace(HCSCR_MARKER, "HCsCR: Level has been unloaded, nuking clipping anchors...");
@@ -534,9 +540,8 @@ public final class HCsCR {
             // Remove.
             iterator.remove();
 
-            // Log, continue. (**DEBUG**)
+            // Log. (**DEBUG**)
             LOGGER.debug(HCSCR_MARKER, "HCsCR: Removed clipping anchor. (pos: {}, state: {})", pos, state);
-            continue;
         }
 
         // Pop the profiler.

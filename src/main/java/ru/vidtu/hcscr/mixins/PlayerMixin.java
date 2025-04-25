@@ -67,7 +67,14 @@ public final class PlayerMixin {
     //?} else
     /*@Redirect(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))*/
     private boolean hcscr_attack_hurtOrSimulate(Entity entity, DamageSource source, float amount) {
+        // Validate.
+        assert entity != null : "HCsCR: Parameter 'entity' is null. (source: " + source + ", amount: " + ", player: " + this + ')';
+        assert source != null : "HCsCR: Parameter 'source' is null. (entity: " + entity + ", amount: " + ", player: " + this + ')';
+        assert Float.isFinite(amount) : "HCsCR: Parameter 'amount' is not finite. (entity: " + entity + ", source: " + source + ", amount: " + ", player: " + this + ')';
+
+        // Delegate.
         // TODO(VidTu): Use more compatible methods from MixinExtras if it's provided by the platform.
+        //noinspection NonShortCircuitBooleanExpression // <- Needs to call both methods.
         return HStonecutter.hurt(entity, source, amount) | HCsCR.handleEntityHit(entity, source, amount);
     }
 }

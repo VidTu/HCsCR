@@ -54,7 +54,7 @@ import java.nio.file.StandardOpenOption;
  */
 @ApiStatus.Internal
 @NullMarked
-public final class HConfig implements Cloneable {
+public final class HConfig {
     /**
      * Logger for this class.
      */
@@ -141,7 +141,7 @@ public final class HConfig implements Cloneable {
         } finally {
             // Clamp.
             crystals = MoreObjects.firstNonNull(crystals, CrystalMode.DIRECT);
-            crystalsDelay = Mth.clamp(crystalsDelay / 1_000_000 * 1_000_000, 0, 200_000_000);
+            crystalsDelay = Mth.clamp((crystalsDelay / 1_000_000) * 1_000_000, 0, 200_000_000);
             anchors = MoreObjects.firstNonNull(anchors, AnchorMode.COLLISION);
         }
     }
@@ -249,7 +249,7 @@ public final class HConfig implements Cloneable {
      * @see #crystalsDelay()
      */
     static void crystalsDelay(@Range(from = 0L, to = 200_000_000L) int crystalsDelay) {
-        HConfig.crystalsDelay = Mth.clamp(crystalsDelay / 1_000_000 * 1_000_000, 0, 200_000_000);
+        HConfig.crystalsDelay = Mth.clamp((crystalsDelay / 1_000_000) * 1_000_000, 0, 200_000_000);
     }
 
     /**
@@ -314,9 +314,11 @@ public final class HConfig implements Cloneable {
             case DIRECT:
                 return entity instanceof EndCrystal;
             case ENVELOPING:
-                //? if >=1.19.4
+                //? if >=1.19.4 {
+                //noinspection SimplifiableIfStatement // <- Preprocessor Statement.
                 if (entity instanceof net.minecraft.world.entity.Interaction) return true;
-                return entity instanceof EndCrystal || (entity instanceof Slime && entity.isInvisible());
+                //?}
+                return (entity instanceof EndCrystal) || ((entity instanceof Slime) && entity.isInvisible());
             default:
                 return false;
         }

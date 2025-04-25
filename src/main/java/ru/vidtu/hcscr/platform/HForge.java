@@ -53,6 +53,8 @@ public final class HForge {
 
     /^*
      * Creates and loads a new mod.
+     *
+     * @param ctx Loading context
      ^/
     //? if legacyNeoForge {
     /^public HForge(net.minecraftforge.fml.ModContainer container, net.minecraftforge.eventbus.api.IEventBus bus) {

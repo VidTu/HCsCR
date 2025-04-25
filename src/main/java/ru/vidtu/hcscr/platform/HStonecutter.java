@@ -59,24 +59,6 @@ import java.util.function.IntFunction;
 @NullMarked
 public final class HStonecutter {
     /**
-     * A duration for tooltips in version-dependant units. Currently {@code 250} milliseconds.
-     */
-    //? if >=1.20.6 {
-    public static final java.time.Duration TOOLTIP_DURATION = java.time.Duration.ofMillis(250L);
-    //?} else if >=1.19.4 {
-    /*public static final int TOOLTIP_DURATION = 250; // Millis.
-    *///?} else
-    /*public static final long TOOLTIP_DURATION = 250_000_000L;*/ // Nanos.
-
-    /**
-     * A channel identifier for servers to know that this mod is installed.
-     */
-    //? if >=1.21.1 || (forge && (!legacyNeoForge) && >=1.18.2 && !1.20.2) {
-    public static final ResourceLocation CHANNEL_IDENTIFIER = ResourceLocation.fromNamespaceAndPath("hcscr", "imhere");
-    //?} else
-    /*public static final ResourceLocation CHANNEL_IDENTIFIER = new ResourceLocation("hcscr", "imhere");*/
-
-    /**
      * Game config directory.
      */
     //? if fabric {
@@ -87,6 +69,24 @@ public final class HStonecutter {
     /*public static final Path CONFIG_DIRECTORY = net.minecraftforge.fml.loading.FMLPaths.CONFIGDIR.get();*/
 
     /**
+     * A channel identifier for servers to know that this mod is installed.
+     */
+    //? if >=1.21.1 || (forge && (!legacyNeoForge) && >=1.18.2 && !1.20.2) {
+    static final ResourceLocation CHANNEL_IDENTIFIER = ResourceLocation.fromNamespaceAndPath("hcscr", "imhere");
+    //?} else
+    /*static final ResourceLocation CHANNEL_IDENTIFIER = new ResourceLocation("hcscr", "imhere");*/
+
+    /**
+     * A duration for tooltips in version-dependant units. Currently {@code 250} milliseconds.
+     */
+    //? if >=1.20.6 {
+    private static final java.time.Duration TOOLTIP_DURATION = java.time.Duration.ofMillis(250L);
+    //?} else if >=1.19.4 {
+    /*public static final int TOOLTIP_DURATION = 250; // Millis.
+    *///?} else
+    /*public static final long TOOLTIP_DURATION = 250_000_000L;*/ // Nanos.
+
+    /**
      * An instance of this class cannot be created.
      *
      * @throws AssertionError Always
@@ -95,7 +95,7 @@ public final class HStonecutter {
     @ApiStatus.ScheduledForRemoval
     @Deprecated
     @Contract(value = "-> fail", pure = true)
-    public HStonecutter() {
+    private HStonecutter() {
         throw new AssertionError("No instances.");
     }
 
@@ -109,7 +109,7 @@ public final class HStonecutter {
     public static MutableComponent translate(String key) {
         //? if >=1.19.2 {
         return Component.translatable(key);
-         //?} else
+        //?} else
         /*return new net.minecraft.network.chat.TranslatableComponent(key);*/
     }
 
@@ -124,7 +124,7 @@ public final class HStonecutter {
     public static MutableComponent translate(String key, Object... args) {
         //? if >=1.19.2 {
         return Component.translatable(key, args);
-         //?} else
+        //?} else
         /*return new net.minecraft.network.chat.TranslatableComponent(key, args);*/
     }
 
@@ -135,7 +135,7 @@ public final class HStonecutter {
      * @return Game profiler
      */
     @CheckReturnValue
-    public static ProfilerFiller profilerOf(@SuppressWarnings("unused") Minecraft game) { // <- Used only before 1.21.3.
+    public static ProfilerFiller profilerOf(@SuppressWarnings("unused") Minecraft game) { // <- Used before 1.21.3.
         //? if >=1.21.3 {
         return net.minecraft.util.profiling.Profiler.get();
         //?} else
@@ -283,6 +283,7 @@ public final class HStonecutter {
      * @param tooltipRenderer Last pass tooltip renderer, typically {@link HScreen}
      * @return A new checkbox instance
      */
+    @SuppressWarnings("BooleanParameter") // <- Boolean method used as a state, not as control flow. (checkbox "checked" state)
     @Contract(value = "_, _, _, _, _, _, _, _ -> new", pure = true)
     public static Checkbox guiCheckbox(Font font, int x, int y, Component message, Component tooltip,
                                        boolean check, BooleanConsumer handler,
@@ -338,7 +339,7 @@ public final class HStonecutter {
         *///?}
         //? if >=1.19.4 {
         box.setTooltip(net.minecraft.client.gui.components.Tooltip.create(tooltip));
-        box.setTooltipDelay(HStonecutter.TOOLTIP_DURATION);
+        box.setTooltipDelay(TOOLTIP_DURATION);
         //?}
         return box;
     }
@@ -415,7 +416,7 @@ public final class HStonecutter {
         };
         //? if >=1.19.4 {
         slider.setTooltip(net.minecraft.client.gui.components.Tooltip.create(tooltip));
-        slider.setTooltipDelay(HStonecutter.TOOLTIP_DURATION);
+        slider.setTooltipDelay(TOOLTIP_DURATION);
         //?}
         return slider;
     }

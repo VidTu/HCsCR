@@ -63,6 +63,9 @@ loom {
             // Set up RAM.
             "-Xmx2G",
 
+            // Force UNIX newlines.
+            "-Dline.separator=\n",
+
             // Debug arguments.
             "-ea",
             "-esa",
@@ -85,7 +88,7 @@ loom {
             "java.base/jdk.internal.misc=ALL-UNNAMED"
         )
     }
-    @Suppress("UnstableApiUsage")
+    @Suppress("UnstableApiUsage") // <- Required to have stable refmap name and Mixin processing.
     mixin {
         useLegacyMixinAp = true
         defaultRefmapName = "hcscr.mixins.refmap.json"

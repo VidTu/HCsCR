@@ -47,7 +47,7 @@ public final class EntityMixin {
      */
     @Shadow
     @Final
-    private static AABB INITIAL_AABB;
+    private static final AABB INITIAL_AABB = new AABB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
 
     /**
      * Entity level (world).
@@ -82,6 +82,7 @@ public final class EntityMixin {
         // Do NOT hide entity if any of the following conditions is met:
         // - The current level (world) is not client-side. (e.g. integrated server world)
         // - The entity is not actually hidden.
+        //noinspection SuspiciousMethodCalls // <- Mixin.
         if (!level.isClientSide() || !HCsCR.HIDDEN_ENTITIES.containsKey(this)) return;
 
         // Set to empty hitbox.

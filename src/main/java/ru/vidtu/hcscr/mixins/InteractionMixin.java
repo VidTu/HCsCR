@@ -64,7 +64,8 @@ public abstract class InteractionMixin extends Entity {
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private InteractionMixin() {
-        super(null, null);
+        //noinspection DataFlowIssue
+        super(null, null); // <- Never called. (Mixin)
         throw new AssertionError("No instances.");
     }
 

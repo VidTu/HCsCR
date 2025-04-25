@@ -95,7 +95,7 @@ public final class RespawnAnchorBlockMixin {
         // - The anchor doesn't explode in the current dimension.
         // - The mod is disabled via config or keybind.
         // - The remove anchors feature is OFF. (in switch block)
-        if (!level.isClientSide() || state.getValue(RespawnAnchorBlock.CHARGE) == 0 ||
+        if (!level.isClientSide() || (state.getValue(RespawnAnchorBlock.CHARGE) == 0) ||
                 RespawnAnchorBlock.canSetSpawn(level) || !HConfig.enable()) {
             // Log, stop. (**DEBUG**)
             HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);

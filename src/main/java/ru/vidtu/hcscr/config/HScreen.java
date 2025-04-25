@@ -94,7 +94,7 @@ public final class HScreen extends Screen {
 
         // Crystals Delay.
         IntFunction<Component> crystalsDelayMessage = delay -> HStonecutter.translate("options.generic_value",
-                HStonecutter.translate("hcscr.crystalsDelay"), delay > 0 ? HStonecutter.translate(
+                HStonecutter.translate("hcscr.crystalsDelay"), (delay > 0) ? HStonecutter.translate(
                         "hcscr.delay.format", delay / 1_000_000) : HStonecutter.translate("hcscr.delay.off"));
         this.add(HStonecutter.guiSlider(this.font, buttonX, 20 + (24 * 2), 200, 20, crystalsDelayMessage,
                 HStonecutter.translate("hcscr.crystalsDelay.tip"), HConfig.crystalsDelay(), 0, 200_000_000,
@@ -102,7 +102,7 @@ public final class HScreen extends Screen {
 
         // Crystals Resync.
         IntFunction<Component> crystalsResyncMessage = resync -> HStonecutter.translate("options.generic_value",
-                HStonecutter.translate("hcscr.crystalsResync"), resync > 0 ? HStonecutter.translate(
+                HStonecutter.translate("hcscr.crystalsResync"), (resync > 0) ? HStonecutter.translate(
                         "hcscr.delay.format", resync * 50) : HStonecutter.translate("hcscr.delay.off"));
         this.add(HStonecutter.guiSlider(this.font, buttonX, 20 + (24 * 3), 200, 20, crystalsResyncMessage,
                 HStonecutter.translate("hcscr.crystalsResync.tip"), HConfig.crystalsResync(), 0, 50,
@@ -182,7 +182,8 @@ public final class HScreen extends Screen {
      *
      * @param tooltip Tooltip to be rendered last pass
      */
-    private void tooltip(List<FormattedCharSequence> tooltip) {
+    @SuppressWarnings("EmptyMethod") // <- Used before 1.19.4.
+    private void tooltip(@SuppressWarnings("unused") List<FormattedCharSequence> tooltip) { // <- Used before 1.19.4.
         //? if <1.19.4
         /*this.tooltip = tooltip;*/
     }
