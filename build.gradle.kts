@@ -140,8 +140,14 @@ dependencies {
         "neoForge"("net.neoforged:neoforge:${property("stonecutter.neo")}")
     } else {
         // Fabric
+        val fabricApiVersion = property("stonecutter.fabric-api").toString()
         modImplementation(libs.fabric.loader)
-        modImplementation("net.fabricmc.fabric-api:fabric-api:${property("stonecutter.fabric-api")}")
+        modImplementation(fabricApi.module("fabric-key-binding-api-v1", fabricApiVersion))
+        modImplementation(fabricApi.module("fabric-lifecycle-events-v1", fabricApiVersion))
+        modImplementation(fabricApi.module("fabric-networking-api-v1", fabricApiVersion))
+        modImplementation(fabricApi.module("fabric-rendering-v1", fabricApiVersion))
+        modRuntimeOnly(fabricApi.module("fabric-resource-loader-v0", fabricApiVersion)) // Loads assets and also a ModMenu dependency.
+        modRuntimeOnly(fabricApi.module("fabric-screen-api-v1", fabricApiVersion)) // ModMenu dependency.
         modImplementation("com.terraformersmc:modmenu:${property("stonecutter.modmenu")}")
     }
 }
@@ -181,7 +187,7 @@ tasks.withType<ProcessResources> {
                 it.writeText(Gson().fromJson(it.readText(), JsonElement::class.java).toString())
             } else if (it.name.endsWith(".toml", ignoreCase = true)) {
                 it.writeText(it.readLines()
-                    .filter { it -> it.isNotBlank() }
+                    .filter { s -> s.isNotBlank() }
                     .joinToString("\n")
                     .replace(" = ", "="))
             }
