@@ -99,9 +99,55 @@ This project is provided under the Apache 2.0 License.
 Check out [NOTICE](https://github.com/VidTu/HCsCR/blob/main/NOTICE) and
 [LICENSE](https://github.com/VidTu/HCsCR/blob/main/LICENSE) for more information.
 
-## Building
+## Development
+
+### Building (Compiling)
+
+To compile the mod from the source code:
 
 1. Have 8 GB of free RAM, 20 GB of free disk space, and an active internet connection.
 2. Install Java 21 and dump it into PATH and/or JAVA_HOME.
 3. Run `./gradlew chiseledBuild` from the terminal/PowerShell.
 4. Grab all the JARs from the `build/libs/` folder.
+
+### Developing/Debugging
+
+Run the `./launch <version>`[^1] (e.g. `./launch 1.16.5-fabric`) command to launch the game client. You can attach a
+debugger to the process with the game launched. Hotswap is supported. "Enhanced" hotswap (class redefinition) and
+hotswap agent will work if supported by your JVM.
+
+Switch between the current target (by Stonecutter) versions by using `./switch <version>`[^2] command.
+It is discouraged to modify code commented out by the preprocessor, switch to the version instead.
+
+Reset to the default target before commiting changes via `./reset`[^3] command to avoid mess.
+
+Running the client via generated tasks (e.g. for IntelliJ IDEA) usually doesn't work, because  the Stonecutter
+Preprocessor requires setting the active project and also building via the chiseled build.
+
+The development environment has stricter preconditions: Mixin checks, Netty detector, Java assertions, etc.
+Code with bugs might (and probably will) fail faster here than in a production environment.
+
+The recommended IDE for development is IntelliJ IDEA (Community or Ultimate) with the Minecraft Development plugin.
+This is not a strict requirement, however. Any IDE/editor should work just fine.
+
+### Reproducible Builds
+
+HCsCR attempts to have reproducible builds (reproducible JAR archives) for its releases. Check out
+[GitHub Releases](https://github.com/VidTu/HCsCR/releases) for "Reproducible Build Hash" values. If it is present
+on any release, this release's binary JAR should be reproducible. Unfortunately, due to the nature of Java
+(Gradle) and Minecraft development, it is not always possible to have reproducible builds.
+Reproducible release JARs are compiled with: (use these commands to create a reproducible build)
+
+```bash
+./gradlew clean --no-daemon --no-build-cache --no-configuration-cache
+./gradlew chiseledClean --no-daemon --no-build-cache --no-configuration-cache
+./gradlew chiseledAssemble --no-daemon --no-build-cache --no-configuration-cache
+```
+
+Currently, no dependency (integrity) validation is performed. This might change in a future version.
+
+[^1]: This is a shortcut for `./gradlew "Set active project to <version>"` and `./gradlew "<version>:runClient"`.
+
+[^2]: This is a shortcut for `./gradlew "Set active project to <version>"`.
+
+[^3]: This is a shortcut for `./gradlew "Reset active project"`.

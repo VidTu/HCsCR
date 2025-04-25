@@ -41,7 +41,7 @@ java.sourceCompatibility = javaVersion
 java.targetCompatibility = javaVersion
 java.toolchain.languageVersion = JavaLanguageVersion.of(javaMajor)
 
-val versionSuffix = if (legacyNeoForge) ModPlatform.NEOFORGE.id() else loomPlatform.id()
+val versionSuffix = if (legacyNeoForge) ModPlatform.NEOFORGE.id()!! else loomPlatform.id()!!
 group = "ru.vidtu.hcscr"
 base.archivesName = "HCsCR"
 version = "$version+$mcVersion-$versionSuffix"
@@ -173,14 +173,13 @@ tasks.withType<ProcessResources> {
     filesMatching(listOf("fabric.mod.json", "quilt.mod.json", "hcscr.mixins.json", "META-INF/mods.toml", "META-INF/neoforge.mods.toml")) {
         expand(inputs.properties)
     }
-    val jsonAlike = Regex("^.*\\.(?:json|mcmeta)$", RegexOption.IGNORE_CASE)
-    fileTree(outputs.files.asPath).forEach {
-        if (it.name.matches(jsonAlike)) {
-            doLast {
+    val files = fileTree(outputs.files.asPath)
+    doLast {
+        val jsonAlike = Regex("^.*\\.(?:json|mcmeta)$", RegexOption.IGNORE_CASE)
+        files.forEach {
+            if (it.name.matches(jsonAlike)) {
                 it.writeText(Gson().fromJson(it.readText(), JsonElement::class.java).toString())
-            }
-        } else if (it.name.endsWith(".toml", ignoreCase = true)) {
-            doLast {
+            } else if (it.name.endsWith(".toml", ignoreCase = true)) {
                 it.writeText(it.readLines()
                     .filter { it -> it.isNotBlank() }
                     .joinToString("\n")
