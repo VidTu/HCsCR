@@ -29,9 +29,35 @@
         "reason": "HCsCR works only with Minecraft ${minecraft}."
       },
       {
-        "id": "fabric",
+        "id": "fabric-key-binding-api-v1",
         "versions": "*",
         "reason": "HCsCR requires Fabric API to properly implement its functionality."
+      },
+      {
+        "id": "fabric-lifecycle-events-v1",
+        "versions": "*",
+        "reason": "HCsCR requires Fabric API to properly implement its functionality."
+      },
+      {
+        "id": "fabric-networking-api-v1",
+        "versions": "*",
+        "reason": "HCsCR requires Fabric API to properly implement its functionality."
+      },
+      {
+        "id": "fabric-rendering-v1",
+        "versions": "*",
+        "reason": "HCsCR requires Fabric API to properly implement its functionality."
+      },
+      {
+        "id": "fabric-resource-loader-v0",
+        "versions": "*",
+        "reason": "HCsCR requires Fabric API to properly implement its functionality."
+      },
+      {
+        "id": "fabric",
+        "versions": "*",
+        "reason": "HCsCR requires Fabric API to properly implement its functionality.",
+        "optional": true
       },
       {
         "id": "modmenu",
