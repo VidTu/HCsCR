@@ -40,8 +40,8 @@
     "fabric-resource-loader-v0": "*"
   },
   "recommends": {
-    "modmenu": "*",
-    "fabric": "*"
+    "fabric": "*",
+    "modmenu": "*"
   },
   "custom": {
     "modmenu": {
