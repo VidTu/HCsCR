@@ -148,6 +148,7 @@ public final class HCsCR {
     public static void handleTick(Minecraft game) {
         // Validate.
         assert game != null : "HCsCR: Parameter 'game' is null.";
+        assert game.isSameThread() : "HCsCR: Handling game tick NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ')';
 
         // Get and push the profiler.
         ProfilerFiller profiler = HStonecutter.profilerOf(game); // Implicit NPE for 'game'
@@ -173,6 +174,7 @@ public final class HCsCR {
     public static void handleFrame(ProfilerFiller profiler) {
         // Validate.
         assert profiler != null : "HCsCR: Parameter 'profiler' is null.";
+        assert Minecraft.getInstance().isSameThread() : "HCsCR: Handling frame tick NOT from the main thread. (thread: " + Thread.currentThread() + ", profiler: " + profiler + ')';
 
         // Push the profiler.
         profiler.push("hcscr:handle_frame"); // Implicit NPE for 'profiler'
@@ -240,7 +242,9 @@ public final class HCsCR {
         assert entity != null : "HCsCR: Parameter 'entity' is null. (source: " + source + ", amount: " + amount + ')';
         assert source != null : "HCsCR: Parameter 'source' is null. (entity: " + entity + ", amount: " + amount + ')';
         assert Float.isFinite(amount) : "HCsCR: Parameter 'amount' is not finite. (entity: " + entity + ", source: " + source + ", amount: " + amount + ')';
-        assert (source.getEntity() instanceof LocalPlayer) && (source.getDirectEntity() instanceof LocalPlayer) : "HCsCR: Source entity is not LocalPlayer. (entity: " + entity + ", source: " + source + ", amount: " + amount + ", sourceEntity: " + source.getEntity() + ", sourceDirectEntity: " + source.getDirectEntity() + ')';
+        //noinspection ObjectEquality // <- Should be the same reference.
+        assert (source.getEntity() instanceof LocalPlayer) && (source.getEntity() == source.getDirectEntity()) && (source.getEntity() == Minecraft.getInstance().player) : "HCsCR: Source entity is not LocalPlayer. (entity: " + entity + ", source: " + source + ", amount: " + amount + ", sourceEntity: " + source.getEntity() + ", sourceDirectEntity: " + source.getDirectEntity() + ')';
+        assert Minecraft.getInstance().isSameThread() : "HCsCR: Handling entity attack NOT from the main thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ", source: " + source + ", amount: " + amount + ')';
 
         // Do NOT process hit if any of the following conditions is met:
         // - The mod is disabled via config or keybind.
@@ -249,12 +253,11 @@ public final class HCsCR {
         // - The current level (world) is not client-side. (e.g. integrated server world)
         // - This entity type shouldn't be processed at all (e.g. any living entity) or by the current config (e.g. slime).
         // - The damaging entity is not a player.
-        if (!HConfig.enable() || HStonecutter.isEntityRemoved(entity) || (amount <= 0.0F) ||
-                !HStonecutter.levelOf(entity).isClientSide() || !HConfig.shouldProcess(entity) ||
-                !(source.getEntity() instanceof LocalPlayer)) return false; // Implicit NPE for 'source'
+        if (!HConfig.enable() || HStonecutter.isEntityRemoved(entity) || (amount <= 0.0F) || // Implicit NPE for 'entity'
+                !HStonecutter.levelOf(entity).isClientSide() || !HConfig.shouldProcess(entity)) return false;
 
         // Don't process player hits that deal zero damage, e.g. with the weakness effect.
-        LocalPlayer player = (LocalPlayer) source.getEntity();
+        LocalPlayer player = (LocalPlayer) source.getEntity(); // Implicit NPE for 'source'
         AttributeMap map = player.getAttributes();
         for (MobEffectInstance instance : player.getActiveEffects()) {
             //? if >=1.20.6 {
@@ -350,6 +353,11 @@ public final class HCsCR {
      * @param profiler Game profiler
      */
     private static void handleConfigBind(Minecraft game, ProfilerFiller profiler) {
+        // Validate.
+        assert game != null : "HCsCR: Parameter 'game' is null. (profiler: " + profiler + ')';
+        assert profiler != null : "HCsCR: Parameter 'profiler' is null. (game: " + game + ')';
+        assert game.isSameThread() : "HCsCR: Handling the config bind NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ", profiler: " + profiler + ')';
+
         // Push the profiler.
         profiler.push("hcscr:config_bind"); // Implicit NPE for 'profiler'
 
@@ -364,7 +372,7 @@ public final class HCsCR {
         LOGGER.trace(HCSCR_MARKER, "HCsCR: Config keybind was consumed, opening the config screen. (game: {}, keybind: {})", game, CONFIG_BIND);
 
         // Check the open screen.
-        Screen prev = game.screen;
+        Screen prev = game.screen; // Implicit NPE for 'game'
         if (prev != null) {
             // Log, pop, stop. (**DEBUG**)
             LOGGER.debug(HCSCR_MARKER, "HCsCR: Can't open the config screen via the keybind, screen is open. (game: {}, prev: {}, keybind: {})", game, prev, CONFIG_BIND);
@@ -374,7 +382,7 @@ public final class HCsCR {
 
         // Open the screen.
         HScreen screen = new HScreen(null);
-        game.setScreen(screen); // Implicit NPE for 'game'
+        game.setScreen(screen);
 
         // Log. (**DEBUG**)
         LOGGER.debug(HCSCR_MARKER, "HCsCR: Opened the config screen via the keybind. (game: {}, screen: {}, keybind: {})", game, screen, CONFIG_BIND);
@@ -390,6 +398,11 @@ public final class HCsCR {
      * @param profiler Game profiler
      */
     private static void handleToggleBind(Minecraft game, ProfilerFiller profiler) {
+        // Validate.
+        assert game != null : "HCsCR: Parameter 'game' is null. (profiler: " + profiler + ')';
+        assert profiler != null : "HCsCR: Parameter 'profiler' is null. (game: " + game + ')';
+        assert game.isSameThread() : "HCsCR: Handling the toggle bind NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ", profiler: " + profiler + ')';
+
         // Push the profiler.
         profiler.push("hcscr:toggle_bind"); // Implicit NPE for 'profiler'
 
@@ -425,6 +438,11 @@ public final class HCsCR {
      * @param profiler Game profiler
      */
     private static void handleHiddenEntities(Minecraft game, ProfilerFiller profiler) {
+        // Validate.
+        assert game != null : "HCsCR: Parameter 'game' is null. (profiler: " + profiler + ')';
+        assert profiler != null : "HCsCR: Parameter 'profiler' is null. (game: " + game + ')';
+        assert game.isSameThread() : "HCsCR: Handling hidden entities NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ", profiler: " + profiler + ')';
+
         // Push the profiler.
         profiler.push("hcscr:hidden_entities"); // Implicit NPE for 'profiler'
 
@@ -499,6 +517,11 @@ public final class HCsCR {
      * @param profiler Game profiler
      */
     private static void handleClippingAnchors(Minecraft game, ProfilerFiller profiler) {
+        // Validate.
+        assert game != null : "HCsCR: Parameter 'game' is null. (profiler: " + profiler + ')';
+        assert profiler != null : "HCsCR: Parameter 'profiler' is null. (game: " + game + ')';
+        assert game.isSameThread() : "HCsCR: Handling clipping anchors NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ", profiler: " + profiler + ')';
+
         // Push the profiler.
         profiler.push("hcscr:clipping_anchors"); // Implicit NPE for 'profiler'
 

@@ -64,8 +64,8 @@ public abstract class InteractionMixin extends Entity {
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private InteractionMixin() {
-        //noinspection DataFlowIssue
-        super(null, null); // <- Never called. (Mixin)
+        //noinspection DataFlowIssue // <- Never called. (Mixin)
+        super(null, null);
         throw new AssertionError("No instances.");
     }
 
@@ -77,6 +77,10 @@ public abstract class InteractionMixin extends Entity {
      */
     @Inject(method = "skipAttackInteraction", at = @At("HEAD"), cancellable = true)
     private void hcscr_skipAttackInteraction_head(Entity attacker, CallbackInfoReturnable<Boolean> cir) {
+        // Validate.
+        assert attacker != null : "HCsCR: Parameter 'attacker' is null. (cir: " + cir + ", interaction: " + this + ')';
+        assert cir != null : "HCsCR: Parameter 'cir' is null. (attacker: " + attacker + ", interaction: " + this + ')';
+
         // Log. (**TRACE**)
         HCSCR_LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Received attack in Interaction entity. (attacker: {}, cir: {}, interaction: {})", attacker, cir, this);
 

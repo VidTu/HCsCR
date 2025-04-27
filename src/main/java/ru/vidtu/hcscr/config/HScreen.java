@@ -182,8 +182,11 @@ public final class HScreen extends Screen {
      *
      * @param tooltip Tooltip to be rendered last pass
      */
-    @SuppressWarnings("EmptyMethod") // <- Used before 1.19.4.
-    private void tooltip(@SuppressWarnings("unused") List<FormattedCharSequence> tooltip) { // <- Used before 1.19.4.
+    private void tooltip(List<FormattedCharSequence> tooltip) {
+        // Validate.
+        assert tooltip != null : "Parameter 'tooltip' is null. (screen: " + this + ')';
+
+        // Assign.
         //? if <1.19.4
         /*this.tooltip = tooltip;*/
     }

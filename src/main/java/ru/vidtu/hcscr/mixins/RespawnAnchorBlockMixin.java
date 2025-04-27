@@ -195,12 +195,12 @@ public final class RespawnAnchorBlockMixin {
 
     @org.spongepowered.asm.mixin.Shadow
     private static boolean isRespawnFuel(net.minecraft.world.item.ItemStack stack) {
-        return false;
+        throw new AssertionError("HCsCR: Unreachable code statement.");
     }
 
     @org.spongepowered.asm.mixin.Shadow
     private static boolean canBeCharged(BlockState state) {
-        return false;
+        throw new AssertionError("HCsCR: Unreachable code statement.");
     }
     *///?}
 }

@@ -1688,7 +1688,7 @@
       <option name="onlyWarnOnBaseMethods" value="true" />
     </inspection_tool>
     <inspection_tool class="NonCommentSourceStatements" enabled="true" level="ERROR" enabled_by_default="true" editorAttributes="ERRORS_ATTRIBUTES">
-      <option name="m_limit" value="50" />
+      <option name="m_limit" value="55" />
     </inspection_tool>
     <inspection_tool class="NonExceptionNameEndsWithException" enabled="true" level="ERROR" enabled_by_default="true" editorAttributes="ERRORS_ATTRIBUTES" />
     <inspection_tool class="NonExtendableApiUsage" enabled="true" level="ERROR" enabled_by_default="true" editorAttributes="ERRORS_ATTRIBUTES" />
@@ -2412,15 +2412,14 @@
       <option name="myAllowedSuppressions">
         <list>
           <option value="UnstableApiUsage" />
-          <option value="unused" />
           <option value="deprecation" />
           <option value="RedundantSuppression" />
           <option value="DataFlowIssue" />
-          <option value="EmptyMethod" />
           <option value="BooleanParameter" />
           <option value="SuspiciousMethodCalls" />
           <option value="SimplifiableIfStatement" />
           <option value="NonShortCircuitBooleanExpression" />
+          <option value="ObjectEquality" />
         </list>
       </option>
     </inspection_tool>

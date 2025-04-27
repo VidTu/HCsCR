@@ -46,7 +46,7 @@ public final class HModMenu implements ModMenuApi {
 
     @Contract(pure = true)
     @Override
-    public ConfigScreenFactory<?> getModConfigScreenFactory() {
+    public ConfigScreenFactory<HScreen> getModConfigScreenFactory() {
         return HScreen::new;
     }
 
