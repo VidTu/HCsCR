@@ -62,18 +62,23 @@ public final class HNeo {
      * @param bus       Mod-specific event bus
      ^/
     public HNeo(Dist dist, ModContainer container, IEventBus bus) {
+        // Validate.
+        assert dist != null : "HCsCR: Parameter 'dist' is null. (container: " + container + ", bus: " + bus + ", mod: " + this + ')';
+        assert container != null : "HCsCR: Parameter 'container' is null. (dist: " + dist + ", bus: " + bus + ", mod: " + this + ')';
+        assert bus != null : "HCsCR: Parameter 'bus' is null. (dist: " + dist + ", container: " + container + ", mod: " + this + ')';
+
         // Log.
         long start = System.nanoTime();
         LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Loading... (platform: neoforge)");
-
-        // Load the config.
-        HConfig.load();
 
         // Not sure how long the Forge does have the "clientSideOnly" field in the TOML,
         // so I'll do an additional exception check here.
         if (dist != Dist.CLIENT) {
             throw new UnsupportedOperationException("HCsCR: You've tried to load the HCsCR mod on a server. This won't work.");
         }
+
+        // Load the config.
+        HConfig.load();
 
         // Register the networking.
         //? if >=1.20.6 {

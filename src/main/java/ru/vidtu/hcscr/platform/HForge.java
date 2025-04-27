@@ -51,29 +51,44 @@ public final class HForge {
      ^/
     private static final Logger LOGGER = LogManager.getLogger("HCsCR/HForge");
 
+    //? if legacyNeoForge {
+    /^/^¹*
+     * Creates and loads a new mod.
+     *
+     * @param container Current mod container
+     * @param bus       Loading event bus
+     ¹^/
+    public HForge(net.minecraftforge.fml.ModContainer container, net.minecraftforge.eventbus.api.IEventBus bus) {
+        // Validate.
+        assert container != null : "HCsCR: Parameter 'container' is null. (bus: " + bus + ", mod: " + this + ')';
+        assert bus != null : "HCsCR: Parameter 'bus' is null. (container: " + container + ", mod: " + this + ')';
+    ^///?} else if >=1.19.2 && (!1.20.2) {
     /^*
      * Creates and loads a new mod.
      *
      * @param ctx Loading context
      ^/
-    //? if legacyNeoForge {
-    /^public HForge(net.minecraftforge.fml.ModContainer container, net.minecraftforge.eventbus.api.IEventBus bus) {
-    ^///?} else if >=1.19.2 && !1.20.2 {
     public HForge(FMLJavaModLoadingContext ctx) {
-    //?} else
-    /^public HForge() {^/
+        // Validate.
+        assert ctx != null : "HCsCR: Parameter 'ctx' is null. (mod: " + this + ')';
+    //?} else {
+    /^/^¹*
+     * Creates a new mod.
+     ¹^/
+    public HForge() {
+    ^///?}
         // Log.
         long start = System.nanoTime();
-        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Loading... (platform: neoforge)");
-
-        // Load the config.
-        HConfig.load();
+        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Loading... (platform: forge)");
 
         // Not sure how long the Forge does have the "clientSideOnly" field in the TOML,
         // so I'll do an additional exception check here.
         if (FMLEnvironment.dist != Dist.CLIENT) {
             throw new UnsupportedOperationException("HCsCR: You've tried to load the HCsCR mod on a server. This won't work.");
         }
+
+        // Load the config.
+        HConfig.load();
 
         // Register the networking.
         //? if >=1.20.2 {
@@ -105,7 +120,7 @@ public final class HForge {
         // Register the binds.
         //? if 1.20.2 {
         /^var bus = FMLJavaModLoadingContext.get().getModEventBus();
-        ^///?} else >=1.19.2 && !legacyNeoForge
+        ^///?} else >=1.19.2 && (!legacyNeoForge)
         var bus = ctx.getModEventBus();
         //? if >=1.19.2 {
         bus.addListener((net.minecraftforge.client.event.RegisterKeyMappingsEvent event) -> {
@@ -173,7 +188,7 @@ public final class HForge {
     @Contract(pure = true)
     @Override
     public String toString() {
-        return "HCsCR/HForge";
+        return "HCsCR/HForge{}";
     }
 }
 *///?}

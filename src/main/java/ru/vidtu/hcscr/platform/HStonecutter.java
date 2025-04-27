@@ -72,7 +72,7 @@ public final class HStonecutter {
     /**
      * A channel identifier for servers to know that this mod is installed.
      */
-    //? if >=1.21.1 || (forge && (!legacyNeoForge) && >=1.18.2 && !1.20.2) {
+    //? if >=1.21.1 || (forge && (!legacyNeoForge) && >=1.18.2 && (!1.20.2)) {
     static final ResourceLocation CHANNEL_IDENTIFIER = ResourceLocation.fromNamespaceAndPath("hcscr", "imhere");
     //?} else
     /*static final ResourceLocation CHANNEL_IDENTIFIER = new ResourceLocation("hcscr", "imhere");*/
@@ -83,9 +83,9 @@ public final class HStonecutter {
     //? if >=1.20.6 {
     private static final java.time.Duration TOOLTIP_DURATION = java.time.Duration.ofMillis(250L);
     //?} else if >=1.19.4 {
-    /*public static final int TOOLTIP_DURATION = 250; // Millis.
+    /*private static final int TOOLTIP_DURATION = 250; // Millis.
     *///?} else
-    /*public static final long TOOLTIP_DURATION = 250_000_000L;*/ // Nanos.
+    /*private static final long TOOLTIP_DURATION = 250_000_000L;*/ // Nanos.
 
     /**
      * An instance of this class cannot be created.
@@ -225,7 +225,7 @@ public final class HStonecutter {
         //? if >=1.17.1 {
         entity.discard(); // Implicit NPE for 'entity'
         //?} else
-        /*entity.remove(); // Implicit NPE for 'entity'*/
+        /*entity.remove();*/ // Implicit NPE for 'entity'
     }
 
     /**
@@ -236,7 +236,6 @@ public final class HStonecutter {
      * @param amount Amount of damage
      * @return The result of the hurting
      */
-    @SuppressWarnings({"deprecation", "RedundantSuppression"}) // <- Used in vanilla code. (1.21.3+)
     @CheckReturnValue
     public static boolean hurt(Entity entity, DamageSource source, float amount) {
         // Validate.
@@ -246,9 +245,10 @@ public final class HStonecutter {
 
         // Delegate.
         //? if >=1.21.3 {
+        //noinspection deprecation // <- Used in vanilla code.
         return entity.hurtOrSimulate(source, amount); // Implicit NPE for 'entity', 'amount'
         //?} else
-        /*return entity.hurt(source, amount); // Implicit NPE for 'entity', 'amount'*/
+        /*return entity.hurt(source, amount);*/ // Implicit NPE for 'entity', 'amount'
     }
 
     /**
@@ -296,6 +296,7 @@ public final class HStonecutter {
              ^/
             private long lastAway = System.nanoTime();
 
+            @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") // <- Parameter names are not provided by Mojmap.
             @Override
             public void renderButton(com.mojang.blaze3d.vertex.PoseStack graphics, int mouseX, int mouseY, float delta) {
                 // Render the element itself.
@@ -373,6 +374,7 @@ public final class HStonecutter {
              ¹^/
             private long lastAway = System.nanoTime();
 
+            @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") // <- Parameter names are not provided by Mojmap.
             @Override
             public void renderButton(com.mojang.blaze3d.vertex.PoseStack graphics, int mouseX, int mouseY, float delta) {
                 // Render the element itself.
@@ -466,6 +468,7 @@ public final class HStonecutter {
              ^/
             private long lastAway = System.nanoTime();
 
+            @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") // <- Parameter names are not provided by Mojmap.
             @Override
             public void renderButton(com.mojang.blaze3d.vertex.PoseStack graphics, int mouseX, int mouseY, float delta) {
                 // Render the element itself.

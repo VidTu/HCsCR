@@ -154,7 +154,7 @@ public final class RespawnAnchorBlockMixin {
         // - The mod is disabled via config or keybind.
         // - The anchor is currently being charged.
         // - The remove anchors feature is OFF. (in switch block)
-        if (!level.isClientSide() || state.getValue(RespawnAnchorBlock.CHARGE) == 0 ||
+        if (!level.isClientSide() || (state.getValue(RespawnAnchorBlock.CHARGE) == 0) ||
                 RespawnAnchorBlock.canSetSpawn(level) || !HConfig.enable()) {
             // Log, stop. (**DEBUG**)
             HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, result: {}, anchor: {})", state, level, pos, player, hand, result, this);
@@ -193,11 +193,13 @@ public final class RespawnAnchorBlockMixin {
         }
     }
 
+    @Contract(pure = true)
     @org.spongepowered.asm.mixin.Shadow
     private static boolean isRespawnFuel(net.minecraft.world.item.ItemStack stack) {
         throw new AssertionError("HCsCR: Unreachable code statement.");
     }
 
+    @Contract(pure = true)
     @org.spongepowered.asm.mixin.Shadow
     private static boolean canBeCharged(BlockState state) {
         throw new AssertionError("HCsCR: Unreachable code statement.");

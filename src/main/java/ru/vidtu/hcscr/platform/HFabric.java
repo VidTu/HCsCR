@@ -119,7 +119,7 @@ public final class HFabric implements ClientModInitializer {
     @Contract(pure = true)
     @Override
     public String toString() {
-        return "HCsCR/HFabric";
+        return "HCsCR/HFabric{}";
     }
 }
 //?}

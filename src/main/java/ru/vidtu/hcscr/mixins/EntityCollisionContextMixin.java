@@ -62,8 +62,15 @@ public final class EntityCollisionContextMixin implements HEntityCollisionContex
         throw new AssertionError("No instances.");
     }
 
+    /^*
+     * Stored the {@link #hcscr_entity} for future use.
+     *
+     * @param entity The entity to stored, {@code null} if none
+     * @param ci     Callback data, ignored
+     ^/
     @Inject(method = "<init>(Lnet/minecraft/world/entity/Entity;)V", at = @At("RETURN"))
-    private void hcscr_init_return(Entity entity, CallbackInfo ci) {
+    private void hcscr_init_return(@Nullable Entity entity, CallbackInfo ci) {
+        // Stored.
         this.hcscr_entity = entity;
     }
 

@@ -141,6 +141,7 @@ public final class HScreen extends Screen {
         minecraft.setScreen(this.parent);
     }
 
+    @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") // <- Parameter names are not provided by Mojmap.
     @Override
     //? if >=1.20.1 {
     public void render(net.minecraft.client.gui.GuiGraphics graphics, int mouseX, int mouseY, float delta) {
@@ -160,7 +161,7 @@ public final class HScreen extends Screen {
         // Render the last pass tooltip.
         //? if < 1.19.4 {
         /*if (this.tooltip == null) return;
-        renderTooltip(graphics, this.tooltip, mouseX, mouseY);
+        this.renderTooltip(graphics, this.tooltip, mouseX, mouseY);
         this.tooltip = null;
         *///?}
     }
@@ -184,7 +185,7 @@ public final class HScreen extends Screen {
      */
     private void tooltip(List<FormattedCharSequence> tooltip) {
         // Validate.
-        assert tooltip != null : "Parameter 'tooltip' is null. (screen: " + this + ')';
+        assert tooltip != null : "HCsCR: Parameter 'tooltip' is null. (screen: " + this + ')';
 
         // Assign.
         //? if <1.19.4
@@ -196,6 +197,8 @@ public final class HScreen extends Screen {
     public String toString() {
         return "HCsCR/HScreen{" +
                 "parent=" + this.parent +
+                //? if <1.19.4
+                /*", tooltip=" + this.tooltip +*/
                 '}';
     }
 }

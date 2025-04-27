@@ -27,10 +27,12 @@ import org.jspecify.annotations.NullMarked;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.vidtu.hcscr.HCsCR;
+import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
  * Mixin that disables the bounding box for entities marked as {@link HCsCR#HIDDEN_ENTITIES}.
@@ -48,12 +50,6 @@ public final class EntityMixin {
     @Shadow
     @Final
     private static final AABB INITIAL_AABB = new AABB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
-
-    /**
-     * Entity level (world).
-     */
-    @Shadow
-    private Level level;
 
     /**
      * An instance of this class cannot be created.
@@ -76,7 +72,7 @@ public final class EntityMixin {
     @Inject(method = "getBoundingBox", at = @At("HEAD"), cancellable = true)
     private void hcscr_getBoundingBox_head(CallbackInfoReturnable<AABB> cir) {
         // Validate.
-        Level level = this.level;
+        Level level = this.hcscr_level();
         assert level != null : "HCsCR: Getting entity bounding box with null level. (cir: " + cir + ", entity: " + this + ')';
 
         // Do NOT hide entity if any of the following conditions is met:
@@ -87,5 +83,17 @@ public final class EntityMixin {
 
         // Set to empty hitbox.
         cir.setReturnValue(INITIAL_AABB);
+    }
+
+    /**
+     * A hacky method to call the {@link HStonecutter#levelOf(Entity)}
+     * with IntelliJ not marking it as unreachable code.
+     *
+     * @return Game profiler
+     */
+    @Contract(pure = true)
+    @Unique
+    private Level hcscr_level() {
+        return HStonecutter.levelOf((Entity) (Object) this);
     }
 }
