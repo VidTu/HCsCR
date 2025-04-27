@@ -107,8 +107,8 @@ public enum CrystalMode {
         return "HCsCR/CrystalMode{" +
                 "name='" + this.name() + '\'' +
                 ", ordinal=" + this.ordinal() +
-                ", label='" + this.label + '\'' +
-                ", tip='" + this.tip + '\'' +
+                ", label=" + this.label +
+                ", tip=" + this.tip +
                 '}';
     }
 }
