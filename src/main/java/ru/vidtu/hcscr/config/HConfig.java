@@ -21,8 +21,6 @@ package ru.vidtu.hcscr.config;
 
 import com.google.common.base.MoreObjects;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.Expose;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
@@ -39,7 +37,6 @@ import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
@@ -63,28 +60,22 @@ public final class HConfig {
     /**
      * GSON instance for configuration loading/saving.
      */
-    private static final Gson GSON = new GsonBuilder()
-            .excludeFieldsWithoutExposeAnnotation()
-            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT)
-            .create();
+    private static final Gson GSON = new Gson();
 
     /**
      * Enable the mod, {@code true} by default.
      */
-    @Expose
     private static boolean enable = true;
 
     /**
      * Crystals removal mode, {@link CrystalMode#DIRECT} by default.
      */
-    @Expose
     private static CrystalMode crystals = CrystalMode.DIRECT;
 
     /**
      * Crystals removal delay in nanos, {@code 0} by default. Some users report that setting the delay
      * to the server's MSPT value actually makes crystal spamming a bit faster.
      */
-    @Expose
     @Range(from = 0L, to = 200_000_000L)
     private static int crystalsDelay = 0;
 
@@ -93,14 +84,12 @@ public final class HConfig {
      * will reappear again, if the server hasn't actually removed it. Useful to prevent ghost crystals,
      * when a crystal hit is not registered by the server.
      */
-    @Expose
     @Range(from = 0L, to = 50L)
     private static int crystalsResync = 20;
 
     /**
      * Anchors removal mode, {@link AnchorMode#COLLISION} by default.
      */
-    @Expose
     private static AnchorMode anchors = AnchorMode.COLLISION;
 
     /**
