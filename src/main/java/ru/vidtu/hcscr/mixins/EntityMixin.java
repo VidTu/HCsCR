@@ -47,9 +47,10 @@ public final class EntityMixin {
     /**
      * Empty bounding box, provided by implementation.
      */
+    @SuppressWarnings("NonConstantFieldWithUpperCaseName") // <- Shadow.
     @Shadow
     @Final
-    private static final AABB INITIAL_AABB = new AABB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
+    private static AABB INITIAL_AABB;
 
     /**
      * An instance of this class cannot be created.

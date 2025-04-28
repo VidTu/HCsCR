@@ -2425,6 +2425,7 @@
           <option value="NonShortCircuitBooleanExpression" />
           <option value="ObjectEquality" />
           <option value="ParameterNameDiffersFromOverriddenParameter" />
+          <option value="NonConstantFieldWithUpperCaseName" />
         </list>
       </option>
     </inspection_tool>

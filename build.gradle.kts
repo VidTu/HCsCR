@@ -66,6 +66,9 @@ loom {
             // Force UNIX newlines.
             "-Dline.separator=\n",
 
+            // Force datafixers not to do our CPU.
+            "-Dmax.bg.threads=1",
+
             // Debug arguments.
             "-ea",
             "-esa",
@@ -149,8 +152,8 @@ dependencies {
         modImplementation(fabricApi.module("fabric-lifecycle-events-v1", fabricApiVersion))
         modImplementation(fabricApi.module("fabric-networking-api-v1", fabricApiVersion))
         modImplementation(fabricApi.module("fabric-rendering-v1", fabricApiVersion))
-        modRuntimeOnly(fabricApi.module("fabric-resource-loader-v0", fabricApiVersion)) // Loads assets and also a ModMenu dependency.
-        modRuntimeOnly(fabricApi.module("fabric-screen-api-v1", fabricApiVersion)) // ModMenu dependency.
+        modImplementation(fabricApi.module("fabric-resource-loader-v0", fabricApiVersion)) // Loads assets and also a ModMenu dependency.
+        modImplementation(fabricApi.module("fabric-screen-api-v1", fabricApiVersion)) // ModMenu dependency.
         modImplementation("com.terraformersmc:modmenu:${property("stonecutter.modmenu")}")
     }
 }
