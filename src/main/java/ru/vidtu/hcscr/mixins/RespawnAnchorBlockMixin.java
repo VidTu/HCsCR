@@ -58,7 +58,10 @@ public final class RespawnAnchorBlockMixin {
      * An instance of this class cannot be created.
      *
      * @throws AssertionError Always
+     * @deprecated Always throws
      */
+    // @ApiStatus.ScheduledForRemoval // Can't annotate this without logging in the console.
+    @Deprecated
     @Contract(value = "-> fail", pure = true)
     private RespawnAnchorBlockMixin() {
         throw new AssertionError("No instances.");
