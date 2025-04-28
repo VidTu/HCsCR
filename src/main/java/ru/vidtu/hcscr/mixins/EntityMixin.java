@@ -62,7 +62,7 @@ public final class EntityMixin {
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private EntityMixin() {
-        throw new AssertionError("No instances.");
+        throw new AssertionError("HCsCR: No instances.");
     }
 
     /**

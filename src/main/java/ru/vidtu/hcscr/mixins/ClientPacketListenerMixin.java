@@ -49,7 +49,7 @@ public final class ClientPacketListenerMixin {
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private ClientPacketListenerMixin() {
-        throw new AssertionError("No instances.");
+        throw new AssertionError("HCsCR: No instances.");
     }
 
     /**

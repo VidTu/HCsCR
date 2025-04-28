@@ -64,7 +64,7 @@ public final class RespawnAnchorBlockMixin {
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private RespawnAnchorBlockMixin() {
-        throw new AssertionError("No instances.");
+        throw new AssertionError("HCsCR: No instances.");
     }
 
     //? if >=1.20.6 {

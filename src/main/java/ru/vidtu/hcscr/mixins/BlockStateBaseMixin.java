@@ -56,7 +56,7 @@ public final class BlockStateBaseMixin {
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private BlockStateBaseMixin() {
-        throw new AssertionError("No instances.");
+        throw new AssertionError("HCsCR: No instances.");
     }
 
     /**

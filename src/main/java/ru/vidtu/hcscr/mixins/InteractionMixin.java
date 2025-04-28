@@ -66,7 +66,7 @@ public abstract class InteractionMixin extends Entity {
     private InteractionMixin() {
         //noinspection DataFlowIssue // <- Never called. (Mixin)
         super(null, null);
-        throw new AssertionError("No instances.");
+        throw new AssertionError("HCsCR: No instances.");
     }
 
     /**

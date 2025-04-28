@@ -61,7 +61,7 @@ public final class MinecraftMixin {
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private MinecraftMixin() {
-        throw new AssertionError("No instances.");
+        throw new AssertionError("HCsCR: No instances.");
     }
 
     /**

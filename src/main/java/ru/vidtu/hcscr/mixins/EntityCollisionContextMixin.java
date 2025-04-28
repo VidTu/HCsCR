@@ -59,7 +59,7 @@ public final class EntityCollisionContextMixin implements HEntityCollisionContex
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private EntityCollisionContextMixin() {
-        throw new AssertionError("No instances.");
+        throw new AssertionError("HCsCR: No instances.");
     }
 
     /^*

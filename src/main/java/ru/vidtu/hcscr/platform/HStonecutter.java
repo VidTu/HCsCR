@@ -97,7 +97,7 @@ public final class HStonecutter {
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private HStonecutter() {
-        throw new AssertionError("No instances.");
+        throw new AssertionError("HCsCR: No instances.");
     }
 
     /**

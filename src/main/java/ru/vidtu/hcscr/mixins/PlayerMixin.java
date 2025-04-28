@@ -50,7 +50,7 @@ public final class PlayerMixin {
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private PlayerMixin() {
-        throw new AssertionError("No instances.");
+        throw new AssertionError("HCsCR: No instances.");
     }
 
     /**
