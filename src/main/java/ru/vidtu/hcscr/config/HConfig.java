@@ -21,6 +21,7 @@ package ru.vidtu.hcscr.config;
 
 import com.google.common.base.MoreObjects;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
@@ -37,6 +38,7 @@ import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
@@ -60,7 +62,9 @@ public final class HConfig {
     /**
      * GSON instance for configuration loading/saving.
      */
-    private static final Gson GSON = new Gson();
+    private static final Gson GSON = new GsonBuilder()
+            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT)
+            .create();
 
     /**
      * Enable the mod, {@code true} by default.
