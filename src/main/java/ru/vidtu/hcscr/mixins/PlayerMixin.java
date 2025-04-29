@@ -61,6 +61,8 @@ public final class PlayerMixin {
      * @param source Attack source
      * @param amount Attack amount
      * @return Whether the attack has succeeded
+     * @see HStonecutter#hurt(Entity, DamageSource, float)
+     * @see HCsCR#handleEntityHit(Entity, DamageSource, float)
      */
     //? if >=1.21.3 {
     @Redirect(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurtOrSimulate(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))

@@ -37,6 +37,8 @@ import ru.vidtu.hcscr.HEntityCollisionContext;
  *
  * @author VidTu
  * @apiNote Internal use only
+ * @see HEntityCollisionContext
+ * @see BlockStateBaseMixin
  ^/
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(EntityCollisionContext.class)

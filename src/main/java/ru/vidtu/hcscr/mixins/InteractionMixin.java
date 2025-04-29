@@ -43,6 +43,7 @@ import ru.vidtu.hcscr.platform.HStonecutter;
  *
  * @author VidTu
  * @apiNote Internal use only
+ * @see CrystalMode#ENVELOPING
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(Interaction.class)
@@ -74,6 +75,9 @@ public abstract class InteractionMixin extends Entity {
      *
      * @param attacker Attacking entity
      * @param cir      Callback data
+     * @see CrystalMode#ENVELOPING
+     * @see HConfig#enable()
+     * @see HConfig#crystals()
      */
     @Inject(method = "skipAttackInteraction", at = @At("HEAD"), cancellable = true)
     private void hcscr_skipAttackInteraction_head(Entity attacker, CallbackInfoReturnable<Boolean> cir) {

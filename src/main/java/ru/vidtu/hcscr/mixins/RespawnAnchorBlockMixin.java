@@ -36,6 +36,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.vidtu.hcscr.HCsCR;
+import ru.vidtu.hcscr.config.AnchorMode;
 import ru.vidtu.hcscr.config.HConfig;
 
 /**
@@ -43,6 +44,7 @@ import ru.vidtu.hcscr.config.HConfig;
  *
  * @author VidTu
  * @apiNote Internal use only
+ * @see AnchorMode
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(RespawnAnchorBlock.class)
@@ -78,6 +80,10 @@ public final class RespawnAnchorBlockMixin {
      * @param player Interacting player, ignored
      * @param result Hit vector, ignored
      * @param cir    Callback data, ignored
+     * @see HConfig#enable()
+     * @see HConfig#anchors()
+     * @see AnchorMode
+     * @see HCsCR#CLIPPING_ANCHORS
      */
     @Inject(method = "useWithoutItem", at = @At("HEAD"))
     private void hcscr_useWithoutItem_head(BlockState state, Level level, BlockPos pos, Player player,
@@ -137,6 +143,10 @@ public final class RespawnAnchorBlockMixin {
      * @param hand   Interaction hand
      * @param result Hit vector, ignored
      * @param cir    Callback data, ignored
+     * @see HConfig#enable()
+     * @see HConfig#anchors()
+     * @see AnchorMode
+     * @see HCsCR#CLIPPING_ANCHORS
      ^/
     @Inject(method = "use", at = @At("HEAD"))
     private void hcscr_use_head(BlockState state, Level level, BlockPos pos, Player player,

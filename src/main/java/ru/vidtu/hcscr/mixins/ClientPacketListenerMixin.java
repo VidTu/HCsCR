@@ -34,6 +34,7 @@ import ru.vidtu.hcscr.HCsCR;
  *
  * @author VidTu
  * @apiNote Internal use only
+ * @see HCsCR#CLIPPING_ANCHORS
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(ClientPacketListener.class)

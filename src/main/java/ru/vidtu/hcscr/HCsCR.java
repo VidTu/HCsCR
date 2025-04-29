@@ -77,11 +77,15 @@ public final class HCsCR {
 
     /**
      * Open config screen keybind. Not bound by default.
+     *
+     * @see #handleConfigBind(Minecraft, ProfilerFiller)
      */
     public static final KeyMapping CONFIG_BIND = new KeyMapping("hcscr.key.config", InputConstants.UNKNOWN.getValue(), "hcscr.key");
 
     /**
      * Toggle the mod keybind. Not bound by default.
+     *
+     * @see #handleToggleBind(Minecraft, ProfilerFiller)
      */
     public static final KeyMapping TOGGLE_BIND = new KeyMapping("hcscr.key.toggle", InputConstants.UNKNOWN.getValue(), "hcscr.key");
 
@@ -103,7 +107,7 @@ public final class HCsCR {
      * hitbox will be removed via {@link EntityMixin}. They are counted down in {@link #handleTick(Minecraft)}.
      *
      * @see EntityMixin
-     * @see #handleTick(Minecraft)
+     * @see #handleHiddenEntities(Minecraft, ProfilerFiller)
      */
     // Ideally, an array-baked map should be always used here too. Due to a bug in fastutil, setValue(int) is not
     // supported until 8.5.12: https://github.com/vigna/fastutil/blob/fcac58f7d3df8e7d903fad533f4caada7f4937cf/CHANGES#L41
@@ -116,6 +120,7 @@ public final class HCsCR {
      * Clipping anchors mapped. These anchors won't collide in the world as their hitbox will be removed via
      * {@link BlockStateBaseMixin}. They are checkin in {@link #handleTick(Minecraft)}.
      *
+     * @see BlockStateBaseMixin
      * @see #handleTick(Minecraft)
      */
     // This map is not expected to grow more than a few elements, so it's an array-baked map, not a hash-baked one.
@@ -141,9 +146,13 @@ public final class HCsCR {
     }
 
     /**
-     * Handles the client tick end. Handles {@link #CONFIG_BIND} and {@link #TOGGLE_BIND}.
+     * Handles the client tick end.
      *
      * @param game Current game instance
+     * @see #handleConfigBind(Minecraft, ProfilerFiller)
+     * @see #handleToggleBind(Minecraft, ProfilerFiller)
+     * @see #handleHiddenEntities(Minecraft, ProfilerFiller)
+     * @see #handleClippingAnchors(Minecraft, ProfilerFiller)
      */
     public static void handleTick(Minecraft game) {
         // Validate.
@@ -230,12 +239,18 @@ public final class HCsCR {
     }
 
     /**
-     * Handles the entity hit. Removes the entity client-side, if required.
+     * Handles the entity hit. Removes the entity client-side or promotes to {@link #SCHEDULED_ENTITIES}, if required.
      *
      * @param entity  Target hit entity
      * @param source  Hit damage source
      * @param amount  Amount of dealt damage
      * @return Whether the entity has been removed
+     * @see HStonecutter#hurt(Entity, DamageSource, float)
+     * @see HConfig#enable()
+     * @see HConfig#shouldProcess(Entity)
+     * @see HConfig#crystals()
+     * @see HConfig#crystalsResync()
+     * @see HConfig#crystalsDelay()
      */
     public static boolean handleEntityHit(Entity entity, DamageSource source, float amount) {
         // Validate.
@@ -351,6 +366,8 @@ public final class HCsCR {
      *
      * @param game     Current game instance
      * @param profiler Game profiler
+     * @see #handleTick(Minecraft)
+     * @see #handleToggleBind(Minecraft, ProfilerFiller)
      */
     private static void handleConfigBind(Minecraft game, ProfilerFiller profiler) {
         // Validate.
@@ -396,6 +413,8 @@ public final class HCsCR {
      *
      * @param game     Current game instance
      * @param profiler Game profiler
+     * @see #handleTick(Minecraft)
+     * @see #handleConfigBind(Minecraft, ProfilerFiller)
      */
     private static void handleToggleBind(Minecraft game, ProfilerFiller profiler) {
         // Validate.
@@ -432,10 +451,14 @@ public final class HCsCR {
     }
 
     /**
-     * Handles the hidden entities.
+     * Handles the hidden entities. Removes redundant entities from {@link #HIDDEN_ENTITIES} or processes them in a
+     * way similar to {@link #handleEntityHit(Entity, DamageSource, float)}.
      *
      * @param game     Current game instance
      * @param profiler Game profiler
+     * @see #handleTick(Minecraft)
+     * @see #HIDDEN_ENTITIES
+     * @see #handleEntityHit(Entity, DamageSource, float)
      */
     private static void handleHiddenEntities(Minecraft game, ProfilerFiller profiler) {
         // Validate.
@@ -511,10 +534,12 @@ public final class HCsCR {
     }
 
     /**
-     * Handles the clipping anchors.
+     * Handles the clipping anchors. Removes redundant entries from {@link #CLIPPING_ANCHORS}.
      *
      * @param game     Current game instance
      * @param profiler Game profiler
+     * @see #handleTick(Minecraft)
+     * @see #CLIPPING_ANCHORS
      */
     private static void handleClippingAnchors(Minecraft game, ProfilerFiller profiler) {
         // Validate.

@@ -39,13 +39,15 @@ import ru.vidtu.hcscr.platform.HStonecutter;
  *
  * @author VidTu
  * @apiNote Internal use only
+ * @see HCsCR#HIDDEN_ENTITIES
+ * @see Entity#getBoundingBox()
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(Entity.class)
 @NullMarked
 public final class EntityMixin {
     /**
-     * Empty bounding box, provided by implementation.
+     * Empty bounding box, provided by the implementation.
      */
     @SuppressWarnings("NonConstantFieldWithUpperCaseName") // <- Shadow.
     @Shadow
@@ -69,6 +71,7 @@ public final class EntityMixin {
      * Sets the bounding box to {@link #INITIAL_AABB} if this entity is {@link HCsCR#HIDDEN_ENTITIES}.
      *
      * @param cir Callback data
+     * @see HCsCR#HIDDEN_ENTITIES
      */
     @Inject(method = "getBoundingBox", at = @At("HEAD"), cancellable = true)
     private void hcscr_getBoundingBox_head(CallbackInfoReturnable<AABB> cir) {

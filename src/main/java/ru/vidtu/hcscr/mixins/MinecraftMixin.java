@@ -40,6 +40,7 @@ import ru.vidtu.hcscr.platform.HStonecutter;
  *
  * @author VidTu
  * @apiNote Internal use only
+ * @see HCsCR
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(Minecraft.class)
@@ -65,10 +66,13 @@ public final class MinecraftMixin {
     }
 
     /**
-     * Clears the {@link HCsCR#SCHEDULED_ENTITIES} and {@link HCsCR#HIDDEN_ENTITIES}.
+     * Clears the {@link HCsCR#SCHEDULED_ENTITIES}, {@link HCsCR#HIDDEN_ENTITIES}, and {@link HCsCR#CLIPPING_ANCHORS}.
      *
      * @param level New level, {@code null} if was unloaded, ignored
      * @param ci    Callback data, ignored
+     * @see HCsCR#SCHEDULED_ENTITIES
+     * @see HCsCR#HIDDEN_ENTITIES
+     * @see HCsCR#CLIPPING_ANCHORS
      */
     @Inject(method = "updateLevelInEngines", at = @At("RETURN"))
     private void hcscr_updateLevelInEngines_return(@Nullable ClientLevel level, CallbackInfo ci) {

@@ -34,6 +34,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.vidtu.hcscr.HCsCR;
+import ru.vidtu.hcscr.config.AnchorMode;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
@@ -41,6 +42,8 @@ import ru.vidtu.hcscr.platform.HStonecutter;
  *
  * @author VidTu
  * @apiNote Internal use only
+ * @see HCsCR#CLIPPING_ANCHORS
+ * @see AnchorMode#COLLISION
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(BlockBehaviour.BlockStateBase.class)

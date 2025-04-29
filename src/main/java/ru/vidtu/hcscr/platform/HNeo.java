@@ -41,6 +41,7 @@ import ru.vidtu.hcscr.config.HScreen;
  *
  * @author VidTu
  * @apiNote Internal use only
+ * @see HCsCR
  ^/
 @ApiStatus.Internal
 //? if >=1.20.6 {

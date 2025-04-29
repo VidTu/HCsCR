@@ -25,6 +25,7 @@ import com.terraformersmc.modmenu.api.ModMenuApi;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
+import ru.vidtu.hcscr.config.HConfig;
 import ru.vidtu.hcscr.config.HScreen;
 
 /**
@@ -32,6 +33,8 @@ import ru.vidtu.hcscr.config.HScreen;
  *
  * @author VidTu
  * @apiNote Internal use only
+ * @see HFabric
+ * @see HConfig
  */
 @ApiStatus.Internal
 @NullMarked

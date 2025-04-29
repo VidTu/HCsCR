@@ -200,6 +200,7 @@ public final class HConfig {
      *
      * @return Crystals removal mode, {@link CrystalMode#DIRECT} by default.
      * @see #cycleCrystals(boolean)
+     * @see #shouldProcess(Entity)
      */
     @Contract(pure = true)
     public static CrystalMode crystals() {
@@ -249,6 +250,7 @@ public final class HConfig {
      * Gets the crystals resync.
      *
      * @return Crystals resync delay in ticks, {@code 20} by default
+     * @see #crystalsResync(int)
      */
     @Contract(pure = true)
     @Range(from = 0L, to = 50L)
@@ -260,6 +262,7 @@ public final class HConfig {
      * Sets the crystals resync.
      *
      * @param crystalsResync Crystals resync delay in ticks, {@code 20} by default
+     * @see #crystalsResync()
      */
     static void crystalsResync(@Range(from = 0L, to = 50L) int crystalsResync) {
         HConfig.crystalsResync = Mth.clamp(crystalsResync, 0, 50);
@@ -269,6 +272,7 @@ public final class HConfig {
      * Gets the anchors.
      *
      * @return Anchors removal mode, {@link AnchorMode#COLLISION} by default
+     * @see #cycleAnchors(boolean)
      */
     @Contract(pure = true)
     public static AnchorMode anchors() {
@@ -280,6 +284,7 @@ public final class HConfig {
      *
      * @param back Whether to cycle backwards
      * @return New anchors mode
+     * @see #anchors()
      */
     @CheckReturnValue
     static AnchorMode cycleAnchors(boolean back) {
@@ -296,6 +301,7 @@ public final class HConfig {
      *
      * @param entity Entity to check
      * @return Whether the entity should be processed
+     * @see #crystals()
      */
     @Contract(pure = true)
     public static boolean shouldProcess(Entity entity) {

@@ -39,6 +39,8 @@ import ru.vidtu.hcscr.config.HConfig;
  *
  * @author VidTu
  * @apiNote Internal use only
+ * @see HCsCR
+ * @see HModMenu
  */
 @ApiStatus.Internal
 @NullMarked
