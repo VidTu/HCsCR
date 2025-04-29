@@ -52,6 +52,8 @@ ModPlatform.values().forEach {
     stonecutter.const(it.id(), it == loomPlatform)
 }
 
+stonecutter.allowExtensions("json")
+
 loom {
     log4jConfigs.setFrom(rootDir.resolve("log4j2.xml"))
     silentMojangMappingsLicense()

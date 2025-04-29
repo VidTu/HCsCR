@@ -19,7 +19,6 @@
 
 package ru.vidtu.hcscr.platform;
 
-import com.mojang.blaze3d.platform.Window;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -180,6 +179,7 @@ public final class HStonecutter {
      * @param entity Target entity to check
      * @return Whether the entity has been removed
      */
+    @SuppressWarnings({"deprecation", "RedundantSuppression"}) // <- Forge 1.16.5.
     @Contract(pure = true)
     public static boolean isEntityRemoved(Entity entity) {
         // Validate.
@@ -237,6 +237,7 @@ public final class HStonecutter {
      * @param amount Amount of damage
      * @return The result of the hurting
      */
+    @SuppressWarnings({"deprecation", "RedundantSuppression"}) // <- Used in vanilla code. (1.21.3+)
     @CheckReturnValue
     public static boolean hurt(Entity entity, DamageSource source, float amount) {
         // Validate.
@@ -246,7 +247,6 @@ public final class HStonecutter {
 
         // Delegate.
         //? if >=1.21.3 {
-        //noinspection deprecation // <- Used in vanilla code.
         return entity.hurtOrSimulate(source, amount); // Implicit NPE for 'entity', 'amount'
         //?} else
         /*return entity.hurt(source, amount);*/ // Implicit NPE for 'entity', 'amount'

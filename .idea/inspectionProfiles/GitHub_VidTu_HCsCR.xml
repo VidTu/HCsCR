@@ -2426,6 +2426,8 @@
           <option value="ObjectEquality" />
           <option value="ParameterNameDiffersFromOverriddenParameter" />
           <option value="NonConstantFieldWithUpperCaseName" />
+          <option value="depreaction" />
+          <option value="RedundantSuppression" />
         </list>
       </option>
     </inspection_tool>
