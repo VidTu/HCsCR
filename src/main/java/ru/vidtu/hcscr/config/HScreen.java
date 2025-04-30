@@ -65,7 +65,10 @@ public final class HScreen extends Screen {
      */
     @Contract(pure = true)
     public HScreen(@Nullable Screen parent) {
+        // Call super.
         super(HStonecutter.translate("hcscr.title"));
+
+        // Assign.
         this.parent = parent;
     }
 
@@ -132,7 +135,7 @@ public final class HScreen extends Screen {
     public void onClose() {
         // Validate.
         Minecraft minecraft = this.minecraft;
-        assert minecraft != null : "HCsCR: Minecraft client instance is not initialized at config screen closing. (screen: " + this + ')';
+        assert minecraft != null : "HCsCR: Minecraft client instance is not initialized at screen closing. (screen: " + this + ')';
 
         // Save.
         HConfig.save();
@@ -141,16 +144,30 @@ public final class HScreen extends Screen {
         minecraft.setScreen(this.parent);
     }
 
+    /**
+     * Renders this screen. Called by the implementation.
+     *
+     * @param graphics  Current graphics handler
+     * @param mouseX    Scaled mouse X position
+     * @param mouseY    Scaled mouse Y position
+     * @param tickDelta Current tick delta (not to be confused with the partial tick)
+     */
     @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") // <- Parameter names are not provided by Mojmap.
     @Override
     //? if >=1.20.1 {
-    public void render(net.minecraft.client.gui.GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void render(net.minecraft.client.gui.GuiGraphics graphics, int mouseX, int mouseY, float tickDelta) {
     //?} else
-    /*public void render(com.mojang.blaze3d.vertex.PoseStack graphics, int mouseX, int mouseY, float delta) {*/
+    /*public void render(com.mojang.blaze3d.vertex.PoseStack graphics, int mouseX, int mouseY, float tickDelta) {*/
+        // Validate.
+        assert graphics != null : "HCsCR: Parameter 'graphics' is null. (mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
+        assert (mouseX >= 0) && (mouseX <= this.width) : "HCsCR: Parameter 'mouseX' is not in the [0.." + this.width + "] range. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
+        assert (mouseY >= 0) && (mouseY <= this.height) : "HCsCR: Parameter 'mouseY' is not in the [0.." + this.height + "] range. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
+        assert (tickDelta >= 0.0F) && (tickDelta < Float.POSITIVE_INFINITY) : "HCsCR: Parameter 'tickDelta' is not in the [0..inf) range. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
+
         // Render background and widgets.
         //? if <1.20.2
         /*this.renderBackground(graphics);*/
-        super.render(graphics, mouseX, mouseY, delta);
+        super.render(graphics, mouseX, mouseY, tickDelta);
 
         // Render title.
         //? if >=1.20.1 {
@@ -172,6 +189,10 @@ public final class HScreen extends Screen {
      * @param widget Widget to add
      */
     private void add(AbstractWidget widget) {
+        // Validate.
+        assert widget != null : "HCsCR: Parameter 'widget' is null. (screen: " + this + ')';
+
+        // Delegate.
         //? if >=1.17.1 {
         this.addRenderableWidget(widget);
         //?} else
