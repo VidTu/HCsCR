@@ -160,8 +160,8 @@ public final class HScreen extends Screen {
     /*public void render(com.mojang.blaze3d.vertex.PoseStack graphics, int mouseX, int mouseY, float tickDelta) {*/
         // Validate.
         assert graphics != null : "HCsCR: Parameter 'graphics' is null. (mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
-        assert (mouseX >= 0) && (mouseX <= this.width) : "HCsCR: Parameter 'mouseX' is not in the [0.." + this.width + "] range. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
-        assert (mouseY >= 0) && (mouseY <= this.height) : "HCsCR: Parameter 'mouseY' is not in the [0.." + this.height + "] range. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
+        assert mouseX >= 0 : "HCsCR: Parameter 'mouseX' is negative. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
+        assert mouseY >= 0 : "HCsCR: Parameter 'mouseY' is negative. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
         assert (tickDelta >= 0.0F) && (tickDelta < Float.POSITIVE_INFINITY) : "HCsCR: Parameter 'tickDelta' is not in the [0..inf) range. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
 
         // Render background and widgets.
