@@ -7,5 +7,12 @@ run/
 !/.idea/codeStyles/**
 !/.idea/copyright
 !/.idea/copyright/**
+!/.idea/dictionaries
+!/.idea/dictionaries/**
 !/.idea/inspectionProfiles
 !/.idea/inspectionProfiles/**
+!/.idea/modules
+!/.idea/modules/**
+!/.idea/icon.png
+!/.idea/encodings.xml
+!/.idea/modules.xml
