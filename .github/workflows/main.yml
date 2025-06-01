@@ -15,13 +15,13 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-name: 'Build'
+name: 'Build (Main)'
 on:
   push:
     branches: [ 'main' ]
 jobs:
   build:
-    name: 'Build'
+    name: 'Build (Main)'
     runs-on: 'ubuntu-24.04'
     timeout-minutes: 60
     permissions:
