@@ -23,7 +23,7 @@ pluginManagement {
         maven("https://maven.fabricmc.net/") // Architectury Loom. (Fabric dependencies)
         maven("https://maven.architectury.dev/") // Architectury Loom.
         maven("https://maven.minecraftforge.net/") // Architectury Loom. (Forge dependencies)
-        maven("https://maven.neoforged.net/releases/") // Architectury Loom. (Neo dependencies)
+        maven("https://maven.neoforged.net/releases/") // Architectury Loom. (NeoForge dependencies)
     }
 }
 

@@ -28,10 +28,12 @@ plugins {
     alias(libs.plugins.architectury.loom)
 }
 
+// Extract the platform and Minecraft version.
 val loomPlatform = loom.platform.get()
 val legacyNeoForge = loom.isForge && name.contains(ModPlatform.NEOFORGE.id())
 val mcVersion = stonecutter.current.version
 
+// Determine and set Java toolchain version.
 val javaMajor = if (stonecutter.eval(mcVersion, ">=1.20.6")) 21
 else if (stonecutter.eval(mcVersion, ">=1.18.2")) 17
 else if (stonecutter.eval(mcVersion, ">=1.17.1")) 16
@@ -55,49 +57,26 @@ ModPlatform.values().forEach {
 stonecutter.allowExtensions("json")
 
 loom {
-    log4jConfigs.setFrom(rootDir.resolve("log4j2.xml"))
+    // Prepare development environment.
+    log4jConfigs.setFrom(rootDir.resolve("dev/log4j2.xml"))
     silentMojangMappingsLicense()
+
+    // Setup JVM args, see that file.
     runs.named("client") {
-        vmArgs(
-            // Allow JVM without hotswap to work.
-            "-XX:+IgnoreUnrecognizedVMOptions",
-
-            // Set up RAM.
-            "-Xmx2G",
-
-            // Force UNIX newlines.
-            "-Dline.separator=\n",
-
-            // Force datafixers not to do our CPU.
-            "-Dmax.bg.threads=1",
-
-            // Debug arguments.
-            "-ea",
-            "-esa",
-            "-Dmixin.debug=true",
-            "-Dmixin.debug.strict.unique=true",
-            "-Dmixin.checks=true",
-            "-Dio.netty.tryReflectionSetAccessible=true",
-            "-Dio.netty.leakDetection.level=PARANOID",
-
-            // Allow hot swapping on supported JVM.
-            "-XX:+AllowEnhancedClassRedefinition",
-            "-XX:+AllowRedefinitionToAddDeleteMethods",
-            "-XX:HotswapAgent=fatjar",
-            "-Dfabric.debug.disableClassPathIsolation=true",
-
-            // Open modules for Netty.
-            "--add-opens",
-            "java.base/java.nio=ALL-UNNAMED",
-            "--add-opens",
-            "java.base/jdk.internal.misc=ALL-UNNAMED"
-        )
+        vmArgs("@../../../dev/args.vm.txt")
     }
-    @Suppress("UnstableApiUsage") // <- Required to have stable refmap name and Mixin processing.
+
+    // Configure Mixin.
+    @Suppress("UnstableApiUsage") // <- Required to configure Mixin.
     mixin {
+        // Some platforms don't set this and fail preparing the Mixin.
         useLegacyMixinAp = true
+
+        // Set the Mixin refmap name. This is completely optional.
         defaultRefmapName = "hcscr.mixins.refmap.json"
     }
+
+    // Add Mixin configs.
     if (loom.isForge) {
         forge {
             mixinConfigs("hcscr.mixins.json")
@@ -111,11 +90,11 @@ repositories {
     mavenCentral()
     if (loom.isForge) {
         if (legacyNeoForge) {
-            maven("https://maven.neoforged.net/releases/") // Neo. (Legacy)
+            maven("https://maven.neoforged.net/releases/") // NeoForge. (Legacy)
         }
         maven("https://maven.minecraftforge.net/") // Forge.
     } else if (loom.isNeoForge) {
-        maven("https://maven.neoforged.net/releases/") // Neo.
+        maven("https://maven.neoforged.net/releases/") // NeoForge.
     } else {
         maven("https://maven.fabricmc.net/") // Fabric.
         maven("https://maven.terraformersmc.com/releases/") // ModMenu.
@@ -126,28 +105,32 @@ repositories {
 }
 
 dependencies {
-    // Annotations
+    // Annotations.
     compileOnly(libs.jspecify)
     compileOnly(libs.jetbrains.annotations)
 
-    // Minecraft
+    // Minecraft.
     minecraft("com.mojang:minecraft:$mcVersion")
     mappings(loom.officialMojangMappings())
+
+    // Force non-vulnerable Log4J, so that vulnerability scanners don't scream loud.
+    // It's also cool for our logging config. (dev/log4j2.xml)
+    implementation(libs.log4j)
 
     // Loader.
     if (loom.isForge) {
         if (legacyNeoForge) {
-            // Legacy NeoForge
+            // Legacy NeoForge.
             "forge"("net.neoforged:forge:${property("stonecutter.neo")}")
         } else {
-            // Forge
+            // Forge.
             "forge"("net.minecraftforge:forge:${property("stonecutter.forge")}")
         }
     } else if (loom.isNeoForge) {
-        // Forge
+        // Forge.
         "neoForge"("net.neoforged:neoforge:${property("stonecutter.neo")}")
     } else {
-        // Fabric
+        // Fabric.
         val fabricApiVersion = property("stonecutter.fabric-api").toString()
         modImplementation(libs.fabric.loader)
         modImplementation(fabricApi.module("fabric-key-binding-api-v1", fabricApiVersion)) // Handles the keybinds.
@@ -160,15 +143,20 @@ dependencies {
     }
 }
 
+// Compile with UTF-8, compatble Java, and with all debug options.
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
     options.compilerArgs.addAll(listOf("-g", "-parameters"))
+    // JDK 8 (used by 1.16.x) doesn't support the "-release" flag
+    // (at the top of the file), so we must NOT specify it or the "javac" will fail.
+    // JDK 9+ listen to this option.
     if (javaVersion.isJava9Compatible) {
         options.release = javaMajor
     }
 }
 
 tasks.withType<ProcessResources> {
+    // Exclude not needed files.
     if (loom.isForge) {
         exclude("fabric.mod.json", "quilt.mod.json", "META-INF/neoforge.mods.toml")
     } else if (loom.isNeoForge) {
@@ -180,6 +168,8 @@ tasks.withType<ProcessResources> {
     } else {
         exclude("META-INF/mods.toml", "META-INF/neoforge.mods.toml")
     }
+
+    // Expand version and dependencies.
     inputs.property("version", version)
     inputs.property("minecraft", mcVersion)
     inputs.property("java", javaMajor)
@@ -187,6 +177,8 @@ tasks.withType<ProcessResources> {
     filesMatching(listOf("fabric.mod.json", "quilt.mod.json", "hcscr.mixins.json", "META-INF/mods.toml", "META-INF/neoforge.mods.toml")) {
         expand(inputs.properties)
     }
+
+    // Minify JSON (including ".mcmeta") and TOML files.
     val files = fileTree(outputs.files.asPath)
     doLast {
         val jsonAlike = Regex("^.*\\.(?:json|mcmeta)$", RegexOption.IGNORE_CASE)
@@ -203,11 +195,14 @@ tasks.withType<ProcessResources> {
     }
 }
 
+// Reproducible builds.
 tasks.withType<AbstractArchiveTask> {
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
 }
 
+// Add LICENSE and manifest into the JAR file.
+// Manifest also controls Mixin/mod loading on some loaders/versions.
 tasks.withType<Jar> {
     from(rootDir.resolve("LICENSE"))
     from(rootDir.resolve("NOTICE"))
@@ -225,7 +220,10 @@ tasks.withType<Jar> {
 }
 
 tasks.withType<RemapJarTask> {
+    // Output into "build/libs" instead of "versions/<ver>/build/libs".
     destinationDirectory = rootProject.layout.buildDirectory.file("libs").get().asFile
+
+    // Minify JSON files. (after Fabric Loom processing)
     val minifier = UnsafeUnaryOperator<String> { Gson().fromJson(it, JsonElement::class.java).toString() }
     doLast {
         ZipUtils.transformString(archiveFile.get().asFile.toPath(), mapOf(
