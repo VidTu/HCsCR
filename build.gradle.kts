@@ -20,6 +20,7 @@
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import net.fabricmc.loom.task.RemapJarTask
+import net.fabricmc.loom.task.RunGameTask
 import net.fabricmc.loom.util.ModPlatform
 import net.fabricmc.loom.util.ZipUtils
 import net.fabricmc.loom.util.ZipUtils.UnsafeUnaryOperator
@@ -29,31 +30,35 @@ plugins {
 }
 
 // Extract the platform and Minecraft version.
-val loomPlatform = loom.platform.get()
-val legacyNeoForge = loom.isForge && name.contains(ModPlatform.NEOFORGE.id())
-val mcVersion = stonecutter.current.version
+val platform = loom.platform.get()
+// NeoForge 1.20.1 is loosely Forge, but not Forge. It uses ModPlatform.FORGE loom platform
+// and Forge packages, but diverges from (can't keep up with) the (Lex/Upstream) MCForge 1.20.1.
+val hackyNeoForge = (name == "1.20.1-neoforge")
+val minecraft = stonecutter.current.version
 
 // Determine and set Java toolchain version.
-val javaMajor = if (stonecutter.eval(mcVersion, ">=1.20.6")) 21
-else if (stonecutter.eval(mcVersion, ">=1.18.2")) 17
-else if (stonecutter.eval(mcVersion, ">=1.17.1")) 16
+val javaTarget = if (stonecutter.eval(minecraft, ">=1.20.6")) 21
+else if (stonecutter.eval(minecraft, ">=1.18.2")) 17
+else if (stonecutter.eval(minecraft, ">=1.17.1")) 16
 else 8
-val javaVersion = JavaVersion.toVersion(javaMajor)
+val javaVersion = JavaVersion.toVersion(javaTarget)
 java.sourceCompatibility = javaVersion
 java.targetCompatibility = javaVersion
-java.toolchain.languageVersion = JavaLanguageVersion.of(javaMajor)
+java.toolchain.languageVersion = JavaLanguageVersion.of(javaTarget)
 
-val versionSuffix = if (legacyNeoForge) ModPlatform.NEOFORGE.id()!! else loomPlatform.id()!!
 group = "ru.vidtu.hcscr"
 base.archivesName = "HCsCR"
-version = "$version+$mcVersion-$versionSuffix"
+version = "$version+$name"
 description = "Remove your end crystals before the server even knows you hit 'em!"
 
-stonecutter.const("legacyNeoForge", legacyNeoForge)
+// Define Stonecutter preprocessor variables.
+stonecutter.const("hackyNeoForge", hackyNeoForge)
 ModPlatform.values().forEach {
-    stonecutter.const(it.id(), it == loomPlatform)
+    stonecutter.const(it.id(), it == platform)
 }
 
+// Process the JSON files via Stonecutter.
+// This is needed for the Mixin configuration.
 stonecutter.allowExtensions("json")
 
 loom {
@@ -69,7 +74,7 @@ loom {
     // Configure Mixin.
     @Suppress("UnstableApiUsage") // <- Required to configure Mixin.
     mixin {
-        // Some platforms don't set this and fail preparing the Mixin.
+        // Some platforms don't set this and fail processing the Mixin.
         useLegacyMixinAp = true
 
         // Set the Mixin refmap name. This is completely optional.
@@ -86,10 +91,15 @@ loom {
     }
 }
 
+// Make the game run with the required Java path.
+tasks.withType<RunGameTask> {
+    javaLauncher = javaToolchains.launcherFor(java.toolchain)
+}
+
 repositories {
     mavenCentral()
     if (loom.isForge) {
-        if (legacyNeoForge) {
+        if (hackyNeoForge) {
             maven("https://maven.neoforged.net/releases/") // NeoForge. (Legacy)
         }
         maven("https://maven.minecraftforge.net/") // Forge.
@@ -98,7 +108,7 @@ repositories {
     } else {
         maven("https://maven.fabricmc.net/") // Fabric.
         maven("https://maven.terraformersmc.com/releases/") // ModMenu.
-        if (mcVersion == "1.20.4") { // Fix for ModMenu not shading Text Placeholder API.
+        if (minecraft == "1.20.4") { // Fix for ModMenu not shading Text Placeholder API.
             maven("https://maven.nucleoid.xyz/") // ModMenu. (Text Placeholder API)
         }
     }
@@ -110,16 +120,17 @@ dependencies {
     compileOnly(libs.jetbrains.annotations)
 
     // Minecraft.
-    minecraft("com.mojang:minecraft:$mcVersion")
+    val minecraftDependency = findProperty("stonecutter.minecraftDependency") ?: minecraft
+    minecraft("com.mojang:minecraft:$minecraftDependency")
     mappings(loom.officialMojangMappings())
 
     // Force non-vulnerable Log4J, so that vulnerability scanners don't scream loud.
-    // It's also cool for our logging config. (dev/log4j2.xml)
+    // It's also cool for our logging config. (see the "dev/log4j2.xml" file)
     implementation(libs.log4j)
 
     // Loader.
     if (loom.isForge) {
-        if (legacyNeoForge) {
+        if (hackyNeoForge) {
             // Legacy NeoForge.
             "forge"("net.neoforged:forge:${property("stonecutter.neo")}")
         } else {
@@ -147,20 +158,21 @@ dependencies {
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
     options.compilerArgs.addAll(listOf("-g", "-parameters"))
-    // JDK 8 (used by 1.16.x) doesn't support the "-release" flag
-    // (at the top of the file), so we must NOT specify it or the "javac" will fail.
-    // JDK 9+ listen to this option.
+    // JDK 8 (used by 1.16.x) doesn't support the "-release" flag and
+    // uses "-source" and "-target" ones (see the top of the file),
+    // so we must NOT specify it or the "javac" will fail.
+    // JDK 9+ does listen to this option.
     if (javaVersion.isJava9Compatible) {
-        options.release = javaMajor
+        options.release = javaTarget
     }
 }
 
 tasks.withType<ProcessResources> {
-    // Exclude not needed files.
+    // Exclude not needed loader entrypoint files.
     if (loom.isForge) {
         exclude("fabric.mod.json", "quilt.mod.json", "META-INF/neoforge.mods.toml")
     } else if (loom.isNeoForge) {
-        if (stonecutter.eval(mcVersion, ">=1.20.6")) {
+        if (stonecutter.eval(minecraft, ">=1.20.6")) {
             exclude("fabric.mod.json", "quilt.mod.json", "META-INF/mods.toml")
         } else {
             exclude("fabric.mod.json", "quilt.mod.json", "META-INF/neoforge.mods.toml")
@@ -170,10 +182,11 @@ tasks.withType<ProcessResources> {
     }
 
     // Expand version and dependencies.
+    val minecraftRequirement = findProperty("stonecutter.minecraftRequirement") ?: minecraft
     inputs.property("version", version)
-    inputs.property("minecraft", mcVersion)
-    inputs.property("java", javaMajor)
-    inputs.property("platform", loomPlatform.id())
+    inputs.property("minecraft", minecraftRequirement)
+    inputs.property("java", javaTarget)
+    inputs.property("platform", platform.id())
     filesMatching(listOf("fabric.mod.json", "quilt.mod.json", "hcscr.mixins.json", "META-INF/mods.toml", "META-INF/neoforge.mods.toml")) {
         expand(inputs.properties)
     }

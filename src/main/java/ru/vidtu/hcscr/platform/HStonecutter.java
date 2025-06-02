@@ -72,7 +72,7 @@ public final class HStonecutter {
     /**
      * A channel identifier for servers to know that this mod is installed.
      */
-    //? if >=1.21.1 || (forge && (!legacyNeoForge) && >=1.18.2 && (!1.20.2)) {
+    //? if >=1.21.1 || (forge && (!hackyNeoForge) && >=1.18.2 && (!1.20.2)) {
     static final ResourceLocation CHANNEL_IDENTIFIER = ResourceLocation.fromNamespaceAndPath("hcscr", "imhere");
     //?} else
     /*static final ResourceLocation CHANNEL_IDENTIFIER = new ResourceLocation("hcscr", "imhere");*/

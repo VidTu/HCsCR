@@ -10,20 +10,20 @@
             <entry key="PAPER" value="false" />
             <entry key="ARCHITECTURY" value="false" />
             <entry key="FORGE" value="false" />
-            <entry key="FABRIC" value="false" />
+            <entry key="FABRIC" value="true" />
             <entry key="SPONGE" value="false" />
             <entry key="BUNGEECORD" value="false" />
             <entry key="WATERFALL" value="false" />
             <entry key="VELOCITY" value="false" />
             <entry key="MIXIN" value="true" />
-            <entry key="NEOFORGE" value="true" />
+            <entry key="NEOFORGE" value="false" />
             <entry key="MCP" value="true" />
             <entry key="ADVENTURE" value="false" />
           </map>
         </userChosenTypes>
         <autoDetectTypes>
+          <platformType>FABRIC</platformType>
           <platformType>MIXIN</platformType>
-          <platformType>NEOFORGE</platformType>
           <platformType>MCP</platformType>
         </autoDetectTypes>
         <projectReimportVersion>1</projectReimportVersion>
