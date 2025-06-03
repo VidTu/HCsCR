@@ -176,7 +176,7 @@ dependencies {
     }
 }
 
-// Compile with UTF-8, compatble Java, and with all debug options.
+// Compile with UTF-8, compatible Java, and with all debug options.
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
     options.compilerArgs.addAll(listOf("-g", "-parameters"))

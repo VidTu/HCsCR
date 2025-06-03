@@ -121,7 +121,7 @@ It is discouraged to modify code commented out by the preprocessor, switch to th
 
 Reset to the default target before commiting changes via `./reset`[^3] command to avoid mess.
 
-Running the client via generated tasks (e.g. for IntelliJ IDEA) usually doesn't work, because the Stonecutter
+Running the client via generated tasks (e.g., for IntelliJ IDEA) usually doesn't work, because the Stonecutter
 Preprocessor requires setting the active project and also building via the chiseled build.
 
 The development environment has stricter preconditions: Mixin checks, Netty detector, Java assertions, etc.
