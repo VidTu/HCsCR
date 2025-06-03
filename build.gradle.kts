@@ -81,13 +81,16 @@ loom {
         // Set the run dir.
         runDir = "../../run"
 
-        // AuthLib for 1.16.5 is bugged, force offline access to fix issues.
-        vmArgs(
-            "-Dminecraft.api.auth.host=http://0.0.0.0:0/",
-            "-Dminecraft.api.account.host=http://0.0.0.0:0/",
-            "-Dminecraft.api.session.host=http://0.0.0.0:0/",
-            "-Dminecraft.api.services.host=http://0.0.0.0:0/",
-        )
+        // AuthLib for 1.16.5 is bugged, disable Mojang API
+        // to fix issues with MP testing.
+        if (minecraft == "1.16.5") {
+            vmArgs(
+                "-Dminecraft.api.auth.host=http://0.0.0.0:0/",
+                "-Dminecraft.api.account.host=http://0.0.0.0:0/",
+                "-Dminecraft.api.session.host=http://0.0.0.0:0/",
+                "-Dminecraft.api.services.host=http://0.0.0.0:0/",
+            )
+        }
     }
 
     // Configure Mixin.
