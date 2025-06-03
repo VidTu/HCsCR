@@ -68,7 +68,26 @@ loom {
 
     // Setup JVM args, see that file.
     runs.named("client") {
-        vmArgs("@../../../dev/args.vm.txt")
+        // Set up debug VM args.
+        if (javaVersion.isJava9Compatible) {
+            vmArgs("@../dev/args.vm.txt")
+        } else {
+            vmArgs(rootDir.resolve("dev/args.vm.txt")
+                .readLines()
+                .filter { !it.contains("line.separator") }
+                .filter { it.isNotBlank() })
+        }
+
+        // Set the run dir.
+        runDir = "../../run"
+
+        // AuthLib for 1.16.5 is bugged, force offline access to fix issues.
+        vmArgs(
+            "-Dminecraft.api.auth.host=http://0.0.0.0:0/",
+            "-Dminecraft.api.account.host=http://0.0.0.0:0/",
+            "-Dminecraft.api.session.host=http://0.0.0.0:0/",
+            "-Dminecraft.api.services.host=http://0.0.0.0:0/",
+        )
     }
 
     // Configure Mixin.
