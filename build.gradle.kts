@@ -142,7 +142,7 @@ dependencies {
     compileOnly(libs.jetbrains.annotations)
 
     // Minecraft.
-    val minecraftDependency = findProperty("stonecutter.minecraftDependency") ?: minecraft
+    val minecraftDependency = findProperty("stonecutter.minecraft-dependency") ?: minecraft
     minecraft("com.mojang:minecraft:$minecraftDependency")
     mappings(loom.officialMojangMappings())
 
@@ -154,14 +154,14 @@ dependencies {
     if (loom.isForge) {
         if (hackyNeoForge) {
             // Legacy NeoForge.
-            "forge"("net.neoforged:forge:${property("stonecutter.neo")}")
+            "forge"("net.neoforged:forge:${property("stonecutter.neoforge")}")
         } else {
             // Forge.
             "forge"("net.minecraftforge:forge:${property("stonecutter.forge")}")
         }
     } else if (loom.isNeoForge) {
         // Forge.
-        "neoForge"("net.neoforged:neoforge:${property("stonecutter.neo")}")
+        "neoForge"("net.neoforged:neoforge:${property("stonecutter.neoforge")}")
     } else {
         // Fabric.
         val fabricApiVersion = property("stonecutter.fabric-api").toString()
@@ -204,7 +204,7 @@ tasks.withType<ProcessResources> {
     }
 
     // Expand version and dependencies.
-    val minecraftRequirement = findProperty("stonecutter.minecraftRequirement") ?: minecraft
+    val minecraftRequirement = findProperty("stonecutter.minecraft-requirement") ?: minecraft
     inputs.property("version", version)
     inputs.property("minecraft", minecraftRequirement)
     inputs.property("java", javaTarget)
