@@ -27,7 +27,7 @@
   "hcscr.anchors.full": "Full",
   "hcscr.anchors.full.tip": "The anchor will be instantly removed via right mouse click. The \"air place\" strategy will stop working.",
   "hcscr.delay.off": "Disabled",
-  "hcscr.delay.format": "%sms.",
+  "hcscr.delay.format": "%sms",
   "modmenu.descriptionTranslation.hcscr": "Remove your end crystals before the server even knows you hit 'em!",
   "modmenu.summaryTranslation.hcscr": "Remove your end crystals faster!"
 }
