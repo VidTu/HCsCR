@@ -440,7 +440,8 @@ public final class HCsCR {
 
         // Show the bar, play the sound.
         game.gui.setOverlayMessage(HStonecutter.translate("hcscr." + newState) // Implicit NPE for 'game'
-                .withStyle(newState ? ChatFormatting.GREEN : ChatFormatting.RED), /*rainbow=*/false);
+                .withStyle(newState ? ChatFormatting.GREEN : ChatFormatting.RED)
+                .withStyle(ChatFormatting.BOLD), /*rainbow=*/false);
         game.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING, newState ? 2.0F : 0.0F));
 
         // Log. (**DEBUG**)
