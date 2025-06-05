@@ -49,11 +49,11 @@ import ru.vidtu.hcscr.config.HScreen;
 //?} else
 /^@Mod("hcscr")^/
 @NullMarked
-public final class HNeo {
+public final class HNeoForge {
     /^*
      * Logger for this class.
      ^/
-    private static final Logger LOGGER = LogManager.getLogger("HCsCR/HNeo");
+    private static final Logger LOGGER = LogManager.getLogger("HCsCR/HNeoForge");
 
     /^*
      * Creates and loads a new mod.
@@ -62,7 +62,7 @@ public final class HNeo {
      * @param container Mod container
      * @param bus       Mod-specific event bus
      ^/
-    public HNeo(Dist dist, ModContainer container, IEventBus bus) {
+    public HNeoForge(Dist dist, ModContainer container, IEventBus bus) {
         // Validate.
         assert dist != null : "HCsCR: Parameter 'dist' is null. (container: " + container + ", bus: " + bus + ", mod: " + this + ')';
         assert container != null : "HCsCR: Parameter 'container' is null. (dist: " + dist + ", bus: " + bus + ", mod: " + this + ')';
@@ -94,7 +94,7 @@ public final class HNeo {
             @Contract(pure = true)
             @Override
             public String toString() {
-                return "HCsCR/HNeo$CustomPacketPayload{}";
+                return "HCsCR/HNeoForge$CustomPacketPayload{}";
             }
         };
         bus.addListener(net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent.class, event -> event.registrar("hcscr").optional().commonToClient(type, net.minecraft.network.codec.StreamCodec.of((buf, payload) -> {}, buf -> {
@@ -118,7 +118,7 @@ public final class HNeo {
             @Contract(pure = true)
             @Override
             public String toString() {
-                return "HCsCR/HNeo$CustomPacketPayload{}";
+                return "HCsCR/HNeoForge$CustomPacketPayload{}";
             }
         };
         bus.addListener(net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent.class, event -> event.registrar("hcscr").optional().common(HStonecutter.CHANNEL_IDENTIFIER, buf -> {
@@ -174,7 +174,7 @@ public final class HNeo {
     @Contract(pure = true)
     @Override
     public String toString() {
-        return "HCsCR/HNeo{}";
+        return "HCsCR/HNeoForge{}";
     }
 }
 *///?}
