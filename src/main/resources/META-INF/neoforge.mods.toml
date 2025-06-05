@@ -39,3 +39,10 @@ mandatory = true
 versionRange = "*"
 ordering = "NONE"
 side = "CLIENT"
+
+[modproperties.hcscr]
+catalogueImageIcon = "hcscr_64.png"
+catalogueItemIcon = "minecraft:end_crystal"
+catalogueBackground = "hcscr_background.png"
+itemIcon = "minecraft:end_crystal"
+logoFile = "hcscr_240.png"
