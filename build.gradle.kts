@@ -1,4 +1,6 @@
 /*
+ * HCsCR is a third-party mod for Minecraft Java Edition to remove your end crystals faster.
+ *
  * Copyright (c) 2023 Offenderify
  * Copyright (c) 2023-2025 VidTu
  *
@@ -222,6 +224,7 @@ tasks.withType<ProcessResources> {
                 it.writeText(Gson().fromJson(it.readText(), JsonElement::class.java).toString())
             } else if (it.name.endsWith(".toml", ignoreCase = true)) {
                 it.writeText(it.readLines()
+                    .filter { s -> !s.startsWith('#') }
                     .filter { s -> s.isNotBlank() }
                     .joinToString("\n")
                     .replace(" = ", "="))
