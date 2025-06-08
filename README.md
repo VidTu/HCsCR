@@ -62,7 +62,7 @@ affected. It cannot be affected in a way that's considered legitimate.
 **A**: No.
 
 **Q**: I want to block this mod as a server owner, can I do this?  
-**A**: A [plugin channel](https://minecraft.wiki/w/Minecraft_Wiki:Projects/wiki.vg_merge/Plugin_channels) called
+**A**: A [plugin channel](https://minecraft.wiki/w/Java_Edition_protocol/Plugin_channels) called
 `hcscr:imhere` is registered by this mod. *Beware*: Other mods like this one don't offer a way to block them.
 Consider investing your time/resources into an anti-cheat plugin, if you want to block all of them.
 
@@ -84,7 +84,7 @@ their [rules](https://modrinth.com/legal/rules). CurseForge has a terrible API a
 **Q**: Why does this mod exist, when there are server-side crystal optimizers?  
 **A**: Firstly, this mod was created in 2023 before the server-side crystal optimizers. Secondly, not every server
 has a server-side crystal optimizer. Thirdly, I have updated it in 2025, because I needed to learn the
-[Stonecutter](https://stonecutter.kikugie.dev/) framework. Now it's not hard to maintain, so why not.
+[Stonecutter](https://stonecutter.kikugie.dev/) preprocessor. Now it's not hard to maintain, so why not.
 
 **Q**: How fast is it?  
 **A**: It should be pretty fast. No precise numbers, it depends on the ping, server MSPT, etc.
