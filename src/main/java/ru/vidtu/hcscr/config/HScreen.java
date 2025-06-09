@@ -21,6 +21,7 @@
 
 package ru.vidtu.hcscr.config;
 
+import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -77,7 +78,10 @@ public final class HScreen extends Screen {
 
     /**
      * Adds the config widgets.
+     *
+     * @apiNote Do not call, called by Minecraft
      */
+    @DoNotCall("Called by Minecraft")
     @Override
     protected void init() {
         // Validate.
@@ -159,8 +163,10 @@ public final class HScreen extends Screen {
      * @param mouseX    Scaled mouse X position
      * @param mouseY    Scaled mouse Y position
      * @param tickDelta Current tick delta (not to be confused with the partial tick)
+     * @apiNote Do not call, called by Minecraft
      */
     @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") // <- Parameter names are not provided by Mojmap.
+    @DoNotCall("Called by Minecraft")
     @Override
     //? if >=1.20.1 {
     public void render(net.minecraft.client.gui.GuiGraphics graphics, int mouseX, int mouseY, float tickDelta) {
@@ -234,7 +240,7 @@ public final class HScreen extends Screen {
     }
 
     /**
-     * Calculates and returns the wioget Y position based on its vertical index.
+     * Calculates and returns the widget Y position based on its vertical index.
      *
      * @param index Widget index
      * @return Calculated widget Y position
