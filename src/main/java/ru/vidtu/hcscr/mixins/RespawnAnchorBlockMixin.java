@@ -21,6 +21,7 @@
 
 package ru.vidtu.hcscr.mixins;
 
+import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -82,11 +83,13 @@ public final class RespawnAnchorBlockMixin {
      * @param player Interacting player, ignored
      * @param result Hit vector, ignored
      * @param cir    Callback data, ignored
+     * @apiNote Do not call, called by Mixin
      * @see HConfig#enable()
      * @see HConfig#anchors()
      * @see AnchorMode
      * @see HCsCR#CLIPPING_ANCHORS
      */
+    @DoNotCall("Called by Mixin")
     @Inject(method = "useWithoutItem", at = @At("HEAD"))
     private void hcscr_useWithoutItem_head(BlockState state, Level level, BlockPos pos, Player player,
                                            BlockHitResult result, CallbackInfoReturnable<InteractionResult> cir) {
@@ -106,7 +109,7 @@ public final class RespawnAnchorBlockMixin {
         // - The anchor doesn't explode in the current dimension.
         // - The mod is disabled via config or keybind.
         // - The remove anchors feature is OFF. (in switch block)
-        if (!level.isClientSide() || (state.getValue(RespawnAnchorBlock.CHARGE) == 0) ||
+        if (!level.isClientSide() || (state.getValue(RespawnAnchorBlock.CHARGE) == 0) || // Implicit NPE for 'level', 'state'
                 RespawnAnchorBlock.canSetSpawn(level) || !HConfig.enable()) {
             // Log, stop. (**DEBUG**)
             HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
@@ -124,7 +127,7 @@ public final class RespawnAnchorBlockMixin {
                 break;
             case FULL:
                 // Remove.
-                level.removeBlock(pos, false);
+                level.removeBlock(pos, false); // Implicit NPE for 'pos'
 
                 // Log, break. (**DEBUG**)
                 HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Removed anchor via right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
@@ -145,11 +148,13 @@ public final class RespawnAnchorBlockMixin {
      * @param hand   Interaction hand
      * @param result Hit vector, ignored
      * @param cir    Callback data, ignored
+     * @apiNote Do not call, called by Mixin
      * @see HConfig#enable()
      * @see HConfig#anchors()
      * @see AnchorMode
      * @see HCsCR#CLIPPING_ANCHORS
      ^/
+    @DoNotCall("Called by Mixin")
     @Inject(method = "use", at = @At("HEAD"))
     private void hcscr_use_head(BlockState state, Level level, BlockPos pos, Player player,
                                 net.minecraft.world.InteractionHand hand, BlockHitResult result,
@@ -169,7 +174,7 @@ public final class RespawnAnchorBlockMixin {
         // - The mod is disabled via config or keybind.
         // - The anchor is currently being charged.
         // - The remove anchors feature is OFF. (in switch block)
-        if (!level.isClientSide() || (state.getValue(RespawnAnchorBlock.CHARGE) == 0) ||
+        if (!level.isClientSide() || (state.getValue(RespawnAnchorBlock.CHARGE) == 0) || // Implicit NPE for 'level', 'state'
                 RespawnAnchorBlock.canSetSpawn(level) || !HConfig.enable()) {
             // Log, stop. (**DEBUG**)
             HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, result: {}, anchor: {})", state, level, pos, player, hand, result, this);
@@ -177,8 +182,8 @@ public final class RespawnAnchorBlockMixin {
         }
 
         // Skip if charging.
-        net.minecraft.world.item.ItemStack stack = player.getItemInHand(hand);
-        if (((hand == net.minecraft.world.InteractionHand.MAIN_HAND) && !isRespawnFuel(stack) &&
+        net.minecraft.world.item.ItemStack stack = player.getItemInHand(hand); // Implicit NPE for 'player'
+        if (((hand == net.minecraft.world.InteractionHand.MAIN_HAND) && !isRespawnFuel(stack) && // Implicit NPE for 'stack;
                 isRespawnFuel(player.getItemInHand(net.minecraft.world.InteractionHand.OFF_HAND))) ||
                 (isRespawnFuel(stack) && canBeCharged(state))) {
             // Log, stop. (**DEBUG**)
@@ -197,7 +202,7 @@ public final class RespawnAnchorBlockMixin {
                 break;
             case FULL:
                 // Remove.
-                level.removeBlock(pos, false);
+                level.removeBlock(pos, false); // Implicit NPE for 'pos'
 
                 // Log, break. (**DEBUG**)
                 HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Removed anchor via right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);

@@ -21,6 +21,7 @@
 
 package ru.vidtu.hcscr.mixins;
 
+import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
@@ -65,13 +66,17 @@ public final class BlockStateBaseMixin {
     }
 
     /**
-     * Injects the empty collision for blocks in {@link HCsCR#}
+     * Injects the empty collision for blocks in {@link HCsCR#CLIPPING_ANCHORS}.
      *
      * @param getter Block container (level/chunk), ignored
      * @param pos    Block position
      * @param ctx    Collision context
      * @param cir    Callback data
+     * @apiNote Do not call, called by Mixin
+     * @see HCsCR#CLIPPING_ANCHORS
+     * @see HStonecutter#collisionContextEntity(EntityCollisionContext)
      */
+    @DoNotCall("Called by Mixin")
     @Inject(method = "getCollisionShape(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/phys/shapes/VoxelShape;", at = @At("HEAD"), cancellable = true)
     private void hcscr_getCollisionShape_head(BlockGetter getter, BlockPos pos, CollisionContext ctx, CallbackInfoReturnable<VoxelShape> cir) {
         // Validate.

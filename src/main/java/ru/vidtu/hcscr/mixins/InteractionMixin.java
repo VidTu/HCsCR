@@ -22,6 +22,7 @@
 //? if >=1.19.4 {
 package ru.vidtu.hcscr.mixins;
 
+import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Interaction;
 import net.minecraft.world.level.Level;
@@ -77,10 +78,12 @@ public abstract class InteractionMixin extends Entity {
      *
      * @param attacker Attacking entity
      * @param cir      Callback data
+     * @apiNote Do not call, called by Mixin
      * @see CrystalMode#ENVELOPING
      * @see HConfig#enable()
      * @see HConfig#crystals()
      */
+    @DoNotCall("Called by Mixin")
     @Inject(method = "skipAttackInteraction", at = @At("HEAD"), cancellable = true)
     private void hcscr_skipAttackInteraction_head(Entity attacker, CallbackInfoReturnable<Boolean> cir) {
         // Validate.
@@ -98,7 +101,7 @@ public abstract class InteractionMixin extends Entity {
         // - The current level (world) is not client-side. (e.g. integrated server world)
         // - The mod is disabled via config/keybind.
         // - The current crystal removal mode is not ENVELOPING.
-        if (!level.isClientSide() || !HConfig.enable() || (HConfig.crystals() != CrystalMode.ENVELOPING)) {
+        if (!level.isClientSide() || !HConfig.enable() || (HConfig.crystals() != CrystalMode.ENVELOPING)) { // Implicit NPE for 'level'
             // Log, stop. (**DEBUG**)
             HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Ignored Interaction entity attack overriding. (attacker: {}, cir: {}, interaction: {})", attacker, cir, this);
             return;

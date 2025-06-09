@@ -21,6 +21,7 @@
 
 package ru.vidtu.hcscr.mixins;
 
+import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -63,9 +64,11 @@ public final class PlayerMixin {
      * @param source Attack source
      * @param amount Attack amount
      * @return Whether the attack has succeeded
+     * @apiNote Do not call, called by Mixin
      * @see HStonecutter#hurtEntity(Entity, DamageSource, float)
      * @see HCsCR#handleEntityHit(Entity, DamageSource, float)
      */
+    @DoNotCall("Called by Mixin")
     //? if >=1.21.3 {
     @Redirect(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurtOrSimulate(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
     //?} else

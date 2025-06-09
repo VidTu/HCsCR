@@ -22,6 +22,7 @@
 //? if <1.17.1 {
 /*package ru.vidtu.hcscr.mixins;
 
+import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import org.jetbrains.annotations.Contract;
@@ -71,7 +72,10 @@ public final class EntityCollisionContextMixin implements HEntityCollisionContex
      *
      * @param entity The entity to stored, {@code null} if none
      * @param ci     Callback data, ignored
+     * @apiNote Do not call, called by Mixin
+     * @see HStonecutter#collisionContextEntity(EntityCollisionContext)
      ^/
+    @DoNotCall("Called by Mixin")
     @Inject(method = "<init>(Lnet/minecraft/world/entity/Entity;)V", at = @At("RETURN"))
     private void hcscr_init_return(@Nullable Entity entity, CallbackInfo ci) {
         // Stored.

@@ -21,6 +21,7 @@
 
 package ru.vidtu.hcscr.mixins;
 
+import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -72,10 +73,12 @@ public final class MinecraftMixin {
      *
      * @param level New level, {@code null} if was unloaded, ignored
      * @param ci    Callback data, ignored
+     * @apiNote Do not call, called by Mixin
      * @see HCsCR#SCHEDULED_ENTITIES
      * @see HCsCR#HIDDEN_ENTITIES
      * @see HCsCR#CLIPPING_ANCHORS
      */
+    @DoNotCall("Called by Mixin")
     @Inject(method = "updateLevelInEngines", at = @At("RETURN"))
     private void hcscr_updateLevelInEngines_return(@Nullable ClientLevel level, CallbackInfo ci) {
         // Get and push the profiler.

@@ -142,6 +142,7 @@ dependencies {
     // Annotations.
     compileOnly(libs.jspecify)
     compileOnly(libs.jetbrains.annotations)
+    compileOnly(libs.error.prone.annotations)
 
     // Minecraft.
     val minecraftDependency = findProperty("stonecutter.minecraft-dependency") ?: minecraft

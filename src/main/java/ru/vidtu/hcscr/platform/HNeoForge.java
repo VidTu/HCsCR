@@ -63,6 +63,7 @@ public final class HNeoForge {
      * @param dist      Current physical side
      * @param container Mod container
      * @param bus       Mod-specific event bus
+     * @apiNote Do not call, called by NeoForge
      ^/
     public HNeoForge(Dist dist, ModContainer container, IEventBus bus) {
         // Validate.
@@ -76,7 +77,7 @@ public final class HNeoForge {
 
         // Not sure how long the Forge does have the "clientSideOnly" field in the TOML,
         // so I'll do an additional exception check here.
-        if (dist != Dist.CLIENT) {
+        if (dist != Dist.CLIENT) { // Implicit null-UOE for 'dist'
             throw new UnsupportedOperationException("HCsCR: You've tried to load the HCsCR mod on a server. This won't work.");
         }
 
@@ -99,7 +100,7 @@ public final class HNeoForge {
                 return "HCsCR/HNeoForge$CustomPacketPayload{}";
             }
         };
-        bus.addListener(net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent.class, event -> event.registrar("hcscr").optional().commonToClient(type, net.minecraft.network.codec.StreamCodec.of((buf, payload) -> {}, buf -> {
+        bus.addListener(net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent.class, event -> event.registrar("hcscr").optional().commonToClient(type, net.minecraft.network.codec.StreamCodec.of((buf, payload) -> {}, buf -> { // Implicit NPE for 'bus'
             buf.skipBytes(buf.readableBytes());
             return instance;
         }), (payload, context) -> context.disconnect(HStonecutter.translate("hcscr.false"))));
@@ -123,7 +124,7 @@ public final class HNeoForge {
                 return "HCsCR/HNeoForge$CustomPacketPayload{}";
             }
         };
-        bus.addListener(net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent.class, event -> event.registrar("hcscr").optional().common(HStonecutter.CHANNEL_IDENTIFIER, buf -> {
+        bus.addListener(net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent.class, event -> event.registrar("hcscr").optional().common(HStonecutter.CHANNEL_IDENTIFIER, buf -> { // Implicit NPE for 'bus'
             buf.skipBytes(buf.readableBytes());
             return instance;
         }, (payload, context) -> context.replyHandler().disconnect(HStonecutter.translate("hcscr.false"))));
@@ -138,7 +139,7 @@ public final class HNeoForge {
         ^///?}
 
         // Register the binds.
-        bus.addListener(RegisterKeyMappingsEvent.class, event -> {
+        bus.addListener(RegisterKeyMappingsEvent.class, event -> { // Implicit NPE for 'bus'
             event.register(HCsCR.CONFIG_BIND);
             event.register(HCsCR.TOGGLE_BIND);
         });
@@ -164,9 +165,9 @@ public final class HNeoForge {
 
         // Register the config screen.
         //? if >=1.20.6 {
-        container.registerExtensionPoint(net.neoforged.neoforge.client.gui.IConfigScreenFactory.class, (modOrGame, parent) -> new HScreen(parent));
+        container.registerExtensionPoint(net.neoforged.neoforge.client.gui.IConfigScreenFactory.class, (modOrGame, parent) -> new HScreen(parent)); // Implicit NPE for 'container'
         //?} else {
-        /^container.registerExtensionPoint(net.neoforged.neoforge.client.ConfigScreenHandler.ConfigScreenFactory.class, () -> new net.neoforged.neoforge.client.ConfigScreenHandler.ConfigScreenFactory((game, screen) -> new HScreen(screen)));
+        /^container.registerExtensionPoint(net.neoforged.neoforge.client.ConfigScreenHandler.ConfigScreenFactory.class, () -> new net.neoforged.neoforge.client.ConfigScreenHandler.ConfigScreenFactory((game, screen) -> new HScreen(screen))); // Implicit NPE for 'container'
         container.registerExtensionPoint(net.neoforged.fml.IExtensionPoint.DisplayTest.class, () -> new net.neoforged.fml.IExtensionPoint.DisplayTest(() -> net.neoforged.fml.IExtensionPoint.DisplayTest.IGNORESERVERONLY, (version, fromServer) -> true));
         ^///?}
 

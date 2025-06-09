@@ -22,6 +22,7 @@
 //? if fabric {
 package ru.vidtu.hcscr.platform;
 
+import com.google.errorprone.annotations.DoNotCall;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import org.jetbrains.annotations.ApiStatus;
@@ -43,12 +44,21 @@ import ru.vidtu.hcscr.config.HScreen;
 public final class HModMenu implements ModMenuApi {
     /**
      * Creates a new entrypoint.
+     *
+     * @apiNote Do not call, called by ModMenu
      */
     @Contract(pure = true)
     public HModMenu() {
         // Empty
     }
 
+    /**
+     * Gets the ModMenu config screen factory.
+     *
+     * @return Config screen factory for ModMenu
+     * @apiNote Do not call, called by ModMenu
+     */
+    @DoNotCall("Called by ModMenu")
     @Contract(pure = true)
     @Override
     public ConfigScreenFactory<HScreen> getModConfigScreenFactory() {

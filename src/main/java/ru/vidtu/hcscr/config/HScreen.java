@@ -22,6 +22,7 @@
 package ru.vidtu.hcscr.config;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
@@ -79,16 +80,21 @@ public final class HScreen extends Screen {
      */
     @Override
     protected void init() {
+        // Validate.
+        Font font = this.font;
+        assert font != null : "HCsCR: Font renderer is not initialized at screen initializing. (screen: " + this + ')';
+
         // Enable.
+        int index = 0;
         int centerX = (this.width / 2);
-        this.addVersionedWidget(HStonecutter.createCheckbox(this.font, centerX, 20, HStonecutter.translate("hcscr.enable"),
+        this.addVersionedWidget(HStonecutter.createCheckbox(font, centerX, calculateWidgetY(index++), HStonecutter.translate("hcscr.enable"), // Implicit NPE for 'font'
                 HStonecutter.translate("hcscr.enable.tip"), HConfig.enable(),
                 HConfig::enable, this::tooltip));
 
         // Crystals.
         int buttonX = (centerX - 100);
         CrystalMode crystals = HConfig.crystals();
-        this.addVersionedWidget(HStonecutter.createButton(this.font, buttonX, 20 + 24, 200, 20, crystals.label(), crystals.tip(), (button, tipSetter) -> {
+        this.addVersionedWidget(HStonecutter.createButton(font, buttonX, calculateWidgetY(index++), 200, 20, crystals.label(), crystals.tip(), (button, tipSetter) -> {
             // Update the crystals.
             CrystalMode newCrystals = HConfig.cycleCrystals(/*back=*/hasShiftDown());
 
@@ -101,7 +107,7 @@ public final class HScreen extends Screen {
         IntFunction<Component> crystalsDelayMessage = delay -> HStonecutter.translate("options.generic_value",
                 HStonecutter.translate("hcscr.crystalsDelay"), (delay > 0) ? HStonecutter.translate(
                         "hcscr.delay.format", delay / 1_000_000) : HStonecutter.translate("hcscr.delay.off"));
-        this.addVersionedWidget(HStonecutter.createSlider(this.font, buttonX, 20 + (24 * 2), 200, 20, crystalsDelayMessage,
+        this.addVersionedWidget(HStonecutter.createSlider(font, buttonX, calculateWidgetY(index++), 200, 20, crystalsDelayMessage,
                 HStonecutter.translate("hcscr.crystalsDelay.tip"), HConfig.crystalsDelay(), 0, 200_000_000,
                 HConfig::crystalsDelay, this::tooltip));
 
@@ -109,13 +115,13 @@ public final class HScreen extends Screen {
         IntFunction<Component> crystalsResyncMessage = resync -> HStonecutter.translate("options.generic_value",
                 HStonecutter.translate("hcscr.crystalsResync"), (resync > 0) ? HStonecutter.translate(
                         "hcscr.delay.format", resync * 50) : HStonecutter.translate("hcscr.delay.off"));
-        this.addVersionedWidget(HStonecutter.createSlider(this.font, buttonX, 20 + (24 * 3), 200, 20, crystalsResyncMessage,
+        this.addVersionedWidget(HStonecutter.createSlider(font, buttonX, calculateWidgetY(index++), 200, 20, crystalsResyncMessage,
                 HStonecutter.translate("hcscr.crystalsResync.tip"), HConfig.crystalsResync(), 0, 50,
                 HConfig::crystalsResync, this::tooltip));
 
         // Anchors.
         AnchorMode anchors = HConfig.anchors();
-        this.addVersionedWidget(HStonecutter.createButton(this.font, buttonX, 20 + (24 * 4), 200, 20, anchors.label(), anchors.tip(), (button, tipSetter) -> {
+        this.addVersionedWidget(HStonecutter.createButton(font, buttonX, calculateWidgetY(index++), 200, 20, anchors.label(), anchors.tip(), (button, tipSetter) -> {
             // Update the anchors.
             AnchorMode newAnchors = HConfig.cycleAnchors(/*back=*/hasShiftDown());
 
@@ -125,7 +131,7 @@ public final class HScreen extends Screen {
         }, this::tooltip));
 
         // Add done button.
-        this.addVersionedWidget(HStonecutter.createButton(this.font, buttonX, this.height - 24, 200, 20,
+        this.addVersionedWidget(HStonecutter.createButton(font, buttonX, this.height - 24, 200, 20,
                 CommonComponents.GUI_DONE, HStonecutter.translate("hcscr.close"),
                 (btn, tipSetter) -> this.onClose(), this::tooltip));
     }
@@ -143,7 +149,7 @@ public final class HScreen extends Screen {
         HConfig.save();
 
         // Close.
-        minecraft.setScreen(this.parent);
+        minecraft.setScreen(this.parent); // Implicit NPE for 'minecraft'
     }
 
     /**
@@ -165,17 +171,19 @@ public final class HScreen extends Screen {
         assert mouseX >= 0 : "HCsCR: Parameter 'mouseX' is negative. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
         assert mouseY >= 0 : "HCsCR: Parameter 'mouseY' is negative. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
         assert (tickDelta >= 0.0F) && (tickDelta < Float.POSITIVE_INFINITY) : "HCsCR: Parameter 'tickDelta' is not in the [0..inf) range. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
+        Font font = this.font;
+        assert font != null : "HCsCR: Font renderer is not initialized at screen rendering. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
 
         // Render background and widgets.
         //? if <1.20.2
-        /*this.renderBackground(graphics);*/
-        super.render(graphics, mouseX, mouseY, tickDelta);
+        /*this.renderBackground(graphics);*/ // Implicit NPE for 'graphics'
+        super.render(graphics, mouseX, mouseY, tickDelta); // Implicit NPE for 'graphics'
 
         // Render title.
         //? if >=1.20.1 {
-        graphics.drawCenteredString(this.font, this.title, this.width / 2, 5, -1);
+        graphics.drawCenteredString(font, this.title, this.width / 2, 5, -1);
         //?} else
-        /*drawCenteredString(graphics, this.font, this.title, this.width / 2, 5, -1);*/
+        /*drawCenteredString(graphics, font, this.title, this.width / 2, 5, -1);*/
 
         // Render the last pass tooltip.
         //? if < 1.19.4 {
@@ -196,9 +204,9 @@ public final class HScreen extends Screen {
 
         // Delegate.
         //? if >=1.17.1 {
-        this.addRenderableWidget(widget);
+        this.addRenderableWidget(widget); // Implicit NPE for 'widget'
         //?} else
-        /*this.addButton(widget);*/
+        /*this.addButton(widget);*/ // Implicit NPE for 'widget'
     }
 
     /**
@@ -223,5 +231,16 @@ public final class HScreen extends Screen {
                 //? if <1.19.4
                 /*", tooltip=" + this.tooltip +*/
                 '}';
+    }
+
+    /**
+     * Calculates and returns the wioget Y position based on its vertical index.
+     *
+     * @param index Widget index
+     * @return Calculated widget Y position
+     */
+    @Contract(pure = true)
+    private static int calculateWidgetY(int index) {
+        return 20 + (index * 24);
     }
 }

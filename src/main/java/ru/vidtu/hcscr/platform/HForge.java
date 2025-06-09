@@ -60,6 +60,7 @@ public final class HForge {
      *
      * @param container Current mod container
      * @param bus       Loading event bus
+     * @apiNote Do not call, called by Forge
      ¹^/
     public HForge(net.minecraftforge.fml.ModContainer container, net.minecraftforge.eventbus.api.IEventBus bus) {
         // Validate.
@@ -70,6 +71,7 @@ public final class HForge {
      * Creates and loads a new mod.
      *
      * @param ctx Loading context
+     * @apiNote Do not call, called by Forge
      ^/
     public HForge(FMLJavaModLoadingContext ctx) {
         // Validate.
@@ -77,6 +79,8 @@ public final class HForge {
     //?} else {
     /^/^¹*
      * Creates a new mod.
+     *
+     * @apiNote Do not call, called by Forge
      ¹^/
     public HForge() {
     ^///?}
@@ -124,7 +128,7 @@ public final class HForge {
         //? if 1.20.2 {
         /^var bus = FMLJavaModLoadingContext.get().getModEventBus();
         ^///?} else >=1.19.2 && (!hackyNeoForge)
-        var bus = ctx.getModEventBus();
+        var bus = ctx.getModEventBus(); // Implicit NPE for 'ctx'
         //? if >=1.19.2 {
         bus.addListener((net.minecraftforge.client.event.RegisterKeyMappingsEvent event) -> {
             event.register(HCsCR.CONFIG_BIND);

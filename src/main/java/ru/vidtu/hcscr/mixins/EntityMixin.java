@@ -21,6 +21,7 @@
 
 package ru.vidtu.hcscr.mixins;
 
+import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -73,8 +74,10 @@ public final class EntityMixin {
      * Sets the bounding box to {@link #INITIAL_AABB} if this entity is {@link HCsCR#HIDDEN_ENTITIES}.
      *
      * @param cir Callback data
+     * @apiNote Do not call, called by Mixin
      * @see HCsCR#HIDDEN_ENTITIES
      */
+    @DoNotCall("Called by Mixin")
     @Inject(method = "getBoundingBox", at = @At("HEAD"), cancellable = true)
     private void hcscr_getBoundingBox_head(CallbackInfoReturnable<AABB> cir) {
         // Validate.
@@ -85,7 +88,7 @@ public final class EntityMixin {
         // - The current level (world) is not client-side. (e.g. integrated server world)
         // - The entity is not actually hidden.
         //noinspection SuspiciousMethodCalls // <- Mixin.
-        if (!level.isClientSide() || !HCsCR.HIDDEN_ENTITIES.containsKey(this)) return;
+        if (!level.isClientSide() || !HCsCR.HIDDEN_ENTITIES.containsKey(this)) return; // Implicit NPE for 'level'
 
         // Set to empty hitbox.
         cir.setReturnValue(INITIAL_AABB);

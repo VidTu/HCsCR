@@ -22,6 +22,7 @@
 //? if fabric {
 package ru.vidtu.hcscr.platform;
 
+import com.google.errorprone.annotations.DoNotCall;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -54,12 +55,20 @@ public final class HFabric implements ClientModInitializer {
 
     /**
      * Creates a new mod.
+     *
+     * @apiNote Do not call, called by Fabric
      */
     @Contract(pure = true)
     public HFabric() {
         // Empty
     }
 
+    /**
+     * Initializes the client.
+     *
+     * @apiNote Do not call, called by Fabric
+     */
+    @DoNotCall("Called by Fabric")
     @Override
     public void onInitializeClient() {
         // Log.

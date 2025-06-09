@@ -21,6 +21,7 @@
 
 package ru.vidtu.hcscr.mixins;
 
+import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import org.jetbrains.annotations.Contract;
@@ -60,13 +61,16 @@ public final class ClientPacketListenerMixin {
      *
      * @param packet Block update packet
      * @param ci     Callback data, ignored
+     * @apiNote Do not call, called by Mixin
+     * @see HCsCR#CLIPPING_ANCHORS
      */
+    @DoNotCall("Called by Mixin")
     @Inject(method = "handleBlockUpdate", at = @At("RETURN"))
     private void hcscr_handleBlockUpdate_return(ClientboundBlockUpdatePacket packet, CallbackInfo ci) {
         // Validate.
         assert packet != null : "HCsCR: Parameter 'packet' is null. (handler: " + this + ')';
 
         // Nuke.
-        HCsCR.CLIPPING_ANCHORS.remove(packet.getPos());
+        HCsCR.CLIPPING_ANCHORS.remove(packet.getPos()); // Implicit NPE for 'packet'
     }
 }
