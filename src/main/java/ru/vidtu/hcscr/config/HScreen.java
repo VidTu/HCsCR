@@ -81,14 +81,14 @@ public final class HScreen extends Screen {
     protected void init() {
         // Enable.
         int centerX = (this.width / 2);
-        this.add(HStonecutter.guiCheckbox(this.font, centerX, 20, HStonecutter.translate("hcscr.enable"),
+        this.addVersionedWidget(HStonecutter.createCheckbox(this.font, centerX, 20, HStonecutter.translate("hcscr.enable"),
                 HStonecutter.translate("hcscr.enable.tip"), HConfig.enable(),
                 HConfig::enable, this::tooltip));
 
         // Crystals.
         int buttonX = (centerX - 100);
         CrystalMode crystals = HConfig.crystals();
-        this.add(HStonecutter.guiButton(this.font, buttonX, 20 + 24, 200, 20, crystals.label(), crystals.tip(), (button, tipSetter) -> {
+        this.addVersionedWidget(HStonecutter.createButton(this.font, buttonX, 20 + 24, 200, 20, crystals.label(), crystals.tip(), (button, tipSetter) -> {
             // Update the crystals.
             CrystalMode newCrystals = HConfig.cycleCrystals(/*back=*/hasShiftDown());
 
@@ -101,7 +101,7 @@ public final class HScreen extends Screen {
         IntFunction<Component> crystalsDelayMessage = delay -> HStonecutter.translate("options.generic_value",
                 HStonecutter.translate("hcscr.crystalsDelay"), (delay > 0) ? HStonecutter.translate(
                         "hcscr.delay.format", delay / 1_000_000) : HStonecutter.translate("hcscr.delay.off"));
-        this.add(HStonecutter.guiSlider(this.font, buttonX, 20 + (24 * 2), 200, 20, crystalsDelayMessage,
+        this.addVersionedWidget(HStonecutter.createSlider(this.font, buttonX, 20 + (24 * 2), 200, 20, crystalsDelayMessage,
                 HStonecutter.translate("hcscr.crystalsDelay.tip"), HConfig.crystalsDelay(), 0, 200_000_000,
                 HConfig::crystalsDelay, this::tooltip));
 
@@ -109,13 +109,13 @@ public final class HScreen extends Screen {
         IntFunction<Component> crystalsResyncMessage = resync -> HStonecutter.translate("options.generic_value",
                 HStonecutter.translate("hcscr.crystalsResync"), (resync > 0) ? HStonecutter.translate(
                         "hcscr.delay.format", resync * 50) : HStonecutter.translate("hcscr.delay.off"));
-        this.add(HStonecutter.guiSlider(this.font, buttonX, 20 + (24 * 3), 200, 20, crystalsResyncMessage,
+        this.addVersionedWidget(HStonecutter.createSlider(this.font, buttonX, 20 + (24 * 3), 200, 20, crystalsResyncMessage,
                 HStonecutter.translate("hcscr.crystalsResync.tip"), HConfig.crystalsResync(), 0, 50,
                 HConfig::crystalsResync, this::tooltip));
 
         // Anchors.
         AnchorMode anchors = HConfig.anchors();
-        this.add(HStonecutter.guiButton(this.font, buttonX, 20 + (24 * 4), 200, 20, anchors.label(), anchors.tip(), (button, tipSetter) -> {
+        this.addVersionedWidget(HStonecutter.createButton(this.font, buttonX, 20 + (24 * 4), 200, 20, anchors.label(), anchors.tip(), (button, tipSetter) -> {
             // Update the anchors.
             AnchorMode newAnchors = HConfig.cycleAnchors(/*back=*/hasShiftDown());
 
@@ -125,7 +125,7 @@ public final class HScreen extends Screen {
         }, this::tooltip));
 
         // Add done button.
-        this.add(HStonecutter.guiButton(this.font, buttonX, this.height - 24, 200, 20,
+        this.addVersionedWidget(HStonecutter.createButton(this.font, buttonX, this.height - 24, 200, 20,
                 CommonComponents.GUI_DONE, HStonecutter.translate("hcscr.close"),
                 (btn, tipSetter) -> this.onClose(), this::tooltip));
     }
@@ -190,7 +190,7 @@ public final class HScreen extends Screen {
      *
      * @param widget Widget to add
      */
-    private void add(AbstractWidget widget) {
+    private void addVersionedWidget(AbstractWidget widget) {
         // Validate.
         assert widget != null : "HCsCR: Parameter 'widget' is null. (screen: " + this + ')';
 

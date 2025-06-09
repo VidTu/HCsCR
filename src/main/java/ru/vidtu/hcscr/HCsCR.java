@@ -93,10 +93,10 @@ public final class HCsCR {
 
     /**
      * Hit entities mapped to their time of removal/hiding time in units of {@link System#nanoTime()}. As soon as
-     * current time will reach the removal time, {@link #handleFrame(ProfilerFiller)} will either remove them
+     * current time will reach the removal time, {@link #handleFrameTick(ProfilerFiller)} will either remove them
      * via {@link HStonecutter#removeEntity(Entity)} or mark them as hidden entities into {@link #HIDDEN_ENTITIES}.
      *
-     * @see #handleFrame(ProfilerFiller)
+     * @see #handleFrameTick(ProfilerFiller)
      * @see HStonecutter#removeEntity(Entity)
      * @see #HIDDEN_ENTITIES
      */
@@ -106,7 +106,7 @@ public final class HCsCR {
 
     /**
      * Hidden entities mapped to their remaining resync ticks. These entities won't appear in the world as their
-     * hitbox will be removed via {@link EntityMixin}. They are counted down in {@link #handleTick(Minecraft)}.
+     * hitbox will be removed via {@link EntityMixin}. They are counted down in {@link #handleGameTick(Minecraft)}.
      *
      * @see EntityMixin
      * @see #handleHiddenEntities(Minecraft, ProfilerFiller)
@@ -120,10 +120,10 @@ public final class HCsCR {
 
     /**
      * Clipping anchors mapped. These anchors won't collide in the world as their hitbox will be removed via
-     * {@link BlockStateBaseMixin}. They are checkin in {@link #handleTick(Minecraft)}.
+     * {@link BlockStateBaseMixin}. They are checkin in {@link #handleGameTick(Minecraft)}.
      *
      * @see BlockStateBaseMixin
-     * @see #handleTick(Minecraft)
+     * @see #handleGameTick(Minecraft)
      */
     // This map is not expected to grow more than a few elements, so it's an array-baked map, not a hash-baked one.
     // Moreover, it's being iterated linearly anyway in handleTick(...).
@@ -156,22 +156,22 @@ public final class HCsCR {
      * @see #handleHiddenEntities(Minecraft, ProfilerFiller)
      * @see #handleClippingAnchors(Minecraft, ProfilerFiller)
      */
-    public static void handleTick(Minecraft game) {
+    public static void handleGameTick(Minecraft game) {
         // Validate.
         assert game != null : "HCsCR: Parameter 'game' is null.";
         assert game.isSameThread() : "HCsCR: Handling game tick NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ')';
 
         // Get and push the profiler.
-        ProfilerFiller profiler = HStonecutter.profilerOf(game); // Implicit NPE for 'game'
+        ProfilerFiller profiler = HStonecutter.profilerOfGame(game); // Implicit NPE for 'game'
         profiler.push("hcscr:tick");
 
         // Keybinds.
-        handleConfigBind(game, profiler);
-        handleToggleBind(game, profiler);
+        handleConfigBind(game, profiler); // Implicit NPE for 'game'
+        handleToggleBind(game, profiler); // Implicit NPE for 'game'
 
         // Entities/anchors.
-        handleHiddenEntities(game, profiler);
-        handleClippingAnchors(game, profiler);
+        handleHiddenEntities(game, profiler); // Implicit NPE for 'game'
+        handleClippingAnchors(game, profiler); // Implicit NPE for 'game'
 
         // Pop the profiler.
         profiler.pop();
@@ -182,7 +182,7 @@ public final class HCsCR {
      *
      * @param profiler Client profiler instance
      */
-    public static void handleFrame(ProfilerFiller profiler) {
+    public static void handleFrameTick(ProfilerFiller profiler) {
         // Validate.
         assert profiler != null : "HCsCR: Parameter 'profiler' is null.";
         assert Minecraft.getInstance().isSameThread() : "HCsCR: Handling frame tick NOT from the main thread. (thread: " + Thread.currentThread() + ", profiler: " + profiler + ')';
@@ -247,7 +247,7 @@ public final class HCsCR {
      * @param source  Hit damage source
      * @param amount  Amount of dealt damage
      * @return Whether the entity has been removed
-     * @see HStonecutter#hurt(Entity, DamageSource, float)
+     * @see HStonecutter#hurtEntity(Entity, DamageSource, float)
      * @see HConfig#enable()
      * @see HConfig#shouldProcess(Entity)
      * @see HConfig#crystals()
@@ -271,7 +271,7 @@ public final class HCsCR {
         // - This entity type shouldn't be processed at all (e.g. any living entity) or by the current config (e.g. slime).
         // - The damaging entity is not a player.
         if (!HConfig.enable() || HStonecutter.isEntityRemoved(entity) || (amount <= 0.0F) || // Implicit NPE for 'entity'
-                !HStonecutter.levelOf(entity).isClientSide() || !HConfig.shouldProcess(entity)) return false;
+                !HStonecutter.levelOfEntity(entity).isClientSide() || !HConfig.shouldProcess(entity)) return false;
 
         // Don't process player hits that deal zero damage, e.g. with the weakness effect.
         LocalPlayer player = (LocalPlayer) source.getEntity(); // Implicit NPE for 'source'
@@ -321,7 +321,7 @@ public final class HCsCR {
 
         // Get the enveloped entities.
         AABB entityBox = entity.getBoundingBox();
-        List<Entity> entities = HStonecutter.levelOf(entity).getEntities(entity, entity.getBoundingBox(), other -> {
+        List<Entity> entities = HStonecutter.levelOfEntity(entity).getEntities(entity, entity.getBoundingBox(), other -> {
             // Do NOT process hit if any of the following conditions is met:
             // - The damaged entity is already scheduled for removal.
             // - This entity type shouldn't be processed at all (e.g. any living entity) or by the current config (e.g. slime).
@@ -368,7 +368,7 @@ public final class HCsCR {
      *
      * @param game     Current game instance
      * @param profiler Game profiler
-     * @see #handleTick(Minecraft)
+     * @see #handleGameTick(Minecraft)
      * @see #handleToggleBind(Minecraft, ProfilerFiller)
      */
     private static void handleConfigBind(Minecraft game, ProfilerFiller profiler) {
@@ -415,7 +415,7 @@ public final class HCsCR {
      *
      * @param game     Current game instance
      * @param profiler Game profiler
-     * @see #handleTick(Minecraft)
+     * @see #handleGameTick(Minecraft)
      * @see #handleConfigBind(Minecraft, ProfilerFiller)
      */
     private static void handleToggleBind(Minecraft game, ProfilerFiller profiler) {
@@ -459,7 +459,7 @@ public final class HCsCR {
      *
      * @param game     Current game instance
      * @param profiler Game profiler
-     * @see #handleTick(Minecraft)
+     * @see #handleGameTick(Minecraft)
      * @see #HIDDEN_ENTITIES
      * @see #handleEntityHit(Entity, DamageSource, float)
      */
@@ -541,7 +541,7 @@ public final class HCsCR {
      *
      * @param game     Current game instance
      * @param profiler Game profiler
-     * @see #handleTick(Minecraft)
+     * @see #handleGameTick(Minecraft)
      * @see #CLIPPING_ANCHORS
      */
     private static void handleClippingAnchors(Minecraft game, ProfilerFiller profiler) {

@@ -63,7 +63,7 @@ public final class PlayerMixin {
      * @param source Attack source
      * @param amount Attack amount
      * @return Whether the attack has succeeded
-     * @see HStonecutter#hurt(Entity, DamageSource, float)
+     * @see HStonecutter#hurtEntity(Entity, DamageSource, float)
      * @see HCsCR#handleEntityHit(Entity, DamageSource, float)
      */
     //? if >=1.21.3 {
@@ -79,6 +79,6 @@ public final class PlayerMixin {
         // Delegate.
         // TODO(VidTu): Use more compatible methods from MixinExtras if it's provided by the platform.
         //noinspection NonShortCircuitBooleanExpression // <- Needs to call both methods.
-        return HStonecutter.hurt(entity, source, amount) | HCsCR.handleEntityHit(entity, source, amount);
+        return HStonecutter.hurtEntity(entity, source, amount) | HCsCR.handleEntityHit(entity, source, amount);
     }
 }

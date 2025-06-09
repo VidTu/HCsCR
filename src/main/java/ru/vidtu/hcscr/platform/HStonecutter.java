@@ -147,7 +147,7 @@ public final class HStonecutter {
      * @return Game profiler
      */
     @CheckReturnValue
-    public static ProfilerFiller profilerOf(Minecraft game) {
+    public static ProfilerFiller profilerOfGame(Minecraft game) {
         // Validate.
         assert game != null : "HCsCR: Parameter 'game' is null.";
 
@@ -165,7 +165,7 @@ public final class HStonecutter {
      * @return The level (world) in which the entity is currently located or was last located
      */
     @Contract(pure = true)
-    public static Level levelOf(Entity entity) {
+    public static Level levelOfEntity(Entity entity) {
         // Validate.
         assert entity != null : "HCsCR: Parameter 'entity' is null.";
 
@@ -241,7 +241,7 @@ public final class HStonecutter {
      */
     @SuppressWarnings({"deprecation", "RedundantSuppression"}) // <- Used in vanilla code. (1.21.3+)
     @CheckReturnValue
-    public static boolean hurt(Entity entity, DamageSource source, float amount) {
+    public static boolean hurtEntity(Entity entity, DamageSource source, float amount) {
         // Validate.
         assert entity != null : "HCsCR: Parameter 'entity' is null. (source: " + source + ", amount: " + ')';
         assert source != null : "HCsCR: Parameter 'source' is null. (entity: " + entity + ", amount: " + ')';
@@ -269,9 +269,9 @@ public final class HStonecutter {
      * @return A new button instance
      */
     @Contract(value = "_, _, _, _, _, _, _, _, _ -> new", pure = true)
-    public static Button guiButton(Font font, int x, int y, int width, int height, Component message,
-                                   Component tooltip, BiConsumer<Button, Consumer<Component>> handler,
-                                   Consumer<List<FormattedCharSequence>> tooltipRenderer) {
+    public static Button createButton(Font font, int x, int y, int width, int height, Component message,
+                                      Component tooltip, BiConsumer<Button, Consumer<Component>> handler,
+                                      Consumer<List<FormattedCharSequence>> tooltipRenderer) {
         // Validate.
         assert font != null : "HCsCR: Parameter 'font' is null. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
         assert (x >= -320) && (x <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320)) : "HCsCR: Parameter 'x' is not in the [" + -320 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
@@ -336,8 +336,8 @@ public final class HStonecutter {
      */
     @SuppressWarnings("BooleanParameter") // <- Boolean method used as a state, not as control flow. (checkbox "checked" state)
     @Contract(value = "_, _, _, _, _, _, _, _ -> new", pure = true)
-    public static Checkbox guiCheckbox(Font font, int x, int y, Component message, Component tooltip, boolean check,
-                                       BooleanConsumer handler, Consumer<List<FormattedCharSequence>> tooltipRenderer) {
+    public static Checkbox createCheckbox(Font font, int x, int y, Component message, Component tooltip, boolean check,
+                                          BooleanConsumer handler, Consumer<List<FormattedCharSequence>> tooltipRenderer) {
         // Validate.
         assert font != null : "HCsCR: Parameter 'font' is null. (x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
         assert (x >= -320) && (x <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320)) : "HCsCR: Parameter 'x' is not in the [" + -320 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
@@ -422,10 +422,10 @@ public final class HStonecutter {
      * @param tooltipRenderer Last pass tooltip renderer, typically {@link HScreen}
      * @return A new slider instance
      */
-    public static AbstractSliderButton guiSlider(Font font, int x, int y, int width, int height,
-                                                 IntFunction<Component> message, Component tooltip,
-                                                 int value, int min, int max, IntConsumer handler,
-                                                 Consumer<List<FormattedCharSequence>> tooltipRenderer) {
+    public static AbstractSliderButton createSlider(Font font, int x, int y, int width, int height,
+                                                    IntFunction<Component> message, Component tooltip,
+                                                    int value, int min, int max, IntConsumer handler,
+                                                    Consumer<List<FormattedCharSequence>> tooltipRenderer) {
         // Validate.
         assert font != null : "HCsCR: Parameter 'font' is null. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
         assert (x >= -320) && (x <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320)) : "HCsCR: Parameter 'x' is not in the [" + -320 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';

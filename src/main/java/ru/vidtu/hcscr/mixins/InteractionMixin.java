@@ -91,7 +91,7 @@ public abstract class InteractionMixin extends Entity {
         HCSCR_LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Received attack in Interaction entity. (attacker: {}, cir: {}, interaction: {})", attacker, cir, this);
 
         // Validate.
-        Level level = HStonecutter.levelOf(this);
+        Level level = HStonecutter.levelOfEntity(this);
         assert level != null : "HCsCR: Interaction entity has null level. (attacker: " + attacker + ", cir: " + cir + ", entity: " + this + ')';
 
         // Do NOT process interactions if any of the following conditions is met:

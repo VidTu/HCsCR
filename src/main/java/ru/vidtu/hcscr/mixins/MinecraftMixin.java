@@ -98,7 +98,7 @@ public final class MinecraftMixin {
     }
 
     /**
-     * A hacky method to call the {@link HStonecutter#profilerOf(Minecraft)}
+     * A hacky method to call the {@link HStonecutter#profilerOfGame(Minecraft)}
      * with IntelliJ not marking it as unreachable code.
      *
      * @return Game profiler
@@ -106,6 +106,6 @@ public final class MinecraftMixin {
     @Contract(pure = true)
     @Unique
     private ProfilerFiller hcscr_profiler() {
-        return HStonecutter.profilerOf((Minecraft) (Object) this);
+        return HStonecutter.profilerOfGame((Minecraft) (Object) this);
     }
 }

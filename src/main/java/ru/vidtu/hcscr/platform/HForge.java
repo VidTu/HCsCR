@@ -144,22 +144,23 @@ public final class HForge {
             ¹^///?}
         });
         ^///?}
+        Minecraft client = Minecraft.getInstance();
         //? if >=1.20.4 {
-        MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent.Post event) -> HCsCR.handleTick(Minecraft.getInstance()));
+        MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent.Post event) -> HCsCR.handleGameTick(client));
         //?} else {
         /^MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent event) -> {
             if (event.phase != TickEvent.Phase.END) return;
-            HCsCR.handleTick(Minecraft.getInstance());
+            HCsCR.handleGameTick(client);
         });
         ^///?}
 
         // Register the scheduled remover.
         //? if >=1.20.4 {
-        MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent.Post event) -> HCsCR.handleFrame(HStonecutter.profilerOf(Minecraft.getInstance())));
+        MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent.Post event) -> HCsCR.handleFrameTick(HStonecutter.profilerOfGame(client)));
         //?} else {
         /^MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent event) -> {
             if (event.phase != TickEvent.Phase.END) return;
-            HCsCR.handleFrame(HStonecutter.profilerOf(Minecraft.getInstance()));
+            HCsCR.handleFrameTick(HStonecutter.profilerOfGame(client));
         });
         ^///?}
 

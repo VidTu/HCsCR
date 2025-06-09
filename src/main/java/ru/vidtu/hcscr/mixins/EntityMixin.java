@@ -92,7 +92,7 @@ public final class EntityMixin {
     }
 
     /**
-     * A hacky method to call the {@link HStonecutter#levelOf(Entity)}
+     * A hacky method to call the {@link HStonecutter#levelOfEntity(Entity)}
      * with IntelliJ not marking it as unreachable code.
      *
      * @return Game profiler
@@ -100,6 +100,6 @@ public final class EntityMixin {
     @Contract(pure = true)
     @Unique
     private Level hcscr_level() {
-        return HStonecutter.levelOf((Entity) (Object) this);
+        return HStonecutter.levelOfEntity((Entity) (Object) this);
     }
 }

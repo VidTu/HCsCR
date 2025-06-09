@@ -102,7 +102,7 @@ public final class HFabric implements ClientModInitializer {
         // Register the binds.
         KeyBindingHelper.registerKeyBinding(HCsCR.CONFIG_BIND);
         KeyBindingHelper.registerKeyBinding(HCsCR.TOGGLE_BIND);
-        ClientTickEvents.END_CLIENT_TICK.register(HCsCR::handleTick);
+        ClientTickEvents.END_CLIENT_TICK.register(HCsCR::handleGameTick);
 
         // Register the scheduled remover.
         WorldRenderEvents.END.register(context -> {
@@ -113,7 +113,7 @@ public final class HFabric implements ClientModInitializer {
             /*ProfilerFiller profiler = context.profiler();*/
 
             // Delegate.
-            HCsCR.handleFrame(profiler);
+            HCsCR.handleFrameTick(profiler);
         });
 
         // Done.
