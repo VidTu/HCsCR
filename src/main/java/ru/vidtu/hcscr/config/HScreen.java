@@ -88,6 +88,9 @@ public final class HScreen extends Screen {
         // Validate.
         Font font = this.font;
         assert font != null : "HCsCR: Font renderer is not initialized at screen initializing. (screen: " + this + ')';
+        Minecraft minecraft = this.minecraft;
+        assert minecraft != null : "HCsCR: Minecraft client instance is not initialized at screen initializing. (screen: " + this + ')';
+        assert minecraft.isSameThread() : "HCsCR: Initializing the config screen NOT from the main thread. (thread: " + Thread.currentThread() + ", screen: " + this + ')';
 
         // Enable.
         int index = 0;
@@ -149,6 +152,7 @@ public final class HScreen extends Screen {
         // Validate.
         Minecraft minecraft = this.minecraft;
         assert minecraft != null : "HCsCR: Minecraft client instance is not initialized at screen closing. (screen: " + this + ')';
+        assert minecraft.isSameThread() : "HCsCR: Closing the config screen NOT from the main thread. (thread: " + Thread.currentThread() + ", screen: " + this + ')';
 
         // Save.
         HConfig.save();
@@ -180,6 +184,9 @@ public final class HScreen extends Screen {
         assert (tickDelta >= 0.0F) && (tickDelta < Float.POSITIVE_INFINITY) : "HCsCR: Parameter 'tickDelta' is not in the [0..inf) range. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
         Font font = this.font;
         assert font != null : "HCsCR: Font renderer is not initialized at screen rendering. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
+        Minecraft minecraft = this.minecraft;
+        assert minecraft != null : "HCsCR: Minecraft client instance is not initialized at screen rendering. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
+        assert minecraft.isSameThread() : "HCsCR: Rendering the config screen NOT from the main thread. (thread: " + Thread.currentThread() + ", graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
 
         // Render background and widgets.
         //? if <1.20.2

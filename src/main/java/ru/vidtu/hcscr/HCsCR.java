@@ -271,9 +271,6 @@ public final class HCsCR {
         assert entity != null : "HCsCR: Parameter 'entity' is null. (source: " + source + ", amount: " + amount + ')';
         assert source != null : "HCsCR: Parameter 'source' is null. (entity: " + entity + ", amount: " + amount + ')';
         assert Float.isFinite(amount) : "HCsCR: Parameter 'amount' is not finite. (entity: " + entity + ", source: " + source + ", amount: " + amount + ')';
-        //noinspection ObjectEquality // <- Should be the same reference.
-        assert (source.getEntity() instanceof LocalPlayer) && (source.getEntity() == source.getDirectEntity()) && (source.getEntity() == Minecraft.getInstance().player) : "HCsCR: Source entity is not LocalPlayer. (entity: " + entity + ", source: " + source + ", amount: " + amount + ", sourceEntity: " + source.getEntity() + ", sourceDirectEntity: " + source.getDirectEntity() + ')';
-        assert Minecraft.getInstance().isSameThread() : "HCsCR: Handling entity attack NOT from the main thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ", source: " + source + ", amount: " + amount + ')';
 
         // Do NOT process hit if any of the following conditions is met:
         // - The mod is disabled via config or keybind.
@@ -284,6 +281,11 @@ public final class HCsCR {
         // - The damaging entity is not a player.
         if (!HConfig.enable() || HStonecutter.isEntityRemoved(entity) || (amount <= 0.0F) || // Implicit NPE for 'entity'
                 !HStonecutter.levelOfEntity(entity).isClientSide() || !HConfig.shouldProcess(entity)) return false;
+
+        // Validate.
+        //noinspection ObjectEquality // <- Should be the same reference.
+        assert (source.getEntity() instanceof LocalPlayer) && (source.getEntity() == source.getDirectEntity()) && (source.getEntity() == Minecraft.getInstance().player) : "HCsCR: Source entity is not LocalPlayer. (entity: " + entity + ", source: " + source + ", amount: " + amount + ", sourceEntity: " + source.getEntity() + ", sourceDirectEntity: " + source.getDirectEntity() + ')';
+        assert Minecraft.getInstance().isSameThread() : "HCsCR: Handling entity attack NOT from the main thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ", source: " + source + ", amount: " + amount + ')';
 
         // Don't process player hits that deal zero damage, e.g. with the weakness effect.
         LocalPlayer player = (LocalPlayer) source.getEntity(); // Implicit NPE for 'source'

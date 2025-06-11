@@ -23,6 +23,7 @@
 package ru.vidtu.hcscr.mixins.blocks;
 
 import com.google.errorprone.annotations.DoNotCall;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
@@ -115,6 +116,9 @@ public final class BedBlockMixin {
             return;
         }
 
+        // Validate.
+        assert Minecraft.getInstance().isSameThread() : "HCsCR: Clicking on a bed NOT from the main thread. (thread: " + Thread.currentThread() + ", state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", bed: " + this + ')';
+
         // Remove or clip.
         switch (HConfig.blocks()) {
             case COLLISION:
@@ -192,6 +196,9 @@ public final class BedBlockMixin {
             HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped bed right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, result: {}, bed: {})", state, level, pos, player, hand, result, this);
             return;
         }
+
+        // Validate.
+        assert Minecraft.getInstance().isSameThread() : "HCsCR: Clicking on a bed NOT from the main thread. (thread: " + Thread.currentThread() + ", state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", hand: " + hand + ", bed: " + this + ')';
 
         // Remove or clip.
         switch (HConfig.blocks()) {

@@ -23,6 +23,7 @@
 package ru.vidtu.hcscr.mixins.blocks;
 
 import com.google.errorprone.annotations.DoNotCall;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -117,6 +118,9 @@ public final class RespawnAnchorBlockMixin {
             return;
         }
 
+        // Validate.
+        assert Minecraft.getInstance().isSameThread() : "HCsCR: Clicking on an anchor NOT from the main thread. (thread: " + Thread.currentThread() + ", state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", anchor: " + this + ')';
+
         // Remove or clip.
         switch (HConfig.blocks()) {
             case COLLISION:
@@ -183,6 +187,9 @@ public final class RespawnAnchorBlockMixin {
             HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, result: {}, anchor: {})", state, level, pos, player, hand, result, this);
             return;
         }
+
+        // Validate.
+        assert Minecraft.getInstance().isSameThread() : "HCsCR: Clicking on an anchor NOT from the main thread. (thread: " + Thread.currentThread() + ", state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", hand: " + hand + ", anchor: " + this + ')';
 
         // Skip if charging.
         net.minecraft.world.item.ItemStack stack = player.getItemInHand(hand); // Implicit NPE for 'player'
