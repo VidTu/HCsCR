@@ -273,14 +273,15 @@ public final class HCsCR {
         assert Float.isFinite(amount) : "HCsCR: Parameter 'amount' is not finite. (entity: " + entity + ", source: " + source + ", amount: " + amount + ')';
 
         // Do NOT process hit if any of the following conditions is met:
-        // - The mod is disabled via config or keybind.
+        // - The current level (world) is not client-side. (e.g., integrated server world)
+        // - The amount of dealt damage is zero or less.
         // - The damaged entity is already scheduled for removal.
-        // - The amount of dealt damage is zero or below.
-        // - The current level (world) is not client-side. (e.g. integrated server world)
+        // - The mod is disabled via config or keybind.
         // - This entity type shouldn't be processed at all (e.g. any living entity) or by the current config (e.g. slime).
         // - The damaging entity is not a player.
-        if (!HConfig.enable() || HStonecutter.isEntityRemoved(entity) || (amount <= 0.0F) || // Implicit NPE for 'entity'
-                !HStonecutter.levelOfEntity(entity).isClientSide() || !HConfig.shouldProcess(entity)) return false;
+        if (!HStonecutter.levelOfEntity(entity).isClientSide() || (amount <= 0.0F) || // Implicit NPE for 'entity'
+                HStonecutter.isEntityRemoved(entity) || !HConfig.enable() ||
+                !HConfig.shouldProcess(entity)) return false;
 
         // Validate.
         //noinspection ObjectEquality // <- Should be the same reference.
