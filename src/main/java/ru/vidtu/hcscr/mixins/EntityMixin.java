@@ -72,22 +72,24 @@ public final class EntityMixin {
     }
 
     /**
-     * Sets the bounding box to {@link #INITIAL_AABB} if this entity is {@link HCsCR#HIDDEN_ENTITIES}.
+     * Sets the bounding box to {@link #INITIAL_AABB} if this entity is contained inside
+     * {@link HCsCR#HIDDEN_ENTITIES}, removing their bounding box from the world that way.
      *
      * @param cir Callback data
      * @apiNote Do not call, called by Mixin
      * @see HCsCR#HIDDEN_ENTITIES
+     * @see #INITIAL_AABB
      */
     @DoNotCall("Called by Mixin")
     @Inject(method = "getBoundingBox", at = @At("HEAD"), cancellable = true)
     private void hcscr_getBoundingBox_head(CallbackInfoReturnable<AABB> cir) {
         // Validate.
-        Level level = this.hcscr_level();
+        Level level = this.hcscr_entitymixin_level();
         assert level != null : "HCsCR: Getting entity bounding box with null level. (cir: " + cir + ", entity: " + this + ')';
 
         // Do NOT hide entity if any of the following conditions is met:
-        // - The current level (world) is not client-side. (e.g. integrated server world)
-        // - The entity is not actually hidden.
+        // - The current level (world) is not client-side. (e.g., integrated server world)
+        // - The entity is not actually hidden via HCsCR.HIDDEN_ENTITIES.
         //noinspection SuspiciousMethodCalls // <- Mixin.
         if (!level.isClientSide() || !HCsCR.HIDDEN_ENTITIES.containsKey(this)) return; // Implicit NPE for 'level'
 
@@ -103,7 +105,7 @@ public final class EntityMixin {
      */
     @Contract(pure = true)
     @Unique
-    private Level hcscr_level() {
+    private Level hcscr_entitymixin_level() {
         return HStonecutter.levelOfEntity((Entity) (Object) this);
     }
 }

@@ -35,7 +35,7 @@ import java.util.Locale;
  *
  * @author VidTu
  * @apiNote Internal use only
- * @see AnchorMode
+ * @see BlockMode
  * @see HConfig#crystals()
  */
 @ApiStatus.Internal
@@ -47,14 +47,19 @@ public enum CrystalMode {
     OFF,
 
     /**
-     * Only direct crystal hits will cause crystals to be instantly removed via left mouse click. This is the
-     * recommended mode for most situations and is the default/only mode in other crystal optimizers.
+     * Only direct crystal hits will cause crystals to be instantly removed via left mouse click.
+     * <p>
+     * This is the recommended mode for most situations and is
+     * the default/only mode in other crystal optimizers.
      */
     DIRECT,
 
     /**
-     * Direct crystal hits as well as hitting some invisible entities enveloping the crystals will cause crystals
-     * to be instantly removed. This can be used on a server which uses those entities to combat hacks.
+     * Direct crystal hits as well as hitting some invisible entities enveloping
+     * the crystals will cause crystals to be instantly removed.
+     * <p>
+     * This can be used on a server which uses those entities to combat hacks.
+     * <p>
      * <b>Beware</b>: May cause issues with anti-cheat plugins.
      */
     ENVELOPING;

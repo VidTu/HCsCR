@@ -26,7 +26,8 @@ import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
-import it.unimi.dsi.fastutil.objects.ObjectArraySet;
+import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
@@ -43,7 +44,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.apache.logging.log4j.LogManager;
@@ -62,7 +62,7 @@ import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * Main HCsCR class.
@@ -93,9 +93,11 @@ public final class HCsCR {
     public static final KeyMapping TOGGLE_BIND = new KeyMapping("hcscr.key.toggle", InputConstants.UNKNOWN.getValue(), "hcscr.key");
 
     /**
-     * Hit entities mapped to their time of removal/hiding time in units of {@link System#nanoTime()}. As soon as
-     * current time will reach the removal time, {@link #handleFrameTick(ProfilerFiller)} will either remove them
-     * via {@link HStonecutter#removeEntity(Entity)} or mark them as hidden entities into {@link #HIDDEN_ENTITIES}.
+     * Hit entities mapped to their time of removal/hiding time in units of {@link System#nanoTime()}.
+     * <p>
+     * As soon as current time will reach the removal time, {@link #handleFrameTick(ProfilerFiller)}
+     * will either remove them via {@link HStonecutter#removeEntity(Entity)} or mark them
+     * as hidden entities into {@link #HIDDEN_ENTITIES}.
      *
      * @see #handleFrameTick(ProfilerFiller)
      * @see HStonecutter#removeEntity(Entity)
@@ -106,8 +108,12 @@ public final class HCsCR {
     public static final Object2LongMap<Entity> SCHEDULED_ENTITIES = new Object2LongArrayMap<>(0);
 
     /**
-     * Hidden entities mapped to their remaining resync ticks. These entities won't appear in the world as their
-     * hitbox will be removed via {@link EntityMixin}. They are counted down in {@link #handleGameTick(Minecraft)}.
+     * Hidden entities mapped to their remaining resync game ticks.
+     * <p>
+     * These entities won't appear in the world as their
+     * hitbox will be removed via {@link EntityMixin}.
+     * <p>
+     * They are counted down in {@link #handleHiddenEntities(Minecraft, ProfilerFiller)}.
      *
      * @see EntityMixin
      * @see #handleHiddenEntities(Minecraft, ProfilerFiller)
@@ -120,15 +126,20 @@ public final class HCsCR {
     /*public static final Object2IntMap<Entity> HIDDEN_ENTITIES = new it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap<>(0);*/
 
     /**
-     * Clipping anchors mapped. These anchors won't collide in the world as their hitbox will be removed via
-     * {@link BlockStateBaseMixin}. They are checkin in {@link #handleGameTick(Minecraft)}.
+     * A map of block positions that the player won't
+     * collide with mapped to expected block states.
+     * <p>
+     * These blocks won't collide with the player in the world as
+     * their hitbox will be removed via {@link BlockStateBaseMixin}.
+     * <p>
+     * The validity is checked in {@link #handleClippingBlocks(Minecraft, ProfilerFiller)}.
      *
      * @see BlockStateBaseMixin
-     * @see #handleGameTick(Minecraft)
+     * @see #handleClippingBlocks(Minecraft, ProfilerFiller)
      */
     // This map is not expected to grow more than a few elements, so it's an array-baked map, not a hash-baked one.
     // Moreover, it's being iterated linearly anyway in handleTick(...).
-    public static final Set<BlockPos> CLIPPING_ANCHORS = new ObjectArraySet<>(0);
+    public static final Object2ObjectMap<BlockPos, BlockState> CLIPPING_BLOCKS = new Object2ObjectArrayMap<>(0);
 
     /**
      * Logger for this class.
@@ -155,7 +166,7 @@ public final class HCsCR {
      * @see #handleConfigBind(Minecraft, ProfilerFiller)
      * @see #handleToggleBind(Minecraft, ProfilerFiller)
      * @see #handleHiddenEntities(Minecraft, ProfilerFiller)
-     * @see #handleClippingAnchors(Minecraft, ProfilerFiller)
+     * @see #handleClippingBlocks(Minecraft, ProfilerFiller)
      */
     public static void handleGameTick(Minecraft game) {
         // Validate.
@@ -172,7 +183,7 @@ public final class HCsCR {
 
         // Entities/anchors.
         handleHiddenEntities(game, profiler); // Implicit NPE for 'game'
-        handleClippingAnchors(game, profiler); // Implicit NPE for 'game'
+        handleClippingBlocks(game, profiler); // Implicit NPE for 'game'
 
         // Pop the profiler.
         profiler.pop();
@@ -538,62 +549,64 @@ public final class HCsCR {
     }
 
     /**
-     * Handles the clipping anchors. Removes redundant entries from {@link #CLIPPING_ANCHORS}.
+     * Handles the clipping blocks. Removes redundant entries from {@link #CLIPPING_BLOCKS}.
      *
      * @param game     Current game instance
      * @param profiler Game profiler
      * @see #handleGameTick(Minecraft)
-     * @see #CLIPPING_ANCHORS
+     * @see #CLIPPING_BLOCKS
      */
-    private static void handleClippingAnchors(Minecraft game, ProfilerFiller profiler) {
+    private static void handleClippingBlocks(Minecraft game, ProfilerFiller profiler) {
         // Validate.
         assert game != null : "HCsCR: Parameter 'game' is null. (profiler: " + profiler + ')';
         assert profiler != null : "HCsCR: Parameter 'profiler' is null. (game: " + game + ')';
-        assert game.isSameThread() : "HCsCR: Handling clipping anchors NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ", profiler: " + profiler + ')';
+        assert game.isSameThread() : "HCsCR: Handling clipping blocks NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ", profiler: " + profiler + ')';
 
         // Push the profiler.
-        profiler.push("hcscr:clipping_anchors"); // Implicit NPE for 'profiler'
+        profiler.push("hcscr:clipping_blocks"); // Implicit NPE for 'profiler'
 
-        // Skip if no clipping anchors.
-        if (CLIPPING_ANCHORS.isEmpty()) {
+        // Skip if no clipping blocks.
+        if (CLIPPING_BLOCKS.isEmpty()) {
             // Pop, stop.
             profiler.pop();
             return;
         }
 
-        // Nuke all anchors, if level is empty.
+        // Nuke all blocks, if level is empty.
         ClientLevel level = game.level; // Implicit NPE for 'game'
         if (level == null) {
             // Log. (**TRACE**)
-            LOGGER.trace(HCSCR_MARKER, "HCsCR: Level has been unloaded, nuking clipping anchors...");
+            LOGGER.trace(HCSCR_MARKER, "HCsCR: Level has been unloaded, nuking clipping blocks...");
 
             // Clear.
-            CLIPPING_ANCHORS.clear();
+            CLIPPING_BLOCKS.clear();
 
             // Log, pop, stop. (**DEBUG**)
-            LOGGER.debug(HCSCR_MARKER, "HCsCR: Level has been unloaded, nuked clipping anchors.");
+            LOGGER.debug(HCSCR_MARKER, "HCsCR: Level has been unloaded, nuked clipping blocks.");
             profiler.pop();
             return;
         }
 
         // Iterate.
-        Iterator<BlockPos> iterator = CLIPPING_ANCHORS.iterator();
+        Iterator<Map.Entry<BlockPos, BlockState>> iterator = CLIPPING_BLOCKS.entrySet().iterator();
         while (iterator.hasNext()) {
             // Extract.
-            BlockPos pos = iterator.next();
+            Map.Entry<BlockPos, BlockState> entry = iterator.next();
+            BlockPos pos = entry.getKey();
+            BlockState expectedState = entry.getValue();
 
             // Log. (**TRACE**)
-            LOGGER.trace(HCSCR_MARKER, "HCsCR: Ticking clipping anchor... (pos: {})", pos);
+            LOGGER.trace(HCSCR_MARKER, "HCsCR: Ticking clipping block... (pos: {}, expectedState: {})", pos, expectedState);
 
-            // Anchor is still there.
-            BlockState state = level.getBlockState(pos);
-            if (state.is(Blocks.RESPAWN_ANCHOR)) continue;
+            // Block is still there.
+            BlockState actualState = level.getBlockState(pos);
+            if (actualState.equals(expectedState)) continue;
 
             // Remove.
             iterator.remove();
 
             // Log. (**DEBUG**)
-            LOGGER.debug(HCSCR_MARKER, "HCsCR: Removed clipping anchor. (pos: {}, state: {})", pos, state);
+            LOGGER.debug(HCSCR_MARKER, "HCsCR: Removed clipping block. (pos: {}, expectedState: {}, actualState: {})", pos, expectedState, actualState);
         }
 
         // Pop the profiler.

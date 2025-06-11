@@ -5,6 +5,7 @@
   "package": "ru.vidtu.hcscr.mixins",
   "refmap": "hcscr.mixins.refmap.json",
   "client": [
+    "BedBlockMixin",
     "BlockStateBaseMixin",
     "ClientPacketListenerMixin",
     //? if <1.17.1

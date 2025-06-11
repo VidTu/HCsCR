@@ -76,6 +76,7 @@ public abstract class InteractionMixin extends Entity {
 
     /**
      * Forcefully enables attack interaction, if mod is enabled and {@link CrystalMode#ENVELOPING} is active.
+     * This allows further processing of the entity in {@link PlayerMixin}, as the attack will succeed.
      *
      * @param attacker Attacking entity
      * @param cir      Callback data
@@ -99,7 +100,7 @@ public abstract class InteractionMixin extends Entity {
         assert level != null : "HCsCR: Interaction entity has null level. (attacker: " + attacker + ", cir: " + cir + ", entity: " + this + ')';
 
         // Do NOT process interactions if any of the following conditions is met:
-        // - The current level (world) is not client-side. (e.g. integrated server world)
+        // - The current level (world) is not client-side. (e.g., integrated server world)
         // - The mod is disabled via config/keybind.
         // - The current crystal removal mode is not ENVELOPING.
         if (!level.isClientSide() || !HConfig.enable() || (HConfig.crystals() != CrystalMode.ENVELOPING)) { // Implicit NPE for 'level'
@@ -108,7 +109,7 @@ public abstract class InteractionMixin extends Entity {
             return;
         }
 
-        // Forcefully allow interactions.
+        // Forcefully allow attack.
         cir.setReturnValue(false);
 
         // Log. (**DEBUG**)

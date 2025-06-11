@@ -26,6 +26,7 @@ import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.util.thread.ReentrantBlockableEventLoop;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Contract;
@@ -49,7 +50,7 @@ import ru.vidtu.hcscr.platform.HStonecutter;
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(Minecraft.class)
 @NullMarked
-public final class MinecraftMixin {
+public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnable> {
     /**
      * Logger for this class.
      */
@@ -66,24 +67,29 @@ public final class MinecraftMixin {
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private MinecraftMixin() {
+        super(null);
         throw new AssertionError("HCsCR: No instances.");
     }
 
     /**
-     * Clears the {@link HCsCR#SCHEDULED_ENTITIES}, {@link HCsCR#HIDDEN_ENTITIES}, and {@link HCsCR#CLIPPING_ANCHORS}.
+     * Clears the {@link HCsCR#SCHEDULED_ENTITIES}, {@link HCsCR#HIDDEN_ENTITIES},
+     * and {@link HCsCR#CLIPPING_BLOCKS} on level load, change, or unload.
      *
      * @param level New level, {@code null} if was unloaded, ignored
      * @param ci    Callback data, ignored
      * @apiNote Do not call, called by Mixin
      * @see HCsCR#SCHEDULED_ENTITIES
      * @see HCsCR#HIDDEN_ENTITIES
-     * @see HCsCR#CLIPPING_ANCHORS
+     * @see HCsCR#CLIPPING_BLOCKS
      */
     @DoNotCall("Called by Mixin")
     @Inject(method = "updateLevelInEngines", at = @At("RETURN"))
     private void hcscr_updateLevelInEngines_return(@Nullable ClientLevel level, CallbackInfo ci) {
+        // Validate.
+        assert this.isSameThread() : "HCsCR: Updating level in engines NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ", game: " + this + ')';
+
         // Get and push the profiler.
-        ProfilerFiller profiler = this.hcscr_profiler();
+        ProfilerFiller profiler = this.hcscr_minecraftmixin_profiler();
         profiler.push("hcscr:clear_data");
 
         // Log. (**TRACE**)
@@ -92,7 +98,7 @@ public final class MinecraftMixin {
         // Clear the maps.
         HCsCR.SCHEDULED_ENTITIES.clear();
         HCsCR.HIDDEN_ENTITIES.clear();
-        HCsCR.CLIPPING_ANCHORS.clear();
+        HCsCR.CLIPPING_BLOCKS.clear();
 
         // Log. (**DEBUG**)
         HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Cleared data. (level: {}, game: {})", level, this);
@@ -109,7 +115,7 @@ public final class MinecraftMixin {
      */
     @Contract(pure = true)
     @Unique
-    private ProfilerFiller hcscr_profiler() {
+    private ProfilerFiller hcscr_minecraftmixin_profiler() {
         return HStonecutter.profilerOfGame((Minecraft) (Object) this);
     }
 }

@@ -38,16 +38,16 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.vidtu.hcscr.HCsCR;
-import ru.vidtu.hcscr.config.AnchorMode;
+import ru.vidtu.hcscr.config.BlockMode;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
- * Mixin that removes client player collision from blocks contained in {@link HCsCR#CLIPPING_ANCHORS}.
+ * Mixin that removes client player collision from blocks contained in {@link HCsCR#CLIPPING_BLOCKS}.
  *
  * @author VidTu
  * @apiNote Internal use only
- * @see HCsCR#CLIPPING_ANCHORS
- * @see AnchorMode#COLLISION
+ * @see HCsCR#CLIPPING_BLOCKS
+ * @see BlockMode#COLLISION
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(BlockBehaviour.BlockStateBase.class)
@@ -67,14 +67,15 @@ public final class BlockStateBaseMixin {
     }
 
     /**
-     * Injects the empty collision for blocks in {@link HCsCR#CLIPPING_ANCHORS}.
+     * Injects the empty collision for blocks in {@link HCsCR#CLIPPING_BLOCKS} only for
+     * the local player entity context. Doesn't ignore for non-entity contexts.
      *
      * @param getter Block container (level/chunk), ignored
      * @param pos    Block position
      * @param ctx    Collision context
      * @param cir    Callback data
      * @apiNote Do not call, called by Mixin
-     * @see HCsCR#CLIPPING_ANCHORS
+     * @see HCsCR#CLIPPING_BLOCKS
      * @see HStonecutter#collisionContextEntity(EntityCollisionContext)
      */
     @DoNotCall("Called by Mixin")
@@ -89,10 +90,10 @@ public final class BlockStateBaseMixin {
         // Do NOT remove collision if any of the following conditions is met:
         // - The current collision context lacks an entity.
         // - The context's entity is not a client-side player. (either non-player entity or a server-side player)
-        // - The block position is not contained in HCsCR.CLIPPING_ANCHORS.
+        // - The block position is not contained in HCsCR.CLIPPING_BLOCKS.
         if (!(ctx instanceof EntityCollisionContext) ||
                 !(HStonecutter.collisionContextEntity((EntityCollisionContext) ctx) instanceof LocalPlayer) ||
-                !HCsCR.CLIPPING_ANCHORS.contains(pos)) return;
+                !HCsCR.CLIPPING_BLOCKS.containsKey(pos)) return;
 
         // Spoof collision data to empty.
         cir.setReturnValue(Shapes.empty());

@@ -40,15 +40,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.vidtu.hcscr.HCsCR;
-import ru.vidtu.hcscr.config.AnchorMode;
+import ru.vidtu.hcscr.config.BlockMode;
 import ru.vidtu.hcscr.config.HConfig;
 
 /**
- * Mixin that allows respawn anchors to be removed.
+ * Mixin that allows respawn anchors to be removed via right click.
  *
  * @author VidTu
  * @apiNote Internal use only
- * @see AnchorMode
+ * @see BlockMode
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(RespawnAnchorBlock.class)
@@ -86,9 +86,9 @@ public final class RespawnAnchorBlockMixin {
      * @param cir    Callback data, ignored
      * @apiNote Do not call, called by Mixin
      * @see HConfig#enable()
-     * @see HConfig#anchors()
-     * @see AnchorMode
-     * @see HCsCR#CLIPPING_ANCHORS
+     * @see HConfig#blocks()
+     * @see BlockMode
+     * @see HCsCR#CLIPPING_BLOCKS
      */
     @DoNotCall("Called by Mixin")
     @Inject(method = "useWithoutItem", at = @At("HEAD"))
@@ -105,11 +105,11 @@ public final class RespawnAnchorBlockMixin {
         HCSCR_LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Detected anchor right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
 
         // Do NOT process anchors if any of the following conditions is met:
-        // - The current level (world) is not client-side. (e.g. integrated server world)
+        // - The current level (world) is not client-side. (e.g., integrated server world)
         // - The anchor doesn't have any charges.
         // - The anchor doesn't explode in the current dimension.
         // - The mod is disabled via config or keybind.
-        // - The remove anchors feature is OFF. (in switch block)
+        // - The "remove blocks" feature is OFF. (in switch block)
         if (!level.isClientSide() || (state.getValue(RespawnAnchorBlock.CHARGE) == 0) || // Implicit NPE for 'level', 'state'
                 RespawnAnchorBlock.canSetSpawn(level) || !HConfig.enable()) {
             // Log, stop. (**DEBUG**)
@@ -118,10 +118,10 @@ public final class RespawnAnchorBlockMixin {
         }
 
         // Remove or clip.
-        switch (HConfig.anchors()) {
+        switch (HConfig.blocks()) {
             case COLLISION:
                 // Clip.
-                HCsCR.CLIPPING_ANCHORS.add(pos);
+                HCsCR.CLIPPING_BLOCKS.put(pos, state);
 
                 // Log, break. (**DEBUG**)
                 HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Clipping anchor via right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
@@ -138,7 +138,9 @@ public final class RespawnAnchorBlockMixin {
                 HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Ignored anchor right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
         }
     }
+
     //?} else {
+
     /*/^*
      * Handles the anchor usage.
      *
@@ -151,9 +153,9 @@ public final class RespawnAnchorBlockMixin {
      * @param cir    Callback data, ignored
      * @apiNote Do not call, called by Mixin
      * @see HConfig#enable()
-     * @see HConfig#anchors()
-     * @see AnchorMode
-     * @see HCsCR#CLIPPING_ANCHORS
+     * @see HConfig#blocks()
+     * @see BlockMode
+     * @see HCsCR#CLIPPING_BLOCKS
      ^/
     @DoNotCall("Called by Mixin")
     @Inject(method = "use", at = @At("HEAD"))
@@ -169,12 +171,12 @@ public final class RespawnAnchorBlockMixin {
         assert result != null : "HCsCR: Parameter 'result' is null. (state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", hand: " + hand + ", anchor: " + this + ')';
 
         // Do NOT process anchors if any of the following conditions is met:
-        // - The current level (world) is not client-side. (e.g. integrated server world)
+        // - The current level (world) is not client-side. (e.g., integrated server world)
         // - The anchor doesn't have any charges.
         // - The anchor doesn't explode in the current dimension.
         // - The mod is disabled via config or keybind.
         // - The anchor is currently being charged.
-        // - The remove anchors feature is OFF. (in switch block)
+        // - The "remove blocks" feature is OFF. (in switch block)
         if (!level.isClientSide() || (state.getValue(RespawnAnchorBlock.CHARGE) == 0) || // Implicit NPE for 'level', 'state'
                 RespawnAnchorBlock.canSetSpawn(level) || !HConfig.enable()) {
             // Log, stop. (**DEBUG**)
@@ -193,10 +195,10 @@ public final class RespawnAnchorBlockMixin {
         }
 
         // Remove or clip.
-        switch (HConfig.anchors()) {
+        switch (HConfig.blocks()) {
             case COLLISION:
                 // Clip.
-                HCsCR.CLIPPING_ANCHORS.add(pos);
+                HCsCR.CLIPPING_BLOCKS.put(pos, state);
 
                 // Log, break. (**DEBUG**)
                 HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Clipping anchor via right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);

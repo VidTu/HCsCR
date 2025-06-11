@@ -25,6 +25,7 @@ package ru.vidtu.hcscr.config;
 import com.google.common.base.MoreObjects;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.SerializedName;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
@@ -76,28 +77,44 @@ public final class HConfig {
 
     /**
      * Crystals removal mode, {@link CrystalMode#DIRECT} by default.
+     *
+     * @see #crystalsDelay
+     * @see #crystalsResync
      */
     private static CrystalMode crystals = CrystalMode.DIRECT;
 
     /**
-     * Crystals removal delay in nanos, {@code 0} by default. Some users report that setting the delay
-     * to the server's MSPT value actually makes crystal spamming a bit faster.
+     * Crystals removal delay in nanos, {@code 0} by default.
+     * <p>
+     * Some users report that setting the delay to the server's
+     * MSPT value actually makes crystal spamming a bit faster.
+     *
+     * @see #crystals
+     * @see #crystalsResync
      */
     @Range(from = 0L, to = 200_000_000L)
     private static int crystalsDelay = 0;
 
     /**
-     * Crystals resync delay in ticks, {@code 20} by default. This is the delay after which the crystal
-     * will reappear again, if the server hasn't actually removed it. Useful to prevent ghost crystals,
-     * when a crystal hit is not registered by the server.
+     * Crystals resync delay in ticks, {@code 20} by default.
+     * <p>
+     * This is the delay after which the crystal will reappear again,
+     * if the server hasn't actually removed it.
+     * <p>
+     * Useful to prevent ghost crystals, when a crystal
+     * hit is not registered by the server.
+     *
+     * @see #crystals
+     * @see #crystalsDelay
      */
     @Range(from = 0L, to = 50L)
     private static int crystalsResync = 20;
 
     /**
-     * Anchors removal mode, {@link AnchorMode#COLLISION} by default.
+     * Blocks (anchors/beds) removal mode, {@link BlockMode#COLLISION} by default.
      */
-    private static AnchorMode anchors = AnchorMode.COLLISION;
+    @SerializedName(value = "blocks", alternate = "anchors") // HCsCR 2.0.2
+    private static BlockMode blocks = BlockMode.COLLISION;
 
     /**
      * Creates a new config via GSON.
@@ -138,7 +155,7 @@ public final class HConfig {
             // Clamp.
             crystals = MoreObjects.firstNonNull(crystals, CrystalMode.DIRECT);
             crystalsDelay = Mth.clamp((crystalsDelay / 1_000_000) * 1_000_000, 0, 200_000_000);
-            anchors = MoreObjects.firstNonNull(anchors, AnchorMode.COLLISION);
+            blocks = MoreObjects.firstNonNull(blocks, BlockMode.COLLISION);
         }
     }
 
@@ -204,6 +221,8 @@ public final class HConfig {
      * @return Crystals removal mode, {@link CrystalMode#DIRECT} by default.
      * @see #cycleCrystals(boolean)
      * @see #shouldProcess(Entity)
+     * @see #crystalsDelay()
+     * @see #crystalsResync()
      */
     @Contract(pure = true)
     public static CrystalMode crystals() {
@@ -232,6 +251,8 @@ public final class HConfig {
      *
      * @return Crystals removal delay in nanos, {@code 0} by default
      * @see #crystalsDelay(int)
+     * @see #crystals()
+     * @see #crystalsResync()
      */
     @Contract(pure = true)
     @Range(from = 0L, to = 200_000_000L)
@@ -254,6 +275,8 @@ public final class HConfig {
      *
      * @return Crystals resync delay in ticks, {@code 20} by default
      * @see #crystalsResync(int)
+     * @see #crystals()
+     * @see #crystalsDelay()
      */
     @Contract(pure = true)
     @Range(from = 0L, to = 50L)
@@ -272,30 +295,30 @@ public final class HConfig {
     }
 
     /**
-     * Gets the anchors.
+     * Gets the blocks.
      *
-     * @return Anchors removal mode, {@link AnchorMode#COLLISION} by default
-     * @see #cycleAnchors(boolean)
+     * @return Blocks removal mode, {@link BlockMode#COLLISION} by default
+     * @see #cycleBlocks(boolean)
      */
     @Contract(pure = true)
-    public static AnchorMode anchors() {
-        return anchors;
+    public static BlockMode blocks() {
+        return blocks;
     }
 
     /**
-     * Cycles the anchors.
+     * Cycles the blocks.
      *
      * @param back Whether to cycle backwards
-     * @return New anchors mode
-     * @see #anchors()
+     * @return New blocks mode
+     * @see #blocks()
      */
     @CheckReturnValue
-    static AnchorMode cycleAnchors(boolean back) {
-        switch (anchors) {
-            case OFF: return (anchors = (back ? AnchorMode.FULL : AnchorMode.COLLISION));
-            case COLLISION: return (anchors = (back ? AnchorMode.OFF : AnchorMode.FULL));
-            case FULL: return (anchors = (back ? AnchorMode.COLLISION : AnchorMode.OFF));
-            default: return (anchors = AnchorMode.COLLISION);
+    static BlockMode cycleBlocks(boolean back) {
+        switch (blocks) {
+            case OFF: return (blocks = (back ? BlockMode.FULL : BlockMode.COLLISION));
+            case COLLISION: return (blocks = (back ? BlockMode.OFF : BlockMode.FULL));
+            case FULL: return (blocks = (back ? BlockMode.COLLISION : BlockMode.OFF));
+            default: return (blocks = BlockMode.COLLISION);
         }
     }
 

@@ -125,10 +125,10 @@ public final class HScreen extends Screen {
                 HConfig::crystalsResync, this::tooltip));
 
         // Anchors.
-        AnchorMode anchors = HConfig.anchors();
+        BlockMode anchors = HConfig.blocks();
         this.addVersionedWidget(HStonecutter.createButton(font, buttonX, calculateWidgetY(index++), 200, 20, anchors.label(), anchors.tip(), (button, tipSetter) -> {
             // Update the anchors.
-            AnchorMode newAnchors = HConfig.cycleAnchors(/*back=*/hasShiftDown());
+            BlockMode newAnchors = HConfig.cycleBlocks(/*back=*/hasShiftDown());
 
             // Update the label and tooltip.
             button.setMessage(newAnchors.label());

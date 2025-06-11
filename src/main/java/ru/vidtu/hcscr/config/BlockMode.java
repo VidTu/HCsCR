@@ -26,34 +26,41 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
+import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.util.Locale;
 
 /**
- * Anchors removal mode.
+ * Blocks (anchors/beds) removal mode.
  *
  * @author VidTu
  * @apiNote Internal use only
  * @see CrystalMode
- * @see HConfig#anchors()
+ * @see HConfig#blocks()
  */
 @ApiStatus.Internal
 @NullMarked
-public enum AnchorMode {
+public enum BlockMode {
     /**
-     * Anchors won't be instantly removed via right mouse click.
+     * Anchors/beds won't be instantly removed via right mouse click.
      */
     OFF,
 
     /**
-     * The player collision for anchors will be instantly removed via right mouse click. This is the recommended
-     * mode for most situations and is the default/only mode in other anchor optimizers.
+     * The player collision for anchors will be instantly removed via right mouse click.
+     * <p>
+     * This is the recommended mode for most situations and is the
+     * default/only mode in other anchor/bed optimizers.
+     *
+     * @see HCsCR#CLIPPING_BLOCKS
      */
     COLLISION,
 
     /**
-     * The anchor will be instantly removed via right mouse click. Will disable the \"air place\" mechanic.
+     * The anchor/bed will be instantly removed via right mouse click.
+     * <p>
+     * Will disable the \"air place\" mechanic.
      */
     FULL;
 
@@ -71,12 +78,12 @@ public enum AnchorMode {
      * Creates a new mode.
      */
     @Contract(pure = true)
-    AnchorMode() {
+    BlockMode() {
         // Create the translation key.
-        String key = ("hcscr.anchors." + this.name().toLowerCase(Locale.ROOT));
+        String key = ("hcscr.blocks." + this.name().toLowerCase(Locale.ROOT));
 
         // Create the components.
-        this.label = HStonecutter.translate("options.generic_value", HStonecutter.translate("hcscr.anchors"), HStonecutter.translate(key.intern()));
+        this.label = HStonecutter.translate("options.generic_value", HStonecutter.translate("hcscr.blocks"), HStonecutter.translate(key.intern()));
         this.tip = HStonecutter.translate((key + ".tip").intern());
     }
 
@@ -107,7 +114,7 @@ public enum AnchorMode {
     @Contract(pure = true)
     @Override
     public String toString() {
-        return "HCsCR/AnchorMode{" +
+        return "HCsCR/BlockMode{" +
                 "name='" + this.name() + '\'' +
                 ", ordinal=" + this.ordinal() +
                 ", label=" + this.label +
