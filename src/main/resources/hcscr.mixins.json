@@ -5,17 +5,17 @@
   "package": "ru.vidtu.hcscr.mixins",
   "refmap": "hcscr.mixins.refmap.json",
   "client": [
-    "BedBlockMixin",
-    "BlockStateBaseMixin",
-    "ClientPacketListenerMixin",
-    //? if <1.17.1
-    /*"EntityCollisionContextMixin",*/
-    "EntityMixin",
-    //? if >=1.19.4
-    "InteractionMixin",
     "MinecraftMixin",
-    "PlayerMixin",
-    "RespawnAnchorBlockMixin"
+    "blocks.BedBlockMixin",
+    "blocks.BlockStateBaseMixin",
+    "blocks.ClientPacketListenerMixin",
+    //? if <1.17.1
+    /*"blocks.EntityCollisionContextMixin",*/
+    "blocks.RespawnAnchorBlockMixin",
+    "crystals.EntityMixin",
+    //? if >=1.19.4
+    "crystals.InteractionMixin",
+    "crystals.PlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

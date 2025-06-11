@@ -21,7 +21,7 @@
  */
 
 //? if <1.17.1 {
-/*package ru.vidtu.hcscr.mixins;
+/*package ru.vidtu.hcscr.mixins.blocks;
 
 import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.world.entity.Entity;
@@ -35,6 +35,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import ru.vidtu.hcscr.HEntityCollisionContext;
+import ru.vidtu.hcscr.platform.HStonecutter;
 
 /^*
  * Mixin that stored the source entity of {@link EntityCollisionContext}. (<1.17.1)

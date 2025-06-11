@@ -20,34 +20,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-//? if <1.17.1 {
-/*package ru.vidtu.hcscr;
-
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.phys.shapes.EntityCollisionContext;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
-import ru.vidtu.hcscr.mixins.blocks.EntityCollisionContextMixin;
-
-/^*
- * Mixin extender for {@link EntityCollisionContextMixin} that allows getting the entity of
- * {@link EntityCollisionContext}. (<1.17.1)
+/**
+ * HCsCR package with mixins to inject related to crystals (entities).
  *
  * @author VidTu
  * @apiNote Internal use only
- ^/
+ * @see ru.vidtu.hcscr.config.BlockMode
+ * @see ru.vidtu.hcscr.config.HConfig#blocks()
+ */
 @ApiStatus.Internal
 @NullMarked
-public interface HEntityCollisionContext {
-    /^*
-     * Gets the entity.
-     *
-     * @return Entity involving in the context, {@code null} if none
-     ^/
-    @Contract(pure = true)
-    @Nullable
-    Entity hcscr_entity();
-}
-*///?}
+package ru.vidtu.hcscr.mixins.crystals;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jspecify.annotations.NullMarked;
