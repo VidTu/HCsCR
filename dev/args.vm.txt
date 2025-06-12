@@ -12,8 +12,8 @@
 
 -Dterminal.ansi=true
 
--ea
--esa
+-enableassertions
+-enablesystemassertions
 -Dmixin.debug=true
 -Dmixin.debug.strict.unique=true
 -Dmixin.checks=true
