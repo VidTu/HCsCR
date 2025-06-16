@@ -121,7 +121,7 @@ public final class HConfig {
      */
     @Contract(pure = true)
     private HConfig() {
-        // Private
+        // Empty.
     }
 
     /**

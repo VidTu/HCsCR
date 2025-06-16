@@ -61,7 +61,7 @@ public final class HFabric implements ClientModInitializer {
      */
     @Contract(pure = true)
     public HFabric() {
-        // Empty
+        // Empty.
     }
 
     /**

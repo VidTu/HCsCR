@@ -50,7 +50,7 @@ public final class HModMenu implements ModMenuApi {
      */
     @Contract(pure = true)
     public HModMenu() {
-        // Empty
+        // Empty.
     }
 
     /**
