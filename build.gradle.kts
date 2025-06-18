@@ -152,7 +152,11 @@ dependencies {
 
     // Force non-vulnerable Log4J, so that vulnerability scanners don't scream loud.
     // It's also cool for our logging config. (see the "dev/log4j2.xml" file)
-    implementation(libs.log4j)
+    implementation(libs.log4j) {
+        exclude("biz.aQute.bnd")
+        exclude("com.github.spotbugs")
+        exclude("org.osgi")
+    }
 
     // Loader.
     if (loom.isForge) {
