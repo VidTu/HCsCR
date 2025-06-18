@@ -126,10 +126,12 @@ public final class HForge {
         ^///?}
 
         // Register the binds.
-        //? if 1.20.2 {
+        //? if >=1.21.6 {
+        var bus = net.minecraftforge.client.event.RegisterKeyMappingsEvent.getBus(ctx.getModBusGroup());
+        //?} else if 1.20.2 {
         /^var bus = FMLJavaModLoadingContext.get().getModEventBus();
         ^///?} else >=1.19.2 && (!hackyNeoForge)
-        var bus = ctx.getModEventBus(); // Implicit NPE for 'ctx'
+        /^var bus = ctx.getModEventBus();^/ // Implicit NPE for 'ctx'
         //? if >=1.19.2 {
         bus.addListener((net.minecraftforge.client.event.RegisterKeyMappingsEvent event) -> {
             event.register(HCsCR.CONFIG_BIND);
@@ -150,9 +152,11 @@ public final class HForge {
         });
         ^///?}
         Minecraft client = Minecraft.getInstance();
-        //? if >=1.20.4 {
-        MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent.Post event) -> HCsCR.handleGameTick(client));
-        //?} else {
+        //? if >=1.21.6 {
+        TickEvent.ClientTickEvent.Post.BUS.addListener(event -> HCsCR.handleGameTick(client));
+        //?} else if >=1.20.4 {
+        /^MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent.Post event) -> HCsCR.handleGameTick(client));
+        ^///?} else {
         /^MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent event) -> {
             if (event.phase != TickEvent.Phase.END) return;
             HCsCR.handleGameTick(client);
@@ -160,9 +164,11 @@ public final class HForge {
         ^///?}
 
         // Register the scheduled remover.
-        //? if >=1.20.4 {
-        MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent.Post event) -> HCsCR.handleFrameTick(HStonecutter.profilerOfGame(client)));
-        //?} else {
+        //? if >=1.21.6 {
+        TickEvent.RenderTickEvent.Post.BUS.addListener(event -> HCsCR.handleFrameTick(HStonecutter.profilerOfGame(client)));
+        //?} else if >=1.20.4 {
+        /^MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent.Post event) -> HCsCR.handleFrameTick(HStonecutter.profilerOfGame(client)));
+        ^///?} else {
         /^MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent event) -> {
             if (event.phase != TickEvent.Phase.END) return;
             HCsCR.handleFrameTick(HStonecutter.profilerOfGame(client));

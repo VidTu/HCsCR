@@ -195,9 +195,9 @@ public final class HScreen extends Screen {
 
         // Render title.
         //? if >=1.20.1 {
-        graphics.drawCenteredString(font, this.title, this.width / 2, 5, -1);
+        graphics.drawCenteredString(font, this.title, this.width / 2, 5, 0xFF_FF_FF_FF);
         //?} else
-        /*drawCenteredString(graphics, font, this.title, this.width / 2, 5, -1);*/
+        /*drawCenteredString(graphics, font, this.title, this.width / 2, 5, 0xFF_FF_FF_FF);*/
 
         // Render the last pass tooltip.
         //? if < 1.19.4 {
