@@ -100,7 +100,7 @@ public final class HForge {
 
         // Register the networking.
         //? if >=1.20.2 {
-        net.minecraftforge.network.ChannelBuilder.named(HStonecutter.CHANNEL_IDENTIFIER).networkProtocolVersion(1).acceptedVersions((status, version) -> false).eventNetworkChannel().addListener(event -> {
+        net.minecraftforge.network.ChannelBuilder.named(HStonecutter.CHANNEL_IDENTIFIER).networkProtocolVersion(1).acceptedVersions((status, version) -> true).eventNetworkChannel().addListener(event -> {
             if (event.getPayload() == null) return;
             var src = event.getSource();
             if (!src.isClientSide()) return;
