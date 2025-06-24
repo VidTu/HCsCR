@@ -25,7 +25,6 @@
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -155,9 +154,9 @@ public final class HForge {
         //? if >=1.21.6 {
         TickEvent.ClientTickEvent.Post.BUS.addListener(event -> HCsCR.handleGameTick(client));
         //?} else if >=1.20.4 {
-        /^MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent.Post event) -> HCsCR.handleGameTick(client));
+        /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent.Post event) -> HCsCR.handleGameTick(client));
         ^///?} else {
-        /^MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent event) -> {
+        /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent event) -> {
             if (event.phase != TickEvent.Phase.END) return;
             HCsCR.handleGameTick(client);
         });
@@ -167,9 +166,9 @@ public final class HForge {
         //? if >=1.21.6 {
         TickEvent.RenderTickEvent.Post.BUS.addListener(event -> HCsCR.handleFrameTick(HStonecutter.profilerOfGame(client)));
         //?} else if >=1.20.4 {
-        /^MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent.Post event) -> HCsCR.handleFrameTick(HStonecutter.profilerOfGame(client)));
+        /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent.Post event) -> HCsCR.handleFrameTick(HStonecutter.profilerOfGame(client)));
         ^///?} else {
-        /^MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent event) -> {
+        /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent event) -> {
             if (event.phase != TickEvent.Phase.END) return;
             HCsCR.handleFrameTick(HStonecutter.profilerOfGame(client));
         });
