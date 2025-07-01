@@ -1,6 +1,8 @@
 {
   "homepage": "https://github.com/VidTu/HCsCR",
   "promos": {
+    "1.21.7-latest": "2.1.1-SNAPSHOT",
+    "1.21.7-recommended": "2.1.1-SNAPSHOT",
     "1.21.6-latest": "2.1.0",
     "1.21.6-recommended": "2.1.0",
     "1.21.5-latest": "2.1.0",

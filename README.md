@@ -9,7 +9,8 @@ Remove your end crystals before the server even knows you hit 'em!
 ## Dependencies
 
 - Fabric Loader, Quilt Loader, Forge, or NeoForge
-- Minecraft (1.16.5, 1.17.1, 1.18.2, 1.19.2, 1.19.4, 1.20.1, 1.20.2, 1.20.4, 1.20.6, 1.21.1, 1.21.3, 1.21.4, 1.21.5, or 1.21.6)
+- Minecraft (1.16.5, 1.17.1, 1.18.2, 1.19.2, 1.19.4, 1.20.1, 1.20.2, 1.20.4,
+  1.20.6, 1.21.1, 1.21.3, 1.21.4, 1.21.5, 1.21.6, or 1.21.7)
 - **Fabric/Quilt only**: [Fabric API](https://modrinth.com/mod/fabric-api) or
   [QFAPI/QSL](https://modrinth.com/mod/qsl) (*Required*)
 - **Fabric/Quilt only**: [Mod Menu](https://modrinth.com/mod/modmenu) (*Optional*)
@@ -40,7 +41,8 @@ You'll need a GitHub account to download these.
 **A**: Fabric, Forge, and NeoForge are supported. Quilt should work too.
 
 **Q**: Which Minecraft versions are supported?  
-**A**: Minecraft 1.16.5, 1.17.1, 1.18.2, 1.19.2, 1.19.4, 1.20.1, 1.20.2, 1.20.4, 1.20.6, 1.21.1, 1.21.3, 1.21.4, 1.21.5, 1.21.6.
+**A**: Minecraft 1.16.5, 1.17.1, 1.18.2, 1.19.2, 1.19.4, 1.20.1, 1.20.2, 1.20.4,
+1.20.6, 1.21.1, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7.
 
 **Q**: Do I need Fabric API or Quilt Standard Libraries?  
 **A**: Yes, you'll need Fabric API for Fabric and QFAPI/QSL for Quilt.
