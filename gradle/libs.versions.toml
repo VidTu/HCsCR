@@ -24,7 +24,7 @@ error_prone_annotations = "2.40.0"
 fabric-loader = "0.16.14"
 jetbrains-annotations = "26.0.2"
 jspecify = "1.0.0"
-log4j = "2.25.0"
+log4j = "2.25.1"
 
 [plugins]
 architectury-loom = { id = "dev.architectury.loom", version.ref = "architectury-loom" }
