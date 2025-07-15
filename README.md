@@ -109,7 +109,7 @@ To compile the mod from the source code:
 
 1. Have 8 GB of free RAM, 20 GB of free disk space, and an active internet connection.
 2. Install Java 21 and dump it into PATH and/or JAVA_HOME.
-3. Run `./gradlew chiseledAssemble` from the terminal/PowerShell.
+3. Run `./gradlew assemble` from the terminal/PowerShell.
 4. Grab all the JARs from the `./build/libs/` folder.
 
 ### Developing/Debugging
@@ -142,13 +142,12 @@ Reproducible release JARs are compiled with: (use these commands to create a rep
 
 ```bash
 ./gradlew clean --no-daemon --no-build-cache --no-configuration-cache
-./gradlew chiseledClean --no-daemon --no-build-cache --no-configuration-cache
-./gradlew chiseledAssemble --no-daemon --no-build-cache --no-configuration-cache
+./gradlew assemble --no-daemon --no-build-cache --no-configuration-cache
 ```
 
 Currently, no dependency (integrity) validation is performed. This might change in a future version.
 
-[^1]: This is a shortcut for `./gradlew "Set active project to <version>"` and `./gradlew "<version>:runClient"`.
+[^1]: This is a shortcut for `./gradlew "<version>:runClient"`.
 
 [^2]: This is a shortcut for `./gradlew "Set active project to <version>"`.
 

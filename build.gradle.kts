@@ -33,7 +33,7 @@ plugins {
 }
 
 // Extract the platform and Minecraft version.
-val platform = loom.platform.get()
+val platform = loom.platform.get().id()
 // NeoForge 1.20.1 is loosely Forge, but not Forge. It uses ModPlatform.FORGE loom platform
 // and Forge packages, but diverges from (can't keep up with) the (Lex/Upstream) MCForge 1.20.1.
 val hackyNeoForge = (name == "1.20.1-neoforge")
@@ -54,15 +54,19 @@ base.archivesName = "HCsCR"
 version = "$version+$name"
 description = "Remove your end crystals before the server even knows you hit 'em!"
 
-// Define Stonecutter preprocessor variables.
-stonecutter.const("hackyNeoForge", hackyNeoForge)
-ModPlatform.values().forEach {
-    stonecutter.const(it.id(), it == platform)
-}
+stonecutter {
+    // Define Stonecutter preprocessor variables.
+    constants["hackyNeoForge"] = hackyNeoForge
+    constants {
+        match(platform, "fabric", "forge", "neoforge")
+    }
 
-// Process the JSON files via Stonecutter.
-// This is needed for the Mixin configuration.
-stonecutter.allowExtensions("json")
+    // Process the JSON files via Stonecutter.
+    // This is needed for the Mixin configuration.
+    filters {
+        include("**/*.json")
+    }
+}
 
 loom {
     // Prepare development environment.
@@ -216,7 +220,7 @@ tasks.withType<ProcessResources> {
     inputs.property("version", version)
     inputs.property("minecraft", minecraftRequirement)
     inputs.property("java", javaTarget)
-    inputs.property("platform", platform.id())
+    inputs.property("platform", platform)
     filesMatching(listOf("fabric.mod.json", "quilt.mod.json", "hcscr.mixins.json", "META-INF/mods.toml", "META-INF/neoforge.mods.toml")) {
         expand(inputs.properties)
     }

@@ -19,4 +19,4 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-./gradlew "Set active project to $1" --no-configuration-cache
+./gradlew "Set active project to $1"

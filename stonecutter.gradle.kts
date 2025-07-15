@@ -25,18 +25,3 @@ plugins {
 }
 
 stonecutter active "1.21.7-fabric" /* [SC] DO NOT EDIT */
-
-stonecutter registerChiseled tasks.register("chiseledBuild", stonecutter.chiseled) {
-    group = "project"
-    ofTask("build")
-}
-
-stonecutter registerChiseled tasks.register("chiseledAssemble", stonecutter.chiseled) {
-    group = "project"
-    ofTask("assemble")
-}
-
-stonecutter registerChiseled tasks.register("chiseledClean", stonecutter.chiseled) {
-    group = "project"
-    ofTask("clean")
-}

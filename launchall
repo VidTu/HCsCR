@@ -21,11 +21,6 @@
 
 for folder in versions/*; do
     version=$(basename "$folder")
-    echo "> Switching to $version..."
-    ./gradlew "Set active project to $version" --no-configuration-cache
     echo "> Launching $version..."
-    ./gradlew "${version}:runClient" --no-configuration-cache
+    ./gradlew "${version}:runClient"
 done
-
-echo "> Resetting..."
-./gradlew "Reset active project" --no-configuration-cache

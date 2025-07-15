@@ -19,4 +19,4 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-./gradlew "Reset active project" --no-configuration-cache
+./gradlew "Reset active project"
