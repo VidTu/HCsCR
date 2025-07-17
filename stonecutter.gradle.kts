@@ -24,4 +24,4 @@ plugins {
     id("dev.kikugie.stonecutter")
 }
 
-stonecutter active "1.21.7-fabric" /* [SC] DO NOT EDIT */
+stonecutter active "1.21.8-fabric" /* [SC] DO NOT EDIT */

@@ -125,7 +125,7 @@ public final class HForge {
         ^///?}
 
         // Register the binds.
-        //? if >=1.21.7 {
+        //? if >=1.21.8 {
         var bus = net.minecraftforge.client.event.RegisterKeyMappingsEvent.getBus(ctx.getModBusGroup());
         //?} else if 1.20.2 {
         /^var bus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -151,7 +151,7 @@ public final class HForge {
         });
         ^///?}
         Minecraft client = Minecraft.getInstance();
-        //? if >=1.21.7 {
+        //? if >=1.21.8 {
         TickEvent.ClientTickEvent.Post.BUS.addListener(event -> HCsCR.handleGameTick(client));
         //?} else if >=1.20.4 {
         /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent.Post event) -> HCsCR.handleGameTick(client));
@@ -163,7 +163,7 @@ public final class HForge {
         ^///?}
 
         // Register the scheduled remover.
-        //? if >=1.21.7 {
+        //? if >=1.21.8 {
         TickEvent.RenderTickEvent.Post.BUS.addListener(event -> HCsCR.handleFrameTick(HStonecutter.profilerOfGame(client)));
         //?} else if >=1.20.4 {
         /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent.Post event) -> HCsCR.handleFrameTick(HStonecutter.profilerOfGame(client)));
