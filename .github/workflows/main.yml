@@ -24,7 +24,7 @@ on:
   push:
     branches: [ 'main' ]
 jobs:
-  build:
+  main:
     name: 'Build (Main)'
     runs-on: 'ubuntu-24.04'
     timeout-minutes: 60
@@ -48,7 +48,7 @@ jobs:
         with:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           dependency-graph: 'generate-and-submit'
-      - name: 'Build'
+      - name: 'Build (Main)'
         timeout-minutes: 60
         run: './gradlew assemble'
       - name: 'Upload'
