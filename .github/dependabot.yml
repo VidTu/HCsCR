@@ -32,3 +32,5 @@ updates:
       - dependency-name: "com.mojang:minecraft"
       - dependency-name: "net.fabricmc.fabric-api:fabric-api"
       - dependency-name: "com.terraformersmc:modmenu"
+      - dependency-name: "net.minecraftforge:forge"
+      - dependency-name: "net.neoforged:forge"
