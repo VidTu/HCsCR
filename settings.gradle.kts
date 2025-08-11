@@ -47,7 +47,7 @@ stonecutter {
             for (type in types) {
                 val subPath = file("versions/$version-$type")
                 if (!subPath.isDirectory) continue
-                vers("$version-$type", version)
+                version("$version-$type", version)
             }
         }
         vcsVersion = "${versions[0]}-${types[0]}"
