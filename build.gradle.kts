@@ -202,6 +202,9 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.withType<ProcessResources> {
+    // Filter with UTF-8.
+    filteringCharset = "UTF-8"
+
     // Exclude not needed loader entrypoint files.
     if (loom.isForge) {
         exclude("fabric.mod.json", "quilt.mod.json", "META-INF/neoforge.mods.toml")
