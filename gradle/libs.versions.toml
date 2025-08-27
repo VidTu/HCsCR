@@ -19,7 +19,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 [versions]
-architectury-loom = "1.11.439"
+architectury-loom = "1.11.440"
 error_prone_annotations = "2.41.0"
 fabric-loader = "0.17.2"
 jetbrains-annotations = "26.0.2"
