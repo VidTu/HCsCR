@@ -78,19 +78,35 @@ public final class HCsCR {
      */
     public static final Marker HCSCR_MARKER = MarkerManager.getMarker("MOD_HCSCR");
 
+    //? if >=1.21.9 {
+    /**
+     * Keybinding category for {@link #CONFIG_BIND}/{@link #TOGGLE_BIND}.
+     *
+     * @see #CONFIG_BIND
+     * @see #TOGGLE_BIND
+     */
+    private static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "key"));
+    //?}
+
     /**
      * Open config screen keybind. Not bound by default.
      *
      * @see #handleConfigBind(Minecraft, ProfilerFiller)
      */
-    public static final KeyMapping CONFIG_BIND = new KeyMapping("hcscr.key.config", InputConstants.UNKNOWN.getValue(), "hcscr.key");
+    //? if >=1.21.9 {
+    public static final KeyMapping CONFIG_BIND = new KeyMapping("hcscr.key.config", InputConstants.UNKNOWN.getValue(), KEY_CATEGORY);
+    //?} else
+    /*public static final KeyMapping CONFIG_BIND = new KeyMapping("hcscr.key.config", InputConstants.UNKNOWN.getValue(), "hcscr.key");*/
 
     /**
      * Toggle the mod keybind. Not bound by default.
      *
      * @see #handleToggleBind(Minecraft, ProfilerFiller)
      */
-    public static final KeyMapping TOGGLE_BIND = new KeyMapping("hcscr.key.toggle", InputConstants.UNKNOWN.getValue(), "hcscr.key");
+    //? if >=1.21.9 {
+    public static final KeyMapping TOGGLE_BIND = new KeyMapping("hcscr.key.toggle", InputConstants.UNKNOWN.getValue(), KEY_CATEGORY);
+    //?} else
+    /*public static final KeyMapping TOGGLE_BIND = new KeyMapping("hcscr.key.toggle", InputConstants.UNKNOWN.getValue(), "hcscr.key");*/
 
     /**
      * Hit entities mapped to their time of removal/hiding time in units of {@link System#nanoTime()}.
