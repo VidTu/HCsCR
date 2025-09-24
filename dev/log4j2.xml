@@ -31,6 +31,10 @@
       </Policies>
       <DefaultRolloverStrategy compressionLevel="9" max="100"/>
     </RollingRandomAccessFile>
+    <Async name="Async">
+      <AppenderRef ref="Console"/>
+      <AppenderRef ref="File" level="INFO"/>
+    </Async>
   </Appenders>
   <Loggers>
     <Root level="TRACE">
@@ -56,8 +60,7 @@
         <RegexFilter regex="^Couldn't connect to realms$" useRawMsg="true" onMatch="DENY" onMismatch="NEUTRAL"/>
         <RegexFilter regex="^Could not authorize you against Realms server: .*$" useRawMsg="true" onMatch="DENY" onMismatch="NEUTRAL"/>
       </Filters>
-      <AppenderRef ref="Console"/>
-      <AppenderRef ref="File" level="INFO"/>
+      <AppenderRef ref="Async"/>
     </Root>
   </Loggers>
 </Configuration>
