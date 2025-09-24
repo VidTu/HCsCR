@@ -107,6 +107,28 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
         profiler.pop();
     }
 
+    //? if fabric {
+    /**
+     * Calls the {@link HCsCR#handleFrameTick(ProfilerFiller)} if the game is ticking.
+     *
+     * @param gameTick Whether the game should be ticked or just updated, no logic is being run by the mod unless set to {@code true}
+     * @param ci       Callback data, ignored
+     * @apiNote Do not call, called by Mixin
+     * @see HCsCR#handleFrameTick(ProfilerFiller)
+     */
+    @DoNotCall("Called by Mixin")
+    @Inject(method = "runTick", at = @At("RETURN"))
+    private void hcscr_runTick_return(boolean gameTick, CallbackInfo ci) {
+        // Skip if game is not ticking. This happens when the integrated
+        // server is loading, unloading, or the game is crashing.
+        if (!gameTick) return;
+
+        // Tick.
+        ProfilerFiller profiler = this.hcscr_minecraftmixin_profiler();
+        HCsCR.handleFrameTick(profiler);
+    }
+    //?}
+
     /**
      * A hacky method to call the {@link HStonecutter#profilerOfGame(Minecraft)}
      * with IntelliJ not marking it as unreachable code.

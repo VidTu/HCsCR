@@ -28,8 +28,6 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.minecraft.util.profiling.ProfilerFiller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
@@ -113,18 +111,6 @@ public final class HFabric implements ClientModInitializer {
         KeyBindingHelper.registerKeyBinding(HCsCR.CONFIG_BIND);
         KeyBindingHelper.registerKeyBinding(HCsCR.TOGGLE_BIND);
         ClientTickEvents.END_CLIENT_TICK.register(HCsCR::handleGameTick);
-
-        // Register the scheduled remover.
-        WorldRenderEvents.END.register(context -> {
-            // Extract the profiler.
-            //? if >=1.21.3 {
-            ProfilerFiller profiler = net.minecraft.util.profiling.Profiler.get();
-            //?} else
-            /*ProfilerFiller profiler = context.profiler();*/
-
-            // Delegate.
-            HCsCR.handleFrameTick(profiler);
-        });
 
         // Done.
         LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / 1_000_000L);

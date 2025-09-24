@@ -181,7 +181,6 @@ dependencies {
         modImplementation(fabricApi.module("fabric-key-binding-api-v1", fabricApiVersion)) // Handles the keybinds.
         modImplementation(fabricApi.module("fabric-lifecycle-events-v1", fabricApiVersion)) // Handles game ticks.
         modImplementation(fabricApi.module("fabric-networking-api-v1", fabricApiVersion)) // Registers the channel, see README.
-        modImplementation(fabricApi.module("fabric-rendering-v1", fabricApiVersion)) // Handles frame ticks.
         modImplementation(fabricApi.module("fabric-resource-loader-v0", fabricApiVersion)) // Loads languages.
         modImplementation(fabricApi.module("fabric-screen-api-v1", fabricApiVersion)) // ModMenu dependency.
         modImplementation("com.terraformersmc:modmenu:${property("stonecutter.modmenu")}")
