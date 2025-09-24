@@ -26,6 +26,8 @@
       <w>dorg</w>
       <w>dslf</w>
       <w>dterminal</w>
+      <w>enableassertions</w>
+      <w>enablesystemassertions</w>
       <w>endlocal</w>
       <w>entrypoints</w>
       <w>errorlevel</w>
