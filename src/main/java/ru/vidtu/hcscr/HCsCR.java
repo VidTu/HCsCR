@@ -208,14 +208,15 @@ public final class HCsCR {
     /**
      * Handles the client rendering frame. Removes redundant elements from {@link #SCHEDULED_ENTITIES}.
      *
-     * @param profiler Client profiler instance
+     * @param game Current game instance
      */
-    public static void handleFrameTick(ProfilerFiller profiler) {
+    public static void handleFrameTick(Minecraft game) {
         // Validate.
-        assert profiler != null : "HCsCR: Parameter 'profiler' is null.";
-        assert Minecraft.getInstance().isSameThread() : "HCsCR: Handling frame tick NOT from the main thread. (thread: " + Thread.currentThread() + ", profiler: " + profiler + ')';
+        assert game != null : "HCsCR: Parameter 'game' is null.";
+        assert game.isSameThread() : "HCsCR: Handling frame tick NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ')';
 
-        // Push the profiler.
+        // Get and push the profiler.
+        ProfilerFiller profiler = HStonecutter.profilerOfGame(game); // Implicit NPE for 'game'
         profiler.push("hcscr:handle_frame"); // Implicit NPE for 'profiler'
 
         // Skip if there's no entities to remove.

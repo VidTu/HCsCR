@@ -164,13 +164,13 @@ public final class HForge {
 
         // Register the scheduled remover.
         //? if >=1.21.8 {
-        TickEvent.RenderTickEvent.Post.BUS.addListener(event -> HCsCR.handleFrameTick(HStonecutter.profilerOfGame(client)));
+        TickEvent.RenderTickEvent.Post.BUS.addListener(event -> HCsCR.handleFrameTick(client));
         //?} else if >=1.20.4 {
-        /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent.Post event) -> HCsCR.handleFrameTick(HStonecutter.profilerOfGame(client)));
+        /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent.Post event) -> HCsCR.handleFrameTick(client));
         ^///?} else {
         /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent event) -> {
             if (event.phase != TickEvent.Phase.END) return;
-            HCsCR.handleFrameTick(HStonecutter.profilerOfGame(client));
+            HCsCR.handleFrameTick(client);
         });
         ^///?}
 

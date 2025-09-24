@@ -109,12 +109,12 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 
     //? if fabric {
     /**
-     * Calls the {@link HCsCR#handleFrameTick(ProfilerFiller)} if the game is ticking.
+     * Calls the {@link HCsCR#handleFrameTick(Minecraft)} if the game is ticking.
      *
      * @param gameTick Whether the game should be ticked or just updated, no logic is being run by the mod unless set to {@code true}
      * @param ci       Callback data, ignored
      * @apiNote Do not call, called by Mixin
-     * @see HCsCR#handleFrameTick(ProfilerFiller)
+     * @see HCsCR#handleFrameTick(Minecraft)
      */
     @DoNotCall("Called by Mixin")
     @Inject(method = "runTick", at = @At("RETURN"))
@@ -124,8 +124,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
         if (!gameTick) return;
 
         // Tick.
-        ProfilerFiller profiler = this.hcscr_minecraftmixin_profiler();
-        HCsCR.handleFrameTick(profiler);
+        HCsCR.handleFrameTick((Minecraft) (Object) this);
     }
     //?}
 
