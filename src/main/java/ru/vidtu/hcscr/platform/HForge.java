@@ -54,7 +54,7 @@ public final class HForge {
      ^/
     private static final Logger LOGGER = LogManager.getLogger("HCsCR/HForge");
 
-    //? if hackyNeoForge {
+    //? if hacky_neoforge {
     /^/^¹*
      * Creates and loads a new mod.
      *
@@ -129,7 +129,7 @@ public final class HForge {
         var bus = net.minecraftforge.client.event.RegisterKeyMappingsEvent.getBus(ctx.getModBusGroup());
         //?} else if 1.20.2 {
         /^var bus = FMLJavaModLoadingContext.get().getModEventBus();
-        ^///?} else >=1.19.2 && (!hackyNeoForge)
+        ^///?} else >=1.19.2 && (!hacky_neoforge)
         /^var bus = ctx.getModEventBus();^/ // Implicit NPE for 'ctx'
         //? if >=1.19.2 {
         bus.addListener((net.minecraftforge.client.event.RegisterKeyMappingsEvent event) -> {
@@ -175,7 +175,7 @@ public final class HForge {
         ^///?}
 
         // Register the config screen.
-        //? if hackyNeoForge {
+        //? if hacky_neoforge {
         /^container.registerExtensionPoint(net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory.class, () -> new net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory((minecraft, screen) -> new HScreen(screen)));
         container.registerExtensionPoint(net.minecraftforge.fml.IExtensionPoint.DisplayTest.class, () -> new net.minecraftforge.fml.IExtensionPoint.DisplayTest(() -> net.minecraftforge.fml.IExtensionPoint.DisplayTest.IGNORESERVERONLY, (version, fromServer) -> true));
         ^///?} else if 1.20.2 {

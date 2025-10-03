@@ -67,6 +67,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private MinecraftMixin() {
+        //noinspection DataFlowIssue // <- Never called. (Mixin)
         super(null);
         throw new AssertionError("HCsCR: No instances.");
     }

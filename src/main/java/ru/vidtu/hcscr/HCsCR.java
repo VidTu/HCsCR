@@ -111,11 +111,11 @@ public final class HCsCR {
     /**
      * Hit entities mapped to their time of removal/hiding time in units of {@link System#nanoTime()}.
      * <p>
-     * As soon as current time will reach the removal time, {@link #handleFrameTick(ProfilerFiller)}
+     * As soon as current time will reach the removal time, {@link #handleFrameTick(Minecraft)}
      * will either remove them via {@link HStonecutter#removeEntity(Entity)} or mark them
      * as hidden entities into {@link #HIDDEN_ENTITIES}.
      *
-     * @see #handleFrameTick(ProfilerFiller)
+     * @see #handleFrameTick(Minecraft)
      * @see HStonecutter#removeEntity(Entity)
      * @see #HIDDEN_ENTITIES
      */

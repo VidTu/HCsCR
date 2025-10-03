@@ -24,7 +24,6 @@ import com.google.gson.Gson
 import com.google.gson.JsonElement
 import net.fabricmc.loom.task.RemapJarTask
 import net.fabricmc.loom.task.RunGameTask
-import net.fabricmc.loom.util.ModPlatform
 import net.fabricmc.loom.util.ZipUtils
 import net.fabricmc.loom.util.ZipUtils.UnsafeUnaryOperator
 
@@ -33,7 +32,7 @@ plugins {
 }
 
 // Extract the platform and Minecraft version.
-val platform = loom.platform.get().id()
+val platform = loom.platform.get().id()!!
 // NeoForge 1.20.1 is loosely Forge, but not Forge. It uses ModPlatform.FORGE loom platform
 // and Forge packages, but diverges from (can't keep up with) the (Lex/Upstream) MCForge 1.20.1.
 val hackyNeoForge = (name == "1.20.1-neoforge")
@@ -56,7 +55,7 @@ description = "Remove your end crystals before the server even knows you hit 'em
 
 stonecutter {
     // Define Stonecutter preprocessor variables.
-    constants["hackyNeoForge"] = hackyNeoForge
+    constants["hacky_neoforge"] = hackyNeoForge
     constants {
         match(platform, "fabric", "forge", "neoforge")
     }
@@ -81,7 +80,7 @@ loom {
         } else {
             vmArgs(rootDir.resolve("dev/args.vm.txt")
                 .readLines()
-                .filter { !it.contains("line.separator") }
+                .filter { "line.separator" !in it }
                 .filter { it.isNotBlank() })
         }
 
