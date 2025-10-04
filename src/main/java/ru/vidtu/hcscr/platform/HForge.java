@@ -150,27 +150,26 @@ public final class HForge {
             ¹^///?}
         });
         ^///?}
-        Minecraft client = Minecraft.getInstance();
         //? if >=1.21.8 {
-        TickEvent.ClientTickEvent.Post.BUS.addListener(event -> HCsCR.handleGameTick(client));
+        TickEvent.ClientTickEvent.Post.BUS.addListener(event -> HCsCR.handleGameTick(Minecraft.getInstance()));
         //?} else if >=1.20.4 {
-        /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent.Post event) -> HCsCR.handleGameTick(client));
+        /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent.Post event) -> HCsCR.handleGameTick(Minecraft.getInstance()));
         ^///?} else {
         /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent event) -> {
             if (event.phase != TickEvent.Phase.END) return;
-            HCsCR.handleGameTick(client);
+            HCsCR.handleGameTick(Minecraft.getInstance());
         });
         ^///?}
 
         // Register the scheduled remover.
         //? if >=1.21.8 {
-        TickEvent.RenderTickEvent.Post.BUS.addListener(event -> HCsCR.handleFrameTick(client));
+        TickEvent.RenderTickEvent.Post.BUS.addListener(event -> HCsCR.handleFrameTick(Minecraft.getInstance()));
         //?} else if >=1.20.4 {
-        /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent.Post event) -> HCsCR.handleFrameTick(client));
+        /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent.Post event) -> HCsCR.handleFrameTick(Minecraft.getInstance()));
         ^///?} else {
         /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent event) -> {
             if (event.phase != TickEvent.Phase.END) return;
-            HCsCR.handleFrameTick(client);
+            HCsCR.handleFrameTick(Minecraft.getInstance());
         });
         ^///?}
 

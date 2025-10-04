@@ -144,23 +144,22 @@ public final class HNeoForge {
             event.register(HCsCR.CONFIG_BIND);
             event.register(HCsCR.TOGGLE_BIND);
         });
-        Minecraft client = Minecraft.getInstance();
         //? if >=1.20.6 {
-        NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.ClientTickEvent.Post.class, event -> HCsCR.handleGameTick(client));
+        NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.ClientTickEvent.Post.class, event -> HCsCR.handleGameTick(Minecraft.getInstance()));
         //?} else {
         /^NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.TickEvent.ClientTickEvent.class, event -> {
             if (event.phase != net.neoforged.neoforge.event.TickEvent.Phase.END) return;
-            HCsCR.handleGameTick(client);
+            HCsCR.handleGameTick(Minecraft.getInstance());
         });
         ^///?}
 
         // Register the scheduled remover.
         //? if >=1.20.6 {
-        NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.RenderFrameEvent.Post.class, event -> HCsCR.handleFrameTick(client));
+        NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.RenderFrameEvent.Post.class, event -> HCsCR.handleFrameTick(Minecraft.getInstance()));
         //?} else {
         /^NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.TickEvent.RenderTickEvent.class, event -> {
             if (event.phase != net.neoforged.neoforge.event.TickEvent.Phase.END) return;
-            HCsCR.handleFrameTick(client);
+            HCsCR.handleFrameTick(Minecraft.getInstance());
         });
         ^///?}
 
