@@ -149,7 +149,9 @@ dependencies {
     compileOnly(libs.error.prone.annotations)
 
     // Minecraft.
-    val minecraftDependency = findProperty("stonecutter.minecraft-dependency") ?: minecraft
+    val minecraftDependencyProperty = findProperty("stonecutter.minecraft-dependency")
+    require(minecraftDependencyProperty != minecraft) { "Unneeded 'stonecutter.minecraft-dependency' property set to $minecraftDependencyProperty in $project, it already uses this version." }
+    val minecraftDependency = minecraftDependencyProperty ?: minecraft
     minecraft("com.mojang:minecraft:$minecraftDependency")
     mappings(loom.officialMojangMappings())
 
@@ -217,7 +219,9 @@ tasks.withType<ProcessResources> {
     }
 
     // Expand version and dependencies.
-    val minecraftRequirement = findProperty("stonecutter.minecraft-requirement") ?: minecraft
+    val minecraftRequirementProperty = findProperty("stonecutter.minecraft-requirement")
+    require(minecraftRequirementProperty != minecraft) { "Unneeded 'stonecutter.minecraft-requirement' property set to $minecraftRequirementProperty in $project, it already uses this version." }
+    val minecraftRequirement = minecraftRequirementProperty ?: minecraft
     inputs.property("version", version)
     inputs.property("minecraft", minecraftRequirement)
     inputs.property("java", javaTarget)
