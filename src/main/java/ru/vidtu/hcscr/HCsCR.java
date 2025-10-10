@@ -413,30 +413,25 @@ public final class HCsCR {
         profiler.push("hcscr:config_bind"); // Implicit NPE for 'profiler'
 
         // Consume the bind.
-        if (!CONFIG_BIND.consumeClick()) {
-            // Pop, stop.
-            profiler.pop();
-            return;
+        while (CONFIG_BIND.consumeClick()) {
+            // Log. (**TRACE**)
+            LOGGER.trace(HCSCR_MARKER, "HCsCR: Config keybind was consumed, opening the config screen. (game: {}, keybind: {})", game, CONFIG_BIND);
+
+            // Check the open screen.
+            Screen prev = game.screen; // Implicit NPE for 'game'
+            if (prev != null) {
+                // Log, continue. (**DEBUG**)
+                LOGGER.debug(HCSCR_MARKER, "HCsCR: Can't open the config screen via the keybind, screen is open. (game: {}, prev: {}, keybind: {})", game, prev, CONFIG_BIND);
+                continue;
+            }
+
+            // Open the screen.
+            HScreen screen = new HScreen(null);
+            game.setScreen(screen);
+
+            // Log. (**DEBUG**)
+            LOGGER.debug(HCSCR_MARKER, "HCsCR: Opened the config screen via the keybind. (game: {}, screen: {}, keybind: {})", game, screen, CONFIG_BIND);
         }
-
-        // Log. (**TRACE**)
-        LOGGER.trace(HCSCR_MARKER, "HCsCR: Config keybind was consumed, opening the config screen. (game: {}, keybind: {})", game, CONFIG_BIND);
-
-        // Check the open screen.
-        Screen prev = game.screen; // Implicit NPE for 'game'
-        if (prev != null) {
-            // Log, pop, stop. (**DEBUG**)
-            LOGGER.debug(HCSCR_MARKER, "HCsCR: Can't open the config screen via the keybind, screen is open. (game: {}, prev: {}, keybind: {})", game, prev, CONFIG_BIND);
-            profiler.pop();
-            return;
-        }
-
-        // Open the screen.
-        HScreen screen = new HScreen(null);
-        game.setScreen(screen);
-
-        // Log. (**DEBUG**)
-        LOGGER.debug(HCSCR_MARKER, "HCsCR: Opened the config screen via the keybind. (game: {}, screen: {}, keybind: {})", game, screen, CONFIG_BIND);
 
         // Pop the profiler.
         profiler.pop();
@@ -460,26 +455,22 @@ public final class HCsCR {
         profiler.push("hcscr:toggle_bind"); // Implicit NPE for 'profiler'
 
         // Consume the bind.
-        if (!TOGGLE_BIND.consumeClick()) {
-            // Pop, stop.
-            profiler.pop();
-            return;
+        while (TOGGLE_BIND.consumeClick()) {
+            // Log. (**TRACE**)
+            LOGGER.trace(HCSCR_MARKER, "HCsCR: Toggle keybind was consumed, toggling the mode. (game: {}, keybind: {})", game, TOGGLE_BIND);
+
+            // Toggle the mod.
+            boolean newState = HConfig.toggle();
+
+            // Show the bar, play the sound.
+            game.gui.setOverlayMessage(HStonecutter.translate("hcscr." + newState) // Implicit NPE for 'game'
+                    .withStyle(newState ? ChatFormatting.GREEN : ChatFormatting.RED)
+                    .withStyle(ChatFormatting.BOLD), /*rainbow=*/false);
+            game.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING, newState ? 2.0F : 0.0F));
+
+            // Log. (**DEBUG**)
+            LOGGER.debug(HCSCR_MARKER, "HCsCR: Mod has been toggled via the keybind. (game: {}, newState: {}, keybind: {})", game, newState, TOGGLE_BIND);
         }
-
-        // Log. (**TRACE**)
-        LOGGER.trace(HCSCR_MARKER, "HCsCR: Toggle keybind was consumed, toggling the mode. (game: {}, keybind: {})", game, TOGGLE_BIND);
-
-        // Toggle the mod.
-        boolean newState = HConfig.toggle();
-
-        // Show the bar, play the sound.
-        game.gui.setOverlayMessage(HStonecutter.translate("hcscr." + newState) // Implicit NPE for 'game'
-                .withStyle(newState ? ChatFormatting.GREEN : ChatFormatting.RED)
-                .withStyle(ChatFormatting.BOLD), /*rainbow=*/false);
-        game.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING, newState ? 2.0F : 0.0F));
-
-        // Log. (**DEBUG**)
-        LOGGER.debug(HCSCR_MARKER, "HCsCR: Mod has been toggled via the keybind. (game: {}, newState: {}, keybind: {})", game, newState, TOGGLE_BIND);
 
         // Pop the profiler.
         profiler.pop();
