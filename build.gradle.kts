@@ -167,14 +167,23 @@ dependencies {
     if (loom.isForge) {
         if (hackyNeoForge) {
             // Legacy NeoForge.
-            "forge"("net.neoforged:forge:${property("stonecutter.neoforge")}")
+            val neoforge = property("stonecutter.neoforge").toString()
+            val extractedMinecraft = neoforge.substringBefore('-')
+            require(minecraft == extractedMinecraft) { "NeoForge (legacy) version '$neoforge' provides Minecraft $extractedMinecraft in $project, but we want $minecraft." }
+            "forge"("net.neoforged:forge:$neoforge")
         } else {
             // Forge.
-            "forge"("net.minecraftforge:forge:${property("stonecutter.forge")}")
+            val forge = property("stonecutter.forge").toString()
+            val extractedMinecraft = forge.substringBefore('-')
+            require(minecraft == extractedMinecraft) { "Forge version '$forge' provides Minecraft $extractedMinecraft in $project, but we want $minecraft." }
+            "forge"("net.minecraftforge:forge:$forge")
         }
     } else if (loom.isNeoForge) {
         // Forge.
-        "neoForge"("net.neoforged:neoforge:${property("stonecutter.neoforge")}")
+        val neoforge = property("stonecutter.neoforge").toString()
+        val extractedMinecraft = neoforge.replaceFirst(Regex("^(\\d+)\\.(\\d+)\\..*$"), "1.\$1.\$2")
+        require(minecraft == extractedMinecraft) { "NeoForge version '$neoforge' provides Minecraft $extractedMinecraft in $project, but we want $minecraft." }
+        "neoForge"("net.neoforged:neoforge:$neoforge")
     } else {
         // Fabric.
         val fabricApiVersion = property("stonecutter.fabric-api").toString()

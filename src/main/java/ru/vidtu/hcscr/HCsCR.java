@@ -78,7 +78,7 @@ public final class HCsCR {
      */
     public static final Marker HCSCR_MARKER = MarkerManager.getMarker("MOD_HCSCR");
 
-    //? if >=1.21.9 {
+    //? if >=1.21.10 {
     /**
      * Keybinding category for {@link #CONFIG_BIND}/{@link #TOGGLE_BIND}.
      *
@@ -93,7 +93,7 @@ public final class HCsCR {
      *
      * @see #handleConfigBind(Minecraft, ProfilerFiller)
      */
-    //? if >=1.21.9 {
+    //? if >=1.21.10 {
     public static final KeyMapping CONFIG_BIND = new KeyMapping("hcscr.key.config", InputConstants.UNKNOWN.getValue(), KEY_CATEGORY);
     //?} else
     /*public static final KeyMapping CONFIG_BIND = new KeyMapping("hcscr.key.config", InputConstants.UNKNOWN.getValue(), "hcscr.key");*/
@@ -103,7 +103,7 @@ public final class HCsCR {
      *
      * @see #handleToggleBind(Minecraft, ProfilerFiller)
      */
-    //? if >=1.21.9 {
+    //? if >=1.21.10 {
     public static final KeyMapping TOGGLE_BIND = new KeyMapping("hcscr.key.toggle", InputConstants.UNKNOWN.getValue(), KEY_CATEGORY);
     //?} else
     /*public static final KeyMapping TOGGLE_BIND = new KeyMapping("hcscr.key.toggle", InputConstants.UNKNOWN.getValue(), "hcscr.key");*/
