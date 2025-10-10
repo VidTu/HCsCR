@@ -181,7 +181,7 @@ dependencies {
     } else if (loom.isNeoForge) {
         // Forge.
         val neoforge = property("stonecutter.neoforge").toString()
-        val extractedMinecraft = neoforge.replaceFirst(Regex("^(\\d+)\\.(\\d+)\\..*$"), "1.\$1.\$2")
+        val extractedMinecraft = "1.${neoforge.substringBeforeLast('.')}"
         require(minecraft == extractedMinecraft) { "NeoForge version '$neoforge' provides Minecraft $extractedMinecraft in $project, but we want $minecraft." }
         "neoForge"("net.neoforged:neoforge:$neoforge")
     } else {
