@@ -174,7 +174,7 @@ public final class HConfig {
 
             // Write the config.
             Files.createDirectories(file.getParent());
-            try (BufferedWriter writer = Files.newBufferedWriter(file, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.SYNC)) {
+            try (BufferedWriter writer = Files.newBufferedWriter(file)) {
                 GSON.toJson(new HConfig(), writer);
             }
 
