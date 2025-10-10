@@ -44,6 +44,15 @@ You'll need a GitHub account to download these.
 **A**: Minecraft 1.16.5, 1.17.1, 1.18.2, 1.19.2, 1.19.4, 1.20.1, 1.20.2, 1.20.4,
 1.20.6, 1.21.1, 1.21.3, 1.21.4, 1.21.5, 1.21.8, and 1.21.10.
 
+**Q**: Which Minecraft versions were previously supported?  
+**A**: Previously supported Minecraft versions were
+[1.19.3](https://github.com/VidTu/HCsCR/releases/tag/1.0.0) (Fabric/Quilt only),
+[1.21.2](https://github.com/VidTu/HCsCR/releases/tag/1.1.1) (Fabric/Quilt only),
+[1.21.6/1.21.7](https://github.com/VidTu/HCsCR/releases/tag/2.1.1), and
+[1.21.9](https://github.com/VidTu/HCsCR/releases/tag/2.1.3).
+**Note**: These versions are *NOT* supported and are included for informational
+purposes. They are probably buggy, laggy, and don't have new features.
+
 **Q**: Do I need Fabric API or Quilt Standard Libraries?  
 **A**: Yes, you'll need Fabric API for Fabric and QFAPI/QSL for Quilt.
 Obviously, you don't need them for Forge or NeoForge.
