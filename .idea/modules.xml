@@ -52,6 +52,14 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.1-forge/HCsCR.1.21.1-forge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.1-forge/HCsCR.1.21.1-forge.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.1-neoforge/HCsCR.1.21.1-neoforge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.1-neoforge/HCsCR.1.21.1-neoforge.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.1-neoforge/HCsCR.1.21.1-neoforge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.1-neoforge/HCsCR.1.21.1-neoforge.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.10-fabric/HCsCR.1.21.10-fabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.10-fabric/HCsCR.1.21.10-fabric.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.10-fabric/HCsCR.1.21.10-fabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.10-fabric/HCsCR.1.21.10-fabric.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.10-forge/HCsCR.1.21.10-forge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.10-forge/HCsCR.1.21.10-forge.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.10-forge/HCsCR.1.21.10-forge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.10-forge/HCsCR.1.21.10-forge.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.10-neoforge/HCsCR.1.21.10-neoforge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.10-neoforge/HCsCR.1.21.10-neoforge.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.10-neoforge/HCsCR.1.21.10-neoforge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.10-neoforge/HCsCR.1.21.10-neoforge.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.11-fabric/HCsCR.1.21.11-fabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.11-fabric/HCsCR.1.21.11-fabric.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.11-fabric/HCsCR.1.21.11-fabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.11-fabric/HCsCR.1.21.11-fabric.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.3-fabric/HCsCR.1.21.3-fabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.3-fabric/HCsCR.1.21.3-fabric.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.3-fabric/HCsCR.1.21.3-fabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.3-fabric/HCsCR.1.21.3-fabric.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.3-forge/HCsCR.1.21.3-forge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.3-forge/HCsCR.1.21.3-forge.main.iml" />
@@ -76,12 +84,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.8-forge/HCsCR.1.21.8-forge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.8-forge/HCsCR.1.21.8-forge.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.8-neoforge/HCsCR.1.21.8-neoforge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.8-neoforge/HCsCR.1.21.8-neoforge.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.8-neoforge/HCsCR.1.21.8-neoforge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.8-neoforge/HCsCR.1.21.8-neoforge.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.10-fabric/HCsCR.1.21.10-fabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.10-fabric/HCsCR.1.21.10-fabric.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.10-fabric/HCsCR.1.21.10-fabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.10-fabric/HCsCR.1.21.10-fabric.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.10-forge/HCsCR.1.21.10-forge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.10-forge/HCsCR.1.21.10-forge.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.10-forge/HCsCR.1.21.10-forge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.10-forge/HCsCR.1.21.10-forge.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.10-neoforge/HCsCR.1.21.10-neoforge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.10-neoforge/HCsCR.1.21.10-neoforge.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.10-neoforge/HCsCR.1.21.10-neoforge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.10-neoforge/HCsCR.1.21.10-neoforge.test.iml" />
     </modules>
   </component>
 </project>

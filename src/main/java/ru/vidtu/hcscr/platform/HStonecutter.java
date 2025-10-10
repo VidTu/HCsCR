@@ -414,7 +414,7 @@ public final class HStonecutter {
      * @param y               Slider Y position
      * @param width           Slider width in scaled pixels
      * @param height          Slider height in scaled pixels
-     * @param message         Slider label provider by value
+     * @param provider        Slider label provider by value
      * @param tooltip         Slider tooltip
      * @param value           Slider value
      * @param min             Slider minimum allowed value
@@ -424,27 +424,27 @@ public final class HStonecutter {
      * @return A new slider instance
      */
     public static AbstractSliderButton createSlider(Font font, int x, int y, int width, int height,
-                                                    IntFunction<Component> message, Component tooltip,
+                                                    IntFunction<Component> provider, Component tooltip,
                                                     int value, int min, int max, IntConsumer handler,
                                                     Consumer<List<FormattedCharSequence>> tooltipRenderer) {
         // Validate.
-        assert font != null : "HCsCR: Parameter 'font' is null. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert (x >= -320) && (x <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320)) : "HCsCR: Parameter 'x' is not in the [" + -320 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert (y >= -240) && (y <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240)) : "HCsCR: Parameter 'y' is not in the [" + -240 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert width == 200 : "HCsCR: Parameter 'width' is not 200. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert height == 20 : "HCsCR: Parameter 'height' is 20. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert message != null : "HCsCR: Parameter 'message' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert tooltip != null : "HCsCR: Parameter 'tooltip' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert max > min : "HCsCR: Parameter 'min' is not bigger than 'max'. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert value >= min : "HCsCR: Parameter 'value' is smaller than 'min'. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert value <= max : "HCsCR: Parameter 'value' is bigger than 'max'. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert handler != null : "HCsCR: Parameter 'handler' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert tooltipRenderer != null : "HCsCR: Parameter 'tooltipRenderer' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ')';
+        assert font != null : "HCsCR: Parameter 'font' is null. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+        assert (x >= -320) && (x <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320)) : "HCsCR: Parameter 'x' is not in the [" + -320 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+        assert (y >= -240) && (y <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240)) : "HCsCR: Parameter 'y' is not in the [" + -240 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+        assert width == 200 : "HCsCR: Parameter 'width' is not 200. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+        assert height == 20 : "HCsCR: Parameter 'height' is 20. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+        assert provider != null : "HCsCR: Parameter 'provider' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+        assert tooltip != null : "HCsCR: Parameter 'tooltip' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+        assert max > min : "HCsCR: Parameter 'min' is not bigger than 'max'. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+        assert value >= min : "HCsCR: Parameter 'value' is smaller than 'min'. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+        assert value <= max : "HCsCR: Parameter 'value' is bigger than 'max'. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+        assert handler != null : "HCsCR: Parameter 'handler' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", tooltipRenderer: " + tooltipRenderer + ')';
+        assert tooltipRenderer != null : "HCsCR: Parameter 'tooltipRenderer' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ')';
 
         // Create the slider.
         int clamped = Mth.clamp(value, min, max);
         double normalized = (double) (clamped - min) / (max - min);
-        AbstractSliderButton slider = new AbstractSliderButton(x, y, width, height, message.apply(clamped), normalized) { // Implicit NPE for 'message'
+        AbstractSliderButton slider = new AbstractSliderButton(x, y, width, height, provider.apply(clamped), normalized) { // Implicit NPE for 'provider'
             /**
              * A denormalized value, i.e. back in its original range.
              */
@@ -452,7 +452,7 @@ public final class HStonecutter {
 
             @Override
             protected void updateMessage() {
-                this.setMessage(message.apply(this.denormalized));
+                this.setMessage(provider.apply(this.denormalized));
             }
 
             @Override
