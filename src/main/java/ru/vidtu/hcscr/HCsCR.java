@@ -85,6 +85,9 @@ public final class HCsCR {
      * @see #CONFIG_BIND
      * @see #TOGGLE_BIND
      */
+    //? if neoforge {
+    /*public static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));*/
+    //?} else
     private static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));
     //?}
 

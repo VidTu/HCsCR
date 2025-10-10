@@ -141,6 +141,8 @@ public final class HNeoForge {
 
         // Register the binds.
         bus.addListener(RegisterKeyMappingsEvent.class, event -> { // Implicit NPE for 'bus'
+            //? if >=1.21.10
+            event.registerCategory(HCsCR.KEY_CATEGORY);
             event.register(HCsCR.CONFIG_BIND);
             event.register(HCsCR.TOGGLE_BIND);
         });
