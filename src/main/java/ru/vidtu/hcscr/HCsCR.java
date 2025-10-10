@@ -85,7 +85,7 @@ public final class HCsCR {
      * @see #CONFIG_BIND
      * @see #TOGGLE_BIND
      */
-    private static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "key"));
+    private static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));
     //?}
 
     /**
@@ -96,7 +96,7 @@ public final class HCsCR {
     //? if >=1.21.10 {
     public static final KeyMapping CONFIG_BIND = new KeyMapping("hcscr.key.config", InputConstants.UNKNOWN.getValue(), KEY_CATEGORY);
     //?} else
-    /*public static final KeyMapping CONFIG_BIND = new KeyMapping("hcscr.key.config", InputConstants.UNKNOWN.getValue(), "hcscr.key");*/
+    /*public static final KeyMapping CONFIG_BIND = new KeyMapping("hcscr.key.config", InputConstants.UNKNOWN.getValue(), "key.category.hcscr.root");*/
 
     /**
      * Toggle the mod keybind. Not bound by default.
@@ -106,7 +106,7 @@ public final class HCsCR {
     //? if >=1.21.10 {
     public static final KeyMapping TOGGLE_BIND = new KeyMapping("hcscr.key.toggle", InputConstants.UNKNOWN.getValue(), KEY_CATEGORY);
     //?} else
-    /*public static final KeyMapping TOGGLE_BIND = new KeyMapping("hcscr.key.toggle", InputConstants.UNKNOWN.getValue(), "hcscr.key");*/
+    /*public static final KeyMapping TOGGLE_BIND = new KeyMapping("hcscr.key.toggle", InputConstants.UNKNOWN.getValue(), "key.category.hcscr.root");*/
 
     /**
      * Hit entities mapped to their time of removal/hiding time in units of {@link System#nanoTime()}.

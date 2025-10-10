@@ -1,9 +1,9 @@
 {
-  "hcscr.true": "HCsCR включён.",
-  "hcscr.false": "HCsCR отключён.",
-  "hcscr.key": "HCsCR",
+  "key.category.hcscr.root": "HCsCR",
   "hcscr.key.config": "Открыть конфиг",
   "hcscr.key.toggle": "Переключить",
+  "hcscr.true": "HCsCR включён.",
+  "hcscr.false": "HCsCR отключён.",
   "hcscr.title": "Конфиг HCsCR",
   "hcscr.close": "Сохранить и закрыть конфиг.",
   "hcscr.enable": "Включить",

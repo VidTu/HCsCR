@@ -1,9 +1,9 @@
 {
-  "hcscr.true": "HCsCR enabled.",
-  "hcscr.false": "HCsCR disabled.",
-  "hcscr.key": "HCsCR",
+  "key.category.hcscr.root": "HCsCR",
   "hcscr.key.config": "Open Config",
   "hcscr.key.toggle": "Toggle",
+  "hcscr.true": "HCsCR enabled.",
+  "hcscr.false": "HCsCR disabled.",
   "hcscr.title": "HCsCR Config",
   "hcscr.close": "Save and close the config.",
   "hcscr.enable": "Enable",
