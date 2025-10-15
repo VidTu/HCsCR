@@ -441,7 +441,7 @@ public final class HStonecutter {
         //? if >=1.21.10 {
         return game.hasShiftDown(); // Implicit NPE for 'game'
         //?} else
-        /*return Screen.hasShiftDown();*/
+        /*return net.minecraft.client.gui.screens.Screen.hasShiftDown();*/
     }
 
     /**
