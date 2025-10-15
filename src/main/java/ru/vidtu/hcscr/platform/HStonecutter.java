@@ -397,7 +397,7 @@ public final class HStonecutter {
         // Note that we're comparing if it looks like END/NETHER not if it doesn't look like OVERWORLD
         // for the reason that custom dimensions fall back to OVERWORLD effects in vanilla.
         ResourceLocation effects = level.dimensionType().effectsLocation(); // Implicit NPE for 'level'
-        return net.minecraft.world.level.dimension.BuiltinDimensionTypes.NETHER_EFFECTS.equals(effects) &&
+        return net.minecraft.world.level.dimension.BuiltinDimensionTypes.NETHER_EFFECTS.equals(effects) ||
                 net.minecraft.world.level.dimension.BuiltinDimensionTypes.END_EFFECTS.equals(effects);
         //?} else
         /*return !net.minecraft.world.level.block.BedBlock.canSetSpawn(level);*/ // Implicit NPE for 'level'
