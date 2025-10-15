@@ -113,7 +113,7 @@ public final class RespawnAnchorBlockMixin {
         // - The anchor doesn't explode in the current environment/dimension.
         // - The "remove blocks" feature is OFF. (in switch block)
         if (!level.isClientSide() || (state.getValue(RespawnAnchorBlock.CHARGE) == 0) || // Implicit NPE for 'level', 'state'
-                !HConfig.enable() || !HStonecutter.willAnchorExplode(level, pos)) {
+                !HConfig.enable() || !HStonecutter.willAnchorExplode(level)) {
             // Log, stop. (**DEBUG**)
             HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
             return;

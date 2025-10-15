@@ -111,7 +111,7 @@ public final class BedBlockMixin {
         // - The mod is disabled via config or keybind.
         // - The bed doesn't explode in the current environment/dimension.
         // - The "remove blocks" feature is OFF. (in switch block)
-        if (!level.isClientSide() || !HConfig.enable() || !HStonecutter.willBedExplode(level, pos)) { // Implicit NPE for 'level'
+        if (!level.isClientSide() || !HConfig.enable() || !HStonecutter.willBedExplode(level)) { // Implicit NPE for 'level'
             // Log, stop. (**DEBUG**)
             HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped bed right click removing. (state: {}, level: {}, pos: {}, player: {}, result: {}, bed: {})", state, level, pos, player, result, this);
             return;

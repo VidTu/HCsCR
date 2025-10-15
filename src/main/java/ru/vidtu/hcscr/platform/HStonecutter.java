@@ -32,7 +32,6 @@ import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -383,19 +382,23 @@ public final class HStonecutter {
      * Checks if the bed will explode when attempting to sleep.
      *
      * @param level Level in which bed is located in
-     * @param pos   Bed position
      * @return {@code true} if the bed will explode, {@code false} if the player will sleep
      */
     @Contract(pure = true)
-    public static boolean willBedExplode(Level level, BlockPos pos) {
+    public static boolean willBedExplode(Level level) {
         // Validate.
-        assert level != null : "HCsCR: Parameter 'level' is null. (pos: " + pos + ')';
-        assert pos != null : "HCsCR: Parameter 'pos' is null. (level: " + level + ')';
-        assert Minecraft.getInstance().isSameThread() : "HCsCR: Checking bed explosion status NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ", pos: " + pos + ')';
+        assert level != null : "HCsCR: Parameter 'level' is null.";
+        assert Minecraft.getInstance().isSameThread() : "HCsCR: Checking bed explosion status NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ')';
 
         // Delegate.
         //? if >=1.21.11 {
-        return level.environmentAttributes().getValue(net.minecraft.world.attribute.EnvironmentAttributes.BED_RULE, pos).explodes(); // Implicit NPE for 'level', 'pos'
+        // Environmental attributes from 25w42a for BED_WORKS are NOT synced to the client,
+        // so we just guess and check by comparing if the dimension "looks" like NETHER and END.
+        // Note that we're comparing if it looks like END/NETHER not if it doesn't look like OVERWORLD
+        // for the reason that custom dimensions fall back to OVERWORLD effects in vanilla.
+        ResourceLocation effects = level.dimensionType().effectsLocation(); // Implicit NPE for 'level'
+        return net.minecraft.world.level.dimension.BuiltinDimensionTypes.NETHER_EFFECTS.equals(effects) &&
+                net.minecraft.world.level.dimension.BuiltinDimensionTypes.END_EFFECTS.equals(effects);
         //?} else
         /*return !net.minecraft.world.level.block.BedBlock.canSetSpawn(level);*/ // Implicit NPE for 'level'
     }
@@ -404,19 +407,20 @@ public final class HStonecutter {
      * Checks if the anchor will explode when attempting to set the spawn point.
      *
      * @param level Level in which anchor is located in
-     * @param pos   Anchor position
      * @return {@code true} if the anchor will explode, {@code false} if the player will set the spawn point
      */
     @Contract(pure = true)
-    public static boolean willAnchorExplode(Level level, BlockPos pos) {
+    public static boolean willAnchorExplode(Level level) {
         // Validate.
-        assert level != null : "HCsCR: Parameter 'level' is null. (pos: " + pos + ')';
-        assert pos != null : "HCsCR: Parameter 'pos' is null. (level: " + level + ')';
-        assert Minecraft.getInstance().isSameThread() : "HCsCR: Checking annchor explosion status NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ", pos: " + pos + ')';
+        assert level != null : "HCsCR: Parameter 'level' is null.";
+        assert Minecraft.getInstance().isSameThread() : "HCsCR: Checking anchor explosion status NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ')';
 
         // Delegate.
         //? if >=1.21.11 {
-        return !level.environmentAttributes().getValue(net.minecraft.world.attribute.EnvironmentAttributes.RESPAWN_ANCHOR_WORKS, pos); // Implicit NPE for 'level', 'pos'
+        // Environmental attributes from 25w42a for RESPAWN_ANCHOR_WORKS are NOT synced to the client,
+        // so we just guess and check by comparing if the dimension "doesn't" look like NETHER.
+        // Unknown effects will fall back to OVERWORLD in vanilla.
+        return !net.minecraft.world.level.dimension.BuiltinDimensionTypes.NETHER_EFFECTS.equals(level.dimensionType().effectsLocation()); // Implicit NPE for 'level'
         //?} else
         /*return !net.minecraft.world.level.block.RespawnAnchorBlock.canSetSpawn(level);*/ // Implicit NPE for 'level'
     }
