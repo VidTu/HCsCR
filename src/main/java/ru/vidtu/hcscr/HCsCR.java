@@ -22,7 +22,6 @@
 
 package ru.vidtu.hcscr;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
@@ -78,38 +77,21 @@ public final class HCsCR {
      */
     public static final Marker HCSCR_MARKER = MarkerManager.getMarker("MOD_HCSCR");
 
-    //? if >=1.21.10 {
-    /**
-     * Keybinding category for {@link #CONFIG_BIND}/{@link #TOGGLE_BIND}.
-     *
-     * @see #CONFIG_BIND
-     * @see #TOGGLE_BIND
-     */
-    //? if neoforge {
-    /*public static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));*/
-    //?} else
-    private static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));
-    //?}
-
     /**
      * Open config screen keybind. Not bound by default.
      *
      * @see #handleConfigBind(Minecraft, ProfilerFiller)
+     * @see HStonecutter#keyBind(String)
      */
-    //? if >=1.21.10 {
-    public static final KeyMapping CONFIG_BIND = new KeyMapping("hcscr.key.config", InputConstants.UNKNOWN.getValue(), KEY_CATEGORY);
-    //?} else
-    /*public static final KeyMapping CONFIG_BIND = new KeyMapping("hcscr.key.config", InputConstants.UNKNOWN.getValue(), "key.category.hcscr.root");*/
+    public static final KeyMapping CONFIG_BIND = HStonecutter.keyBind("hcscr.key.config");
 
     /**
      * Toggle the mod keybind. Not bound by default.
      *
      * @see #handleToggleBind(Minecraft, ProfilerFiller)
+     * @see HStonecutter#keyBind(String)
      */
-    //? if >=1.21.10 {
-    public static final KeyMapping TOGGLE_BIND = new KeyMapping("hcscr.key.toggle", InputConstants.UNKNOWN.getValue(), KEY_CATEGORY);
-    //?} else
-    /*public static final KeyMapping TOGGLE_BIND = new KeyMapping("hcscr.key.toggle", InputConstants.UNKNOWN.getValue(), "key.category.hcscr.root");*/
+    public static final KeyMapping TOGGLE_BIND = HStonecutter.keyBind("hcscr.key.toggle");
 
     /**
      * Hit entities mapped to their time of removal/hiding time in units of {@link System#nanoTime()}.
@@ -136,13 +118,11 @@ public final class HCsCR {
      *
      * @see EntityMixin
      * @see #handleHiddenEntities(Minecraft, ProfilerFiller)
+     * @see HStonecutter#linearRemovableInt2ObjectMap()
      */
-    // Ideally, an array-baked map should be always used here too. Due to a bug in fastutil, setValue(int) is not
-    // supported until 8.5.12: https://github.com/vigna/fastutil/blob/fcac58f7d3df8e7d903fad533f4caada7f4937cf/CHANGES#L41
-    //? if >=1.21.4 {
-    public static final Object2IntMap<Entity> HIDDEN_ENTITIES = new it.unimi.dsi.fastutil.objects.Object2IntArrayMap<>(0);
-    //?} else
-    /*public static final Object2IntMap<Entity> HIDDEN_ENTITIES = new it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap<>(0);*/
+    // This map should array-backed too, but it must support setValue(int) in iterators, so sometimes it's a hash-backed
+    // map, even when it's suboptimal. See HStonecutter.linearRemovableInt2ObjectMap() for details.
+    public static final Object2IntMap<Entity> HIDDEN_ENTITIES = HStonecutter.linearRemovableInt2ObjectMap();
 
     /**
      * A map of block positions that the player won't
@@ -190,7 +170,7 @@ public final class HCsCR {
     public static void handleGameTick(Minecraft game) {
         // Validate.
         assert game != null : "HCsCR: Parameter 'game' is null.";
-        assert game.isSameThread() : "HCsCR: Handling game tick NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ')';
+        assert game.isSameThread() : "HCsCR: Handling a game tick NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ')';
 
         // Get and push the profiler.
         ProfilerFiller profiler = HStonecutter.profilerOfGame(game); // Implicit NPE for 'game'
@@ -216,7 +196,7 @@ public final class HCsCR {
     public static void handleFrameTick(Minecraft game) {
         // Validate.
         assert game != null : "HCsCR: Parameter 'game' is null.";
-        assert game.isSameThread() : "HCsCR: Handling frame tick NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ')';
+        assert game.isSameThread() : "HCsCR: Handling a frame tick NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ')';
 
         // Get and push the profiler.
         ProfilerFiller profiler = HStonecutter.profilerOfGame(game); // Implicit NPE for 'game'
@@ -312,22 +292,11 @@ public final class HCsCR {
         LocalPlayer player = (LocalPlayer) source.getEntity(); // Implicit NPE for 'source'
         AttributeMap map = player.getAttributes();
         for (MobEffectInstance instance : player.getActiveEffects()) {
-            //? if >=1.20.6 {
-            instance.getEffect().value().addAttributeModifiers(map, instance.getAmplifier());
-            //?} else if >=1.20.2 {
-            /*instance.getEffect().addAttributeModifiers(map, instance.getAmplifier());
-            *///?} else {
-            /*instance.getEffect().addAttributeModifiers(player, map, instance.getAmplifier());
-            *///?}
+            HStonecutter.addEffectAttributes(instance, player, map);
         }
         double attributeAmount = player.getAttributeValue(Attributes.ATTACK_DAMAGE);
         for (MobEffectInstance instance : player.getActiveEffects()) {
-            //? if >=1.20.6 {
-            instance.getEffect().value().removeAttributeModifiers(map);
-            //?} else if >=1.20.2 {
-            /*instance.getEffect().removeAttributeModifiers(map);
-             *///?} else
-            /*instance.getEffect().removeAttributeModifiers(player, map, instance.getAmplifier());*/
+            HStonecutter.removeEffectAttributes(instance, player, map);
         }
         if (attributeAmount <= 0.0D) return false;
 

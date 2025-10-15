@@ -22,12 +22,16 @@
 
 package ru.vidtu.hcscr.platform;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -35,7 +39,9 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import org.jetbrains.annotations.ApiStatus;
@@ -43,6 +49,7 @@ import org.jetbrains.annotations.CheckReturnValue;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
+import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.config.HScreen;
 
 import java.nio.file.Path;
@@ -71,6 +78,18 @@ public final class HStonecutter {
     /*public static final Path CONFIG_DIRECTORY = net.neoforged.fml.loading.FMLPaths.CONFIGDIR.get();
     *///?} else
     /*public static final Path CONFIG_DIRECTORY = net.minecraftforge.fml.loading.FMLPaths.CONFIGDIR.get();*/
+
+    //? if >=1.21.10 {
+    /**
+     * Key category for {@link #keyBind(String)}.
+     *
+     * @see #keyBind(String)
+     */
+    //? if neoforge {
+    /*public static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));*/
+    //?} else
+    private static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));
+    //?}
 
     /**
      * A channel identifier for servers to know that this mod is installed.
@@ -104,6 +123,45 @@ public final class HStonecutter {
     }
 
     /**
+     * Creates a new linear (array-baked) map that supports {@code setValue(int)} operations in iterators.
+     * The created map will have initial capacity of {@code 0}.
+     *
+     * @param <T> Map value type
+     * @return A newly created linear map
+     * @implNote In some cases (due a faulty implementation), a suboptimal hash-baked map will be used to allow {@code setValue(int)}
+     */
+    @Contract(value = "-> new", pure = true)
+    public static <T> Object2IntMap<T> linearRemovableInt2ObjectMap() {
+        // Ideally, an array-baked map should be always used here. Due to a bug in fastutil, setValue(int) is not
+        // supported until 8.5.12: https://github.com/vigna/fastutil/blob/fcac58f7d3df8e7d903fad533f4caada7f4937cf/CHANGES#L4
+        //? if >=1.21.4 {
+        return new it.unimi.dsi.fastutil.objects.Object2IntArrayMap<>(0);
+        //?} else
+        /*return new it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap<>(0);*/
+    }
+
+    /**
+     * Creates a new key bind. The key bind won't have a default key.
+     *
+     * @param id Keybind ID
+     * @return A newly created unbound key bind
+     * @see HCsCR#CONFIG_BIND
+     * @see HCsCR#TOGGLE_BIND
+     */
+    @Contract(value = "_ -> new", pure = true)
+    public static KeyMapping keyBind(String id) {
+        // Validate.
+        assert id != null : "HCsCR: Parameter 'id' is null.";
+        assert !id.isEmpty() : "HCsCR: Creating a key binding with an empty ID.";
+
+        // Delegate.
+        //? if >=1.21.10 {
+        return new KeyMapping(id, InputConstants.UNKNOWN.getValue(), KEY_CATEGORY);
+        //?} else
+        /*return new KeyMapping(id, InputConstants.UNKNOWN.getValue(), "key.category.hcscr.root");*/
+    }
+
+    /**
      * Creates a new translatable component.
      *
      * @param key Translation key
@@ -113,6 +171,7 @@ public final class HStonecutter {
     public static MutableComponent translate(String key) {
         // Validate.
         assert key != null : "HCsCR: Parameter 'key' is null.";
+        assert !key.isEmpty() : "HCsCR: Creating a translatable component with an empty key.";
 
         // Delegate.
         //? if >=1.19.2 {
@@ -133,6 +192,8 @@ public final class HStonecutter {
         // Validate.
         assert key != null : "HCsCR: Parameter 'key' is null. (args: " + Arrays.toString(args) + ')';
         assert args != null : "HCsCR: Parameter 'args' is null. (key: " + key + ')';
+        assert !key.isEmpty() : "HCsCR: Creating a translatable component with an empty key. (args: " + Arrays.toString(args) + ')';
+        assert args.length != 0 : "HCsCR: Creating a translatable components with empty args array. (key: " + key + ')';
 
         // Delegate.
         //? if >=1.19.2 {
@@ -147,10 +208,11 @@ public final class HStonecutter {
      * @param game Current game instance
      * @return Game profiler
      */
-    @CheckReturnValue
+    @Contract(pure = true)
     public static ProfilerFiller profilerOfGame(Minecraft game) {
         // Validate.
         assert game != null : "HCsCR: Parameter 'game' is null.";
+        assert game.isSameThread() : "HCsCR: Getting the game profiler NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ')';
 
         // Delegate.
         //? if >=1.21.3 {
@@ -169,6 +231,7 @@ public final class HStonecutter {
     public static Level levelOfEntity(Entity entity) {
         // Validate.
         assert entity != null : "HCsCR: Parameter 'entity' is null.";
+        // No thread checks here because this can be called from the integrated server.
 
         //? if >=1.20.1 {
         return entity.level(); // Implicit NPE for 'entity'
@@ -181,12 +244,14 @@ public final class HStonecutter {
      *
      * @param entity Target entity to check
      * @return Whether the entity has been removed
+     * @see #removeEntity(Entity)
      */
     @SuppressWarnings({"deprecation", "RedundantSuppression"}) // <- Forge 1.16.5.
     @Contract(pure = true)
     public static boolean isEntityRemoved(Entity entity) {
         // Validate.
         assert entity != null : "HCsCR: Parameter 'entity' is null.";
+        assert Minecraft.getInstance().isSameThread() : "HCsCR: Checking entity removal NOT from the main thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ')';
 
         // Delegate.
         //? if >=1.17.1 {
@@ -206,6 +271,7 @@ public final class HStonecutter {
     public static Entity collisionContextEntity(EntityCollisionContext ctx) {
         // Validate.
         assert ctx != null : "HCsCR: Parameter 'ctx' is null.";
+        // No thread checks here because this can be called from the integrated server.
 
         // Delegate.
         //? if >=1.18.2 {
@@ -220,10 +286,12 @@ public final class HStonecutter {
      * Marks the entity as to be removed from the world.
      *
      * @param entity Target entity to remove
+     * @see #isEntityRemoved(Entity)
      */
     public static void removeEntity(Entity entity) {
         // Validate.
         assert entity != null : "HCsCR: Parameter 'entity' is null.";
+        assert Minecraft.getInstance().isSameThread() : "HCsCR: Removing an entity NOT from the main thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ')';
 
         // Delegate.
         //? if >=1.17.1 {
@@ -247,12 +315,86 @@ public final class HStonecutter {
         assert entity != null : "HCsCR: Parameter 'entity' is null. (source: " + source + ", amount: " + ')';
         assert source != null : "HCsCR: Parameter 'source' is null. (entity: " + entity + ", amount: " + ')';
         assert Float.isFinite(amount) : "HCsCR: Parameter 'amount' is not finite. (entity: " + entity + ", source: " + source + ", amount: " + ')';
+        // No thread checks here because this can be called from the integrated server.
 
         // Delegate.
         //? if >=1.21.3 {
         return entity.hurtOrSimulate(source, amount); // Implicit NPE for 'entity', 'amount'
         //?} else
         /*return entity.hurt(source, amount);*/ // Implicit NPE for 'entity', 'amount'
+    }
+
+    /**
+     * Adds the effect attributes onto the player.
+     *
+     * @param effect Effect to add the attributes from
+     * @param player Target player
+     * @param map    Player's attribute map
+     */
+    public static void addEffectAttributes(MobEffectInstance effect, LocalPlayer player, AttributeMap map) {
+        // Validate.
+        assert effect != null : "HCsCR: Parameter 'effect' is null. (player: " + player + ", map: " + map + ')';
+        assert player != null : "HCsCR: Parameter 'player' is null. (effect: " + effect + ", map: " + map + ')';
+        assert map != null : "HCsCR: Parameter 'map' is null. (effect: " + effect + ", player: " + player + ')';
+        //noinspection ObjectEquality // <- Should be the same reference.
+        assert player.getAttributes() == map : "HCsCR: Provided map is not from the provided player while adding attributes. (effect: " + effect + ", player: " + player + ", map: " + map + ", playerMap: " + player.getAttributes() + ')';
+        assert player.getActiveEffects().contains(effect) : "HCsCR: Provided effect is not active for the player while adding attributes. (effect: " + effect + ", player: " + player + ", map: " + map + ", playerEffects: " + player.getActiveEffects() + ')';
+        assert Minecraft.getInstance().isSameThread() : "HCsCR: Adding effect attributes NOT from the main thread. (thread: " + Thread.currentThread() + ", effect: " + effect + ", player: " + player + ", map: " + map + ')';
+
+        // Delegate.
+        //? if >=1.20.6 {
+        effect.getEffect().value().addAttributeModifiers(map, effect.getAmplifier());
+        //?} else if >=1.20.2 {
+        /*effect.getEffect().addAttributeModifiers(map, effect.getAmplifier());
+         *///?} else {
+        /*effect.getEffect().addAttributeModifiers(player, map, effect.getAmplifier());
+         *///?}
+    }
+
+    /**
+     * Removes the effect attributes onto the player.
+     *
+     * @param effect Effect to remove the attributes from
+     * @param player Target player
+     * @param map    Player's attribute map
+     */
+    public static void removeEffectAttributes(MobEffectInstance effect, LocalPlayer player, AttributeMap map) {
+        // Validate.
+        assert effect != null : "HCsCR: Parameter 'effect' is null. (player: " + player + ", map: " + map + ')';
+        assert player != null : "HCsCR: Parameter 'player' is null. (effect: " + effect + ", map: " + map + ')';
+        assert map != null : "HCsCR: Parameter 'map' is null. (effect: " + effect + ", player: " + player + ')';
+        //noinspection ObjectEquality // <- Should be the same reference.
+        assert player.getAttributes() == map : "HCsCR: Provided map is not from the provided player while removing attributes. (effect: " + effect + ", player: " + player + ", map: " + map + ", playerMap: " + player.getAttributes() + ')';
+        assert player.getActiveEffects().contains(effect) : "HCsCR: Provided effect is not active for the player while removing attributes. (effect: " + effect + ", player: " + player + ", map: " + map + ", playerEffects: " + player.getActiveEffects() + ')';
+        assert Minecraft.getInstance().isSameThread() : "HCsCR: Removing effect attributes NOT from the main thread. (thread: " + Thread.currentThread() + ", effect: " + effect + ", player: " + player + ", map: " + map + ')';
+
+        // Delegate.
+        //? if >=1.20.6 {
+        effect.getEffect().value().removeAttributeModifiers(map);
+        //?} else if >=1.20.2 {
+        /*effect.getEffect().removeAttributeModifiers(map);
+         *///?} else {
+        /*effect.getEffect().removeAttributeModifiers(player, map, effect.getAmplifier());
+         *///?}
+    }
+
+    /**
+     * Checks if the Shift key is down.
+     *
+     * @param game Current game instance
+     * @return {@code true} if the Shift key is down, {@code false} if not
+     */
+    @Contract(pure = true)
+    public static boolean isShiftKeyDown(Minecraft game) {
+        // Validate.
+        assert game != null : "HCsCR: Parameter 'game' is null.";
+        assert game.isSameThread() : "HCsCR: Checking the shift key state NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ')';
+
+        // Delegate.
+        //? if >=1.21.10 {
+        return game.hasShiftDown(); // Implicit NPE for 'game'
+        //? } else
+        /*return Screen.hasShiftDown();*/
     }
 
     /**

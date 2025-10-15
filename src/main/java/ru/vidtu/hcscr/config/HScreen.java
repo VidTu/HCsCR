@@ -104,10 +104,7 @@ public final class HScreen extends Screen {
         CrystalMode crystals = HConfig.crystals();
         this.addVersionedWidget(HStonecutter.createButton(font, buttonX, calculateWidgetY(index++), 200, 20, crystals.label(), crystals.tip(), (button, tipSetter) -> {
             // Update the crystals.
-            //? if >=1.21.10 {
-            CrystalMode newCrystals = HConfig.cycleCrystals(minecraft.hasShiftDown());
-            //?} else
-            /*CrystalMode newCrystals = HConfig.cycleCrystals(hasShiftDown());*/
+            CrystalMode newCrystals = HConfig.cycleCrystals(/*back=*/HStonecutter.isShiftKeyDown(minecraft));
 
             // Update the label and tooltip.
             button.setMessage(newCrystals.label());
@@ -134,10 +131,7 @@ public final class HScreen extends Screen {
         BlockMode anchors = HConfig.blocks();
         this.addVersionedWidget(HStonecutter.createButton(font, buttonX, calculateWidgetY(index++), 200, 20, anchors.label(), anchors.tip(), (button, tipSetter) -> {
             // Update the anchors.
-            //? if >=1.21.10 {
-            BlockMode newAnchors = HConfig.cycleBlocks(minecraft.hasShiftDown());
-            //?} else
-            /*BlockMode newAnchors = HConfig.cycleBlocks(hasShiftDown());*/
+            BlockMode newAnchors = HConfig.cycleBlocks(/*back=*/HStonecutter.isShiftKeyDown(minecraft));
 
             // Update the label and tooltip.
             button.setMessage(newAnchors.label());
