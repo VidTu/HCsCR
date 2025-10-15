@@ -193,7 +193,11 @@ dependencies {
         modImplementation(fabricApi.module("fabric-networking-api-v1", fabricApiVersion)) // Registers the channel, see README.
         modImplementation(fabricApi.module("fabric-resource-loader-v0", fabricApiVersion)) // Loads languages.
         modImplementation(fabricApi.module("fabric-screen-api-v1", fabricApiVersion)) // ModMenu dependency.
-        modImplementation("com.terraformersmc:modmenu:${property("stonecutter.modmenu")}")
+        if (findProperty("stonecutter.modmenu.compile-only").toString().toBoolean()) {
+            modCompileOnly("com.terraformersmc:modmenu:${property("stonecutter.modmenu")}")
+        } else {
+            modImplementation("com.terraformersmc:modmenu:${property("stonecutter.modmenu")}")
+        }
     }
 }
 

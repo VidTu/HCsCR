@@ -32,6 +32,7 @@ import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -319,9 +320,9 @@ public final class HStonecutter {
 
         // Delegate.
         //? if >=1.21.3 {
-        return entity.hurtOrSimulate(source, amount); // Implicit NPE for 'entity', 'amount'
+        return entity.hurtOrSimulate(source, amount); // Implicit NPE for 'entity', 'source'
         //?} else
-        /*return entity.hurt(source, amount);*/ // Implicit NPE for 'entity', 'amount'
+        /*return entity.hurt(source, amount);*/ // Implicit NPE for 'entity', 'source'
     }
 
     /**
@@ -343,11 +344,11 @@ public final class HStonecutter {
 
         // Delegate.
         //? if >=1.20.6 {
-        effect.getEffect().value().addAttributeModifiers(map, effect.getAmplifier());
+        effect.getEffect().value().addAttributeModifiers(map, effect.getAmplifier()); // Implicit NPE for 'effect', 'map'
         //?} else if >=1.20.2 {
-        /*effect.getEffect().addAttributeModifiers(map, effect.getAmplifier());
+        /*effect.getEffect().addAttributeModifiers(map, effect.getAmplifier()); // Implicit NPE for 'effect', 'map'
          *///?} else {
-        /*effect.getEffect().addAttributeModifiers(player, map, effect.getAmplifier());
+        /*effect.getEffect().addAttributeModifiers(player, map, effect.getAmplifier()); // Implicit NPE for 'player', 'effect', 'map'
          *///?}
     }
 
@@ -370,12 +371,54 @@ public final class HStonecutter {
 
         // Delegate.
         //? if >=1.20.6 {
-        effect.getEffect().value().removeAttributeModifiers(map);
+        effect.getEffect().value().removeAttributeModifiers(map); // Implicit NPE for 'effect', 'map'
         //?} else if >=1.20.2 {
-        /*effect.getEffect().removeAttributeModifiers(map);
+        /*effect.getEffect().removeAttributeModifiers(map); // Implicit NPE for 'effect', 'map'
          *///?} else {
-        /*effect.getEffect().removeAttributeModifiers(player, map, effect.getAmplifier());
+        /*effect.getEffect().removeAttributeModifiers(player, map, effect.getAmplifier()); // Implicit NPE for 'player', 'effect', 'map'
          *///?}
+    }
+
+    /**
+     * Checks if the bed will explode when attempting to sleep.
+     *
+     * @param level Level in which bed is located in
+     * @param pos   Bed position
+     * @return {@code true} if the bed will explode, {@code false} if the player will sleep
+     */
+    @Contract(pure = true)
+    public static boolean willBedExplode(Level level, BlockPos pos) {
+        // Validate.
+        assert level != null : "HCsCR: Parameter 'level' is null. (pos: " + pos + ')';
+        assert pos != null : "HCsCR: Parameter 'pos' is null. (level: " + level + ')';
+        assert Minecraft.getInstance().isSameThread() : "HCsCR: Checking bed explosion status NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ", pos: " + pos + ')';
+
+        // Delegate.
+        //? if >=1.21.11 {
+        return level.environmentAttributes().getValue(net.minecraft.world.attribute.EnvironmentAttributes.BED_RULE, pos).explodes(); // Implicit NPE for 'level', 'pos'
+        //?} else
+        /*return !net.minecraft.world.level.block.BedBlock.canSetSpawn(level);*/ // Implicit NPE for 'level'
+    }
+
+    /**
+     * Checks if the anchor will explode when attempting to set the spawn point.
+     *
+     * @param level Level in which anchor is located in
+     * @param pos   Anchor position
+     * @return {@code true} if the anchor will explode, {@code false} if the player will set the spawn point
+     */
+    @Contract(pure = true)
+    public static boolean willAnchorExplode(Level level, BlockPos pos) {
+        // Validate.
+        assert level != null : "HCsCR: Parameter 'level' is null. (pos: " + pos + ')';
+        assert pos != null : "HCsCR: Parameter 'pos' is null. (level: " + level + ')';
+        assert Minecraft.getInstance().isSameThread() : "HCsCR: Checking annchor explosion status NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ", pos: " + pos + ')';
+
+        // Delegate.
+        //? if >=1.21.11 {
+        return !level.environmentAttributes().getValue(net.minecraft.world.attribute.EnvironmentAttributes.RESPAWN_ANCHOR_WORKS, pos); // Implicit NPE for 'level', 'pos'
+        //?} else
+        /*return !net.minecraft.world.level.block.RespawnAnchorBlock.canSetSpawn(level);*/ // Implicit NPE for 'level'
     }
 
     /**
@@ -393,7 +436,7 @@ public final class HStonecutter {
         // Delegate.
         //? if >=1.21.10 {
         return game.hasShiftDown(); // Implicit NPE for 'game'
-        //? } else
+        //?} else
         /*return Screen.hasShiftDown();*/
     }
 

@@ -43,6 +43,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.config.BlockMode;
 import ru.vidtu.hcscr.config.HConfig;
+import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
  * Mixin that allows respawn anchors to be removed via right click.
@@ -108,11 +109,11 @@ public final class RespawnAnchorBlockMixin {
         // Do NOT process anchors if any of the following conditions is met:
         // - The current level (world) is not client-side. (e.g., integrated server world)
         // - The anchor doesn't have any charges.
-        // - The anchor doesn't explode in the current dimension.
         // - The mod is disabled via config or keybind.
+        // - The anchor doesn't explode in the current environment/dimension.
         // - The "remove blocks" feature is OFF. (in switch block)
         if (!level.isClientSide() || (state.getValue(RespawnAnchorBlock.CHARGE) == 0) || // Implicit NPE for 'level', 'state'
-                RespawnAnchorBlock.canSetSpawn(level) || !HConfig.enable()) {
+                !HConfig.enable() || !HStonecutter.willAnchorExplode(level, pos)) {
             // Log, stop. (**DEBUG**)
             HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
             return;
