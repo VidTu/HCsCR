@@ -128,7 +128,7 @@ public final class HStonecutter {
      *
      * @param <T> Map value type
      * @return A newly created linear map
-     * @implNote In some cases (due a faulty implementation), a suboptimal hash-baked map will be used to allow {@code setValue(int)}
+     * @implNote In some cases (due to a faulty implementation), a suboptimal hash-baked map will be used to allow {@code setValue(int)}
      */
     @Contract(value = "-> new", pure = true)
     public static <T> Object2IntMap<T> linearRemovableInt2ObjectMap() {
@@ -472,6 +472,7 @@ public final class HStonecutter {
         assert tooltip != null : "HCsCR: Parameter 'tooltip' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
         assert handler != null : "HCsCR: Parameter 'handler' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", tooltipRenderer: " + tooltipRenderer + ')';
         assert tooltipRenderer != null : "HCsCR: Parameter 'tooltipRenderer' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ')';
+        assert Minecraft.getInstance().isSameThread() : "HCsCR: Creating a button NOT from the main thread. (thread: " + Thread.currentThread() + ", font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
 
         // Create.
         //? if >=1.19.4 {
@@ -536,6 +537,7 @@ public final class HStonecutter {
         assert tooltip != null : "HCsCR: Parameter 'tooltip' is null. (font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
         assert handler != null : "HCsCR: Parameter 'handler' is null. (font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", tooltipRenderer: " + tooltipRenderer + ')';
         assert tooltipRenderer != null : "HCsCR: Parameter 'tooltipRenderer' is null. (font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ')';
+        assert Minecraft.getInstance().isSameThread() : "HCsCR: Creating a checkbox NOT from the main thread. (thread: " + Thread.currentThread() + ", font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
 
         // Create.
         //? if >=1.20.4 {
@@ -629,6 +631,7 @@ public final class HStonecutter {
         assert value <= max : "HCsCR: Parameter 'value' is bigger than 'max'. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
         assert handler != null : "HCsCR: Parameter 'handler' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", tooltipRenderer: " + tooltipRenderer + ')';
         assert tooltipRenderer != null : "HCsCR: Parameter 'tooltipRenderer' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ')';
+        assert Minecraft.getInstance().isSameThread() : "HCsCR: Creating a slider NOT from the main thread. (thread: " + Thread.currentThread() + ", font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
 
         // Create the slider.
         int clamped = Mth.clamp(value, min, max);
