@@ -46,7 +46,7 @@ stonecutter {
         for (version in versions) {
             for (type in types) {
                 val subPath = file("versions/$version-$type")
-                if (!subPath.isDirectory) continue
+                if (subPath.resolve(".ignored").isFile) continue
                 version("$version-$type", version)
             }
         }

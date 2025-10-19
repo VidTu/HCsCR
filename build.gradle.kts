@@ -148,7 +148,7 @@ dependencies {
     compileOnly(libs.jetbrains.annotations)
     compileOnly(libs.error.prone.annotations)
 
-    // Minecraft.
+    // Minecraft. The dependency may be manually specified for example for snapshots.
     val minecraftDependencyProperty = findProperty("stonecutter.minecraft-dependency")
     require(minecraftDependencyProperty != minecraft) { "Unneeded 'stonecutter.minecraft-dependency' property set to $minecraftDependencyProperty in $project, it already uses this version." }
     val minecraftDependency = minecraftDependencyProperty ?: minecraft
@@ -168,12 +168,14 @@ dependencies {
         if (hackyNeoForge) {
             // Legacy NeoForge.
             val neoforge = property("stonecutter.neoforge").toString()
+            require(neoforge.isNotBlank() && neoforge != "[STONECUTTER]") { "NeoForge (legacy) version is not provided in $project." }
             val extractedMinecraft = neoforge.substringBefore('-')
             require(minecraft == extractedMinecraft) { "NeoForge (legacy) version '$neoforge' provides Minecraft $extractedMinecraft in $project, but we want $minecraft." }
             "forge"("net.neoforged:forge:$neoforge")
         } else {
             // Forge.
             val forge = property("stonecutter.forge").toString()
+            require(forge.isNotBlank() && forge != "[STONECUTTER]") { "Forge version is not provided in $project." }
             val extractedMinecraft = forge.substringBefore('-')
             require(minecraft == extractedMinecraft) { "Forge version '$forge' provides Minecraft $extractedMinecraft in $project, but we want $minecraft." }
             "forge"("net.minecraftforge:forge:$forge")
@@ -181,22 +183,29 @@ dependencies {
     } else if (loom.isNeoForge) {
         // Forge.
         val neoforge = property("stonecutter.neoforge").toString()
+        require(neoforge.isNotBlank() && neoforge != "[STONECUTTER]") { "NeoForge version is not provided in $project." }
         val extractedMinecraft = "1.${neoforge.substringBeforeLast('.')}"
         require(minecraft == extractedMinecraft) { "NeoForge version '$neoforge' provides Minecraft $extractedMinecraft in $project, but we want $minecraft." }
         "neoForge"("net.neoforged:neoforge:$neoforge")
     } else {
         // Fabric.
-        val fabricApiVersion = property("stonecutter.fabric-api").toString()
+        val fapi = property("stonecutter.fabric-api").toString()
+        require(fapi.isNotBlank() && fapi != "[STONECUTTER]") { "Fabric API version is not provided in $project." }
         modImplementation(libs.fabric.loader)
-        modImplementation(fabricApi.module("fabric-key-binding-api-v1", fabricApiVersion)) // Handles the keybinds.
-        modImplementation(fabricApi.module("fabric-lifecycle-events-v1", fabricApiVersion)) // Handles game ticks.
-        modImplementation(fabricApi.module("fabric-networking-api-v1", fabricApiVersion)) // Registers the channel, see README.
-        modImplementation(fabricApi.module("fabric-resource-loader-v0", fabricApiVersion)) // Loads languages.
-        modImplementation(fabricApi.module("fabric-screen-api-v1", fabricApiVersion)) // ModMenu dependency.
+        modImplementation(fabricApi.module("fabric-key-binding-api-v1", fapi)) // Handles the keybinds.
+        modImplementation(fabricApi.module("fabric-lifecycle-events-v1", fapi)) // Handles game ticks.
+        modImplementation(fabricApi.module("fabric-networking-api-v1", fapi)) // Registers the channel, see README.
+        modImplementation(fabricApi.module("fabric-resource-loader-v0", fapi)) // Loads languages.
+        modImplementation(fabricApi.module("fabric-screen-api-v1", fapi)) // ModMenu dependency.
+        val modmenu = property("stonecutter.modmenu").toString()
+        require(modmenu.isNotBlank() && modmenu != "[STONECUTTER]") { "ModMenu version is not provided in $project." }
+        // Sometimes, ModMenu is not yet updated for the version. (it almost never updates to snapshots nowadays)
+        // So we should depend on it compile-time (it is really an optional dependency for us) to allow both
+        // compilation of an optional ModMenu compatibility class (HModMenu.java) and launching the game.
         if (findProperty("stonecutter.modmenu.compile-only").toString().toBoolean()) {
-            modCompileOnly("com.terraformersmc:modmenu:${property("stonecutter.modmenu")}")
+            modCompileOnly("com.terraformersmc:modmenu:$modmenu")
         } else {
-            modImplementation("com.terraformersmc:modmenu:${property("stonecutter.modmenu")}")
+            modImplementation("com.terraformersmc:modmenu:$modmenu")
         }
     }
 }
@@ -207,7 +216,7 @@ tasks.withType<JavaCompile> {
     options.compilerArgs.addAll(listOf("-g", "-parameters"))
     // JDK 8 (used by 1.16.x) doesn't support the "-release" flag and
     // uses "-source" and "-target" ones (see the top of the file),
-    // so we must NOT specify it or the "javac" will fail.
+    // so we must NOT specify it, or the "javac" will fail.
     // JDK 9+ does listen to this option.
     if (javaVersion.isJava9Compatible) {
         options.release = javaTarget
@@ -231,7 +240,7 @@ tasks.withType<ProcessResources> {
         exclude("META-INF/mods.toml", "META-INF/neoforge.mods.toml")
     }
 
-    // Expand version and dependencies.
+    // Expand version and dependencies. The requirement may be manually specified for example for snapshots.
     val minecraftRequirementProperty = findProperty("stonecutter.minecraft-requirement")
     require(minecraftRequirementProperty != minecraft) { "Unneeded 'stonecutter.minecraft-requirement' property set to $minecraftRequirementProperty in $project, it already uses this version." }
     val minecraftRequirement = minecraftRequirementProperty ?: minecraft
