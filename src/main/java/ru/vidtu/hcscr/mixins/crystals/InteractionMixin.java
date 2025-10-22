@@ -75,8 +75,8 @@ public abstract class InteractionMixin extends Entity {
     }
 
     /**
-     * Forcefully enables attack interaction, if mod is enabled and {@link CrystalMode#ENVELOPING} is active.
-     * This allows further processing of the entity in {@link PlayerMixin}, as the attack will succeed.
+     * Forcefully enables attack interaction, if mod is enabled and {@link CrystalMode#ENVELOPING} is active. This allows
+     * further processing of the entity in {@link PlayerMixin_E}/{@link PlayerMixin_M}, as the attack will succeed.
      *
      * @param attacker Attacking entity
      * @param cir      Callback data

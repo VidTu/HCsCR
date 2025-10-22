@@ -25,6 +25,7 @@ fabric-loader = "0.17.3"
 jetbrains-annotations = "26.0.2"
 jspecify = "1.0.0"
 log4j = "2.25.2"
+mixinextras = "0.5.0"
 
 [plugins]
 architectury-loom = { id = "dev.architectury.loom", version.ref = "architectury-loom" }
@@ -35,3 +36,4 @@ fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-l
 jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
 jspecify = { module = "org.jspecify:jspecify", version.ref = "jspecify" }
 log4j = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
+mixinextras = { module = "io.github.llamalad7:mixinextras-common", version.ref = "mixinextras" }

@@ -3,6 +3,7 @@
   "minVersion": "0.8",
   "compatibilityLevel": "JAVA_${java}",
   "package": "ru.vidtu.hcscr.mixins",
+  "plugin": "ru.vidtu.hcscr.platform.HPlugin",
   "refmap": "hcscr.mixins.refmap.json",
   "client": [
     "MinecraftMixin",
@@ -15,7 +16,8 @@
     "crystals.EntityMixin",
     //? if >=1.19.4
     "crystals.InteractionMixin",
-    "crystals.PlayerMixin"
+    "crystals.PlayerMixin_E",
+    "crystals.PlayerMixin_M"
   ],
   "injectors": {
     "defaultRequire": 1

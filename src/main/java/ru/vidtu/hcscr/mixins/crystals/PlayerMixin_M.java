@@ -32,18 +32,22 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import ru.vidtu.hcscr.HCsCR;
+import ru.vidtu.hcscr.platform.HPlugin;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
- * Mixin that speeds up entity removing via {@link HCsCR#handleEntityHit(Entity, DamageSource, float)}.
+ * Mixin that speeds up entity removing via {@link HCsCR#handleEntityHit(Entity, DamageSource, float)}
+ * in absence of MixinExtras via {@link Redirect} hook. See {@link PlayerMixin_M} for an alternative.
  *
  * @author VidTu
  * @apiNote Internal use only
+ * @see HPlugin
+ * @see PlayerMixin_M
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(Player.class)
 @NullMarked
-public final class PlayerMixin {
+public final class PlayerMixin_M {
     /**
      * An instance of this class cannot be created.
      *
@@ -53,7 +57,7 @@ public final class PlayerMixin {
     // @ApiStatus.ScheduledForRemoval // Can't annotate this without logging in the console.
     @Deprecated
     @Contract(value = "-> fail", pure = true)
-    private PlayerMixin() {
+    private PlayerMixin_M() {
         throw new AssertionError("HCsCR: No instances.");
     }
 
@@ -81,7 +85,6 @@ public final class PlayerMixin {
         assert Float.isFinite(amount) : "HCsCR: Parameter 'amount' is not finite. (entity: " + entity + ", source: " + source + ", amount: " + ", player: " + this + ')';
 
         // Delegate.
-        // TODO(VidTu): Use more compatible methods from MixinExtras if it's provided by the platform.
         //noinspection NonShortCircuitBooleanExpression // <- Needs to call both methods.
         return HStonecutter.hurtEntity(entity, source, amount) | HCsCR.handleEntityHit(entity, source, amount);
     }

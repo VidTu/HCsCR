@@ -155,6 +155,12 @@ dependencies {
     minecraft("com.mojang:minecraft:$minecraftDependency")
     mappings(loom.officialMojangMappings())
 
+    // MixinExtras.
+    if (loom.isForge) {
+        compileOnly(libs.mixinextras)
+        annotationProcessor(libs.mixinextras)
+    }
+
     // Force non-vulnerable Log4J, so that vulnerability scanners don't scream loud.
     // It's also cool for our logging config. (see the "dev/log4j2.xml" file)
     implementation(libs.log4j) {
