@@ -86,8 +86,8 @@ public final class HStonecutter {
      * @see #keyBind(String)
      */
     //? if neoforge {
-    /*public static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));*/
-    //?} else
+    /*public static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));
+    *///?} else
     private static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));
     //?}
 
@@ -278,8 +278,10 @@ public final class HStonecutter {
         return ctx.getEntity(); // Implicit NPE for 'ctx'
         //?} else if >=1.17.1 {
         /*return ctx.getEntity().orElse(null); // Implicit NPE for 'ctx'
-        *///?} else
-        /*return ((ru.vidtu.hcscr.HEntityCollisionContext) ctx).hcscr_entity();*/ // Implicit NPE for 'ctx'
+        *///?} else {
+        /*//noinspection CastToIncompatibleInterface // <- Mixin Accessor.
+        return ((ru.vidtu.hcscr.HEntityCollisionContext) ctx).hcscr_entity(); // Implicit NPE for 'ctx'
+        *///?}
     }
 
     /**

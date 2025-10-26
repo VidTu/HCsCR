@@ -127,9 +127,9 @@ public final class HForge {
         // Register the binds.
         //? if >=1.21.10 {
         var bus = net.minecraftforge.client.event.RegisterKeyMappingsEvent.BUS;
-        //? } else if >=1.21.8 {
-        var bus = net.minecraftforge.client.event.RegisterKeyMappingsEvent.getBus(ctx.getModBusGroup());
-        //?} else if 1.20.2 {
+        //?} else if >=1.21.8 {
+        /^var bus = net.minecraftforge.client.event.RegisterKeyMappingsEvent.getBus(ctx.getModBusGroup());
+        ^///?} else if 1.20.2 {
         /^var bus = FMLJavaModLoadingContext.get().getModEventBus();
         ^///?} else >=1.19.2 && (!hacky_neoforge)
         /^var bus = ctx.getModEventBus();^/ // Implicit NPE for 'ctx'

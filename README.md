@@ -82,7 +82,7 @@ considered legitimate.
 
 **Q**: I want to block this mod as a server owner, can I do this?  
 **A**: A [plugin channel](https://minecraft.wiki/w/Java_Edition_protocol/Plugin_channels)
-called `hcscr:imhere` is registered by this mod. *Beware*: Other mods simiar to
+called `hcscr:imhere` is registered by this mod. *Beware*: Other mods similar to
 this one don't offer a way to block them. Consider investing your time/resources
 into an anti-cheat plugin, if you want to block all of them.
 

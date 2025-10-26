@@ -64,10 +64,10 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
      * @deprecated Always throws
      */
     // @ApiStatus.ScheduledForRemoval // Can't annotate this without logging in the console.
+    @SuppressWarnings({"RedundantSuppression", "DataFlowIssue"}) // <- Never called. (Mixin)
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private MinecraftMixin() {
-        //noinspection DataFlowIssue // <- Never called. (Mixin)
         super(null);
         throw new AssertionError("HCsCR: No instances.");
     }
