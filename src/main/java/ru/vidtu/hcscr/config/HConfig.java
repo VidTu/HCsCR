@@ -158,6 +158,7 @@ public final class HConfig {
             // Clamp.
             crystals = MoreObjects.firstNonNull(crystals, CrystalMode.DIRECT);
             crystalsDelay = Mth.clamp((crystalsDelay / 1_000_000) * 1_000_000, 0, 200_000_000);
+            crystalsResync = Mth.clamp(crystalsResync, 0, 50);
             blocks = MoreObjects.firstNonNull(blocks, BlockMode.COLLISION);
         }
     }
