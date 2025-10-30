@@ -72,6 +72,7 @@ public final class HConfig {
     /**
      * Enable the mod, {@code true} by default.
      */
+    @SerializedName("enable")
     private static boolean enable = true;
 
     /**
@@ -80,6 +81,7 @@ public final class HConfig {
      * @see #crystalsDelay
      * @see #crystalsResync
      */
+    @SerializedName("crystals")
     private static CrystalMode crystals = CrystalMode.DIRECT;
 
     /**
@@ -91,6 +93,7 @@ public final class HConfig {
      * @see #crystals
      * @see #crystalsResync
      */
+    @SerializedName("crystalsDelay")
     @Range(from = 0L, to = 200_000_000L)
     private static int crystalsDelay = 0;
 
@@ -106,6 +109,7 @@ public final class HConfig {
      * @see #crystals
      * @see #crystalsDelay
      */
+    @SerializedName("crystalsResync")
     @Range(from = 0L, to = 50L)
     private static int crystalsResync = 20;
 
