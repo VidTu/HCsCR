@@ -116,7 +116,7 @@ public final class HConfig {
     /**
      * Blocks (anchors/beds) removal mode, {@link BlockMode#COLLISION} by default.
      */
-    @SerializedName(value = "blocks", alternate = "anchors") // HCsCR 2.0.2
+    @SerializedName(value = "blocks", alternate = "anchors") // was "anchors" in HCsCR 2.0.2
     private static BlockMode blocks = BlockMode.COLLISION;
 
     /**

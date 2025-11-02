@@ -651,7 +651,7 @@ public final class HStonecutter {
 
             @Override
             protected void applyValue() {
-                int denormalized = this.denormalized = (int) Mth.lerp(this.value, min, max);
+                int denormalized = this.denormalized = (int) Math.round(Mth.lerp(this.value, min, max));
                 handler.accept(denormalized); // Implicit NPE for 'handler'
             }
 
