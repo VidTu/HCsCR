@@ -126,6 +126,31 @@ This project is provided under the Apache 2.0 License.
 Check out [NOTICE](https://github.com/VidTu/HCsCR/blob/main/NOTICE) and
 [LICENSE](https://github.com/VidTu/HCsCR/blob/main/LICENSE) for more information.
 
+## Credits
+
+This mod is developed primarily by [VidTu](https://github.com/VidTu),
+but it wouldn't be possible without:
+
+- [Stonecutter](https://codeberg.org/stonecutter/stonecutter) by
+  [KikuGie](https://codeberg.org/KikuGie). (and contributors)
+- [Architectury Loom](https://github.com/architectury/architectury-loom) by
+  [Architectury](https://github.com/architectury). (and contributors; plus
+  upstream [Fabric Loom](https://github.com/FabricMC/fabric-loom)
+  by [FabricMC](https://github.com/FabricMC) and contributors)
+- [Fabric Loader](https://github.com/FabricMC/fabric-loader) and
+  [Fabric API](https://github.com/FabricMC/fabric) by
+  [FabricMC](https://github.com/FabricMC). (and contributors)
+- [NeoForge](https://github.com/neoforged/NeoForge) by
+  [NeoForged](https://github.com/neoforged). (and contributors)
+- [Forge](https://github.com/MinecraftForge/MinecraftForge) by
+  [Minecraft Forge](https://github.com/MinecraftForge). (and contributors)
+- [Mod Menu](https://github.com/TerraformersMC/ModMenu) by
+  [TerraformersMC](https://github.com/TerraformersMC). (and contributors)
+- [Minecraft](https://minecraft.net/) by
+  [Mojang](https://mojang.com/).
+
+It also uses [Gradle](https://gradle.org/) and [Java](https://java.com/).
+
 ## Development
 
 ### Building (Compiling)
