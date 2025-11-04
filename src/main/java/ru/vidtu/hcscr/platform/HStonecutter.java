@@ -34,7 +34,6 @@ import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -85,17 +84,28 @@ public final class HStonecutter {
      *
      * @see #keyBind(String)
      */
-    //? if neoforge {
-    /*public static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));
-    *///?} else
-    private static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));
+        //? if neoforge {
+            //? if >=1.21.11 {
+    /*public static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));*/
+            //?} else {
+    /*public static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(net.minecraft.resources.Identifier.fromNamespaceAndPath("hcscr", "root"));*/
+            //?}
+        //?} else {
+            //? if >=1.21.11 {
+    private static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(net.minecraft.resources.Identifier.fromNamespaceAndPath("hcscr", "root"));
+            //? } else {
+    /*private static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));*/
+            //? }
+        //?}
     //?}
 
     /**
      * A channel identifier for servers to know that this mod is installed.
      */
-    //? if >=1.21.1 || (forge && (!hacky_neoforge) && >=1.18.2 && (!1.20.2)) {
-    static final ResourceLocation CHANNEL_IDENTIFIER = ResourceLocation.fromNamespaceAndPath("hcscr", "imhere");
+    //? if >=1.21.11 {
+    static final net.minecraft.resources.Identifier CHANNEL_IDENTIFIER = net.minecraft.resources.Identifier.fromNamespaceAndPath("hcscr", "imhere");
+    //? } elif >=1.21.1 || (forge && (!hacky_neoforge) && >=1.18.2 && (!1.20.2)) {
+    /*static final net.minecraft.resources.ResourceLocation CHANNEL_IDENTIFIER = net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "imhere");*/
     //?} else
     /*static final ResourceLocation CHANNEL_IDENTIFIER = new ResourceLocation("hcscr", "imhere");*/
 
@@ -395,12 +405,9 @@ public final class HStonecutter {
         // Delegate.
         //? if >=1.21.11 {
         // Environmental attributes from 25w42a for BED_WORKS are NOT synced to the client,
-        // so we just guess and check by comparing if the dimension "looks" like NETHER and END.
-        // Note that we're comparing if it looks like END/NETHER not if it doesn't look like OVERWORLD
-        // for the reason that custom dimensions fall back to OVERWORLD effects in vanilla.
-        ResourceLocation effects = level.dimensionType().effectsLocation(); // Implicit NPE for 'level'
-        return net.minecraft.world.level.dimension.BuiltinDimensionTypes.NETHER_EFFECTS.equals(effects) ||
-                net.minecraft.world.level.dimension.BuiltinDimensionTypes.END_EFFECTS.equals(effects);
+        // so we just guess and check by comparing if the dimension doesn't have an OVERWORLD skybox.
+        // TODO(VidTu): Check this in late 1.21.11 development cycle, as of 25w45a it is a enum, might change.
+        return level.dimensionType().skybox() != net.minecraft.world.level.dimension.DimensionType.Skybox.OVERWORLD; // Implicit NPE for 'level'
         //?} else
         /*return !net.minecraft.world.level.block.BedBlock.canSetSpawn(level);*/ // Implicit NPE for 'level'
     }
@@ -420,9 +427,9 @@ public final class HStonecutter {
         // Delegate.
         //? if >=1.21.11 {
         // Environmental attributes from 25w42a for RESPAWN_ANCHOR_WORKS are NOT synced to the client,
-        // so we just guess and check by comparing if the dimension "doesn't" look like NETHER.
-        // Unknown effects will fall back to OVERWORLD in vanilla.
-        return !net.minecraft.world.level.dimension.BuiltinDimensionTypes.NETHER_EFFECTS.equals(level.dimensionType().effectsLocation()); // Implicit NPE for 'level'
+        // so we just guess and check by comparing if the dimension "doesn't" have skybox like NETHER.
+        // TODO(VidTu): Check this in late 1.21.11 development cycle, as of 25w45a it is a enum, might change.
+        return level.dimensionType().skybox() != net.minecraft.world.level.dimension.DimensionType.Skybox.NONE; // Implicit NPE for 'level'
         //?} else
         /*return !net.minecraft.world.level.block.RespawnAnchorBlock.canSetSpawn(level);*/ // Implicit NPE for 'level'
     }
