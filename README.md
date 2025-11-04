@@ -19,7 +19,7 @@ Remove your end crystals before the server even knows you hit 'em!
 ## About
 
 Crystal PvP has become a pretty popular combat mode in Minecraft. Crystals
-themselves were never designed to be used in combat. Because of that, a client
+themselves were never designed to be used in combat. Because of this, a client
 ping (latency) plays a significant role in a crystal PvP fight, affecting how
 fast you can spam. This mod helps to reduce (but does NOT fully remove) the ping
 factor from crystal PvP fights. This is commonly called a *client-side crystal
@@ -28,7 +28,7 @@ the ping doesn't play a big role in anchor fights, and it might even be
 beneficial to have high ping in these fights. This is not the only crystal
 optimizer mod available, but it's the most configurable out there.
 
-*Note*: A server-side crystal optimizer plugin (not this one) is much more
+*Note*: A server-side crystal optimizer plugin (not this mod) is much more
 effective. Consider checking the `/fastcrystals` command or similar commands
 on your server. Ask the admins to install one if the command doesn't exist.
 
@@ -131,6 +131,7 @@ Check out [NOTICE](https://github.com/VidTu/HCsCR/blob/main/NOTICE) and
 This mod is developed primarily by [VidTu](https://github.com/VidTu),
 but it wouldn't be possible without:
 
+- [Contributors](https://github.com/VidTu/HCsCR/graphs/contributors).
 - [Stonecutter](https://codeberg.org/stonecutter/stonecutter) by
   [KikuGie](https://codeberg.org/KikuGie). (and contributors)
 - [Architectury Loom](https://github.com/architectury/architectury-loom) by
