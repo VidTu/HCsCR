@@ -86,9 +86,9 @@ public final class HStonecutter {
      */
         //? if neoforge {
             //? if >=1.21.11 {
-    /*public static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));*/
-            //?} else {
     /*public static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(net.minecraft.resources.Identifier.fromNamespaceAndPath("hcscr", "root"));*/
+            //?} else {
+    /*public static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));*/
             //?}
         //?} else {
             //? if >=1.21.11 {
@@ -107,7 +107,7 @@ public final class HStonecutter {
     //? } elif >=1.21.1 || (forge && (!hacky_neoforge) && >=1.18.2 && (!1.20.2)) {
     /*static final net.minecraft.resources.ResourceLocation CHANNEL_IDENTIFIER = net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "imhere");*/
     //?} else
-    /*static final ResourceLocation CHANNEL_IDENTIFIER = new ResourceLocation("hcscr", "imhere");*/
+    /*static final net.minecraft.resources.ResourceLocation CHANNEL_IDENTIFIER = new net.minecraft.resources.ResourceLocation("hcscr", "imhere");*/
 
     /**
      * A duration for tooltips in version-dependant units. Currently {@code 250} milliseconds.
