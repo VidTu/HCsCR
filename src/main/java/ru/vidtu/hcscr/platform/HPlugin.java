@@ -36,8 +36,8 @@ import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import ru.vidtu.hcscr.HCsCR;
-import ru.vidtu.hcscr.mixins.crystals.PlayerMixin_E;
-import ru.vidtu.hcscr.mixins.crystals.PlayerMixin_M;
+import ru.vidtu.hcscr.mixin.crystal.PlayerMixin_E;
+import ru.vidtu.hcscr.mixin.crystal.PlayerMixin_M;
 
 import java.util.List;
 import java.util.Set;
@@ -97,7 +97,7 @@ public final class HPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         // If the Mixin class is not from HCsCR, don't touch it and allow it to be applied.
-        if (!mixinClassName.startsWith("ru.vidtu.hcscr.mixins.")) {
+        if (!mixinClassName.startsWith("ru.vidtu.hcscr.mixin.")) {
             // Log. (**TRACE**)
             if (!LOGGER.isTraceEnabled(HCSCR_MARKER)) return true;
             LOGGER.trace(HCSCR_MARKER, "HCsCR: Applying mixin, because it's not a part of HCsCR. (mixinExtras: {}, plugin: {}, targetClassName: {}, mixinClassName: {})", this.mixinExtras, this, targetClassName, mixinClassName);

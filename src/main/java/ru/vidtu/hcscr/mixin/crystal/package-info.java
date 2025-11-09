@@ -21,14 +21,16 @@
  */
 
 /**
- * HCsCR package with mixins to inject.
+ * HCsCR package with mixins to inject related to crystals (entities).
  *
  * @author VidTu
  * @apiNote Internal use only
+ * @see ru.vidtu.hcscr.config.BlockMode
+ * @see ru.vidtu.hcscr.config.HConfig#blocks()
  */
 @ApiStatus.Internal
 @NullMarked
-package ru.vidtu.hcscr.mixins;
+package ru.vidtu.hcscr.mixin.crystal;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.NullMarked;

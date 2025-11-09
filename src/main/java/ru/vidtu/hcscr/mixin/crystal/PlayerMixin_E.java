@@ -20,7 +20,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.vidtu.hcscr.mixins.crystals;
+package ru.vidtu.hcscr.mixin.crystal;
 
 import com.google.errorprone.annotations.DoNotCall;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;

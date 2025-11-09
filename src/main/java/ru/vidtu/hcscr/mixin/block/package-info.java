@@ -21,7 +21,7 @@
  */
 
 /**
- * HCsCR package with mixins to inject related to crystals (entities).
+ * HCsCR package with mixins to inject related to blocks (anchors/beds).
  *
  * @author VidTu
  * @apiNote Internal use only
@@ -30,7 +30,7 @@
  */
 @ApiStatus.Internal
 @NullMarked
-package ru.vidtu.hcscr.mixins.crystals;
+package ru.vidtu.hcscr.mixin.block;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.NullMarked;

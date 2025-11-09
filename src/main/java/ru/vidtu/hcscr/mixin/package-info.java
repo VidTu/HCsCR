@@ -21,16 +21,14 @@
  */
 
 /**
- * HCsCR package with mixins to inject related to blocks (anchors/beds).
+ * HCsCR package with mixins to inject.
  *
  * @author VidTu
  * @apiNote Internal use only
- * @see ru.vidtu.hcscr.config.BlockMode
- * @see ru.vidtu.hcscr.config.HConfig#blocks()
  */
 @ApiStatus.Internal
 @NullMarked
-package ru.vidtu.hcscr.mixins.blocks;
+package ru.vidtu.hcscr.mixin;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.NullMarked;

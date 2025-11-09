@@ -55,8 +55,8 @@ import org.jspecify.annotations.NullMarked;
 import ru.vidtu.hcscr.config.CrystalMode;
 import ru.vidtu.hcscr.config.HConfig;
 import ru.vidtu.hcscr.config.HScreen;
-import ru.vidtu.hcscr.mixins.blocks.BlockStateBaseMixin;
-import ru.vidtu.hcscr.mixins.crystals.EntityMixin;
+import ru.vidtu.hcscr.mixin.block.BlockStateBaseMixin;
+import ru.vidtu.hcscr.mixin.crystal.EntityMixin;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.util.Iterator;

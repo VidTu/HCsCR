@@ -29,7 +29,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
-import ru.vidtu.hcscr.mixins.blocks.EntityCollisionContextMixin;
+import ru.vidtu.hcscr.mixin.block.EntityCollisionContextMixin;
 
 /^*
  * Mixin extender for {@link EntityCollisionContextMixin} that allows getting the entity of

@@ -20,7 +20,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.vidtu.hcscr.mixins.blocks;
+package ru.vidtu.hcscr.mixin.block;
 
 import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.client.Minecraft;

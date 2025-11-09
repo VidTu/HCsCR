@@ -21,7 +21,7 @@
  */
 
 //? if >=1.19.4 {
-package ru.vidtu.hcscr.mixins.crystals;
+package ru.vidtu.hcscr.mixin.crystal;
 
 import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.world.entity.Entity;

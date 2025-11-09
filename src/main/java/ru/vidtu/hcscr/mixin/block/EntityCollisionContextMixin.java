@@ -21,7 +21,7 @@
  */
 
 //? if <1.17.1 {
-/*package ru.vidtu.hcscr.mixins.blocks;
+/*package ru.vidtu.hcscr.mixin.block;
 
 import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.world.entity.Entity;
