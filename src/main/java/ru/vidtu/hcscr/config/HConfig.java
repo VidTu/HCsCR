@@ -168,7 +168,7 @@ public final class HConfig {
      *
      * @see #load()
      */
-    static void save() {
+    /*package-private*/ static void save() {
         try {
             // Log. (**TRACE**)
             LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Saving the config... (directory: {})", HStonecutter.CONFIG_DIRECTORY);
@@ -215,7 +215,7 @@ public final class HConfig {
      * @see #enable()
      * @see #toggle()
      */
-    static void enable(boolean enable) {
+    /*package-private*/ static void enable(boolean enable) {
         HConfig.enable = enable;
     }
 
@@ -241,7 +241,7 @@ public final class HConfig {
      * @see #crystals()
      */
     @CheckReturnValue
-    static CrystalMode cycleCrystals(boolean back) {
+    /*package-private*/ static CrystalMode cycleCrystals(boolean back) {
         switch (crystals) {
             case OFF: return (crystals = (back ? CrystalMode.ENVELOPING : CrystalMode.DIRECT));
             case DIRECT: return (crystals = (back ? CrystalMode.OFF : CrystalMode.ENVELOPING));
@@ -270,7 +270,7 @@ public final class HConfig {
      * @param crystalsDelay Crystals removal delay in nanos, {@code 0} by default
      * @see #crystalsDelay()
      */
-    static void crystalsDelay(@Range(from = 0L, to = 200_000_000L) int crystalsDelay) {
+    /*package-private*/ static void crystalsDelay(@Range(from = 0L, to = 200_000_000L) int crystalsDelay) {
         HConfig.crystalsDelay = Mth.clamp((crystalsDelay / 1_000_000) * 1_000_000, 0, 200_000_000);
     }
 
@@ -294,7 +294,7 @@ public final class HConfig {
      * @param crystalsResync Crystals resync delay in ticks, {@code 20} by default
      * @see #crystalsResync()
      */
-    static void crystalsResync(@Range(from = 0L, to = 50L) int crystalsResync) {
+    /*package-private*/ static void crystalsResync(@Range(from = 0L, to = 50L) int crystalsResync) {
         HConfig.crystalsResync = Mth.clamp(crystalsResync, 0, 50);
     }
 
@@ -317,7 +317,7 @@ public final class HConfig {
      * @see #blocks()
      */
     @CheckReturnValue
-    static BlockMode cycleBlocks(boolean back) {
+    /*package-private*/ static BlockMode cycleBlocks(boolean back) {
         switch (blocks) {
             case OFF: return (blocks = (back ? BlockMode.FULL : BlockMode.COLLISION));
             case COLLISION: return (blocks = (back ? BlockMode.OFF : BlockMode.FULL));

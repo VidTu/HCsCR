@@ -85,17 +85,17 @@ public final class HStonecutter {
      * @see #keyBind(String)
      */
         //? if neoforge {
-            //? if >=1.21.11 {
-    /*public static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(net.minecraft.resources.Identifier.fromNamespaceAndPath("hcscr", "root"));*/
+            /*//? if >=1.21.11 {
+    /^package-private^/ static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(net.minecraft.resources.Identifier.fromNamespaceAndPath("hcscr", "root"));
             //?} else {
-    /*public static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));*/
-            //?}
-        //?} else {
+    /^/^¹package-private¹^/ static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));
+            ^///?}
+        *///?} else {
             //? if >=1.21.11 {
     private static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(net.minecraft.resources.Identifier.fromNamespaceAndPath("hcscr", "root"));
-            //? } else {
-    /*private static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));*/
-            //? }
+            //?} else {
+    /*private static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));
+            *///?}
         //?}
     //?}
 
@@ -103,11 +103,11 @@ public final class HStonecutter {
      * A channel identifier for servers to know that this mod is installed.
      */
     //? if >=1.21.11 {
-    static final net.minecraft.resources.Identifier CHANNEL_IDENTIFIER = net.minecraft.resources.Identifier.fromNamespaceAndPath("hcscr", "imhere");
-    //? } elif >=1.21.1 || (forge && (!hacky_neoforge) && >=1.18.2 && (!1.20.2)) {
-    /*static final net.minecraft.resources.ResourceLocation CHANNEL_IDENTIFIER = net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "imhere");*/
-    //?} else
-    /*static final net.minecraft.resources.ResourceLocation CHANNEL_IDENTIFIER = new net.minecraft.resources.ResourceLocation("hcscr", "imhere");*/
+    /*package-private*/ static final net.minecraft.resources.Identifier CHANNEL_IDENTIFIER = net.minecraft.resources.Identifier.fromNamespaceAndPath("hcscr", "imhere");
+    //?} elif >=1.21.1 || (forge && (!hacky_neoforge) && >=1.18.2 && (!1.20.2)) {
+    /*/^package-private^/ static final net.minecraft.resources.ResourceLocation CHANNEL_IDENTIFIER = net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "imhere");
+    *///?} else
+    /*/^package-private^/ static final net.minecraft.resources.ResourceLocation CHANNEL_IDENTIFIER = new net.minecraft.resources.ResourceLocation("hcscr", "imhere");*/
 
     /**
      * A duration for tooltips in version-dependant units. Currently {@code 250} milliseconds.

@@ -78,7 +78,7 @@ public enum BlockMode {
      * Creates a new mode.
      */
     @Contract(pure = true)
-    BlockMode() {
+    /*package-private*/ BlockMode() {
         // Create the translation key.
         String key = ("hcscr.blocks." + this.name().toLowerCase(Locale.ROOT));
 
@@ -95,7 +95,7 @@ public enum BlockMode {
      * @see HScreen
      */
     @Contract(pure = true)
-    Component label() {
+    /*package-private*/ Component label() {
         return this.label;
     }
 
@@ -107,7 +107,7 @@ public enum BlockMode {
      * @see HScreen
      */
     @Contract(pure = true)
-    Component tip() {
+    /*package-private*/ Component tip() {
         return this.tip;
     }
 

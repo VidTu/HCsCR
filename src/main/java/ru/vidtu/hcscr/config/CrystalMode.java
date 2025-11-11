@@ -78,7 +78,7 @@ public enum CrystalMode {
      * Creates a new mode.
      */
     @Contract(pure = true)
-    CrystalMode() {
+    /*package-private*/ CrystalMode() {
         // Create the translation key.
         String key = ("hcscr.crystals." + this.name().toLowerCase(Locale.ROOT));
 
@@ -94,7 +94,7 @@ public enum CrystalMode {
      * @see #tip()
      */
     @Contract(pure = true)
-    Component label() {
+    /*package-private*/ Component label() {
         return this.label;
     }
 
@@ -105,7 +105,7 @@ public enum CrystalMode {
      * @see #label()
      */
     @Contract(pure = true)
-    Component tip() {
+    /*package-private*/ Component tip() {
         return this.tip;
     }
 
