@@ -8,7 +8,7 @@
   "hcscr.close": "Сохранить и закрыть конфиг.",
   "hcscr.enable": "Включить",
   "hcscr.enable.tip": "Включить работу мода.",
-  "hcscr.crystals": "Кристаллы: %s",
+  "hcscr.crystals": "Кристаллы",
   "hcscr.crystals.off": "Выключены",
   "hcscr.crystals.off.tip": "Кристаллы не будут моментально убираться левой кнопкой мыши.",
   "hcscr.crystals.direct": "Прямым ударом",
