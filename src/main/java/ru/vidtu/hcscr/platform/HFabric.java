@@ -101,7 +101,7 @@ public final class HFabric implements ClientModInitializer {
         net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry.playS2C().register(type, codec);
         net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking.registerGlobalReceiver(type, (payload, context) -> context.responseSender().disconnect(HStonecutter.translate("hcscr.false")));
         ClientPlayNetworking.registerGlobalReceiver(type, (payload, context) -> context.responseSender().disconnect(HStonecutter.translate("hcscr.false")));
-        //?} else if >=1.20.2 {
+        //?} elif >=1.20.2 {
         /*net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking.registerGlobalReceiver(HStonecutter.CHANNEL_IDENTIFIER, (client, handler, buf, responseSender) -> handler.onDisconnect(HStonecutter.translate("hcscr.false")));
         ClientPlayNetworking.registerGlobalReceiver(HStonecutter.CHANNEL_IDENTIFIER, (client, handler, buf, responseSender) -> handler.getConnection().disconnect(HStonecutter.translate("hcscr.false")));
         *///?} else

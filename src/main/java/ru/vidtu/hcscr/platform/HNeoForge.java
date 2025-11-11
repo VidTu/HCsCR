@@ -105,7 +105,7 @@ public final class HNeoForge {
             buf.skipBytes(buf.readableBytes());
             return instance;
         }), (payload, context) -> context.disconnect(HStonecutter.translate("hcscr.false"))));
-        //?} else if >=1.20.4 {
+        //?} elif >=1.20.4 {
         /^var instance = new net.minecraft.network.protocol.common.custom.CustomPacketPayload() {
             @Contract(pure = true)
             @Override

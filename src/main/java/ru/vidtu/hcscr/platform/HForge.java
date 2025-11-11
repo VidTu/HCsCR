@@ -66,7 +66,7 @@ public final class HForge {
         // Validate.
         assert container != null : "HCsCR: Parameter 'container' is null. (bus: " + bus + ", mod: " + this + ')';
         assert bus != null : "HCsCR: Parameter 'bus' is null. (container: " + container + ", mod: " + this + ')';
-    ^///?} else if >=1.19.2 && (!1.20.2) {
+    ^///?} elif >=1.19.2 && (!1.20.2) {
     /^*
      * Creates and loads a new mod.
      *
@@ -109,7 +109,7 @@ public final class HForge {
         //?} else {
         /^//? if >=1.18.2 {
         net.minecraftforge.network.NetworkRegistry.newEventChannel(HStonecutter.CHANNEL_IDENTIFIER, () -> "hcscr", version -> true, version -> true).addListener(event -> {
-        //?} else if >=1.17.1 {
+        //?} elif >=1.17.1 {
         /^¹net.minecraftforge.fmllegacy.network.NetworkRegistry.newEventChannel(HStonecutter.CHANNEL_IDENTIFIER, () -> "hcscr", version -> true, version -> true).addListener(event -> {
         ¹^///?} else
         /^¹net.minecraftforge.fml.network.NetworkRegistry.newEventChannel(HStonecutter.CHANNEL_IDENTIFIER, () -> "hcscr", version -> true, version -> true).addListener(event -> {¹^/
@@ -127,11 +127,11 @@ public final class HForge {
         // Register the binds.
         //? if >=1.21.10 {
         var bus = net.minecraftforge.client.event.RegisterKeyMappingsEvent.BUS;
-        //?} else if >=1.21.8 {
+        //?} elif >=1.21.8 {
         /^var bus = net.minecraftforge.client.event.RegisterKeyMappingsEvent.getBus(ctx.getModBusGroup());
-        ^///?} else if 1.20.2 {
+        ^///?} elif 1.20.2 {
         /^var bus = FMLJavaModLoadingContext.get().getModEventBus();
-        ^///?} else >=1.19.2 && (!hacky_neoforge)
+        ^///?} elif >=1.19.2 && (!hacky_neoforge)
         /^var bus = ctx.getModEventBus();^/ // Implicit NPE for 'ctx'
         //? if >=1.19.2 {
         bus.addListener((net.minecraftforge.client.event.RegisterKeyMappingsEvent event) -> {
@@ -143,7 +143,7 @@ public final class HForge {
             //? if >=1.18.2 {
             net.minecraftforge.client.ClientRegistry.registerKeyBinding(HCsCR.CONFIG_BIND);
             net.minecraftforge.client.ClientRegistry.registerKeyBinding(HCsCR.TOGGLE_BIND);
-            //?} else if >=1.17.1 {
+            //?} elif >=1.17.1 {
             /^¹net.minecraftforge.fmlclient.registry.ClientRegistry.registerKeyBinding(HCsCR.CONFIG_BIND);
             net.minecraftforge.fmlclient.registry.ClientRegistry.registerKeyBinding(HCsCR.TOGGLE_BIND);
             ¹^///?} else {
@@ -154,7 +154,7 @@ public final class HForge {
         ^///?}
         //? if >=1.21.8 {
         TickEvent.ClientTickEvent.Post.BUS.addListener(event -> HCsCR.handleGameTick(Minecraft.getInstance()));
-        //?} else if >=1.20.4 {
+        //?} elif >=1.20.4 {
         /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent.Post event) -> HCsCR.handleGameTick(Minecraft.getInstance()));
         ^///?} else {
         /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent event) -> {
@@ -166,7 +166,7 @@ public final class HForge {
         // Register the scheduled remover.
         //? if >=1.21.8 {
         TickEvent.RenderTickEvent.Post.BUS.addListener(event -> HCsCR.handleFrameTick(Minecraft.getInstance()));
-        //?} else if >=1.20.4 {
+        //?} elif >=1.20.4 {
         /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent.Post event) -> HCsCR.handleFrameTick(Minecraft.getInstance()));
         ^///?} else {
         /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent event) -> {
@@ -179,16 +179,16 @@ public final class HForge {
         //? if hacky_neoforge {
         /^container.registerExtensionPoint(net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory.class, () -> new net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory((minecraft, screen) -> new HScreen(screen)));
         container.registerExtensionPoint(net.minecraftforge.fml.IExtensionPoint.DisplayTest.class, () -> new net.minecraftforge.fml.IExtensionPoint.DisplayTest(() -> net.minecraftforge.fml.IExtensionPoint.DisplayTest.IGNORESERVERONLY, (version, fromServer) -> true));
-        ^///?} else if 1.20.2 {
+        ^///?} elif 1.20.2 {
         /^net.minecraftforge.fml.ModLoadingContext.get().registerExtensionPoint(net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory.class, () -> new net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory((minecraft, screen) -> new HScreen(screen)));
         net.minecraftforge.fml.ModLoadingContext.get().registerExtensionPoint(net.minecraftforge.fml.IExtensionPoint.DisplayTest.class, () -> new net.minecraftforge.fml.IExtensionPoint.DisplayTest(() -> net.minecraftforge.fml.IExtensionPoint.DisplayTest.IGNORESERVERONLY, (version, fromServer) -> true));
-        ^///?} else if >=1.19.2 {
+        ^///?} elif >=1.19.2 {
         ctx.registerExtensionPoint(net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory.class, () -> new net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory(HScreen::new));
         ctx.registerDisplayTest(net.minecraftforge.fml.IExtensionPoint.DisplayTest.IGNORE_SERVER_VERSION);
-        //?} else if >=1.18.2 {
+        //?} elif >=1.18.2 {
         /^net.minecraftforge.fml.ModLoadingContext.get().registerExtensionPoint(net.minecraftforge.client.ConfigGuiHandler.ConfigGuiFactory.class, () -> new net.minecraftforge.client.ConfigGuiHandler.ConfigGuiFactory(HScreen::new));
         net.minecraftforge.fml.ModLoadingContext.get().registerDisplayTest(net.minecraftforge.fml.IExtensionPoint.DisplayTest.IGNORE_SERVER_VERSION);
-        ^///?} else if >=1.17.1 {
+        ^///?} elif >=1.17.1 {
         /^net.minecraftforge.fml.ModLoadingContext.get().registerExtensionPoint(net.minecraftforge.fmlclient.ConfigGuiHandler.ConfigGuiFactory.class, () -> new net.minecraftforge.fmlclient.ConfigGuiHandler.ConfigGuiFactory((minecraft, screen) -> new HScreen(screen)));
         net.minecraftforge.fml.ModLoadingContext.get().registerExtensionPoint(net.minecraftforge.fml.IExtensionPoint.DisplayTest.class, () -> new net.minecraftforge.fml.IExtensionPoint.DisplayTest(() -> net.minecraftforge.fmllegacy.network.FMLNetworkConstants.IGNORESERVERONLY, (version, fromServer) -> true));
         ^///?} else {

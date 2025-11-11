@@ -73,7 +73,7 @@ public final class HStonecutter {
      */
     //? if fabric {
     public static final Path CONFIG_DIRECTORY = net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir();
-    //?} else if neoforge {
+    //?} elif neoforge {
     /*public static final Path CONFIG_DIRECTORY = net.neoforged.fml.loading.FMLPaths.CONFIGDIR.get();
     *///?} else
     /*public static final Path CONFIG_DIRECTORY = net.minecraftforge.fml.loading.FMLPaths.CONFIGDIR.get();*/
@@ -114,7 +114,7 @@ public final class HStonecutter {
      */
     //? if >=1.20.6 {
     private static final java.time.Duration TOOLTIP_DURATION = java.time.Duration.ofMillis(250L);
-    //?} else if >=1.19.4 {
+    //?} elif >=1.19.4 {
     /*private static final int TOOLTIP_DURATION = 250; // Millis.
     *///?} else
     /*private static final long TOOLTIP_DURATION = 250_000_000L;*/ // Nanos.
@@ -286,7 +286,7 @@ public final class HStonecutter {
         // Delegate.
         //? if >=1.18.2 {
         return ctx.getEntity(); // Implicit NPE for 'ctx'
-        //?} else if >=1.17.1 {
+        //?} elif >=1.17.1 {
         /*return ctx.getEntity().orElse(null); // Implicit NPE for 'ctx'
         *///?} else {
         /*//noinspection CastToIncompatibleInterface // <- Mixin Accessor.
@@ -356,7 +356,7 @@ public final class HStonecutter {
         // Delegate.
         //? if >=1.20.6 {
         effect.getEffect().value().addAttributeModifiers(map, effect.getAmplifier()); // Implicit NPE for 'effect', 'map'
-        //?} else if >=1.20.2 {
+        //?} elif >=1.20.2 {
         /*effect.getEffect().addAttributeModifiers(map, effect.getAmplifier()); // Implicit NPE for 'effect', 'map'
          *///?} else {
         /*effect.getEffect().addAttributeModifiers(player, map, effect.getAmplifier()); // Implicit NPE for 'player', 'effect', 'map'
@@ -383,7 +383,7 @@ public final class HStonecutter {
         // Delegate.
         //? if >=1.20.6 {
         effect.getEffect().value().removeAttributeModifiers(map); // Implicit NPE for 'effect', 'map'
-        //?} else if >=1.20.2 {
+        //?} elif >=1.20.2 {
         /*effect.getEffect().removeAttributeModifiers(map); // Implicit NPE for 'effect', 'map'
          *///?} else {
         /*effect.getEffect().removeAttributeModifiers(player, map, effect.getAmplifier()); // Implicit NPE for 'player', 'effect', 'map'
