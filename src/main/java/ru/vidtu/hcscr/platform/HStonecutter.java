@@ -623,6 +623,7 @@ public final class HStonecutter {
      * @param tooltipRenderer Last pass tooltip renderer, typically {@link HScreen}
      * @return A new slider instance
      */
+    @Contract(value = "_, _, _, _, _, _, _, _, _, _, _, _ -> new", pure = true)
     public static AbstractSliderButton createSlider(Font font, int x, int y, int width, int height,
                                                     IntFunction<Component> provider, Component tooltip,
                                                     int value, int min, int max, IntConsumer handler,
