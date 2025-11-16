@@ -1,3 +1,5 @@
+<img src="hcscr.png" alt="HCsCR Icon" width=128 height=128/>
+
 # HCsCR
 
 Remove your end crystals before the server even knows you hit 'em!
@@ -117,7 +119,7 @@ it depends on the ping, server MSPT, etc.
 
 <details>
 <summary>Totally Real™ Reviews From Happy Users</summary>
-<img alt="grandma happy with crystal optimizer" src="https://i.imgur.com/Iz9GGfP.png"/>
+<img alt="Grandma is happy with the crystal optimizer" src="https://i.imgur.com/Iz9GGfP.png"/>
 </details>
 
 ## License
