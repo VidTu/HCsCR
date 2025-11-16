@@ -55,7 +55,7 @@ public final class HScreen extends Screen {
     @Nullable
     private final Screen parent;
 
-    //? if < 1.19.4 {
+    //? if <1.19.4 {
     /*/^*
      * Tooltip to be rendered last pass. (<1.19.4)
      ^/
@@ -198,7 +198,7 @@ public final class HScreen extends Screen {
         /*drawCenteredString(graphics, font, this.title, this.width / 2, 5, 0xFF_FF_FF_FF);*/
 
         // Render the last pass tooltip.
-        //? if < 1.19.4 {
+        //? if <1.19.4 {
         /*if (this.tooltip == null) return;
         this.renderTooltip(graphics, this.tooltip, mouseX, mouseY);
         this.tooltip = null;
