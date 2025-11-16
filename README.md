@@ -168,7 +168,7 @@ To compile the mod from the source code:
 
 ### Developing/Debugging
 
-Run the `./launch <version>`[^1] (e.g. `./launcher 1.16.5-fabric`) command to
+Run the `./launch <version>`[^1] (e.g. `./launch 1.16.5-fabric`) command to
 launch the game client. You can attach a debugger to that process. Hotswap is
 supported. "Enhanced" hotswap (class redefinition) and hotswap
 agent will work if supported by your JVM.
@@ -191,23 +191,6 @@ fail faster here than in a production environment.
 The recommended IDE for development is IntelliJ IDEA (Community or Ultimate)
 with the Minecraft Development plugin. This is not a strict requirement,
 however. Any IDE/editor should work just fine.
-
-### Reproducible Builds
-
-HCsCR attempts to have reproducible builds (reproducible JAR archives) for its
-releases. Check out [GitHub Releases](https://github.com/VidTu/HCsCR/releases)
-for "Reproducible Build Hash" values. If it is present on any release, this
-release's binary JAR should be reproducible. Unfortunately, due to the nature of
-Java (Gradle) and Minecraft development, it is not always possible to have
-reproducible builds. Reproducible release JARs are compiled with:
-
-```bash
-./gradlew clean --no-daemon --no-build-cache --no-configuration-cache
-./gradlew assemble --no-daemon --no-build-cache --no-configuration-cache
-```
-
-Currently, no dependency (integrity) validation is performed.
-This might change in a future version.
 
 [^1]: This is a shortcut for `./gradlew "<version>:runClient"`.
 
