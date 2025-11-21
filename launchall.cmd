@@ -19,5 +19,7 @@
 :: SPDX-License-Identifier: Apache-2.0
 
 for /D %%f in (versions\*) do (
-    gradlew.bat "%%~nxf:runClient"
+    if not exist %%f\.ignored (
+        gradlew.bat "%%~nxf:runClient"
+    )
 )

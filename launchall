@@ -26,5 +26,5 @@ set -euvx
 # Iterate.
 for folder in versions/*; do
     version=$(basename "$folder")
-    ./gradlew "${version}:runClient"
+    [ -f "$folder/.ignored" ] || ./gradlew "${version}:runClient"
 done
