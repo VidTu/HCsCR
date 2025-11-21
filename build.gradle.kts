@@ -44,9 +44,11 @@ else if (stonecutter.eval(minecraft, ">=1.18.2")) 17
 else if (stonecutter.eval(minecraft, ">=1.17.1")) 16
 else 8
 val javaVersion = JavaVersion.toVersion(javaTarget)
-java.sourceCompatibility = javaVersion
-java.targetCompatibility = javaVersion
-java.toolchain.languageVersion = JavaLanguageVersion.of(javaTarget)
+java {
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    toolchain.languageVersion = JavaLanguageVersion.of(javaTarget)
+}
 
 group = "ru.vidtu.hcscr"
 base.archivesName = "HCsCR"
@@ -72,31 +74,37 @@ loom {
     log4jConfigs.setFrom(rootDir.resolve("dev/log4j2.xml"))
     silentMojangMappingsLicense()
 
-    // Setup JVM args, see that file.
-    runs.named("client") {
-        // Set up debug VM args.
-        if (javaVersion.isJava9Compatible) {
-            vmArgs("@../dev/args.vm.txt")
-        } else {
-            vmArgs(rootDir.resolve("dev/args.vm.txt")
-                .readLines()
-                .filter { "line.separator" !in it }
-                .filter { it.isNotBlank() })
+    // Set up runs.
+    runs {
+        // Customize the client run.
+        named("client") {
+            // Set up debug VM args.
+            if (javaVersion.isJava9Compatible) {
+                vmArgs("@../dev/args.vm.txt")
+            } else {
+                vmArgs(rootDir.resolve("dev/args.vm.txt")
+                    .readLines()
+                    .filter { "line.separator" !in it }
+                    .filter { it.isNotBlank() })
+            }
+
+            // Set the run dir.
+            runDir = "../../run"
+
+            // AuthLib for 1.16.5 is bugged, disable Mojang API
+            // to fix issues with MP testing.
+            if (minecraft == "1.16.5") {
+                vmArgs(
+                    "-Dminecraft.api.auth.host=http://0.0.0.0:0/",
+                    "-Dminecraft.api.account.host=http://0.0.0.0:0/",
+                    "-Dminecraft.api.session.host=http://0.0.0.0:0/",
+                    "-Dminecraft.api.services.host=http://0.0.0.0:0/",
+                )
+            }
         }
 
-        // Set the run dir.
-        runDir = "../../run"
-
-        // AuthLib for 1.16.5 is bugged, disable Mojang API
-        // to fix issues with MP testing.
-        if (minecraft == "1.16.5") {
-            vmArgs(
-                "-Dminecraft.api.auth.host=http://0.0.0.0:0/",
-                "-Dminecraft.api.account.host=http://0.0.0.0:0/",
-                "-Dminecraft.api.session.host=http://0.0.0.0:0/",
-                "-Dminecraft.api.services.host=http://0.0.0.0:0/",
-            )
-        }
+        // Remove server run, the mod is client-only.
+        remove(findByName("server"))
     }
 
     // Configure Mixin.
