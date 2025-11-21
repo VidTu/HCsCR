@@ -39,17 +39,23 @@ rootProject.name = "HCsCR"
 
 val types = listOf("fabric", "forge", "neoforge")
 val versions = listOf("1.21.11", "1.21.10", "1.21.8", "1.21.5", "1.21.4", "1.21.3", "1.21.1", "1.20.6", "1.20.4", "1.20.2", "1.20.1", "1.19.4", "1.19.2", "1.18.2", "1.17.1", "1.16.5")
+val ignored = mutableListOf<String>()
 stonecutter {
     kotlinController = true
     centralScript = "build.gradle.kts"
     create(rootProject) {
         for (version in versions) {
             for (type in types) {
-                val subPath = file("versions/$version-$type")
-                if (subPath.resolve(".ignored").isFile) continue
+                val id = "$version-$type"
+                val subPath = file("versions/$id")
+                if (subPath.resolve(".ignored").isFile) {
+                    ignored.add(id)
+                    continue
+                }
                 version("$version-$type", version)
             }
         }
         vcsVersion = "${versions[0]}-${types[0]}"
     }
 }
+logger.warn("Ignored versions: ${ignored.joinToString()}")
