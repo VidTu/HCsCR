@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+#!/bin/sh
+#
 # HCsCR is a third-party mod for Minecraft Java Edition
 # that allows removing the end crystals faster.
 #
@@ -19,4 +20,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+# Fail on error, fail on unbound variable, verbose mode, xtrace mode.
+set -euvx
+
+# Reset.
 ./gradlew "Reset active project"
