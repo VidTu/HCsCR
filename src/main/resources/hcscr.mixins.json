@@ -11,7 +11,7 @@
     "block.BlockStateBaseMixin",
     "block.ClientPacketListenerMixin",
     //? if <1.17.1
-    /*"blocks.EntityCollisionContextMixin",*/
+    /*"block.EntityCollisionContextMixin",*/
     "block.RespawnAnchorBlockMixin",
     "crystal.EntityMixin",
     //? if >=1.19.4
