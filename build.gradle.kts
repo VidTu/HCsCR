@@ -38,7 +38,7 @@ val platform = loom.platform.get().id()!!
 val hackyNeoForge = (name == "1.20.1-neoforge")
 val minecraft = stonecutter.current.version
 
-// Determine and set Java toolchain version.
+// Language.
 val javaTarget = if (stonecutter.eval(minecraft, ">=1.20.6")) 21
 else if (stonecutter.eval(minecraft, ">=1.18.2")) 17
 else if (stonecutter.eval(minecraft, ">=1.17.1")) 16
@@ -50,6 +50,7 @@ java {
     toolchain.languageVersion = JavaLanguageVersion.of(javaTarget)
 }
 
+// Metadata.
 group = "ru.vidtu.hcscr"
 base.archivesName = "HCsCR"
 version = "$version+$name"
