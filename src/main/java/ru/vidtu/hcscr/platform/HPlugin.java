@@ -116,7 +116,7 @@ public final class HPlugin implements IMixinConfigPlugin {
 
         // Log. (**DEBUG**)
         if (applyMixin) {
-            LOGGER.debug(HCSCR_MARKER, "HCsCR: Applying mixin. (mixinExtras: {}, plugin: {}, targetClassName: {}, mixinClassName: {})", this.mixinExtras, this, targetClassName, mixinClassName);
+            LOGGER.debug(HCSCR_MARKER, "HCsCR: Mixin rules allows it, applying mixin... (mixinExtras: {}, plugin: {}, targetClassName: {}, mixinClassName: {})", this.mixinExtras, this, targetClassName, mixinClassName);
         } else {
             LOGGER.debug(HCSCR_MARKER, "HCsCR: Mixin has been ruled out due to MixinExtras rules, mixin WON'T be applied. (mixinExtras: {}, plugin: {}, targetClassName: {}, mixinClassName: {})", this.mixinExtras, this, targetClassName, mixinClassName);
         }

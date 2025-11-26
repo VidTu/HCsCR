@@ -200,7 +200,7 @@ public final class HCsCR {
 
         // Get and push the profiler.
         ProfilerFiller profiler = HStonecutter.profilerOfGame(game); // Implicit NPE for 'game'
-        profiler.push("hcscr:handle_frame"); // Implicit NPE for 'profiler'
+        profiler.push("hcscr:handle_frame");
 
         // Skip if there's no entities to remove.
         if (SCHEDULED_ENTITIES.isEmpty()) {
@@ -211,6 +211,7 @@ public final class HCsCR {
 
         // Remove all entities that have expired or no longer in the world.
         int resync = HConfig.crystalsResync();
+        boolean noResync = (resync == 0);
         long now = System.nanoTime();
         ObjectIterator<Object2LongMap.Entry<Entity>> iterator = SCHEDULED_ENTITIES.object2LongEntrySet().iterator();
         while (iterator.hasNext()) {
@@ -237,7 +238,7 @@ public final class HCsCR {
             iterator.remove();
 
             // Hide or remove the entity.
-            if (resync == 0) {
+            if (noResync) {
                 HStonecutter.removeEntity(entity);
             } else {
                 HIDDEN_ENTITIES.put(entity, resync);
