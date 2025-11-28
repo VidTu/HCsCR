@@ -149,6 +149,8 @@ but it wouldn't be possible without:
   [Minecraft Forge](https://github.com/MinecraftForge). (and contributors)
 - [Mod Menu](https://github.com/TerraformersMC/ModMenu) by
   [TerraformersMC](https://github.com/TerraformersMC). (and contributors)
+- [Mixin](https://github.com/SpongePowered/Mixin) by
+  [SpongePowered](https://github.com/SpongePowered). (and contributors)
 - [Minecraft](https://minecraft.net/) by
   [Mojang](https://mojang.com/).
 
