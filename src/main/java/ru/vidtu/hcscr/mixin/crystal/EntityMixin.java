@@ -75,7 +75,7 @@ public final class EntityMixin {
      * Sets the bounding box to {@link #INITIAL_AABB} if this entity is contained inside
      * {@link HCsCR#HIDDEN_ENTITIES}, removing their bounding box from the world that way.
      *
-     * @param cir Callback data
+     * @param cir Callback data containing the resulting bounding box
      * @apiNote Do not call, called by Mixin
      * @see HCsCR#HIDDEN_ENTITIES
      * @see #INITIAL_AABB

@@ -8,7 +8,7 @@
   "client": [
     "MinecraftMixin",
     "block.BedBlockMixin",
-    "block.BlockStateBaseMixin",
+    "block.BlockBehaviour_BlockStateBaseMixin",
     "block.ClientPacketListenerMixin",
     //? if <1.17.1
     /*"block.EntityCollisionContextMixin",*/

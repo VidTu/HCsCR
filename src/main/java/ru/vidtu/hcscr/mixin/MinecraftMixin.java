@@ -76,25 +76,31 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
      * Clears the {@link HCsCR#SCHEDULED_ENTITIES}, {@link HCsCR#HIDDEN_ENTITIES},
      * and {@link HCsCR#CLIPPING_BLOCKS} on level load, change, or unload.
      *
-     * @param level New level, {@code null} if was unloaded, ignored
-     * @param ci    Callback data, ignored
+     * @param level     New level, {@code null} if was unloaded, ignored
+     * @param stopSound Whether the sound engine should be halted and all sounds stopped, ignored
+     * @param ci        Callback data, ignored
      * @apiNote Do not call, called by Mixin
      * @see HCsCR#SCHEDULED_ENTITIES
      * @see HCsCR#HIDDEN_ENTITIES
      * @see HCsCR#CLIPPING_BLOCKS
      */
     @DoNotCall("Called by Mixin")
-    @Inject(method = "updateLevelInEngines", at = @At("RETURN"))
-    private void hcscr_updateLevelInEngines_return(@Nullable ClientLevel level, CallbackInfo ci) {
+    //? if >=1.21.11 {
+    @Inject(method = "updateLevelInEngines(Lnet/minecraft/client/multiplayer/ClientLevel;Z)V", at = @At("RETURN"))
+    private void hcscr_updateLevelInEngines_return(@Nullable ClientLevel level, boolean stopSound, CallbackInfo ci) {
+    //? } else {
+    /*@Inject(method = "updateLevelInEngines", at = @At("RETURN"))
+    private void hcscr_updateLevelInEngines_return(@Nullable ClientLevel level, CallbackInfo ci) {*/
+    //? }
         // Validate.
-        assert this.isSameThread() : "HCsCR: Updating level in engines NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ", game: " + this + ')';
+        assert this.isSameThread() : "HCsCR: Updating level in engines NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ", client: " + this + ')';
 
         // Get and push the profiler.
         ProfilerFiller profiler = this.hcscr_minecraftmixin_profiler();
         profiler.push("hcscr:clear_data");
 
         // Log. (**TRACE**)
-        HCSCR_LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Clearing data... (level: {}, game: {})", level, this);
+        HCSCR_LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Clearing data... (level: {}, client: {})", level, this);
 
         // Clear the maps.
         HCsCR.SCHEDULED_ENTITIES.clear();
@@ -102,7 +108,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
         HCsCR.CLIPPING_BLOCKS.clear();
 
         // Log. (**DEBUG**)
-        HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Cleared data. (level: {}, game: {})", level, this);
+        HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Cleared data. (level: {}, client: {})", level, this);
 
         // Pop the profiler.
         profiler.pop();
@@ -110,27 +116,27 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 
     //? if fabric {
     /**
-     * Calls the {@link HCsCR#handleFrameTick(Minecraft)} if the game is ticking.
+     * Calls the {@link HCsCR#handleClientMainLoop(Minecraft)} if the game is ticking.
      *
-     * @param gameTick Whether the game should be ticked or just updated, no logic is being run by the mod unless set to {@code true}
-     * @param ci       Callback data, ignored
+     * @param advanceGameTime Whether the game should be explicitly ticked or just updated, no logic is being run by the mod unless set to {@code true}
+     * @param ci              Callback data, ignored
      * @apiNote Do not call, called by Mixin
-     * @see HCsCR#handleFrameTick(Minecraft)
+     * @see HCsCR#handleClientMainLoop(Minecraft)
      */
     @DoNotCall("Called by Mixin")
     @Inject(method = "runTick", at = @At("RETURN"))
-    private void hcscr_runTick_return(boolean gameTick, CallbackInfo ci) {
+    private void hcscr_runTick_return(boolean advanceGameTime, CallbackInfo ci) {
         // Skip if game is not ticking. This happens when the integrated
         // server is loading, unloading, or the game is crashing.
-        if (!gameTick) return;
+        if (!advanceGameTime) return;
 
         // Tick.
-        HCsCR.handleFrameTick((Minecraft) (Object) this);
+        HCsCR.handleClientMainLoop((Minecraft) (Object) this);
     }
     //?}
 
     /**
-     * A hacky method to call the {@link HStonecutter#profilerOfGame(Minecraft)}
+     * A hacky method to call the {@link HStonecutter#profilerOfClient(Minecraft)}
      * with IntelliJ not marking it as unreachable code.
      *
      * @return Game profiler
@@ -138,6 +144,6 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
     @Contract(pure = true)
     @Unique
     private ProfilerFiller hcscr_minecraftmixin_profiler() {
-        return HStonecutter.profilerOfGame((Minecraft) (Object) this);
+        return HStonecutter.profilerOfClient((Minecraft) (Object) this);
     }
 }

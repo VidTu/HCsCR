@@ -152,26 +152,28 @@ public final class HForge {
             ¹^///?}
         });
         ^///?}
+
+        // Register the client tick end handler.
         //? if >=1.21.8 {
-        TickEvent.ClientTickEvent.Post.BUS.addListener(event -> HCsCR.handleGameTick(Minecraft.getInstance()));
+        TickEvent.ClientTickEvent.Post.BUS.addListener(event -> HCsCR.handleClientTickEnd(Minecraft.getInstance()));
         //?} elif >=1.20.4 {
-        /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent.Post event) -> HCsCR.handleGameTick(Minecraft.getInstance()));
+        /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent.Post event) -> HCsCR.handleClientTickEnd(Minecraft.getInstance()));
         ^///?} else {
         /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent event) -> {
             if (event.phase != TickEvent.Phase.END) return;
-            HCsCR.handleGameTick(Minecraft.getInstance());
+            HCsCR.handleClientTickEnd(Minecraft.getInstance());
         });
         ^///?}
 
-        // Register the scheduled remover.
+        // Register the client game loop handler.
         //? if >=1.21.8 {
-        TickEvent.RenderTickEvent.Post.BUS.addListener(event -> HCsCR.handleFrameTick(Minecraft.getInstance()));
+        TickEvent.RenderTickEvent.Post.BUS.addListener(event -> HCsCR.handleClientMainLoop(Minecraft.getInstance()));
         //?} elif >=1.20.4 {
-        /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent.Post event) -> HCsCR.handleFrameTick(Minecraft.getInstance()));
+        /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent.Post event) -> HCsCR.handleClientMainLoop(Minecraft.getInstance()));
         ^///?} else {
         /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent event) -> {
             if (event.phase != TickEvent.Phase.END) return;
-            HCsCR.handleFrameTick(Minecraft.getInstance());
+            HCsCR.handleClientMainLoop(Minecraft.getInstance());
         });
         ^///?}
 

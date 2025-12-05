@@ -153,7 +153,7 @@ public final class HStonecutter {
     /**
      * Creates a new key bind. The key bind won't have a default key.
      *
-     * @param id Keybind ID
+     * @param id Key bind ID
      * @return A newly created unbound key bind
      * @see HCsCR#CONFIG_BIND
      * @see HCsCR#TOGGLE_BIND
@@ -213,28 +213,28 @@ public final class HStonecutter {
     }
 
     /**
-     * Gets the profiler of the game.
+     * Gets the profiler of the game client.
      *
-     * @param game Current game instance
-     * @return Game profiler
+     * @param client Client game instance
+     * @return Client profiler
      */
     @Contract(pure = true)
-    public static ProfilerFiller profilerOfGame(Minecraft game) {
+    public static ProfilerFiller profilerOfClient(Minecraft client) {
         // Validate.
-        assert game != null : "HCsCR: Parameter 'game' is null.";
-        assert game.isSameThread() : "HCsCR: Getting the game profiler NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ')';
+        assert client != null : "HCsCR: Parameter 'client' is null.";
+        assert client.isSameThread() : "HCsCR: Getting the client profiler NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
 
         // Delegate.
         //? if >=1.21.3 {
         return net.minecraft.util.profiling.Profiler.get();
         //?} else
-        /*return game.getProfiler();*/ // Implicit NPE for 'game'
+        /*return client.getProfiler();*/ // Implicit NPE for 'client'
     }
 
     /**
      * Gets the level of the entity.
      *
-     * @param entity Target entity
+     * @param entity Target entity to get the level of
      * @return The level (world) in which the entity is currently located or was last located
      */
     @Contract(pure = true)
@@ -273,7 +273,7 @@ public final class HStonecutter {
     /**
      * Gets the entity involved in the collision context.
      *
-     * @param ctx Target context
+     * @param ctx Target collision context to get the entity from
      * @return Entity involving in the context, {@code null} if none
      */
     @Contract(pure = true)
@@ -316,8 +316,8 @@ public final class HStonecutter {
      * Hurts (damages) the entity the specified amount.
      *
      * @param entity Target entity to hurt
-     * @param source Hurt source
-     * @param amount Amount of damage
+     * @param source Attack source (inaccurate if invoked on the client)
+     * @param amount Total amount of damage done to the entity (inaccurate if invoked on the client)
      * @return The result of the hurting
      */
     @SuppressWarnings({"deprecation", "RedundantSuppression"}) // <- Used in vanilla code. (1.21.3+)
@@ -406,7 +406,7 @@ public final class HStonecutter {
         //? if >=1.21.11 {
         // Environmental attributes from 25w42a for BED_WORKS are NOT synced to the client,
         // so we just guess and check by comparing if the dimension doesn't have an OVERWORLD skybox.
-        // TODO(VidTu): Check this in late 1.21.11 development cycle, as of 25w45a it is a enum, might change.
+        // TODO(VidTu): Check this in the 1.21.11 development cycle, as of 25w45a (and 1.21.11-rc1) it is a enum, might change.
         return level.dimensionType().skybox() != net.minecraft.world.level.dimension.DimensionType.Skybox.OVERWORLD; // Implicit NPE for 'level'
         //?} else
         /*return !net.minecraft.world.level.block.BedBlock.canSetSpawn(level);*/ // Implicit NPE for 'level'
@@ -428,7 +428,7 @@ public final class HStonecutter {
         //? if >=1.21.11 {
         // Environmental attributes from 25w42a for RESPAWN_ANCHOR_WORKS are NOT synced to the client,
         // so we just guess and check by comparing if the dimension "doesn't" have skybox like NETHER.
-        // TODO(VidTu): Check this in late 1.21.11 development cycle, as of 25w45a it is a enum, might change.
+        // TODO(VidTu): Check this in the 1.21.11 development cycle, as of 25w45a (and 1.21.11-rc1) it is a enum, might change.
         return level.dimensionType().skybox() != net.minecraft.world.level.dimension.DimensionType.Skybox.NONE; // Implicit NPE for 'level'
         //?} else
         /*return !net.minecraft.world.level.block.RespawnAnchorBlock.canSetSpawn(level);*/ // Implicit NPE for 'level'
@@ -437,18 +437,18 @@ public final class HStonecutter {
     /**
      * Checks if the Shift key is down.
      *
-     * @param game Current game instance
+     * @param client Client game instance
      * @return {@code true} if the Shift key is down, {@code false} if not
      */
     @Contract(pure = true)
-    public static boolean isShiftKeyDown(Minecraft game) {
+    public static boolean isShiftKeyDown(Minecraft client) {
         // Validate.
-        assert game != null : "HCsCR: Parameter 'game' is null.";
-        assert game.isSameThread() : "HCsCR: Checking the shift key state NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ')';
+        assert client != null : "HCsCR: Parameter 'client' is null.";
+        assert client.isSameThread() : "HCsCR: Checking the shift key state NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
 
         // Delegate.
         //? if >=1.21.10 {
-        return game.hasShiftDown(); // Implicit NPE for 'game'
+        return client.hasShiftDown(); // Implicit NPE for 'client'
         //?} else
         /*return net.minecraft.client.gui.screens.Screen.hasShiftDown();*/
     }

@@ -55,7 +55,7 @@ import org.jspecify.annotations.NullMarked;
 import ru.vidtu.hcscr.config.CrystalMode;
 import ru.vidtu.hcscr.config.HConfig;
 import ru.vidtu.hcscr.config.HScreen;
-import ru.vidtu.hcscr.mixin.block.BlockStateBaseMixin;
+import ru.vidtu.hcscr.mixin.block.BlockBehaviour_BlockStateBaseMixin;
 import ru.vidtu.hcscr.mixin.crystal.EntityMixin;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
@@ -96,11 +96,11 @@ public final class HCsCR {
     /**
      * Hit entities mapped to their time of removal/hiding time in units of {@link System#nanoTime()}.
      * <p>
-     * As soon as current time will reach the removal time, {@link #handleFrameTick(Minecraft)}
+     * As soon as current time will reach the removal time, {@link #handleClientMainLoop(Minecraft)}
      * will either remove them via {@link HStonecutter#removeEntity(Entity)} or mark them
      * as hidden entities into {@link #HIDDEN_ENTITIES}.
      *
-     * @see #handleFrameTick(Minecraft)
+     * @see #handleClientMainLoop(Minecraft)
      * @see HStonecutter#removeEntity(Entity)
      * @see #HIDDEN_ENTITIES
      */
@@ -114,10 +114,10 @@ public final class HCsCR {
      * These entities won't appear in the world as their
      * hitbox will be removed via {@link EntityMixin}.
      * <p>
-     * They are counted down in {@link #handleHiddenEntities(Minecraft, ProfilerFiller)}.
+     * They are counted down in {@link #cleanHiddenEntities(Minecraft, ProfilerFiller)}.
      *
      * @see EntityMixin
-     * @see #handleHiddenEntities(Minecraft, ProfilerFiller)
+     * @see #cleanHiddenEntities(Minecraft, ProfilerFiller)
      * @see HStonecutter#linearRemovableInt2ObjectMap()
      */
     // This map should array-backed too, but it must support setValue(int) in iterators, so sometimes it's a hash-backed
@@ -129,12 +129,12 @@ public final class HCsCR {
      * collide with mapped to expected block states.
      * <p>
      * These blocks won't collide with the player in the world as
-     * their hitbox will be removed via {@link BlockStateBaseMixin}.
+     * their hitbox will be removed via {@link BlockBehaviour_BlockStateBaseMixin}.
      * <p>
-     * The validity is checked in {@link #handleClippingBlocks(Minecraft, ProfilerFiller)}.
+     * The validity is checked in {@link #cleanClippingBlocks(Minecraft, ProfilerFiller)}.
      *
-     * @see BlockStateBaseMixin
-     * @see #handleClippingBlocks(Minecraft, ProfilerFiller)
+     * @see BlockBehaviour_BlockStateBaseMixin
+     * @see #cleanClippingBlocks(Minecraft, ProfilerFiller)
      */
     // This map is not expected to grow more than a few elements, so it's an array-baked map, not a hash-baked one.
     // Moreover, it's being iterated linearly anyway in handleTick(...).
@@ -161,46 +161,46 @@ public final class HCsCR {
     /**
      * Handles the client tick end.
      *
-     * @param game Current game instance
+     * @param client Client game instance
      * @see #handleConfigBind(Minecraft, ProfilerFiller)
      * @see #handleToggleBind(Minecraft, ProfilerFiller)
-     * @see #handleHiddenEntities(Minecraft, ProfilerFiller)
-     * @see #handleClippingBlocks(Minecraft, ProfilerFiller)
+     * @see #cleanHiddenEntities(Minecraft, ProfilerFiller)
+     * @see #cleanClippingBlocks(Minecraft, ProfilerFiller)
      */
-    public static void handleGameTick(Minecraft game) {
+    public static void handleClientTickEnd(Minecraft client) {
         // Validate.
-        assert game != null : "HCsCR: Parameter 'game' is null.";
-        assert game.isSameThread() : "HCsCR: Handling a game tick NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ')';
+        assert client != null : "HCsCR: Parameter 'client' is null.";
+        assert client.isSameThread() : "HCsCR: Handling a client game tick end NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
 
         // Get and push the profiler.
-        ProfilerFiller profiler = HStonecutter.profilerOfGame(game); // Implicit NPE for 'game'
-        profiler.push("hcscr:tick");
+        ProfilerFiller profiler = HStonecutter.profilerOfClient(client); // Implicit NPE for 'client'
+        profiler.push("hcscr:client_tick_end");
 
         // Keybinds.
-        handleConfigBind(game, profiler); // Implicit NPE for 'game'
-        handleToggleBind(game, profiler); // Implicit NPE for 'game'
+        handleConfigBind(client, profiler); // Implicit NPE for 'client'
+        handleToggleBind(client, profiler); // Implicit NPE for 'client'
 
         // Entities/anchors.
-        handleHiddenEntities(game, profiler); // Implicit NPE for 'game'
-        handleClippingBlocks(game, profiler); // Implicit NPE for 'game'
+        cleanHiddenEntities(client, profiler); // Implicit NPE for 'client'
+        cleanClippingBlocks(client, profiler); // Implicit NPE for 'client'
 
         // Pop the profiler.
         profiler.pop();
     }
 
     /**
-     * Handles the client rendering frame. Removes redundant elements from {@link #SCHEDULED_ENTITIES}.
+     * Handles the client main loop. Removes redundant elements from {@link #SCHEDULED_ENTITIES}.
      *
-     * @param game Current game instance
+     * @param client Client game instance
      */
-    public static void handleFrameTick(Minecraft game) {
+    public static void handleClientMainLoop(Minecraft client) {
         // Validate.
-        assert game != null : "HCsCR: Parameter 'game' is null.";
-        assert game.isSameThread() : "HCsCR: Handling a frame tick NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ')';
+        assert client != null : "HCsCR: Parameter 'client' is null.";
+        assert client.isSameThread() : "HCsCR: Handling client main loop NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
 
         // Get and push the profiler.
-        ProfilerFiller profiler = HStonecutter.profilerOfGame(game); // Implicit NPE for 'game'
-        profiler.push("hcscr:handle_frame");
+        ProfilerFiller profiler = HStonecutter.profilerOfClient(client); // Implicit NPE for 'client'
+        profiler.push("hcscr:client_main_loop");
 
         // Skip if there's no entities to remove.
         if (SCHEDULED_ENTITIES.isEmpty()) {
@@ -254,11 +254,11 @@ public final class HCsCR {
     }
 
     /**
-     * Handles the entity hit. Removes the entity client-side or promotes to {@link #SCHEDULED_ENTITIES}, if required.
+     * Handles the entity hit by a player. Removes the entity client-side or promotes to {@link #SCHEDULED_ENTITIES}, if required.
      *
-     * @param entity  Target hit entity
-     * @param source  Hit damage source
-     * @param amount  Amount of dealt damage
+     * @param entity Entity being attacked by a player
+     * @param source Attack source (inaccurate if invoked on the client)
+     * @param amount Total amount of damage done to the entity (inaccurate if invoked on the client)
      * @return Whether the entity has been removed
      * @see HStonecutter#hurtEntity(Entity, DamageSource, float)
      * @see HConfig#enable()
@@ -267,7 +267,7 @@ public final class HCsCR {
      * @see HConfig#crystalsResync()
      * @see HConfig#crystalsDelay()
      */
-    public static boolean handleEntityHit(Entity entity, DamageSource source, float amount) {
+    public static boolean handlePlayerHittingEntity(Entity entity, DamageSource source, float amount) {
         // Validate.
         assert entity != null : "HCsCR: Parameter 'entity' is null. (source: " + source + ", amount: " + amount + ')';
         assert source != null : "HCsCR: Parameter 'source' is null. (entity: " + entity + ", amount: " + amount + ')';
@@ -371,16 +371,16 @@ public final class HCsCR {
     /**
      * Handles the config keybind.
      *
-     * @param game     Current game instance
-     * @param profiler Game profiler
-     * @see #handleGameTick(Minecraft)
+     * @param client   Client game instance
+     * @param profiler Client profiler
+     * @see #handleClientTickEnd(Minecraft)
      * @see #handleToggleBind(Minecraft, ProfilerFiller)
      */
-    private static void handleConfigBind(Minecraft game, ProfilerFiller profiler) {
+    private static void handleConfigBind(Minecraft client, ProfilerFiller profiler) {
         // Validate.
-        assert game != null : "HCsCR: Parameter 'game' is null. (profiler: " + profiler + ')';
-        assert profiler != null : "HCsCR: Parameter 'profiler' is null. (game: " + game + ')';
-        assert game.isSameThread() : "HCsCR: Handling the config bind NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ", profiler: " + profiler + ')';
+        assert client != null : "HCsCR: Parameter 'client' is null. (profiler: " + profiler + ')';
+        assert profiler != null : "HCsCR: Parameter 'profiler' is null. (client: " + client + ')';
+        assert client.isSameThread() : "HCsCR: Handling the config bind NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ", profiler: " + profiler + ')';
 
         // Push the profiler.
         profiler.push("hcscr:config_bind"); // Implicit NPE for 'profiler'
@@ -388,22 +388,22 @@ public final class HCsCR {
         // Consume the bind.
         while (CONFIG_BIND.consumeClick()) {
             // Log. (**TRACE**)
-            LOGGER.trace(HCSCR_MARKER, "HCsCR: Config keybind was consumed, opening the config screen. (game: {}, keybind: {})", game, CONFIG_BIND);
+            LOGGER.trace(HCSCR_MARKER, "HCsCR: Config keybind was consumed, opening the config screen. (client: {}, keybind: {})", client, CONFIG_BIND);
 
             // Check the open screen.
-            Screen prev = game.screen; // Implicit NPE for 'game'
-            if (prev != null) {
+            Screen currentScreen = client.screen; // Implicit NPE for 'client'
+            if (currentScreen != null) {
                 // Log, continue. (**DEBUG**)
-                LOGGER.debug(HCSCR_MARKER, "HCsCR: Can't open the config screen via the keybind, screen is open. (game: {}, prev: {}, keybind: {})", game, prev, CONFIG_BIND);
+                LOGGER.debug(HCSCR_MARKER, "HCsCR: Can't open the config screen via the keybind, screen is open. (client: {}, currentScreen {}, keybind: {})", client, currentScreen, CONFIG_BIND);
                 continue;
             }
 
             // Open the screen.
             HScreen screen = new HScreen(null);
-            game.setScreen(screen);
+            client.setScreen(screen);
 
             // Log. (**DEBUG**)
-            LOGGER.debug(HCSCR_MARKER, "HCsCR: Opened the config screen via the keybind. (game: {}, screen: {}, keybind: {})", game, screen, CONFIG_BIND);
+            LOGGER.debug(HCSCR_MARKER, "HCsCR: Opened the config screen via the keybind. (client: {}, screen: {}, keybind: {})", client, screen, CONFIG_BIND);
         }
 
         // Pop the profiler.
@@ -413,16 +413,16 @@ public final class HCsCR {
     /**
      * Handles the toggle keybind.
      *
-     * @param game     Current game instance
-     * @param profiler Game profiler
-     * @see #handleGameTick(Minecraft)
+     * @param client   Client game instance
+     * @param profiler Client profiler
+     * @see #handleClientTickEnd(Minecraft)
      * @see #handleConfigBind(Minecraft, ProfilerFiller)
      */
-    private static void handleToggleBind(Minecraft game, ProfilerFiller profiler) {
+    private static void handleToggleBind(Minecraft client, ProfilerFiller profiler) {
         // Validate.
-        assert game != null : "HCsCR: Parameter 'game' is null. (profiler: " + profiler + ')';
-        assert profiler != null : "HCsCR: Parameter 'profiler' is null. (game: " + game + ')';
-        assert game.isSameThread() : "HCsCR: Handling the toggle bind NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ", profiler: " + profiler + ')';
+        assert client != null : "HCsCR: Parameter 'client' is null. (profiler: " + profiler + ')';
+        assert profiler != null : "HCsCR: Parameter 'profiler' is null. (client: " + client + ')';
+        assert client.isSameThread() : "HCsCR: Handling the toggle bind NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ", profiler: " + profiler + ')';
 
         // Push the profiler.
         profiler.push("hcscr:toggle_bind"); // Implicit NPE for 'profiler'
@@ -430,19 +430,19 @@ public final class HCsCR {
         // Consume the bind.
         while (TOGGLE_BIND.consumeClick()) {
             // Log. (**TRACE**)
-            LOGGER.trace(HCSCR_MARKER, "HCsCR: Toggle keybind was consumed, toggling the mode. (game: {}, keybind: {})", game, TOGGLE_BIND);
+            LOGGER.trace(HCSCR_MARKER, "HCsCR: Toggle keybind was consumed, toggling the mode. (client: {}, keybind: {})", client, TOGGLE_BIND);
 
             // Toggle the mod.
             boolean newState = HConfig.toggle();
 
             // Show the bar, play the sound.
-            game.gui.setOverlayMessage(HStonecutter.translate("hcscr." + newState) // Implicit NPE for 'game'
+            client.gui.setOverlayMessage(HStonecutter.translate("hcscr." + newState) // Implicit NPE for 'client'
                     .withStyle(newState ? ChatFormatting.GREEN : ChatFormatting.RED)
                     .withStyle(ChatFormatting.BOLD), /*rainbow=*/false);
-            game.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING, newState ? 2.0F : 0.0F));
+            client.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING, newState ? 2.0F : 0.0F));
 
             // Log. (**DEBUG**)
-            LOGGER.debug(HCSCR_MARKER, "HCsCR: Mod has been toggled via the keybind. (game: {}, newState: {}, keybind: {})", game, newState, TOGGLE_BIND);
+            LOGGER.debug(HCSCR_MARKER, "HCsCR: Mod has been toggled via the keybind. (client: {}, newState: {}, keybind: {})", client, newState, TOGGLE_BIND);
         }
 
         // Pop the profiler.
@@ -450,23 +450,23 @@ public final class HCsCR {
     }
 
     /**
-     * Handles the hidden entities. Removes redundant entities from {@link #HIDDEN_ENTITIES} or processes them in a
-     * way similar to {@link #handleEntityHit(Entity, DamageSource, float)}.
+     * Cleans the hidden entities. Removes redundant entities from {@link #HIDDEN_ENTITIES} or processes them in a
+     * way similar to {@link #handlePlayerHittingEntity(Entity, DamageSource, float)}.
      *
-     * @param game     Current game instance
-     * @param profiler Game profiler
-     * @see #handleGameTick(Minecraft)
+     * @param client   Client game instance
+     * @param profiler Client profiler
+     * @see #handleClientTickEnd(Minecraft)
      * @see #HIDDEN_ENTITIES
-     * @see #handleEntityHit(Entity, DamageSource, float)
+     * @see #handlePlayerHittingEntity(Entity, DamageSource, float)
      */
-    private static void handleHiddenEntities(Minecraft game, ProfilerFiller profiler) {
+    private static void cleanHiddenEntities(Minecraft client, ProfilerFiller profiler) {
         // Validate.
-        assert game != null : "HCsCR: Parameter 'game' is null. (profiler: " + profiler + ')';
-        assert profiler != null : "HCsCR: Parameter 'profiler' is null. (game: " + game + ')';
-        assert game.isSameThread() : "HCsCR: Handling hidden entities NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ", profiler: " + profiler + ')';
+        assert client != null : "HCsCR: Parameter 'client' is null. (profiler: " + profiler + ')';
+        assert profiler != null : "HCsCR: Parameter 'profiler' is null. (client: " + client + ')';
+        assert client.isSameThread() : "HCsCR: Cleaning hidden entities NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ", profiler: " + profiler + ')';
 
         // Push the profiler.
-        profiler.push("hcscr:hidden_entities"); // Implicit NPE for 'profiler'
+        profiler.push("hcscr:clean_hidden_entities"); // Implicit NPE for 'profiler'
 
         // Skip if no hidden entities.
         if (HIDDEN_ENTITIES.isEmpty()) {
@@ -476,7 +476,7 @@ public final class HCsCR {
         }
 
         // Nuke all entities, if level is empty.
-        if (game.level == null) { // Implicit NPE for 'game'
+        if (client.level == null) { // Implicit NPE for 'client'
             // Log. (**TRACE**)
             LOGGER.trace(HCSCR_MARKER, "HCsCR: Level has been unloaded, nuking hidden entities...");
 
@@ -495,37 +495,37 @@ public final class HCsCR {
             // Extract.
             Object2IntMap.Entry<Entity> entry = iterator.next();
             Entity entity = entry.getKey();
-            int left = entry.getIntValue();
+            int ticksBeforeResync = entry.getIntValue();
 
             // Log. (**TRACE**)
             if (LOGGER.isTraceEnabled(HCSCR_MARKER)) {
-                LOGGER.trace(HCSCR_MARKER, "HCsCR: Ticking hidden entity... (entity: {}, left: {})", entity, left);
+                LOGGER.trace(HCSCR_MARKER, "HCsCR: Ticking hidden entity... (entity: {}, ticksBeforeResync: {})", entity, ticksBeforeResync);
             }
 
             // Entity has been removed.
             if (HStonecutter.isEntityRemoved(entity)) {
-                // Remove.
+                // Remove from the map.
                 iterator.remove();
 
                 // Log, continue. (**DEBUG**)
                 if (!LOGGER.isDebugEnabled(HCSCR_MARKER)) continue;
-                LOGGER.debug(HCSCR_MARKER, "HCsCR: Removed hidden entity. (entity: {}, left: {})", entity, left);
+                LOGGER.debug(HCSCR_MARKER, "HCsCR: Removed hidden entity. (entity: {}, ticksBeforeResync: {})", entity, ticksBeforeResync);
                 continue;
             }
 
             // Entity should be resynced.
-            if (left <= 0) {
-                // Remove.
+            if (ticksBeforeResync <= 0) {
+                // Remove  from the map.
                 iterator.remove();
 
                 // Log, continue. (**DEBUG**)
                 if (!LOGGER.isDebugEnabled(HCSCR_MARKER)) continue;
-                LOGGER.debug(HCSCR_MARKER, "HCsCR: Resynced hidden entity. (entity: {}, left: {})", entity, left);
+                LOGGER.debug(HCSCR_MARKER, "HCsCR: Resynced hidden entity. (entity: {}, ticksBeforeResync: {})", entity, ticksBeforeResync);
                 continue;
             }
 
             // Countdown.
-            entry.setValue(left - 1);
+            entry.setValue(ticksBeforeResync - 1);
         }
 
         // Pop the profiler.
@@ -533,21 +533,21 @@ public final class HCsCR {
     }
 
     /**
-     * Handles the clipping blocks. Removes redundant entries from {@link #CLIPPING_BLOCKS}.
+     * Cleans the clipping blocks. Removes redundant entries from {@link #CLIPPING_BLOCKS}.
      *
-     * @param game     Current game instance
-     * @param profiler Game profiler
-     * @see #handleGameTick(Minecraft)
+     * @param client   Client game instance
+     * @param profiler Client profiler
+     * @see #handleClientTickEnd(Minecraft)
      * @see #CLIPPING_BLOCKS
      */
-    private static void handleClippingBlocks(Minecraft game, ProfilerFiller profiler) {
+    private static void cleanClippingBlocks(Minecraft client, ProfilerFiller profiler) {
         // Validate.
-        assert game != null : "HCsCR: Parameter 'game' is null. (profiler: " + profiler + ')';
-        assert profiler != null : "HCsCR: Parameter 'profiler' is null. (game: " + game + ')';
-        assert game.isSameThread() : "HCsCR: Handling clipping blocks NOT from the main thread. (thread: " + Thread.currentThread() + ", game: " + game + ", profiler: " + profiler + ')';
+        assert client != null : "HCsCR: Parameter 'client' is null. (profiler: " + profiler + ')';
+        assert profiler != null : "HCsCR: Parameter 'profiler' is null. (client: " + client + ')';
+        assert client.isSameThread() : "HCsCR: Cleaning clipping blocks NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ", profiler: " + profiler + ')';
 
         // Push the profiler.
-        profiler.push("hcscr:clipping_blocks"); // Implicit NPE for 'profiler'
+        profiler.push("hcscr:clean_clipping_blocks"); // Implicit NPE for 'profiler'
 
         // Skip if no clipping blocks.
         if (CLIPPING_BLOCKS.isEmpty()) {
@@ -557,7 +557,7 @@ public final class HCsCR {
         }
 
         // Nuke all blocks, if level is empty.
-        ClientLevel level = game.level; // Implicit NPE for 'game'
+        ClientLevel level = client.level; // Implicit NPE for 'client'
         if (level == null) {
             // Log. (**TRACE**)
             LOGGER.trace(HCSCR_MARKER, "HCsCR: Level has been unloaded, nuking clipping blocks...");
@@ -582,11 +582,11 @@ public final class HCsCR {
             // Log. (**TRACE**)
             LOGGER.trace(HCSCR_MARKER, "HCsCR: Ticking clipping block... (pos: {}, expectedState: {})", pos, expectedState);
 
-            // Block is still there.
+            // Skip if block is still there.
             BlockState actualState = level.getBlockState(pos);
             if (actualState.equals(expectedState)) continue;
 
-            // Remove.
+            // Remove from the map.
             iterator.remove();
 
             // Log. (**DEBUG**)

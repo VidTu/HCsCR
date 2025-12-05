@@ -52,7 +52,7 @@ import ru.vidtu.hcscr.platform.HStonecutter;
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(BlockBehaviour.BlockStateBase.class)
 @NullMarked
-public final class BlockStateBaseMixin {
+public final class BlockBehaviour_BlockStateBaseMixin {
     /**
      * An instance of this class cannot be created.
      *
@@ -62,7 +62,7 @@ public final class BlockStateBaseMixin {
     // @ApiStatus.ScheduledForRemoval // Can't annotate this without logging in the console.
     @Deprecated
     @Contract(value = "-> fail", pure = true)
-    private BlockStateBaseMixin() {
+    private BlockBehaviour_BlockStateBaseMixin() {
         throw new AssertionError("HCsCR: No instances.");
     }
 
@@ -70,29 +70,29 @@ public final class BlockStateBaseMixin {
      * Injects the empty collision for blocks in {@link HCsCR#CLIPPING_BLOCKS} only for
      * the local player entity context. Doesn't ignore for non-entity contexts.
      *
-     * @param getter Block container (level/chunk), ignored
-     * @param pos    Block position
-     * @param ctx    Collision context
-     * @param cir    Callback data
+     * @param level   The level that this block is placed in, ignored
+     * @param pos     Block position
+     * @param context Current collision context to infer the collision type
+     * @param cir     Callback data containing the resulting collision shape
      * @apiNote Do not call, called by Mixin
      * @see HCsCR#CLIPPING_BLOCKS
      * @see HStonecutter#collisionContextEntity(EntityCollisionContext)
      */
     @DoNotCall("Called by Mixin")
     @Inject(method = "getCollisionShape(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/phys/shapes/VoxelShape;", at = @At("HEAD"), cancellable = true)
-    private void hcscr_getCollisionShape_head(BlockGetter getter, BlockPos pos, CollisionContext ctx, CallbackInfoReturnable<VoxelShape> cir) {
+    private void hcscr_getCollisionShape_head(BlockGetter level, BlockPos pos, CollisionContext context, CallbackInfoReturnable<VoxelShape> cir) {
         // Validate.
-        assert getter != null : "HCsCR: Parameter 'getter' is null. (pos: " + pos + ", ctx: " + ctx + ", cir: " + cir + ", state: " + this + ')';
-        assert pos != null : "HCsCR: Parameter 'pos' is null. (getter: " + getter + ", ctx: " + ctx + ", cir: " + cir + ", state: " + this + ')';
-        assert ctx != null : "HCsCR: Parameter 'ctx' is null. (getter: " + getter + ", pos: " + pos + ", cir: " + cir + ", state: " + this + ')';
-        assert cir != null : "HCsCR: Parameter 'cir' is null. (getter: " + getter + ", pos: " + pos + ", ctx: " + ctx + ", state: " + this + ')';
+        assert level != null : "HCsCR: Parameter 'level' is null. (pos: " + pos + ", context: " + context + ", cir: " + cir + ", state: " + this + ')';
+        assert pos != null : "HCsCR: Parameter 'pos' is null. (level: " + level + ", context: " + context + ", cir: " + cir + ", state: " + this + ')';
+        assert context != null : "HCsCR: Parameter 'context' is null. (level: " + level + ", pos: " + pos + ", cir: " + cir + ", state: " + this + ')';
+        assert cir != null : "HCsCR: Parameter 'cir' is null. (level: " + level + ", pos: " + pos + ", context: " + context + ", state: " + this + ')';
 
         // Do NOT remove collision if any of the following conditions is met:
         // - The current collision context lacks an entity.
         // - The context's entity is not a client-side player. (either non-player entity or a server-side player)
         // - The block position is not contained in HCsCR.CLIPPING_BLOCKS.
-        if (!(ctx instanceof EntityCollisionContext) ||
-                !(HStonecutter.collisionContextEntity((EntityCollisionContext) ctx) instanceof LocalPlayer) ||
+        if (!(context instanceof EntityCollisionContext) ||
+                !(HStonecutter.collisionContextEntity((EntityCollisionContext) context) instanceof LocalPlayer) ||
                 !HCsCR.CLIPPING_BLOCKS.containsKey(pos)) return;
 
         // Spoof collision data to empty.

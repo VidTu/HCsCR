@@ -78,8 +78,8 @@ public abstract class InteractionMixin extends Entity {
      * Forcefully enables attack interaction, if mod is enabled and {@link CrystalMode#ENVELOPING} is active. This allows
      * further processing of the entity in {@link PlayerMixin_E}/{@link PlayerMixin_M}, as the attack will succeed.
      *
-     * @param attacker Attacking entity
-     * @param cir      Callback data
+     * @param source Entity that is attacking this interaction
+     * @param cir    Callback data containing the resulting interaction skipping decision
      * @apiNote Do not call, called by Mixin
      * @see CrystalMode#ENVELOPING
      * @see HConfig#enable()
@@ -87,17 +87,17 @@ public abstract class InteractionMixin extends Entity {
      */
     @DoNotCall("Called by Mixin")
     @Inject(method = "skipAttackInteraction", at = @At("HEAD"), cancellable = true)
-    private void hcscr_skipAttackInteraction_head(Entity attacker, CallbackInfoReturnable<Boolean> cir) {
+    private void hcscr_skipAttackInteraction_head(Entity source, CallbackInfoReturnable<Boolean> cir) {
         // Validate.
-        assert attacker != null : "HCsCR: Parameter 'attacker' is null. (cir: " + cir + ", interaction: " + this + ')';
-        assert cir != null : "HCsCR: Parameter 'cir' is null. (attacker: " + attacker + ", interaction: " + this + ')';
+        assert source != null : "HCsCR: Parameter 'source' is null. (cir: " + cir + ", interaction: " + this + ')';
+        assert cir != null : "HCsCR: Parameter 'cir' is null. (source: " + source + ", interaction: " + this + ')';
 
         // Log. (**TRACE**)
-        HCSCR_LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Received attack in Interaction entity. (attacker: {}, cir: {}, interaction: {})", attacker, cir, this);
+        HCSCR_LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Received attack in Interaction entity. (source: {}, cir: {}, interaction: {})", source, cir, this);
 
         // Validate.
         Level level = HStonecutter.levelOfEntity(this);
-        assert level != null : "HCsCR: Interaction entity has null level. (attacker: " + attacker + ", cir: " + cir + ", entity: " + this + ')';
+        assert level != null : "HCsCR: Interaction entity has null level. (source: " + source + ", cir: " + cir + ", entity: " + this + ')';
 
         // Do NOT process interactions if any of the following conditions is met:
         // - The current level (world) is not client-side. (e.g., integrated server world)
@@ -105,7 +105,7 @@ public abstract class InteractionMixin extends Entity {
         // - The current crystal removal mode is not ENVELOPING.
         if (!level.isClientSide() || !HConfig.enable() || (HConfig.crystals() != CrystalMode.ENVELOPING)) { // Implicit NPE for 'level'
             // Log, stop. (**DEBUG**)
-            HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Ignored Interaction entity attack overriding. (attacker: {}, cir: {}, interaction: {})", attacker, cir, this);
+            HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Ignored Interaction entity attack overriding. (source: {}, cir: {}, interaction: {})", source, cir, this);
             return;
         }
 
@@ -113,7 +113,7 @@ public abstract class InteractionMixin extends Entity {
         cir.setReturnValue(false);
 
         // Log. (**DEBUG**)
-        HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Forcefully allowed Interaction to be attacked. (attacker: {}, cir: {}, interaction: {})", attacker, cir, this);
+        HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Forcefully allowed Interaction to be attacked. (source: {}, cir: {}, interaction: {})", source, cir, this);
     }
 }
 //?}

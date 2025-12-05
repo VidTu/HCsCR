@@ -93,8 +93,8 @@ public final class HFabric implements ClientModInitializer {
                 return "HCsCR/HFabric$CustomPacketPayload{}";
             }
         };
-        var codec = net.minecraft.network.codec.StreamCodec.<net.minecraft.network.FriendlyByteBuf, net.minecraft.network.protocol.common.custom.CustomPacketPayload>of((buf, payload) -> {}, buf -> {
-            buf.skipBytes(buf.readableBytes());
+        var codec = net.minecraft.network.codec.StreamCodec.<net.minecraft.network.FriendlyByteBuf, net.minecraft.network.protocol.common.custom.CustomPacketPayload>of((output, value) -> {}, input -> {
+            input.skipBytes(input.readableBytes()); // Implicit NPE for 'input'
             return instance;
         });
         net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry.configurationS2C().register(type, codec);
@@ -110,7 +110,12 @@ public final class HFabric implements ClientModInitializer {
         // Register the binds.
         KeyBindingHelper.registerKeyBinding(HCsCR.CONFIG_BIND);
         KeyBindingHelper.registerKeyBinding(HCsCR.TOGGLE_BIND);
-        ClientTickEvents.END_CLIENT_TICK.register(HCsCR::handleGameTick);
+
+        // Register the client tick end handler.
+        ClientTickEvents.END_CLIENT_TICK.register(HCsCR::handleClientTickEnd);
+
+        // Client game loop handling is done via the MinecraftMixin. (Fabric only for now)
+        // Config screen handling (ModMenu entrypoint) is in the HModMenu class.
 
         // Done.
         LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / 1_000_000L);

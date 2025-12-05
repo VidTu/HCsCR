@@ -79,12 +79,12 @@ public final class RespawnAnchorBlockMixin {
     /**
      * Handles the anchor usage.
      *
-     * @param state  Anchor state
-     * @param level  Anchor level
-     * @param pos    Anchor position
-     * @param player Interacting player, ignored
-     * @param result Hit vector, ignored
-     * @param cir    Callback data, ignored
+     * @param state     Anchor block state
+     * @param level     The level that this anchor block is placed in
+     * @param pos       Anchor block position
+     * @param player    Player interacting with the anchor, ignored
+     * @param hitResult The exact position player used the anchor at, ignored
+     * @param cir       Callback data containing the anchor interaction result, ignored
      * @apiNote Do not call, called by Mixin
      * @see HConfig#enable()
      * @see HConfig#blocks()
@@ -94,16 +94,16 @@ public final class RespawnAnchorBlockMixin {
     @DoNotCall("Called by Mixin")
     @Inject(method = "useWithoutItem", at = @At("HEAD"))
     private void hcscr_useWithoutItem_head(BlockState state, Level level, BlockPos pos, Player player,
-                                           BlockHitResult result, CallbackInfoReturnable<InteractionResult> cir) {
+                                           BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
         // Validate.
-        assert state != null : "HCsCR: Parameter 'state' is null. (level: " + level + ", pos: " + pos + ", player: " + player + ", result: " + result + ", anchor: " + this + ')';
-        assert level != null : "HCsCR: Parameter 'level' is null. (state: " + state + ", pos: " + pos + ", player: " + player + ", result: " + result + ", anchor: " + this + ')';
-        assert pos != null : "HCsCR: Parameter 'pos' is null. (state: " + state + ", level: " + level + ", player: " + player + ", result: " + result + ", anchor: " + this + ')';
-        assert player != null : "HCsCR: Parameter 'player' is null. (state: " + state + ", level: " + level + ", pos: " + pos + ", result: " + result + ", anchor: " + this + ')';
-        assert result != null : "HCsCR: Parameter 'result' is null. (state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", anchor: " + this + ')';
+        assert state != null : "HCsCR: Parameter 'state' is null. (level: " + level + ", pos: " + pos + ", player: " + player + ", hitResult: " + hitResult + ", anchor: " + this + ')';
+        assert level != null : "HCsCR: Parameter 'level' is null. (state: " + state + ", pos: " + pos + ", player: " + player + ", hitResult: " + hitResult + ", anchor: " + this + ')';
+        assert pos != null : "HCsCR: Parameter 'pos' is null. (state: " + state + ", level: " + level + ", player: " + player + ", hitResult: " + hitResult + ", anchor: " + this + ')';
+        assert player != null : "HCsCR: Parameter 'player' is null. (state: " + state + ", level: " + level + ", pos: " + pos + ", hitResult: " + hitResult + ", anchor: " + this + ')';
+        assert hitResult != null : "HCsCR: Parameter 'hitResult' is null. (state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", anchor: " + this + ')';
 
         // Log. (**TRACE**)
-        HCSCR_LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Detected anchor right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
+        HCSCR_LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Detected anchor right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, anchor: {})", state, level, pos, player, hitResult, this);
 
         // Do NOT process anchors if any of the following conditions is met:
         // - The current level (world) is not client-side. (e.g., integrated server world)
@@ -114,12 +114,12 @@ public final class RespawnAnchorBlockMixin {
         if (!level.isClientSide() || (state.getValue(RespawnAnchorBlock.CHARGE) == 0) || // Implicit NPE for 'level', 'state'
                 !HConfig.enable() || !ru.vidtu.hcscr.platform.HStonecutter.willAnchorExplode(level)) {
             // Log, stop. (**DEBUG**)
-            HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
+            HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, anchor: {})", state, level, pos, player, hitResult, this);
             return;
         }
 
         // Validate.
-        assert Minecraft.getInstance().isSameThread() : "HCsCR: Clicking on an anchor NOT from the main thread. (thread: " + Thread.currentThread() + ", state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", anchor: " + this + ')';
+        assert Minecraft.getInstance().isSameThread() : "HCsCR: Clicking on an anchor NOT from the main thread. (thread: " + Thread.currentThread() + ", state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", hitResult: " + hitResult + ", anchor: " + this + ')';
 
         // Remove or clip.
         switch (HConfig.blocks()) {
@@ -128,18 +128,18 @@ public final class RespawnAnchorBlockMixin {
                 HCsCR.CLIPPING_BLOCKS.put(pos, state);
 
                 // Log, break. (**DEBUG**)
-                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Clipping anchor via right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
+                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Clipping anchor via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, anchor: {})", state, level, pos, player, hitResult, this);
                 break;
             case FULL:
                 // Remove.
                 level.removeBlock(pos, false); // Implicit NPE for 'pos'
 
                 // Log, break. (**DEBUG**)
-                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Removed anchor via right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
+                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Removed anchor via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, anchor: {})", state, level, pos, player, hitResult, this);
                 break;
             default:
                 // Log. (**DEBUG**)
-                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Ignored anchor right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
+                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Ignored anchor right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, anchor: {})", state, level, pos, player, hitResult, this);
         }
     }
 
@@ -148,13 +148,13 @@ public final class RespawnAnchorBlockMixin {
     /*/^*
      * Handles the anchor usage.
      *
-     * @param state  Anchor state
-     * @param level  Anchor level
-     * @param pos    Anchor position
-     * @param player Interacting player
-     * @param hand   Interaction hand
-     * @param result Hit vector, ignored
-     * @param cir    Callback data, ignored
+     * @param state     Anchor block state
+     * @param level     The level that this anchor block is placed in
+     * @param pos       Anchor block position
+     * @param player    Player interacting with the anchor
+     * @param hand      The hand the player uses to interact with the anchor
+     * @param hitResult The exact position player used the anchor at, ignored
+     * @param cir       Callback data containing the anchor interaction result, ignored
      * @apiNote Do not call, called by Mixin
      * @see HConfig#enable()
      * @see HConfig#blocks()
@@ -164,15 +164,15 @@ public final class RespawnAnchorBlockMixin {
     @DoNotCall("Called by Mixin")
     @Inject(method = "use", at = @At("HEAD"))
     private void hcscr_use_head(BlockState state, Level level, BlockPos pos, Player player,
-                                net.minecraft.world.InteractionHand hand, BlockHitResult result,
+                                net.minecraft.world.InteractionHand hand, BlockHitResult hitResult,
                                 CallbackInfoReturnable<InteractionResult> cir) {
         // Validate.
-        assert state != null : "HCsCR: Parameter 'state' is null. (level: " + level + ", pos: " + pos + ", player: " + player + ", hand: " + hand + ", result: " + result + ", anchor: " + this + ')';
-        assert level != null : "HCsCR: Parameter 'level' is null. (state: " + state + ", pos: " + pos + ", player: " + player + ", hand: " + hand + ", result: " + result + ", anchor: " + this + ')';
-        assert pos != null : "HCsCR: Parameter 'pos' is null. (state: " + state + ", level: " + level + ", player: " + player + ", hand: " + hand + ", result: " + result + ", anchor: " + this + ')';
-        assert player != null : "HCsCR: Parameter 'player' is null. (state: " + state + ", level: " + level + ", pos: " + pos + ", hand: " + hand + ", result: " + result + ", anchor: " + this + ')';
-        assert hand != null : "HCsCR: Parameter 'hand' is null. (state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", result: " + result + ", anchor: " + this + ')';
-        assert result != null : "HCsCR: Parameter 'result' is null. (state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", hand: " + hand + ", anchor: " + this + ')';
+        assert state != null : "HCsCR: Parameter 'state' is null. (level: " + level + ", pos: " + pos + ", player: " + player + ", hand: " + hand + ", hitResult: " + hitResult + ", anchor: " + this + ')';
+        assert level != null : "HCsCR: Parameter 'level' is null. (state: " + state + ", pos: " + pos + ", player: " + player + ", hand: " + hand + ", hitResult: " + hitResult + ", anchor: " + this + ')';
+        assert pos != null : "HCsCR: Parameter 'pos' is null. (state: " + state + ", level: " + level + ", player: " + player + ", hand: " + hand + ", hitResult: " + hitResult + ", anchor: " + this + ')';
+        assert player != null : "HCsCR: Parameter 'player' is null. (state: " + state + ", level: " + level + ", pos: " + pos + ", hand: " + hand + ", hitResult: " + hitResult + ", anchor: " + this + ')';
+        assert hand != null : "HCsCR: Parameter 'hand' is null. (state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", hitResult: " + hitResult + ", anchor: " + this + ')';
+        assert hitResult != null : "HCsCR: Parameter 'hitResult' is null. (state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", hand: " + hand + ", anchor: " + this + ')';
 
         // Do NOT process anchors if any of the following conditions is met:
         // - The current level (world) is not client-side. (e.g., integrated server world)
@@ -184,20 +184,20 @@ public final class RespawnAnchorBlockMixin {
         if (!level.isClientSide() || (state.getValue(RespawnAnchorBlock.CHARGE) == 0) || // Implicit NPE for 'level', 'state'
                 RespawnAnchorBlock.canSetSpawn(level) || !HConfig.enable()) {
             // Log, stop. (**DEBUG**)
-            HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, result: {}, anchor: {})", state, level, pos, player, hand, result, this);
+            HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, hitResult: {}, anchor: {})", state, level, pos, player, hand, hitResult, this);
             return;
         }
 
         // Validate.
-        assert Minecraft.getInstance().isSameThread() : "HCsCR: Clicking on an anchor NOT from the main thread. (thread: " + Thread.currentThread() + ", state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", hand: " + hand + ", anchor: " + this + ')';
+        assert Minecraft.getInstance().isSameThread() : "HCsCR: Clicking on an anchor NOT from the main thread. (thread: " + Thread.currentThread() + ", state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", hand: " + hand + ", hitResult: " + hitResult + ", anchor: " + this + ')';
 
         // Skip if charging.
-        net.minecraft.world.item.ItemStack stack = player.getItemInHand(hand); // Implicit NPE for 'player'
-        if (((hand == net.minecraft.world.InteractionHand.MAIN_HAND) && !isRespawnFuel(stack) && // Implicit NPE for 'stack;
+        net.minecraft.world.item.ItemStack itemInHand = player.getItemInHand(hand); // Implicit NPE for 'player'
+        if (((hand == net.minecraft.world.InteractionHand.MAIN_HAND) && !isRespawnFuel(itemInHand) && // Implicit NPE for 'itemInHand'
                 isRespawnFuel(player.getItemInHand(net.minecraft.world.InteractionHand.OFF_HAND))) ||
-                (isRespawnFuel(stack) && canBeCharged(state))) {
+                (isRespawnFuel(itemInHand) && canBeCharged(state))) {
             // Log, stop. (**DEBUG**)
-            HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, result: {}, stack: {}, anchor: {})", state, level, pos, player, hand, result, stack, this);
+            HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, hitResult: {}, itemInHand: {}, anchor: {})", state, level, pos, player, hand, hitResult, itemInHand, this);
             return;
         }
 
@@ -208,24 +208,24 @@ public final class RespawnAnchorBlockMixin {
                 HCsCR.CLIPPING_BLOCKS.put(pos, state);
 
                 // Log, break. (**DEBUG**)
-                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Clipping anchor via right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
+                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Clipping anchor via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, itemInHand: {}, anchor: {})", state, level, pos, player, hitResult, itemInHand, this);
                 break;
             case FULL:
                 // Remove.
                 level.removeBlock(pos, false); // Implicit NPE for 'pos'
 
                 // Log, break. (**DEBUG**)
-                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Removed anchor via right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
+                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Removed anchor via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, itemInHand: {}, anchor: {})", state, level, pos, player, hitResult, itemInHand, this);
                 break;
             default:
                 // Log. (**DEBUG**)
-                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Ignored anchor right click. (state: {}, level: {}, pos: {}, player: {}, result: {}, anchor: {})", state, level, pos, player, result, this);
+                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Ignored anchor right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, itemInHand: {}, anchor: {})", state, level, pos, player, hitResult, itemInHand, this);
         }
     }
 
     @Contract(pure = true)
     @org.spongepowered.asm.mixin.Shadow
-    private static boolean isRespawnFuel(net.minecraft.world.item.ItemStack stack) {
+    private static boolean isRespawnFuel(net.minecraft.world.item.ItemStack itemInHand) {
         throw new AssertionError("HCsCR: Unreachable code statement.");
     }
 

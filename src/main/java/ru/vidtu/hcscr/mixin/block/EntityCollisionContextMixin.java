@@ -72,7 +72,7 @@ public final class EntityCollisionContextMixin implements HEntityCollisionContex
     /^*
      * Stores the {@link #hcscr_entity} for future use.
      *
-     * @param entity The entity to stored, {@code null} if none
+     * @param entity The entity to store in the context, {@code null} if none
      * @param ci     Callback data, ignored
      * @apiNote Do not call, called by Mixin
      * @see HStonecutter#collisionContextEntity(EntityCollisionContext)
@@ -81,7 +81,7 @@ public final class EntityCollisionContextMixin implements HEntityCollisionContex
     @DoNotCall("Called by Mixin")
     @Inject(method = "<init>(Lnet/minecraft/world/entity/Entity;)V", at = @At("RETURN"))
     private void hcscr_init_return(@Nullable Entity entity, CallbackInfo ci) {
-        // Stored.
+        // Store.
         this.hcscr_entity = entity;
     }
 

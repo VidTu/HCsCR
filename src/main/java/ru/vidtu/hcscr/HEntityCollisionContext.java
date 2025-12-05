@@ -44,7 +44,7 @@ public interface HEntityCollisionContext {
     /^*
      * Gets the entity.
      *
-     * @return Entity involving in the context, {@code null} if none
+     * @return Entity involving in the context, {@code null} if none or not stored
      ^/
     @Contract(pure = true)
     @Nullable

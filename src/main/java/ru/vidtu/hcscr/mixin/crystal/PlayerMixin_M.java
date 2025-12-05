@@ -36,7 +36,7 @@ import ru.vidtu.hcscr.platform.HPlugin;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
- * Mixin that speeds up entity removing via {@link HCsCR#handleEntityHit(Entity, DamageSource, float)}
+ * Mixin that speeds up entity removing via {@link HCsCR#handlePlayerHittingEntity(Entity, DamageSource, float)}
  * in absence of MixinExtras via {@link Redirect} hook. See {@link PlayerMixin_M} for an alternative.
  *
  * @author VidTu
@@ -63,29 +63,29 @@ public final class PlayerMixin_M {
 
     /**
      * Processes the entity attacking. Calls original attack method as well as
-     * {@link HCsCR#handleEntityHit(Entity, DamageSource, float)}, returns {@code true} if any succeeded.
+     * {@link HCsCR#handlePlayerHittingEntity(Entity, DamageSource, float)}, returns {@code true} if any succeeded.
      *
-     * @param entity Entity being attacked
-     * @param source Attack source
-     * @param amount Attack amount
+     * @param target       Entity being attacked by this player
+     * @param damageSource Attack source (inaccurate if invoked on the client)
+     * @param totalDamage  Total amount of damage done to the entity (inaccurate if invoked on the client)
      * @return Whether the attack has succeeded
      * @apiNote Do not call, called by Mixin
      * @see HStonecutter#hurtEntity(Entity, DamageSource, float)
-     * @see HCsCR#handleEntityHit(Entity, DamageSource, float)
+     * @see HCsCR#handlePlayerHittingEntity(Entity, DamageSource, float)
      */
     @DoNotCall("Called by Mixin")
     //? if >=1.21.3 {
     @Redirect(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurtOrSimulate(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
     //?} else
     /*@Redirect(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))*/
-    private boolean hcscr_attack_hurtOrSimulate(Entity entity, DamageSource source, float amount) {
+    private boolean hcscr_attack_hurtOrSimulate(Entity target, DamageSource damageSource, float totalDamage) {
         // Validate.
-        assert entity != null : "HCsCR: Parameter 'entity' is null. (source: " + source + ", amount: " + ", player: " + this + ')';
-        assert source != null : "HCsCR: Parameter 'source' is null. (entity: " + entity + ", amount: " + ", player: " + this + ')';
-        assert Float.isFinite(amount) : "HCsCR: Parameter 'amount' is not finite. (entity: " + entity + ", source: " + source + ", amount: " + ", player: " + this + ')';
+        assert target != null : "HCsCR: Parameter 'target' is null. (damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", player: " + this + ')';
+        assert damageSource != null : "HCsCR: Parameter 'damageSource' is null. (target: " + target + ", totalDamage: " + totalDamage + ", player: " + this + ')';
+        assert Float.isFinite(totalDamage) : "HCsCR: Parameter 'totalDamage' is not finite. (target: " + target + ", damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", player: " + this + ')';
 
         // Delegate.
         //noinspection NonShortCircuitBooleanExpression // <- Needs to call both methods.
-        return HStonecutter.hurtEntity(entity, source, amount) | HCsCR.handleEntityHit(entity, source, amount);
+        return HStonecutter.hurtEntity(target, damageSource, totalDamage) | HCsCR.handlePlayerHittingEntity(target, damageSource, totalDamage);
     }
 }

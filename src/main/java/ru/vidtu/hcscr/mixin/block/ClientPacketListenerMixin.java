@@ -77,7 +77,7 @@ public final class ClientPacketListenerMixin {
      * Nukes the packet block position from {@link HCsCR#CLIPPING_BLOCKS}
      * on receiving block update packet from the server.
      *
-     * @param packet Block update packet
+     * @param packet Packet that updates the block state
      * @param ci     Callback data, ignored
      * @apiNote Do not call, called by Mixin
      * @see HCsCR#CLIPPING_BLOCKS
