@@ -28,6 +28,10 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.network.FriendlyByteBuf;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
@@ -35,6 +39,16 @@ import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.config.HConfig;
+
+//? if >=1.20.2 {
+    //? if >=1.20.6 {
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.minecraft.network.codec.StreamCodec;
+    //?}
+import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.client.multiplayer.ClientConfigurationPacketListenerImpl;
+//?}
 
 /**
  * Main HCsCR class for Fabric.
@@ -71,19 +85,19 @@ public final class HFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         // Log.
-        long start = System.nanoTime();
+        final long start = System.nanoTime();
         LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Loading... (platform: fabric)");
 
         // Load the config.
         HConfig.load();
 
-        // Register the network.
+        // Register the networking.
         //? if >=1.20.6 {
-        var type = new net.minecraft.network.protocol.common.custom.CustomPacketPayload.Type<>(HStonecutter.CHANNEL_IDENTIFIER);
-        var instance = new net.minecraft.network.protocol.common.custom.CustomPacketPayload() {
+        final CustomPacketPayload.Type<CustomPacketPayload> type = new CustomPacketPayload.Type<>(HStonecutter.CHANNEL_IDENTIFIER);
+        final CustomPacketPayload instance = new CustomPacketPayload() {
             @Contract(pure = true)
             @Override
-            public Type<? extends net.minecraft.network.protocol.common.custom.CustomPacketPayload> type() {
+            public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
                 return type;
             }
 
@@ -93,19 +107,28 @@ public final class HFabric implements ClientModInitializer {
                 return "HCsCR/HFabric$CustomPacketPayload{}";
             }
         };
-        var codec = net.minecraft.network.codec.StreamCodec.<net.minecraft.network.FriendlyByteBuf, net.minecraft.network.protocol.common.custom.CustomPacketPayload>of((output, value) -> {}, input -> {
+        final StreamCodec<FriendlyByteBuf, CustomPacketPayload> codec = StreamCodec.of((final FriendlyByteBuf output, final CustomPacketPayload value) -> {
+            // Validate.
+            assert false : "HCsCR: Client-side mod should not send/encode this packet.";
+
+            // Send nothing. (NO-OP)
+        }, (final FriendlyByteBuf input) -> {
+            // Validate.
+            assert input != null : "HCsCR: Parameter 'input' is null.";
+
+            // Skip bytes. (whatever they are)
             input.skipBytes(input.readableBytes()); // Implicit NPE for 'input'
             return instance;
         });
-        net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry.configurationS2C().register(type, codec);
-        net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry.playS2C().register(type, codec);
-        net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking.registerGlobalReceiver(type, (payload, context) -> context.responseSender().disconnect(HStonecutter.translate("hcscr.false")));
-        ClientPlayNetworking.registerGlobalReceiver(type, (payload, context) -> context.responseSender().disconnect(HStonecutter.translate("hcscr.false")));
-        //?} elif >=1.20.2 {
-        /*net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking.registerGlobalReceiver(HStonecutter.CHANNEL_IDENTIFIER, (client, handler, buf, responseSender) -> handler.onDisconnect(HStonecutter.translate("hcscr.false")));
-        ClientPlayNetworking.registerGlobalReceiver(HStonecutter.CHANNEL_IDENTIFIER, (client, handler, buf, responseSender) -> handler.getConnection().disconnect(HStonecutter.translate("hcscr.false")));
-        *///?} else
-        /*ClientPlayNetworking.registerGlobalReceiver(HStonecutter.CHANNEL_IDENTIFIER, (client, handler, buf, responseSender) -> handler.getConnection().disconnect(HStonecutter.translate("hcscr.false")));*/
+        PayloadTypeRegistry.configurationS2C().register(type, codec);
+        PayloadTypeRegistry.playS2C().register(type, codec);
+        ClientConfigurationNetworking.registerGlobalReceiver(type, (final CustomPacketPayload payload, final ClientConfigurationNetworking.Context context) -> context.responseSender().disconnect(HStonecutter.translate("hcscr.false")));
+        ClientPlayNetworking.registerGlobalReceiver(type, (final CustomPacketPayload payload, final ClientPlayNetworking.Context context) -> context.responseSender().disconnect(HStonecutter.translate("hcscr.false")));
+        //?} else {
+            /*//? if >=1.20.2
+        ClientConfigurationNetworking.registerGlobalReceiver(HStonecutter.CHANNEL_IDENTIFIER, (final Minecraft client, final ClientConfigurationPacketListenerImpl handler, final FriendlyByteBuf buf, final PacketSender responseSender) -> handler.onDisconnect(HStonecutter.translate("hcscr.false")));
+        ClientPlayNetworking.registerGlobalReceiver(HStonecutter.CHANNEL_IDENTIFIER, (final Minecraft client, final ClientPacketListener handler, final FriendlyByteBuf buf, final PacketSender responseSender) -> handler.getConnection().disconnect(HStonecutter.translate("hcscr.false")));
+        *///?}
 
         // Register the binds.
         KeyBindingHelper.registerKeyBinding(HCsCR.CONFIG_BIND);
@@ -118,7 +141,7 @@ public final class HFabric implements ClientModInitializer {
         // Config screen handling (ModMenu entrypoint) is in the HModMenu class.
 
         // Done.
-        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / 1_000_000L);
+        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / HCsCR.NANOS_IN_MS);
     }
 
     @Contract(pure = true)
