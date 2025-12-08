@@ -80,7 +80,7 @@ public enum BlockMode {
     @Contract(pure = true)
     /*package-private*/ BlockMode() {
         // Create the translation key.
-        String key = ("hcscr.blocks." + this.name().toLowerCase(Locale.ROOT));
+        final String key = ("hcscr.blocks." + this.name().toLowerCase(Locale.ROOT));
 
         // Create the components.
         this.label = HStonecutter.translate("options.generic_value", HStonecutter.translate("hcscr.blocks"), HStonecutter.translate(key.intern()));

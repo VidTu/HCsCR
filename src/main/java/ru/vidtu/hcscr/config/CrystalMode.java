@@ -80,7 +80,7 @@ public enum CrystalMode {
     @Contract(pure = true)
     /*package-private*/ CrystalMode() {
         // Create the translation key.
-        String key = ("hcscr.crystals." + this.name().toLowerCase(Locale.ROOT));
+        final String key = ("hcscr.crystals." + this.name().toLowerCase(Locale.ROOT));
 
         // Create the components.
         this.label = HStonecutter.translate("options.generic_value", HStonecutter.translate("hcscr.crystals"), HStonecutter.translate(key.intern()));

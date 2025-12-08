@@ -73,7 +73,7 @@ public final class HConfig {
      * Enable the mod, {@code true} by default.
      */
     @SerializedName("enable")
-    private static boolean enable = true;
+    private static /*non-final*/ boolean enable = true;
 
     /**
      * Crystals removal mode, {@link CrystalMode#DIRECT} by default.
@@ -82,7 +82,7 @@ public final class HConfig {
      * @see #crystalsResync
      */
     @SerializedName("crystals")
-    private static CrystalMode crystals = CrystalMode.DIRECT;
+    private static /*non-final*/ CrystalMode crystals = CrystalMode.DIRECT;
 
     /**
      * Crystals removal delay in nanos, {@code 0} by default.
@@ -95,7 +95,7 @@ public final class HConfig {
      */
     @SerializedName("crystalsDelay")
     @Range(from = 0L, to = 200_000_000L)
-    private static int crystalsDelay = 0;
+    private static /*non-final*/ int crystalsDelay = 0;
 
     /**
      * Crystals resync delay in ticks, {@code 20} by default.
@@ -111,13 +111,13 @@ public final class HConfig {
      */
     @SerializedName("crystalsResync")
     @Range(from = 0L, to = 50L)
-    private static int crystalsResync = 20;
+    private static /*non-final*/ int crystalsResync = 20;
 
     /**
      * Blocks (anchors/beds) removal mode, {@link BlockMode#COLLISION} by default.
      */
     @SerializedName(value = "blocks", alternate = "anchors") // was "anchors" in HCsCR 2.0.2
-    private static BlockMode blocks = BlockMode.COLLISION;
+    private static /*non-final*/ BlockMode blocks = BlockMode.COLLISION;
 
     /**
      * Creates a new config via GSON.
@@ -138,20 +138,20 @@ public final class HConfig {
             LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Loading the config... (directory: {})", HStonecutter.CONFIG_DIRECTORY);
 
             // Resolve the file.
-            Path file = HStonecutter.CONFIG_DIRECTORY.resolve("hcscr.json");
+            final Path file = HStonecutter.CONFIG_DIRECTORY.resolve("hcscr.json");
 
             // Read the config.
-            try (BufferedReader reader = Files.newBufferedReader(file)) {
+            try (final BufferedReader reader = Files.newBufferedReader(file)) {
                 // Load the config.
                 GSON.fromJson(reader, HConfig.class);
             }
 
             // Log. (**DEBUG**)
             LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Config has been loaded. (directory: {}, file: {})", HStonecutter.CONFIG_DIRECTORY, file);
-        } catch (NoSuchFileException nsfe) {
+        } catch (final NoSuchFileException nsfe) {
             // Log. (**DEBUG**)
             LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Ignoring missing HCsCR config.", nsfe);
-        } catch (Throwable t) {
+        } catch (final Throwable t) {
             // Log.
             LOGGER.error(HCsCR.HCSCR_MARKER, "HCsCR: Unable to load the HCsCR config.", t);
         } finally {
@@ -174,17 +174,17 @@ public final class HConfig {
             LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Saving the config... (directory: {})", HStonecutter.CONFIG_DIRECTORY);
 
             // Resolve the file.
-            Path file = HStonecutter.CONFIG_DIRECTORY.resolve("hcscr.json");
+            final Path file = HStonecutter.CONFIG_DIRECTORY.resolve("hcscr.json");
 
             // Write the config.
             Files.createDirectories(file.getParent());
-            try (BufferedWriter writer = Files.newBufferedWriter(file)) {
+            try (final BufferedWriter writer = Files.newBufferedWriter(file)) {
                 GSON.toJson(new HConfig(), writer);
             }
 
             // Log. (**DEBUG**)
             LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Config has been saved. (directory: {}, file: {})", HStonecutter.CONFIG_DIRECTORY, file);
-        } catch (Throwable t) {
+        } catch (final Throwable t) {
             // Log.
             LOGGER.error(HCsCR.HCSCR_MARKER, "HCsCR: Unable to save the HCsCR config.", t);
         }
@@ -215,7 +215,7 @@ public final class HConfig {
      * @see #enable()
      * @see #toggle()
      */
-    /*package-private*/ static void enable(boolean enable) {
+    /*package-private*/ static void enable(final boolean enable) {
         HConfig.enable = enable;
     }
 
@@ -241,7 +241,7 @@ public final class HConfig {
      * @see #crystals()
      */
     @CheckReturnValue
-    /*package-private*/ static CrystalMode cycleCrystals(boolean back) {
+    /*package-private*/ static CrystalMode cycleCrystals(final boolean back) {
         switch (crystals) {
             case OFF: return (crystals = (back ? CrystalMode.ENVELOPING : CrystalMode.DIRECT));
             case DIRECT: return (crystals = (back ? CrystalMode.OFF : CrystalMode.ENVELOPING));
@@ -270,7 +270,7 @@ public final class HConfig {
      * @param crystalsDelay Crystals removal delay in nanos, {@code 0} by default
      * @see #crystalsDelay()
      */
-    /*package-private*/ static void crystalsDelay(@Range(from = 0L, to = 200_000_000L) int crystalsDelay) {
+    /*package-private*/ static void crystalsDelay(@Range(from = 0L, to = 200_000_000L) final int crystalsDelay) {
         HConfig.crystalsDelay = Mth.clamp((crystalsDelay / 1_000_000) * 1_000_000, 0, 200_000_000);
     }
 
@@ -294,7 +294,7 @@ public final class HConfig {
      * @param crystalsResync Crystals resync delay in ticks, {@code 20} by default
      * @see #crystalsResync()
      */
-    /*package-private*/ static void crystalsResync(@Range(from = 0L, to = 50L) int crystalsResync) {
+    /*package-private*/ static void crystalsResync(@Range(from = 0L, to = 50L) final int crystalsResync) {
         HConfig.crystalsResync = Mth.clamp(crystalsResync, 0, 50);
     }
 
@@ -317,7 +317,7 @@ public final class HConfig {
      * @see #blocks()
      */
     @CheckReturnValue
-    /*package-private*/ static BlockMode cycleBlocks(boolean back) {
+    /*package-private*/ static BlockMode cycleBlocks(final boolean back) {
         switch (blocks) {
             case OFF: return (blocks = (back ? BlockMode.FULL : BlockMode.COLLISION));
             case COLLISION: return (blocks = (back ? BlockMode.OFF : BlockMode.FULL));
@@ -334,11 +334,11 @@ public final class HConfig {
      * @see #crystals()
      */
     @Contract(pure = true)
-    public static boolean shouldProcess(Entity entity) {
+    public static boolean shouldProcess(final Entity entity) {
         // Validate.
         assert entity != null : "HCsCR: Parameter 'entity' is null.";
 
-        // Fast way for disabled mod.
+        // Check depending on the mode.
         switch (crystals) {
             case DIRECT:
                 return entity instanceof EndCrystal;
@@ -363,7 +363,7 @@ public final class HConfig {
      */
     @CheckReturnValue
     public static boolean toggle() {
-        boolean newState = (enable = !enable);
+        final boolean newState = (enable = !enable);
         save();
         return newState;
     }

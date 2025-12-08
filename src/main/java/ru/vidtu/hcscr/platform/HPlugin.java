@@ -95,7 +95,7 @@ public final class HPlugin implements IMixinConfigPlugin {
     @DoNotCall("Called by Mixin")
     @Contract(pure = true)
     @Override
-    public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+    public boolean shouldApplyMixin(final String targetClassName, final String mixinClassName) {
         // If the Mixin class is not from HCsCR, don't touch it and allow it to be applied.
         if (!mixinClassName.startsWith("ru.vidtu.hcscr.mixin.")) {
             // Log. (**TRACE**)
@@ -105,7 +105,7 @@ public final class HPlugin implements IMixinConfigPlugin {
         }
 
         // Check if the Mixin should be applied.
-        boolean applyMixin;
+        final boolean applyMixin;
         if (mixinClassName.endsWith("_E")) { // Mixin[E]xtras. Use only if MixinExtras IS installed.
             applyMixin = this.mixinExtras;
         } else if (mixinClassName.endsWith("_M")) { // [M]ixin. Use only if MixinExtras is NOT installed.
@@ -134,7 +134,7 @@ public final class HPlugin implements IMixinConfigPlugin {
     @DoNotCall("Called by Mixin")
     @Contract(pure = true)
     @Override
-    public void onLoad(String mixinPackage) {
+    public void onLoad(final String mixinPackage) {
         // NO-OP
     }
 
@@ -162,7 +162,7 @@ public final class HPlugin implements IMixinConfigPlugin {
     @DoNotCall("Called by Mixin")
     @Contract(pure = true)
     @Override
-    public void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {
+    public void acceptTargets(final Set<String> myTargets, final Set<String> otherTargets) {
         // NO-OP
     }
 
@@ -192,7 +192,8 @@ public final class HPlugin implements IMixinConfigPlugin {
     @DoNotCall("Called by Mixin")
     @Contract(pure = true)
     @Override
-    public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
+    public void preApply(final String targetClassName, final ClassNode targetClass,
+                         final String mixinClassName, final IMixinInfo mixinInfo) {
         // NO-OP
     }
 
@@ -208,7 +209,8 @@ public final class HPlugin implements IMixinConfigPlugin {
     @DoNotCall("Called by Mixin")
     @Contract(pure = true)
     @Override
-    public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
+    public void postApply(final String targetClassName, final ClassNode targetClass,
+                          final String mixinClassName, final IMixinInfo mixinInfo) {
         // NO-OP
     }
 
@@ -240,7 +242,7 @@ public final class HPlugin implements IMixinConfigPlugin {
     @Contract(pure = true)
     private boolean shouldUseMixinExtras() {
         // Extract the system property.
-        String property = System.getProperty("ru.vidtu.hcscr.mixinextras", "auto");
+        final String property = System.getProperty("ru.vidtu.hcscr.mixinextras", "auto");
 
         // Check if forcefully disabled.
         if ("false".equalsIgnoreCase(property)) {
@@ -265,14 +267,14 @@ public final class HPlugin implements IMixinConfigPlugin {
         // Try to find MixinExtras.
         try {
             // Find MixinExtras version.
-            MixinExtrasVersion version = MixinExtrasVersion.LATEST;
+            final MixinExtrasVersion version = MixinExtrasVersion.LATEST;
 
             // Log.
             LOGGER.info(HCSCR_MARKER, "HCsCR: MixinExtras HAS been found, and it will be used. (version: {})", version);
 
             // Enabled.
             return true;
-        } catch (Throwable t) {
+        } catch (final Throwable t) {
             // Log.
             LOGGER.info(HCSCR_MARKER, "HCsCR: MixinExtras has NOT been found, and it won't be used.");
             LOGGER.debug(HCSCR_MARKER, "HCsCR: Unable to provide compat for MixinExtras, it's probably not installed. (plugin: {})", this, t);
