@@ -88,10 +88,10 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
     //? if >=1.21.11 {
     @Inject(method = "updateLevelInEngines(Lnet/minecraft/client/multiplayer/ClientLevel;Z)V", at = @At("RETURN"))
     private void hcscr_updateLevelInEngines_return(@Nullable ClientLevel level, boolean stopSound, CallbackInfo ci) {
-    //? } else {
+    //?} else {
     /*@Inject(method = "updateLevelInEngines", at = @At("RETURN"))
-    private void hcscr_updateLevelInEngines_return(@Nullable ClientLevel level, CallbackInfo ci) {*/
-    //? }
+    private void hcscr_updateLevelInEngines_return(@Nullable ClientLevel level, CallbackInfo ci) {
+    *///?}
         // Validate.
         assert this.isSameThread() : "HCsCR: Updating level in engines NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ", client: " + this + ')';
 

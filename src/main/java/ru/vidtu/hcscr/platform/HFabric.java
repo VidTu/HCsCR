@@ -29,8 +29,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,15 +38,20 @@ import org.jspecify.annotations.NullMarked;
 import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.config.HConfig;
 
-//? if >=1.20.2 {
-    //? if >=1.20.6 {
+//? if >=1.20.6 {
+import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.network.codec.StreamCodec;
-    //?}
-import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+//?} elif >=1.20.2 {
+/*import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientConfigurationPacketListenerImpl;
-//?}
+import net.minecraft.client.multiplayer.ClientPacketListener;
+*///?} else {
+/*import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+*///?}
 
 /**
  * Main HCsCR class for Fabric.
@@ -108,10 +111,8 @@ public final class HFabric implements ClientModInitializer {
             }
         };
         final StreamCodec<FriendlyByteBuf, CustomPacketPayload> codec = StreamCodec.of((final FriendlyByteBuf output, final CustomPacketPayload value) -> {
-            // Validate.
-            assert false : "HCsCR: Client-side mod should not send/encode this packet.";
-
-            // Send nothing. (NO-OP)
+            // Throw unconditionally.
+            throw new IllegalStateException("HCsCR: Client-side mod should not send/encode this packet. (output: " + output + ", value: " + value + ')');
         }, (final FriendlyByteBuf input) -> {
             // Validate.
             assert input != null : "HCsCR: Parameter 'input' is null.";
@@ -122,12 +123,56 @@ public final class HFabric implements ClientModInitializer {
         });
         PayloadTypeRegistry.configurationS2C().register(type, codec);
         PayloadTypeRegistry.playS2C().register(type, codec);
-        ClientConfigurationNetworking.registerGlobalReceiver(type, (final CustomPacketPayload payload, final ClientConfigurationNetworking.Context context) -> context.responseSender().disconnect(HStonecutter.translate("hcscr.false")));
-        ClientPlayNetworking.registerGlobalReceiver(type, (final CustomPacketPayload payload, final ClientPlayNetworking.Context context) -> context.responseSender().disconnect(HStonecutter.translate("hcscr.false")));
-        //?} else {
-            /*//? if >=1.20.2
-        ClientConfigurationNetworking.registerGlobalReceiver(HStonecutter.CHANNEL_IDENTIFIER, (final Minecraft client, final ClientConfigurationPacketListenerImpl handler, final FriendlyByteBuf buf, final PacketSender responseSender) -> handler.onDisconnect(HStonecutter.translate("hcscr.false")));
-        ClientPlayNetworking.registerGlobalReceiver(HStonecutter.CHANNEL_IDENTIFIER, (final Minecraft client, final ClientPacketListener handler, final FriendlyByteBuf buf, final PacketSender responseSender) -> handler.getConnection().disconnect(HStonecutter.translate("hcscr.false")));
+        ClientConfigurationNetworking.registerGlobalReceiver(type, (final CustomPacketPayload payload, final ClientConfigurationNetworking.Context context) -> {
+            // Validate.
+            assert context != null : "HCsCR: Parameter 'context' is null. (payload:" + payload + ')';
+            final PacketSender sender = context.responseSender(); // Implicit NPE for 'context'
+            assert sender != null : "HCsCR: Response sender is null. (payload: " + payload + ", context: " + context + ')';
+
+            // Close the connection.
+            sender.disconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'sender'
+        });
+        ClientPlayNetworking.registerGlobalReceiver(type, (final CustomPacketPayload payload, final ClientPlayNetworking.Context context) -> {
+            // Validate.
+            assert context != null : "HCsCR: Parameter 'context' is null. (payload:" + payload + ')';
+            final PacketSender sender = context.responseSender(); // Implicit NPE for 'context'
+            assert sender != null : "HCsCR: Response sender is null. (payload: " + payload + ", context: " + context + ')';
+
+            // Close the connection.
+            sender.disconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'sender'
+        });
+        //?} elif >=1.20.2 {
+        /*ClientConfigurationNetworking.registerGlobalReceiver(HStonecutter.CHANNEL_IDENTIFIER, (final Minecraft client, final ClientConfigurationPacketListenerImpl handler, final FriendlyByteBuf buf, final PacketSender responseSender) -> {
+            // Validate.
+            assert client != null : "HCsCR: Parameter 'client' is null. (handler: " + handler + ", buf: " + buf + ", responseSender: " + responseSender + ')';
+            assert handler != null : "HCsCR: Parameter 'handler' is null. (client: " + client + ", buf: " + buf + ", responseSender: " + responseSender + ')';
+            assert buf != null : "HCsCR: Parameter 'buf' is null. (client: " + client + ", handler: " + handler + ", responseSender: " + responseSender + ')';
+            assert responseSender != null : "HCsCR: Parameter 'responseSender' is null. (client: " + client + ", handler: " + handler + ", buf: " + buf + ')';
+
+            // Close the connection.
+            handler.onDisconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'handler'
+        });
+        ClientPlayNetworking.registerGlobalReceiver(HStonecutter.CHANNEL_IDENTIFIER, (final Minecraft client, final ClientPacketListener handler, final FriendlyByteBuf buf, final PacketSender responseSender) -> {
+            // Validate.
+            assert client != null : "HCsCR: Parameter 'client' is null. (handler: " + handler + ", buf: " + buf + ", responseSender: " + responseSender + ')';
+            assert handler != null : "HCsCR: Parameter 'handler' is null. (client: " + client + ", buf: " + buf + ", responseSender: " + responseSender + ')';
+            assert buf != null : "HCsCR: Parameter 'buf' is null. (client: " + client + ", handler: " + handler + ", responseSender: " + responseSender + ')';
+            assert responseSender != null : "HCsCR: Parameter 'responseSender' is null. (client: " + client + ", handler: " + handler + ", buf: " + buf + ')';
+
+            // Close the connection.
+            handler.onDisconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'handler'
+        });
+        *///?} else {
+        /*ClientPlayNetworking.registerGlobalReceiver(HStonecutter.CHANNEL_IDENTIFIER, (final Minecraft client, final ClientPacketListener handler, final FriendlyByteBuf buf, final PacketSender responseSender) -> {
+            // Validate.
+            assert client != null : "HCsCR: Parameter 'client' is null. (handler: " + handler + ", buf: " + buf + ", responseSender: " + responseSender + ')';
+            assert handler != null : "HCsCR: Parameter 'handler' is null. (client: " + client + ", buf: " + buf + ", responseSender: " + responseSender + ')';
+            assert buf != null : "HCsCR: Parameter 'buf' is null. (client: " + client + ", handler: " + handler + ", responseSender: " + responseSender + ')';
+            assert responseSender != null : "HCsCR: Parameter 'responseSender' is null. (client: " + client + ", handler: " + handler + ", buf: " + buf + ')';
+
+            // Close the connection.
+            handler.onDisconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'handler'
+        });
         *///?}
 
         // Register the binds.

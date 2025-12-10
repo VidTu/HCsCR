@@ -47,6 +47,10 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 
+//? if >=1.19.4 {
+import net.minecraft.world.entity.Interaction;
+//?}
+
 /**
  * HCsCR config storage.
  *
@@ -345,7 +349,7 @@ public final class HConfig {
             case ENVELOPING:
                 //? if >=1.19.4 {
                 //noinspection SimplifiableIfStatement // <- Preprocessor Statement.
-                if (entity instanceof net.minecraft.world.entity.Interaction) return true;
+                if (entity instanceof Interaction) return true;
                 //?}
                 return (entity instanceof EndCrystal) || ((entity instanceof Slime) && entity.isInvisible());
             default:

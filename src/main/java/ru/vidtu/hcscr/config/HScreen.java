@@ -26,6 +26,7 @@ import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -37,7 +38,14 @@ import org.jspecify.annotations.Nullable;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.IntFunction;
+
+//? if >=1.20.1 {
+import net.minecraft.client.gui.GuiGraphics;
+//?} else {
+/*import com.mojang.blaze3d.vertex.PoseStack;
+*///?}
 
 /**
  * HCsCR config screen.
@@ -60,7 +68,7 @@ public final class HScreen extends Screen {
      * Tooltip to be rendered last pass. (<1.19.4)
      ^/
     @Nullable
-    private List<FormattedCharSequence> tooltip;
+    private /^non-final^/ List<FormattedCharSequence> tooltip;
     *///?}
 
     /**
@@ -86,25 +94,25 @@ public final class HScreen extends Screen {
     @Override
     protected void init() {
         // Validate.
-        Font font = this.font;
+        final Font font = this.font;
         assert font != null : "HCsCR: Font renderer is not initialized at screen initializing. (screen: " + this + ')';
-        Minecraft minecraft = this.minecraft;
+        final Minecraft minecraft = this.minecraft;
         assert minecraft != null : "HCsCR: Minecraft client instance is not initialized at screen initializing. (screen: " + this + ')';
         assert minecraft.isSameThread() : "HCsCR: Initializing the config screen NOT from the main thread. (thread: " + Thread.currentThread() + ", screen: " + this + ')';
 
         // Enable.
-        int index = 0;
-        int centerX = (this.width / 2);
+        /*non-final*/ int index = 0;
+        final int centerX = (this.width / 2);
         this.addVersionedWidget(HStonecutter.createCheckbox(font, centerX, calculateWidgetY(index++), HStonecutter.translate("hcscr.enable"), // Implicit NPE for 'font'
                 HStonecutter.translate("hcscr.enable.tip"), HConfig.enable(),
                 HConfig::enable, this::tooltip));
 
         // Crystals.
-        int buttonX = (centerX - 100);
-        CrystalMode crystals = HConfig.crystals();
-        this.addVersionedWidget(HStonecutter.createButton(font, buttonX, calculateWidgetY(index++), 200, 20, crystals.label(), crystals.tip(), (button, tipSetter) -> {
+        final int buttonX = (centerX - 100);
+        final CrystalMode crystals = HConfig.crystals();
+        this.addVersionedWidget(HStonecutter.createButton(font, buttonX, calculateWidgetY(index++), 200, 20, crystals.label(), crystals.tip(), (final Button button, final Consumer<Component> tipSetter) -> {
             // Update the crystals.
-            CrystalMode newCrystals = HConfig.cycleCrystals(/*back=*/HStonecutter.isShiftKeyDown(minecraft));
+            final CrystalMode newCrystals = HConfig.cycleCrystals(/*back=*/HStonecutter.isShiftKeyDown(minecraft));
 
             // Update the label and tooltip.
             button.setMessage(newCrystals.label());
@@ -112,7 +120,7 @@ public final class HScreen extends Screen {
         }, this::tooltip));
 
         // Crystals Delay.
-        IntFunction<Component> crystalsDelayMessage = delay -> HStonecutter.translate("options.generic_value",
+        final IntFunction<Component> crystalsDelayMessage = (final int delay) -> HStonecutter.translate("options.generic_value",
                 HStonecutter.translate("hcscr.crystalsDelay"), (delay > 0) ? HStonecutter.translate(
                         "hcscr.delay.format", delay / 1_000_000) : HStonecutter.translate("hcscr.delay.off"));
         this.addVersionedWidget(HStonecutter.createSlider(font, buttonX, calculateWidgetY(index++), 200, 20, crystalsDelayMessage,
@@ -120,7 +128,7 @@ public final class HScreen extends Screen {
                 HConfig::crystalsDelay, this::tooltip));
 
         // Crystals Resync.
-        IntFunction<Component> crystalsResyncMessage = resync -> HStonecutter.translate("options.generic_value",
+        final IntFunction<Component> crystalsResyncMessage = (final int resync) -> HStonecutter.translate("options.generic_value",
                 HStonecutter.translate("hcscr.crystalsResync"), (resync > 0) ? HStonecutter.translate(
                         "hcscr.delay.format", resync * 50) : HStonecutter.translate("hcscr.delay.off"));
         this.addVersionedWidget(HStonecutter.createSlider(font, buttonX, calculateWidgetY(index++), 200, 20, crystalsResyncMessage,
@@ -128,10 +136,10 @@ public final class HScreen extends Screen {
                 HConfig::crystalsResync, this::tooltip));
 
         // Anchors.
-        BlockMode anchors = HConfig.blocks();
-        this.addVersionedWidget(HStonecutter.createButton(font, buttonX, calculateWidgetY(index++), 200, 20, anchors.label(), anchors.tip(), (button, tipSetter) -> {
+        final BlockMode anchors = HConfig.blocks();
+        this.addVersionedWidget(HStonecutter.createButton(font, buttonX, calculateWidgetY(index++), 200, 20, anchors.label(), anchors.tip(), (final Button button, final Consumer<Component> tipSetter) -> {
             // Update the anchors.
-            BlockMode newAnchors = HConfig.cycleBlocks(/*back=*/HStonecutter.isShiftKeyDown(minecraft));
+            final BlockMode newAnchors = HConfig.cycleBlocks(/*back=*/HStonecutter.isShiftKeyDown(minecraft));
 
             // Update the label and tooltip.
             button.setMessage(newAnchors.label());
@@ -141,7 +149,7 @@ public final class HScreen extends Screen {
         // Add done button.
         this.addVersionedWidget(HStonecutter.createButton(font, buttonX, this.height - 24, 200, 20,
                 CommonComponents.GUI_DONE, HStonecutter.translate("hcscr.close"),
-                (btn, tipSetter) -> this.onClose(), this::tooltip));
+                (final Button button, final Consumer<Component> tipSetter) -> this.onClose(), this::tooltip));
     }
 
     /**
@@ -150,7 +158,7 @@ public final class HScreen extends Screen {
     @Override
     public void onClose() {
         // Validate.
-        Minecraft minecraft = this.minecraft;
+        final Minecraft minecraft = this.minecraft;
         assert minecraft != null : "HCsCR: Minecraft client instance is not initialized at screen closing. (screen: " + this + ')';
         assert minecraft.isSameThread() : "HCsCR: Closing the config screen NOT from the main thread. (thread: " + Thread.currentThread() + ", screen: " + this + ')';
 
@@ -174,33 +182,37 @@ public final class HScreen extends Screen {
     @DoNotCall("Called by Minecraft")
     @Override
     //? if >=1.20.1 {
-    public void render(net.minecraft.client.gui.GuiGraphics graphics, int mouseX, int mouseY, float tickDelta) {
-    //?} else
-    /*public void render(com.mojang.blaze3d.vertex.PoseStack graphics, int mouseX, int mouseY, float tickDelta) {*/
+    public void render(final GuiGraphics graphics, final int mouseX, final int mouseY, final float tickDelta) {
+    //?} else {
+    /*public void render(final PoseStack graphics, final int mouseX, final int mouseY, final float tickDelta) {*/
+    //?}
         // Validate.
         assert graphics != null : "HCsCR: Parameter 'graphics' is null. (mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
         assert (tickDelta >= 0.0F) && (tickDelta < Float.POSITIVE_INFINITY) : "HCsCR: Parameter 'tickDelta' is not in the [0..INF) range. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
-        Font font = this.font;
+        final Font font = this.font;
         assert font != null : "HCsCR: Font renderer is not initialized at screen rendering. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
-        Minecraft minecraft = this.minecraft;
+        final Minecraft minecraft = this.minecraft;
         assert minecraft != null : "HCsCR: Minecraft client instance is not initialized at screen rendering. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
         assert minecraft.isSameThread() : "HCsCR: Rendering the config screen NOT from the main thread. (thread: " + Thread.currentThread() + ", graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
 
         // Render background and widgets.
-        //? if <1.20.2
-        /*this.renderBackground(graphics);*/ // Implicit NPE for 'graphics'
+        //? if <1.20.2 {
+        /*this.renderBackground(graphics); // Implicit NPE for 'graphics'
+        *///?}
         super.render(graphics, mouseX, mouseY, tickDelta); // Implicit NPE for 'graphics'
 
         // Render title.
         //? if >=1.20.1 {
         graphics.drawCenteredString(font, this.title, this.width / 2, 5, 0xFF_FF_FF_FF);
-        //?} else
+        //?} else {
         /*drawCenteredString(graphics, font, this.title, this.width / 2, 5, 0xFF_FF_FF_FF);*/
+        //?}
 
         // Render the last pass tooltip.
         //? if <1.19.4 {
-        /*if (this.tooltip == null) return;
-        this.renderTooltip(graphics, this.tooltip, mouseX, mouseY);
+        /*final List<FormattedCharSequence> tooltip = this.tooltip;
+        if (tooltip == null) return;
+        this.renderTooltip(graphics, tooltip, mouseX, mouseY);
         this.tooltip = null;
         *///?}
     }
@@ -210,15 +222,16 @@ public final class HScreen extends Screen {
      *
      * @param widget Widget to add
      */
-    private void addVersionedWidget(AbstractWidget widget) {
+    private void addVersionedWidget(final AbstractWidget widget) {
         // Validate.
         assert widget != null : "HCsCR: Parameter 'widget' is null. (screen: " + this + ')';
 
         // Delegate.
         //? if >=1.17.1 {
         this.addRenderableWidget(widget); // Implicit NPE for 'widget'
-        //?} else
-        /*this.addButton(widget);*/ // Implicit NPE for 'widget'
+        //?} else {
+        /*this.addButton(widget); // Implicit NPE for 'widget'
+        *///?}
     }
 
     /**
@@ -226,13 +239,14 @@ public final class HScreen extends Screen {
      *
      * @param tooltip Tooltip to be rendered last pass
      */
-    private void tooltip(List<FormattedCharSequence> tooltip) {
+    private void tooltip(final List<FormattedCharSequence> tooltip) {
         // Validate.
         assert tooltip != null : "HCsCR: Parameter 'tooltip' is null. (screen: " + this + ')';
 
         // Assign.
-        //? if <1.19.4
+        //? if <1.19.4 {
         /*this.tooltip = tooltip;*/
+        //?}
     }
 
     @Contract(pure = true)
@@ -240,8 +254,9 @@ public final class HScreen extends Screen {
     public String toString() {
         return "HCsCR/HScreen{" +
                 "parent=" + this.parent +
-                //? if <1.19.4
+                //? if <1.19.4 {
                 /*", tooltip=" + this.tooltip +*/
+                //?}
                 '}';
     }
 
@@ -252,7 +267,7 @@ public final class HScreen extends Screen {
      * @return Calculated widget Y position
      */
     @Contract(pure = true)
-    private static int calculateWidgetY(int index) {
-        return 20 + (index * 24);
+    private static int calculateWidgetY(final int index) {
+        return (20 + (index * 24));
     }
 }

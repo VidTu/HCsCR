@@ -24,10 +24,10 @@
 /*package ru.vidtu.hcscr.platform;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.Connection;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,6 +37,114 @@ import org.jspecify.annotations.NullMarked;
 import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.config.HConfig;
 import ru.vidtu.hcscr.config.HScreen;
+
+//? if hacky_neoforge {
+/^import net.minecraft.client.gui.screens.Screen;
+import net.minecraftforge.client.ConfigScreenHandler;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.IExtensionPoint;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.NetworkRegistry;
+import java.util.function.Supplier;
+^///?} elif >=1.21.8 {
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraftforge.client.ConfigScreenHandler;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.minecraftforge.eventbus.api.bus.EventBus;
+import net.minecraftforge.fml.IExtensionPoint;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.network.Channel;
+import net.minecraftforge.network.ChannelBuilder;
+//?} elif >=1.20.2 {
+/^import net.minecraft.client.gui.screens.Screen;
+import net.minecraftforge.client.ConfigScreenHandler;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.IExtensionPoint;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.network.Channel;
+import net.minecraftforge.network.ChannelBuilder;
+^///?} elif >=1.21.8 {
+/^import net.minecraftforge.client.ConfigScreenHandler;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.minecraftforge.eventbus.api.bus.EventBus;
+import net.minecraftforge.fml.IExtensionPoint;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.network.Channel;
+import net.minecraftforge.network.ChannelBuilder;
+^///?} elif >=1.20.2 {
+/^import net.minecraftforge.client.ConfigScreenHandler;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.IExtensionPoint;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.network.Channel;
+import net.minecraftforge.network.ChannelBuilder;
+^///?} elif >=1.19.2 {
+/^import net.minecraftforge.client.ConfigScreenHandler;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.IExtensionPoint;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.NetworkRegistry;
+import java.util.function.Supplier;
+^///?} elif >=1.18.2 {
+/^import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.client.ConfigGuiHandler;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.IExtensionPoint;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.NetworkRegistry;
+import java.util.function.Supplier;
+^///?} elif >=1.17.1 {
+/^import net.minecraft.client.gui.screens.Screen;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.IExtensionPoint;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fmlclient.ConfigGuiHandler;
+import net.minecraftforge.fmlclient.registry.ClientRegistry;
+import net.minecraftforge.fmllegacy.network.FMLNetworkConstants;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkRegistry;
+import java.util.function.Supplier;
+^///?} else {
+/^import net.minecraft.client.gui.screens.Screen;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.ExtensionPoint;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.FMLNetworkConstants;
+import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import org.apache.commons.lang3.tuple.Pair;
+import java.util.function.Supplier;
+^///?}
 
 /^*
  * Main HCsCR class for Forge.
@@ -62,7 +170,7 @@ public final class HForge {
      * @param bus       Loading event bus
      * @apiNote Do not call, called by Forge
      ¹^/
-    public HForge(net.minecraftforge.fml.ModContainer container, net.minecraftforge.eventbus.api.IEventBus bus) {
+    public HForge(final ModContainer container, final IEventBus bus) {
         // Validate.
         assert container != null : "HCsCR: Parameter 'container' is null. (bus: " + bus + ", mod: " + this + ')';
         assert bus != null : "HCsCR: Parameter 'bus' is null. (container: " + container + ", mod: " + this + ')';
@@ -73,7 +181,7 @@ public final class HForge {
      * @param ctx Loading context
      * @apiNote Do not call, called by Forge
      ^/
-    public HForge(FMLJavaModLoadingContext ctx) {
+    public HForge(final FMLJavaModLoadingContext ctx) {
         // Validate.
         assert ctx != null : "HCsCR: Parameter 'ctx' is null. (mod: " + this + ')';
     //?} else {
@@ -85,7 +193,7 @@ public final class HForge {
     public HForge() {
     ^///?}
         // Log.
-        long start = System.nanoTime();
+        final long start = System.nanoTime();
         LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Loading... (platform: forge)");
 
         // Not sure how long the Forge does have the "clientSideOnly" field in the TOML,
@@ -99,67 +207,99 @@ public final class HForge {
 
         // Register the networking.
         //? if >=1.20.2 {
-        net.minecraftforge.network.ChannelBuilder.named(HStonecutter.CHANNEL_IDENTIFIER).networkProtocolVersion(1).acceptedVersions((status, version) -> true).eventNetworkChannel().addListener(event -> {
-            if (event.getPayload() == null) return;
-            var src = event.getSource();
-            if (!src.isClientSide()) return;
-            src.getConnection().disconnect(HStonecutter.translate("hcscr.false"));
-            src.setPacketHandled(true);
+        ChannelBuilder.named(HStonecutter.CHANNEL_IDENTIFIER).networkProtocolVersion(1).acceptedVersions((final Channel.VersionTest.Status status, final int version) -> true).eventNetworkChannel().addListener((final CustomPayloadEvent event) -> {
+            // Validate.
+            assert event != null : "HCsCR: Parameter 'event' is null.";
+
+            // Skip if there's no payload. (e.g., a channel registration)
+            if (event.getPayload() == null) return; // Implicit NPE for 'event'
+
+            // Check if coming from the server.
+            final CustomPayloadEvent.Context source = event.getSource();
+            assert source != null : "HCsCR: Source is null. (event: " + event + ')';
+            if (!source.isClientSide()) return; // Implicit NPE for 'source'
+            source.setPacketHandled(true);
+
+            // Close the connection.
+            final Connection connection = source.getConnection();
+            assert connection != null : "HCsCR: Connection is null. (event: " + event + ", source: " + source + ')';
+            connection.disconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'connection'
         });
         //?} else {
-        /^//? if >=1.18.2 {
-        net.minecraftforge.network.NetworkRegistry.newEventChannel(HStonecutter.CHANNEL_IDENTIFIER, () -> "hcscr", version -> true, version -> true).addListener(event -> {
-        //?} elif >=1.17.1 {
-        /^¹net.minecraftforge.fmllegacy.network.NetworkRegistry.newEventChannel(HStonecutter.CHANNEL_IDENTIFIER, () -> "hcscr", version -> true, version -> true).addListener(event -> {
-        ¹^///?} else
-        /^¹net.minecraftforge.fml.network.NetworkRegistry.newEventChannel(HStonecutter.CHANNEL_IDENTIFIER, () -> "hcscr", version -> true, version -> true).addListener(event -> {¹^/
-            if (event.getPayload() == null) return;
-            //? if >=1.17.1 {
-            var src = event.getSource().get();
-            //?} else
-            /^¹net.minecraftforge.fml.network.NetworkEvent.Context src = event.getSource().get();¹^/
-            if (src.getDirection().getReceptionSide() != net.minecraftforge.fml.LogicalSide.CLIENT) return;
-            src.getNetworkManager().disconnect(HStonecutter.translate("hcscr.false"));
-            src.setPacketHandled(true);
+        /^NetworkRegistry.newEventChannel(HStonecutter.CHANNEL_IDENTIFIER, () -> "hcscr", (final String version) -> true, (final String version) -> true).addListener((final NetworkEvent event) -> {
+            // Validate.
+            assert event != null : "HCsCR: Parameter 'event' is null.";
+
+            // Skip if there's no payload. (e.g., a channel registration)
+            if (event.getPayload() == null) return; // Implicit NPE for 'event'
+
+            // Check if coming from the server.
+            final Supplier<NetworkEvent.Context> sourceGetter = event.getSource();
+            assert sourceGetter != null : "HCsCR: Source getter is null. (event: " + event + ')';
+            final NetworkEvent.Context source = sourceGetter.get(); // Implicit NPE for 'sourceGetter'
+            assert source != null : "HCsCR: Source is null. (event: " + event + ", sourceGetter: " + sourceGetter + ')';
+            if (source.getDirection().getReceptionSide() != LogicalSide.CLIENT) return; // Implicit NPE for 'source'
+            source.setPacketHandled(true);
+
+            // Close the connection.
+            final Connection connection = source.getNetworkManager();
+            assert connection != null : "HCsCR: Connection is null. (event: " + event + ", sourceGetter: " + sourceGetter + ", source: " + source + ')';
+            connection.disconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'connection'
         });
         ^///?}
 
         // Register the binds.
         //? if >=1.21.10 {
-        var bus = net.minecraftforge.client.event.RegisterKeyMappingsEvent.BUS;
+        final EventBus<RegisterKeyMappingsEvent> bus = RegisterKeyMappingsEvent.BUS;
         //?} elif >=1.21.8 {
-        /^var bus = net.minecraftforge.client.event.RegisterKeyMappingsEvent.getBus(ctx.getModBusGroup());
+        /^final EventBus<RegisterKeyMappingsEvent> bus = RegisterKeyMappingsEvent.getBus(ctx.getModBusGroup()); // Implicit NPE for 'ctx'
         ^///?} elif 1.20.2 {
-        /^var bus = FMLJavaModLoadingContext.get().getModEventBus();
+        /^final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         ^///?} elif >=1.19.2 && (!hacky_neoforge)
-        /^var bus = ctx.getModEventBus();^/ // Implicit NPE for 'ctx'
+        /^final IEventBus bus = ctx.getModEventBus();^/ // Implicit NPE for 'ctx'
         //? if >=1.19.2 {
-        bus.addListener((net.minecraftforge.client.event.RegisterKeyMappingsEvent event) -> {
+        bus.addListener((final RegisterKeyMappingsEvent event) -> {
+            // Validate.
+            assert event != null : "HCsCR: Parameter 'event' is null.";
+
+            // Register.
             event.register(HCsCR.CONFIG_BIND);
             event.register(HCsCR.TOGGLE_BIND);
         });
         //?} else {
-        /^FMLJavaModLoadingContext.get().getModEventBus().addListener((net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent event) -> {
-            //? if >=1.18.2 {
-            net.minecraftforge.client.ClientRegistry.registerKeyBinding(HCsCR.CONFIG_BIND);
-            net.minecraftforge.client.ClientRegistry.registerKeyBinding(HCsCR.TOGGLE_BIND);
-            //?} elif >=1.17.1 {
-            /^¹net.minecraftforge.fmlclient.registry.ClientRegistry.registerKeyBinding(HCsCR.CONFIG_BIND);
-            net.minecraftforge.fmlclient.registry.ClientRegistry.registerKeyBinding(HCsCR.TOGGLE_BIND);
-            ¹^///?} else {
-            /^¹net.minecraftforge.fml.client.registry.ClientRegistry.registerKeyBinding(HCsCR.CONFIG_BIND);
-            net.minecraftforge.fml.client.registry.ClientRegistry.registerKeyBinding(HCsCR.TOGGLE_BIND);
-            ¹^///?}
+        /^FMLJavaModLoadingContext.get().getModEventBus().addListener((final FMLClientSetupEvent event) -> {
+            // Validate.
+            assert event != null : "HCsCR: Parameter 'event' is null.";
+
+            // Register.
+            ClientRegistry.registerKeyBinding(HCsCR.CONFIG_BIND);
+            ClientRegistry.registerKeyBinding(HCsCR.TOGGLE_BIND);
         });
         ^///?}
 
         // Register the client tick end handler.
         //? if >=1.21.8 {
-        TickEvent.ClientTickEvent.Post.BUS.addListener(event -> HCsCR.handleClientTickEnd(Minecraft.getInstance()));
+        TickEvent.ClientTickEvent.Post.BUS.addListener((final TickEvent.ClientTickEvent.Post event) -> {
+            // Validate.
+            assert event != null : "HCsCR: Parameter 'event' is null.";
+
+            // Handle.
+            HCsCR.handleClientTickEnd(Minecraft.getInstance());
+        });
         //?} elif >=1.20.4 {
-        /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent.Post event) -> HCsCR.handleClientTickEnd(Minecraft.getInstance()));
+        /^MinecraftForge.EVENT_BUS.addListener((final TickEvent.ClientTickEvent.Post event) -> {
+            // Validate.
+            assert event != null : "HCsCR: Parameter 'event' is null.";
+
+            // Handle.
+            HCsCR.handleClientTickEnd(Minecraft.getInstance());
+        });
         ^///?} else {
-        /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent event) -> {
+        /^MinecraftForge.EVENT_BUS.addListener((final TickEvent.ClientTickEvent event) -> {
+            // Validate.
+            assert event != null : "HCsCR: Parameter 'event' is null.";
+
+            // Handle.
             if (event.phase != TickEvent.Phase.END) return;
             HCsCR.handleClientTickEnd(Minecraft.getInstance());
         });
@@ -167,11 +307,27 @@ public final class HForge {
 
         // Register the client game loop handler.
         //? if >=1.21.8 {
-        TickEvent.RenderTickEvent.Post.BUS.addListener(event -> HCsCR.handleClientMainLoop(Minecraft.getInstance()));
+        TickEvent.RenderTickEvent.Post.BUS.addListener((final TickEvent.RenderTickEvent.Post event) -> {
+            // Validate.
+            assert event != null : "HCsCR: Parameter 'event' is null.";
+
+            // Handle.
+            HCsCR.handleClientMainLoop(Minecraft.getInstance());
+        });
         //?} elif >=1.20.4 {
-        /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent.Post event) -> HCsCR.handleClientMainLoop(Minecraft.getInstance()));
+        /^MinecraftForge.EVENT_BUS.addListener((final TickEvent.RenderTickEvent.Post event) -> {
+            // Validate.
+            assert event != null : "HCsCR: Parameter 'event' is null.";
+
+            // Handle.
+            HCsCR.handleClientMainLoop(Minecraft.getInstance());
+        });
         ^///?} else {
-        /^net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent event) -> {
+        /^MinecraftForge.EVENT_BUS.addListener((final TickEvent.RenderTickEvent event) -> {
+            // Validate.
+            assert event != null : "HCsCR: Parameter 'event' is null.";
+
+            // Handle.
             if (event.phase != TickEvent.Phase.END) return;
             HCsCR.handleClientMainLoop(Minecraft.getInstance());
         });
@@ -179,23 +335,47 @@ public final class HForge {
 
         // Register the config screen.
         //? if hacky_neoforge {
-        /^container.registerExtensionPoint(net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory.class, () -> new net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory((minecraft, screen) -> new HScreen(screen)));
-        container.registerExtensionPoint(net.minecraftforge.fml.IExtensionPoint.DisplayTest.class, () -> new net.minecraftforge.fml.IExtensionPoint.DisplayTest(() -> net.minecraftforge.fml.IExtensionPoint.DisplayTest.IGNORESERVERONLY, (version, fromServer) -> true));
+        /^container.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((final Minecraft mcClient, final Screen modsScreen) -> {
+            // Validate.
+            assert mcClient != null : "HCsCR: Parameter 'mcClient' is null. (modsScreen: " + modsScreen + ')';
+
+            // Create.
+            return new HScreen(modsScreen);
+        }));
+        container.registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> IExtensionPoint.DisplayTest.IGNORESERVERONLY, (final String remoteVersion, final Boolean isFromServer) -> true));
         ^///?} elif 1.20.2 {
-        /^net.minecraftforge.fml.ModLoadingContext.get().registerExtensionPoint(net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory.class, () -> new net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory((minecraft, screen) -> new HScreen(screen)));
-        net.minecraftforge.fml.ModLoadingContext.get().registerExtensionPoint(net.minecraftforge.fml.IExtensionPoint.DisplayTest.class, () -> new net.minecraftforge.fml.IExtensionPoint.DisplayTest(() -> net.minecraftforge.fml.IExtensionPoint.DisplayTest.IGNORESERVERONLY, (version, fromServer) -> true));
+        /^ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((final Minecraft mcClient, final Screen modsScreen) -> {
+            // Validate.
+            assert mcClient != null : "HCsCR: Parameter 'mcClient' is null. (modsScreen: " + modsScreen + ')';
+
+            // Create.
+            return new HScreen(modsScreen);
+        }));
+        ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> IExtensionPoint.DisplayTest.IGNORESERVERONLY, (final String remoteVersion, final Boolean isFromServer) -> true));
         ^///?} elif >=1.19.2 {
-        ctx.registerExtensionPoint(net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory.class, () -> new net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory(HScreen::new));
-        ctx.registerDisplayTest(net.minecraftforge.fml.IExtensionPoint.DisplayTest.IGNORE_SERVER_VERSION);
+        ctx.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory(HScreen::new));
+        ctx.registerDisplayTest(IExtensionPoint.DisplayTest.IGNORE_SERVER_VERSION);
         //?} elif >=1.18.2 {
-        /^net.minecraftforge.fml.ModLoadingContext.get().registerExtensionPoint(net.minecraftforge.client.ConfigGuiHandler.ConfigGuiFactory.class, () -> new net.minecraftforge.client.ConfigGuiHandler.ConfigGuiFactory(HScreen::new));
-        net.minecraftforge.fml.ModLoadingContext.get().registerDisplayTest(net.minecraftforge.fml.IExtensionPoint.DisplayTest.IGNORE_SERVER_VERSION);
+        /^ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, () -> new ConfigGuiHandler.ConfigGuiFactory(HScreen::new));
+        ModLoadingContext.get().registerDisplayTest(IExtensionPoint.DisplayTest.IGNORE_SERVER_VERSION);
         ^///?} elif >=1.17.1 {
-        /^net.minecraftforge.fml.ModLoadingContext.get().registerExtensionPoint(net.minecraftforge.fmlclient.ConfigGuiHandler.ConfigGuiFactory.class, () -> new net.minecraftforge.fmlclient.ConfigGuiHandler.ConfigGuiFactory((minecraft, screen) -> new HScreen(screen)));
-        net.minecraftforge.fml.ModLoadingContext.get().registerExtensionPoint(net.minecraftforge.fml.IExtensionPoint.DisplayTest.class, () -> new net.minecraftforge.fml.IExtensionPoint.DisplayTest(() -> net.minecraftforge.fmllegacy.network.FMLNetworkConstants.IGNORESERVERONLY, (version, fromServer) -> true));
+        /^ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, () -> new ConfigGuiHandler.ConfigGuiFactory((final Minecraft mcClient, final Screen modsScreen) -> {
+            // Validate.
+            assert mcClient != null : "HCsCR: Parameter 'mcClient' is null. (modsScreen: " + modsScreen + ')';
+
+            // Create.
+            return new HScreen(modsScreen);
+        }));
+        ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> FMLNetworkConstants.IGNORESERVERONLY, (final String remoteVersion, final Boolean isFromServer) -> true));
         ^///?} else {
-        /^net.minecraftforge.fml.ModLoadingContext.get().registerExtensionPoint(net.minecraftforge.fml.ExtensionPoint.CONFIGGUIFACTORY, () -> (minecraft, screen) -> new HScreen(screen));
-        net.minecraftforge.fml.ModLoadingContext.get().registerExtensionPoint(net.minecraftforge.fml.ExtensionPoint.DISPLAYTEST, () -> org.apache.commons.lang3.tuple.Pair.of(() -> net.minecraftforge.fml.network.FMLNetworkConstants.IGNORESERVERONLY, (version, fromServer) -> true));
+        /^ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> (final Minecraft mcClient, final Screen modsScreen) -> {
+            // Validate.
+            assert mcClient != null : "HCsCR: Parameter 'mcClient' is null. (modsScreen: " + modsScreen + ')';
+
+            // Create.
+            return new HScreen(modsScreen);
+        });
+        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (final String remoteVersion, final Boolean isFromServer) -> true));
         ^///?}
 
         // Done.
