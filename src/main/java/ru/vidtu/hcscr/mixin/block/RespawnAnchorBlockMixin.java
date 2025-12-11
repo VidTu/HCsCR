@@ -44,6 +44,12 @@ import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.config.BlockMode;
 import ru.vidtu.hcscr.config.HConfig;
 
+//? if <1.20.6 {
+/*import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
+import org.spongepowered.asm.mixin.Shadow;
+*///?}
+
 /**
  * Mixin that allows respawn anchors to be removed via right click.
  *
@@ -93,8 +99,9 @@ public final class RespawnAnchorBlockMixin {
      */
     @DoNotCall("Called by Mixin")
     @Inject(method = "useWithoutItem", at = @At("HEAD"))
-    private void hcscr_useWithoutItem_head(BlockState state, Level level, BlockPos pos, Player player,
-                                           BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
+    private void hcscr_useWithoutItem_head(final BlockState state, final Level level, final BlockPos pos,
+                                           final Player player, final BlockHitResult hitResult,
+                                           final CallbackInfoReturnable<InteractionResult> cir) {
         // Validate.
         assert state != null : "HCsCR: Parameter 'state' is null. (level: " + level + ", pos: " + pos + ", player: " + player + ", hitResult: " + hitResult + ", anchor: " + this + ')';
         assert level != null : "HCsCR: Parameter 'level' is null. (state: " + state + ", pos: " + pos + ", player: " + player + ", hitResult: " + hitResult + ", anchor: " + this + ')';
@@ -163,9 +170,9 @@ public final class RespawnAnchorBlockMixin {
      ^/
     @DoNotCall("Called by Mixin")
     @Inject(method = "use", at = @At("HEAD"))
-    private void hcscr_use_head(BlockState state, Level level, BlockPos pos, Player player,
-                                net.minecraft.world.InteractionHand hand, BlockHitResult hitResult,
-                                CallbackInfoReturnable<InteractionResult> cir) {
+    private void hcscr_use_head(final BlockState state, final Level level, final BlockPos pos, final Player player,
+                                final InteractionHand hand, final BlockHitResult hitResult,
+                                final CallbackInfoReturnable<InteractionResult> cir) {
         // Validate.
         assert state != null : "HCsCR: Parameter 'state' is null. (level: " + level + ", pos: " + pos + ", player: " + player + ", hand: " + hand + ", hitResult: " + hitResult + ", anchor: " + this + ')';
         assert level != null : "HCsCR: Parameter 'level' is null. (state: " + state + ", pos: " + pos + ", player: " + player + ", hand: " + hand + ", hitResult: " + hitResult + ", anchor: " + this + ')';
@@ -192,7 +199,7 @@ public final class RespawnAnchorBlockMixin {
         assert Minecraft.getInstance().isSameThread() : "HCsCR: Clicking on an anchor NOT from the main thread. (thread: " + Thread.currentThread() + ", state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", hand: " + hand + ", hitResult: " + hitResult + ", anchor: " + this + ')';
 
         // Skip if charging.
-        net.minecraft.world.item.ItemStack itemInHand = player.getItemInHand(hand); // Implicit NPE for 'player'
+        final ItemStack itemInHand = player.getItemInHand(hand); // Implicit NPE for 'player'
         if (((hand == net.minecraft.world.InteractionHand.MAIN_HAND) && !isRespawnFuel(itemInHand) && // Implicit NPE for 'itemInHand'
                 isRespawnFuel(player.getItemInHand(net.minecraft.world.InteractionHand.OFF_HAND))) ||
                 (isRespawnFuel(itemInHand) && canBeCharged(state))) {
@@ -224,14 +231,14 @@ public final class RespawnAnchorBlockMixin {
     }
 
     @Contract(pure = true)
-    @org.spongepowered.asm.mixin.Shadow
-    private static boolean isRespawnFuel(net.minecraft.world.item.ItemStack itemInHand) {
+    @Shadow
+    private static boolean isRespawnFuel(final ItemStack itemInHand) {
         throw new AssertionError("HCsCR: Unreachable code statement.");
     }
 
     @Contract(pure = true)
-    @org.spongepowered.asm.mixin.Shadow
-    private static boolean canBeCharged(BlockState state) {
+    @Shadow
+    private static boolean canBeCharged(final BlockState state) {
         throw new AssertionError("HCsCR: Unreachable code statement.");
     }
     *///?}

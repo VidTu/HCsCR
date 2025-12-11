@@ -10,12 +10,14 @@
     "block.BedBlockMixin",
     "block.BlockBehaviour_BlockStateBaseMixin",
     "block.ClientPacketListenerMixin",
-    //? if <1.17.1
-    /*"block.EntityCollisionContextMixin",*/
+    //? if <1.17.1 {
+    /*"block.EntityCollisionContextMixin",
+    *///?}
     "block.RespawnAnchorBlockMixin",
     "crystal.EntityMixin",
-    //? if >=1.19.4
+    //? if >=1.19.4 {
     "crystal.InteractionMixin",
+    //?}
     "crystal.PlayerMixin_E",
     "crystal.PlayerMixin_M"
   ],

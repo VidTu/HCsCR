@@ -97,10 +97,10 @@ public final class HPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(final String targetClassName, final String mixinClassName) {
         // If the Mixin class is not from HCsCR, don't touch it and allow it to be applied.
-        if (!mixinClassName.startsWith("ru.vidtu.hcscr.mixin.")) {
+        if (!mixinClassName.startsWith("ru.vidtu.hcscr.mixin.")) { // Implicit NPE for 'mixinClassName'
             // Log. (**TRACE**)
             if (!LOGGER.isTraceEnabled(HCSCR_MARKER)) return true;
-            LOGGER.trace(HCSCR_MARKER, "HCsCR: Applying mixin, because it's not a part of HCsCR. (mixinExtras: {}, plugin: {}, targetClassName: {}, mixinClassName: {})", this.mixinExtras, this, targetClassName, mixinClassName);
+            LOGGER.trace(HCSCR_MARKER, "HCsCR: Skipping and applying mixin, because it's not a part of HCsCR... (mixinExtras: {}, plugin: {}, targetClassName: {}, mixinClassName: {})", this.mixinExtras, this, targetClassName, mixinClassName);
             return true;
         }
 
@@ -116,7 +116,7 @@ public final class HPlugin implements IMixinConfigPlugin {
 
         // Log. (**DEBUG**)
         if (applyMixin) {
-            LOGGER.debug(HCSCR_MARKER, "HCsCR: Mixin rules allows it, applying mixin... (mixinExtras: {}, plugin: {}, targetClassName: {}, mixinClassName: {})", this.mixinExtras, this, targetClassName, mixinClassName);
+            LOGGER.debug(HCSCR_MARKER, "HCsCR: Mixin hasn't been ruled out due to MixinExtras rules, mixin WILL be applied. (mixinExtras: {}, plugin: {}, targetClassName: {}, mixinClassName: {})", this.mixinExtras, this, targetClassName, mixinClassName);
         } else {
             LOGGER.debug(HCSCR_MARKER, "HCsCR: Mixin has been ruled out due to MixinExtras rules, mixin WON'T be applied. (mixinExtras: {}, plugin: {}, targetClassName: {}, mixinClassName: {})", this.mixinExtras, this, targetClassName, mixinClassName);
         }

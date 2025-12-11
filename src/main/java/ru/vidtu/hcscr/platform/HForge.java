@@ -250,13 +250,14 @@ public final class HForge {
 
         // Register the binds.
         //? if >=1.21.10 {
-        final EventBus<RegisterKeyMappingsEvent> bus = RegisterKeyMappingsEvent.BUS;
-        //?} elif >=1.21.8 {
-        /^final EventBus<RegisterKeyMappingsEvent> bus = RegisterKeyMappingsEvent.getBus(ctx.getModBusGroup()); // Implicit NPE for 'ctx'
-        ^///?} elif 1.20.2 {
+        /^final EventBus<RegisterKeyMappingsEvent> bus = RegisterKeyMappingsEvent.BUS;
+        ^///?} elif >=1.21.8 {
+        final EventBus<RegisterKeyMappingsEvent> bus = RegisterKeyMappingsEvent.getBus(ctx.getModBusGroup()); // Implicit NPE for 'ctx'
+        //?} elif 1.20.2 {
         /^final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        ^///?} elif >=1.19.2 && (!hacky_neoforge)
-        /^final IEventBus bus = ctx.getModEventBus();^/ // Implicit NPE for 'ctx'
+        ^///?} elif >=1.19.2 && (!hacky_neoforge) {
+        /^final IEventBus bus = ctx.getModEventBus(); // Implicit NPE for 'ctx'
+        ^///?}
         //? if >=1.19.2 {
         bus.addListener((final RegisterKeyMappingsEvent event) -> {
             // Validate.

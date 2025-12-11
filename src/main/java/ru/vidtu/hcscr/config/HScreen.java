@@ -77,7 +77,7 @@ public final class HScreen extends Screen {
      * @param parent Parent screen, {@code null} if none
      */
     @Contract(pure = true)
-    public HScreen(@Nullable Screen parent) {
+    public HScreen(@Nullable final Screen parent) {
         // Call super.
         super(HStonecutter.translate("hcscr.title"));
 
@@ -184,8 +184,8 @@ public final class HScreen extends Screen {
     //? if >=1.20.1 {
     public void render(final GuiGraphics graphics, final int mouseX, final int mouseY, final float tickDelta) {
     //?} else {
-    /*public void render(final PoseStack graphics, final int mouseX, final int mouseY, final float tickDelta) {*/
-    //?}
+    /*public void render(final PoseStack graphics, final int mouseX, final int mouseY, final float tickDelta) {
+    *///?}
         // Validate.
         assert graphics != null : "HCsCR: Parameter 'graphics' is null. (mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
         assert (tickDelta >= 0.0F) && (tickDelta < Float.POSITIVE_INFINITY) : "HCsCR: Parameter 'tickDelta' is not in the [0..INF) range. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
@@ -205,8 +205,8 @@ public final class HScreen extends Screen {
         //? if >=1.20.1 {
         graphics.drawCenteredString(font, this.title, this.width / 2, 5, 0xFF_FF_FF_FF);
         //?} else {
-        /*drawCenteredString(graphics, font, this.title, this.width / 2, 5, 0xFF_FF_FF_FF);*/
-        //?}
+        /*drawCenteredString(graphics, font, this.title, this.width / 2, 5, 0xFF_FF_FF_FF);
+        *///?}
 
         // Render the last pass tooltip.
         //? if <1.19.4 {
@@ -245,8 +245,8 @@ public final class HScreen extends Screen {
 
         // Assign.
         //? if <1.19.4 {
-        /*this.tooltip = tooltip;*/
-        //?}
+        /*this.tooltip = tooltip;
+        *///?}
     }
 
     @Contract(pure = true)
@@ -255,8 +255,8 @@ public final class HScreen extends Screen {
         return "HCsCR/HScreen{" +
                 "parent=" + this.parent +
                 //? if <1.19.4 {
-                /*", tooltip=" + this.tooltip +*/
-                //?}
+                /*", tooltip=" + this.tooltip +
+                *///?}
                 '}';
     }
 

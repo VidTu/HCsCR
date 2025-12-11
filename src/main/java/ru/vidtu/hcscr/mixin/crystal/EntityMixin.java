@@ -56,7 +56,7 @@ public final class EntityMixin {
     @SuppressWarnings("NonConstantFieldWithUpperCaseName") // <- Shadow.
     @Shadow
     @Final
-    private static AABB INITIAL_AABB;
+    private static /*shadow-final*/ AABB INITIAL_AABB;
 
     /**
      * An instance of this class cannot be created.
@@ -82,9 +82,9 @@ public final class EntityMixin {
      */
     @DoNotCall("Called by Mixin")
     @Inject(method = "getBoundingBox", at = @At("HEAD"), cancellable = true)
-    private void hcscr_getBoundingBox_head(CallbackInfoReturnable<AABB> cir) {
+    private void hcscr_getBoundingBox_head(final CallbackInfoReturnable<AABB> cir) {
         // Validate.
-        Level level = this.hcscr_entitymixin_level();
+        final Level level = this.hcscr_entitymixin_level();
         assert level != null : "HCsCR: Getting entity bounding box with null level. (cir: " + cir + ", entity: " + this + ')';
 
         // Do NOT hide entity if any of the following conditions is met:

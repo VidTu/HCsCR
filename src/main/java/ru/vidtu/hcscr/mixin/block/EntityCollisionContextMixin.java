@@ -54,7 +54,7 @@ public final class EntityCollisionContextMixin implements HEntityCollisionContex
      ^/
     @Unique
     @Nullable
-    private Entity hcscr_entity;
+    private /^non-final^/ Entity hcscr_entity;
 
     /^*
      * An instance of this class cannot be created.
@@ -80,7 +80,7 @@ public final class EntityCollisionContextMixin implements HEntityCollisionContex
      ^/
     @DoNotCall("Called by Mixin")
     @Inject(method = "<init>(Lnet/minecraft/world/entity/Entity;)V", at = @At("RETURN"))
-    private void hcscr_init_return(@Nullable Entity entity, CallbackInfo ci) {
+    private void hcscr_init_return(@Nullable final Entity entity, final CallbackInfo ci) {
         // Store.
         this.hcscr_entity = entity;
     }

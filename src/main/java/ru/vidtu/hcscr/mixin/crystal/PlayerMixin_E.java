@@ -76,13 +76,16 @@ public final class PlayerMixin_E {
     @DoNotCall("Called by Mixin")
     //? if >=1.21.3 {
     @WrapOperation(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurtOrSimulate(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
-    //?} else
-    /*@WrapOperation(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))*/
-    private boolean hcscr_attack_hurtOrSimulate(Entity target, DamageSource damageSource, float totalDamage, Operation<Boolean> original) {
+    //?} else {
+    /*@WrapOperation(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
+    *///?}
+    private boolean hcscr_attack_hurtOrSimulate(final Entity target, final DamageSource damageSource,
+                                                final float totalDamage, final Operation<Boolean> original) {
         // Validate.
-        assert target != null : "HCsCR: Parameter 'target' is null. (damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", player: " + this + ')';
-        assert damageSource != null : "HCsCR: Parameter 'damageSource' is null. (target: " + target + ", totalDamage: " + totalDamage + ", player: " + this + ')';
-        assert Float.isFinite(totalDamage) : "HCsCR: Parameter 'totalDamage' is not finite. (target: " + target + ", damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", player: " + this + ')';
+        assert target != null : "HCsCR: Parameter 'target' is null. (damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", original: " + original + ", player: " + this + ')';
+        assert damageSource != null : "HCsCR: Parameter 'damageSource' is null. (target: " + target + ", totalDamage: " + totalDamage + ", original: " + original + ", player: " + this + ')';
+        assert Float.isFinite(totalDamage) : "HCsCR: Parameter 'totalDamage' is not finite. (target: " + target + ", damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", original: " + original + ", player: " + this + ')';
+        assert original != null : "HCsCR: Parameter 'original' is null. (target: " + target + ", damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", player: " + this + ')';
 
         // Delegate.
         //noinspection NonShortCircuitBooleanExpression // <- Needs to call both methods.

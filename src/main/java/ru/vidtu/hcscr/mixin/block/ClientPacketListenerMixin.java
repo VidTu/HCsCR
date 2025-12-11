@@ -58,7 +58,7 @@ public final class ClientPacketListenerMixin {
      */
     @Shadow
     @Nullable
-    private ClientLevel level;
+    private /*non-final*/ ClientLevel level;
 
     /**
      * An instance of this class cannot be created.
@@ -84,24 +84,24 @@ public final class ClientPacketListenerMixin {
      */
     @DoNotCall("Called by Mixin")
     @Inject(method = "handleBlockUpdate", at = @At("RETURN"))
-    private void hcscr_handleBlockUpdate_return(ClientboundBlockUpdatePacket packet, CallbackInfo ci) {
+    private void hcscr_handleBlockUpdate_return(final ClientboundBlockUpdatePacket packet, final CallbackInfo ci) {
         // Validate.
         assert packet != null : "HCsCR: Parameter 'packet' is null. (handler: " + this + ')';
         assert Minecraft.getInstance().isSameThread() : "HCsCR: Receiving block update packet NOT from the main thread. (thread: " + Thread.currentThread() + ", packet: " + packet + ", handler: " + this + ')';
 
         // Nuke.
-        BlockPos pos = packet.getPos(); // Implicit NPE for 'packet'
+        final BlockPos pos = packet.getPos(); // Implicit NPE for 'packet'
         HCsCR.CLIPPING_BLOCKS.remove(pos);
 
         // Find the bed, skip if not bed.
-        Level level = this.level;
+        final Level level = this.level;
         if (level == null) return;
-        BlockState state = level.getBlockState(pos);
+        final BlockState state = level.getBlockState(pos);
         if (!state.is(BlockTags.BEDS)) return;
 
         // Nuke the bed's other part, skip if not bed.
-        BlockPos otherPos = pos.relative(BedBlock.getConnectedDirection(state));
-        BlockState otherState = level.getBlockState(otherPos);
+        final BlockPos otherPos = pos.relative(BedBlock.getConnectedDirection(state));
+        final BlockState otherState = level.getBlockState(otherPos);
         if (!otherState.is(BlockTags.BEDS)) return;
         HCsCR.CLIPPING_BLOCKS.remove(otherPos);
     }

@@ -87,16 +87,17 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
     @DoNotCall("Called by Mixin")
     //? if >=1.21.11 {
     @Inject(method = "updateLevelInEngines(Lnet/minecraft/client/multiplayer/ClientLevel;Z)V", at = @At("RETURN"))
-    private void hcscr_updateLevelInEngines_return(@Nullable ClientLevel level, boolean stopSound, CallbackInfo ci) {
+    private void hcscr_updateLevelInEngines_return(@Nullable final ClientLevel level, final boolean stopSound,
+                                                   final CallbackInfo ci) {
     //?} else {
     /*@Inject(method = "updateLevelInEngines", at = @At("RETURN"))
-    private void hcscr_updateLevelInEngines_return(@Nullable ClientLevel level, CallbackInfo ci) {
+    private void hcscr_updateLevelInEngines_return(@Nullable final ClientLevel level, final CallbackInfo ci) {
     *///?}
         // Validate.
         assert this.isSameThread() : "HCsCR: Updating level in engines NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ", client: " + this + ')';
 
         // Get and push the profiler.
-        ProfilerFiller profiler = this.hcscr_minecraftmixin_profiler();
+        final ProfilerFiller profiler = this.hcscr_minecraftmixin_profiler();
         profiler.push("hcscr:clear_data");
 
         // Log. (**TRACE**)
@@ -125,7 +126,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
      */
     @DoNotCall("Called by Mixin")
     @Inject(method = "runTick", at = @At("RETURN"))
-    private void hcscr_runTick_return(boolean advanceGameTime, CallbackInfo ci) {
+    private void hcscr_runTick_return(final boolean advanceGameTime, final CallbackInfo ci) {
         // Skip if game is not ticking. This happens when the integrated
         // server is loading, unloading, or the game is crashing.
         if (!advanceGameTime) return;

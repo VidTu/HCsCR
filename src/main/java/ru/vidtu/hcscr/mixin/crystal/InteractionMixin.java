@@ -87,7 +87,7 @@ public abstract class InteractionMixin extends Entity {
      */
     @DoNotCall("Called by Mixin")
     @Inject(method = "skipAttackInteraction", at = @At("HEAD"), cancellable = true)
-    private void hcscr_skipAttackInteraction_head(Entity source, CallbackInfoReturnable<Boolean> cir) {
+    private void hcscr_skipAttackInteraction_head(final Entity source, final CallbackInfoReturnable<Boolean> cir) {
         // Validate.
         assert source != null : "HCsCR: Parameter 'source' is null. (cir: " + cir + ", interaction: " + this + ')';
         assert cir != null : "HCsCR: Parameter 'cir' is null. (source: " + source + ", interaction: " + this + ')';
@@ -96,7 +96,7 @@ public abstract class InteractionMixin extends Entity {
         HCSCR_LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Received attack in Interaction entity. (source: {}, cir: {}, interaction: {})", source, cir, this);
 
         // Validate.
-        Level level = HStonecutter.levelOfEntity(this);
+        final Level level = HStonecutter.levelOfEntity(this);
         assert level != null : "HCsCR: Interaction entity has null level. (source: " + source + ", cir: " + cir + ", entity: " + this + ')';
 
         // Do NOT process interactions if any of the following conditions is met:

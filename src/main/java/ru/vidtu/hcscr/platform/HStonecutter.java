@@ -75,8 +75,9 @@ public final class HStonecutter {
     public static final Path CONFIG_DIRECTORY = net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir();
     //?} elif neoforge {
     /*public static final Path CONFIG_DIRECTORY = net.neoforged.fml.loading.FMLPaths.CONFIGDIR.get();
-    *///?} else
-    /*public static final Path CONFIG_DIRECTORY = net.minecraftforge.fml.loading.FMLPaths.CONFIGDIR.get();*/
+    *///?} else {
+    /*public static final Path CONFIG_DIRECTORY = net.minecraftforge.fml.loading.FMLPaths.CONFIGDIR.get();
+    *///?}
 
     //? if >=1.21.10 {
     /**
@@ -86,10 +87,10 @@ public final class HStonecutter {
      */
         //? if neoforge {
             /*//? if >=1.21.11 {
-    /^package-private^/ static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(net.minecraft.resources.Identifier.fromNamespaceAndPath("hcscr", "root"));
-            //?} else {
-    /^/^¹package-private¹^/ static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));
-            ^///?}
+    /^/^¹package-private¹^/ static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(net.minecraft.resources.Identifier.fromNamespaceAndPath("hcscr", "root"));
+            ^///?} else {
+    /^package-private^/ static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));
+            //?}
         *///?} else {
             //? if >=1.21.11 {
     private static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(net.minecraft.resources.Identifier.fromNamespaceAndPath("hcscr", "root"));
@@ -106,8 +107,9 @@ public final class HStonecutter {
     /*package-private*/ static final net.minecraft.resources.Identifier CHANNEL_IDENTIFIER = net.minecraft.resources.Identifier.fromNamespaceAndPath("hcscr", "imhere");
     //?} elif >=1.21.1 || (forge && (!hacky_neoforge) && >=1.18.2 && (!1.20.2)) {
     /*/^package-private^/ static final net.minecraft.resources.ResourceLocation CHANNEL_IDENTIFIER = net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "imhere");
-    *///?} else
-    /*/^package-private^/ static final net.minecraft.resources.ResourceLocation CHANNEL_IDENTIFIER = new net.minecraft.resources.ResourceLocation("hcscr", "imhere");*/
+    *///?} else {
+    /*/^package-private^/ static final net.minecraft.resources.ResourceLocation CHANNEL_IDENTIFIER = new net.minecraft.resources.ResourceLocation("hcscr", "imhere");
+    *///?}
 
     /**
      * A duration for tooltips in version-dependant units. Currently {@code 250} milliseconds.
@@ -116,8 +118,9 @@ public final class HStonecutter {
     private static final java.time.Duration TOOLTIP_DURATION = java.time.Duration.ofMillis(250L);
     //?} elif >=1.19.4 {
     /*private static final int TOOLTIP_DURATION = 250; // Millis.
-    *///?} else
-    /*private static final long TOOLTIP_DURATION = 250_000_000L;*/ // Nanos.
+    *///?} else {
+    /*private static final long TOOLTIP_DURATION = 250_000_000L; // Nanos.
+    *///?}
 
     /**
      * An instance of this class cannot be created.
@@ -146,8 +149,9 @@ public final class HStonecutter {
         // supported until 8.5.12: https://github.com/vigna/fastutil/blob/fcac58f7d3df8e7d903fad533f4caada7f4937cf/CHANGES#L4
         //? if >=1.21.4 {
         return new it.unimi.dsi.fastutil.objects.Object2IntArrayMap<>(0);
-        //?} else
-        /*return new it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap<>(0);*/
+        //?} else {
+        /*return new it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap<>(0);
+        *///?}
     }
 
     /**
@@ -159,7 +163,7 @@ public final class HStonecutter {
      * @see HCsCR#TOGGLE_BIND
      */
     @Contract(value = "_ -> new", pure = true)
-    public static KeyMapping keyBind(String id) {
+    public static KeyMapping keyBind(final String id) {
         // Validate.
         assert id != null : "HCsCR: Parameter 'id' is null.";
         assert !id.isEmpty() : "HCsCR: Creating a key binding with an empty ID.";
@@ -167,8 +171,9 @@ public final class HStonecutter {
         // Delegate.
         //? if >=1.21.10 {
         return new KeyMapping(id, InputConstants.UNKNOWN.getValue(), KEY_CATEGORY);
-        //?} else
-        /*return new KeyMapping(id, InputConstants.UNKNOWN.getValue(), "key.category.hcscr.root");*/
+        //?} else {
+        /*return new KeyMapping(id, InputConstants.UNKNOWN.getValue(), "key.category.hcscr.root");
+        *///?}
     }
 
     /**
@@ -178,7 +183,7 @@ public final class HStonecutter {
      * @return A new translatable component
      */
     @Contract(value = "_ -> new", pure = true)
-    public static MutableComponent translate(String key) {
+    public static MutableComponent translate(final String key) {
         // Validate.
         assert key != null : "HCsCR: Parameter 'key' is null.";
         assert !key.isEmpty() : "HCsCR: Creating a translatable component with an empty key.";
@@ -186,8 +191,9 @@ public final class HStonecutter {
         // Delegate.
         //? if >=1.19.2 {
         return Component.translatable(key);
-        //?} else
-        /*return new net.minecraft.network.chat.TranslatableComponent(key);*/
+        //?} else {
+        /*return new net.minecraft.network.chat.TranslatableComponent(key);
+        *///?}
     }
 
     /**
@@ -198,7 +204,7 @@ public final class HStonecutter {
      * @return A new translatable component
      */
     @Contract(value = "_, _ -> new", pure = true)
-    public static MutableComponent translate(String key, Object... args) {
+    public static MutableComponent translate(final String key, final Object... args) {
         // Validate.
         assert key != null : "HCsCR: Parameter 'key' is null. (args: " + Arrays.toString(args) + ')';
         assert args != null : "HCsCR: Parameter 'args' is null. (key: " + key + ')';
@@ -208,8 +214,9 @@ public final class HStonecutter {
         // Delegate.
         //? if >=1.19.2 {
         return Component.translatable(key, args);
-        //?} else
-        /*return new net.minecraft.network.chat.TranslatableComponent(key, args);*/
+        //?} else {
+        /*return new net.minecraft.network.chat.TranslatableComponent(key, args);
+        *///?}
     }
 
     /**
@@ -219,7 +226,7 @@ public final class HStonecutter {
      * @return Client profiler
      */
     @Contract(pure = true)
-    public static ProfilerFiller profilerOfClient(Minecraft client) {
+    public static ProfilerFiller profilerOfClient(final Minecraft client) {
         // Validate.
         assert client != null : "HCsCR: Parameter 'client' is null.";
         assert client.isSameThread() : "HCsCR: Getting the client profiler NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
@@ -227,8 +234,9 @@ public final class HStonecutter {
         // Delegate.
         //? if >=1.21.3 {
         return net.minecraft.util.profiling.Profiler.get();
-        //?} else
-        /*return client.getProfiler();*/ // Implicit NPE for 'client'
+        //?} else {
+        /*return client.getProfiler(); // Implicit NPE for 'client'
+        *///?}
     }
 
     /**
@@ -238,15 +246,16 @@ public final class HStonecutter {
      * @return The level (world) in which the entity is currently located or was last located
      */
     @Contract(pure = true)
-    public static Level levelOfEntity(Entity entity) {
+    public static Level levelOfEntity(final Entity entity) {
         // Validate.
         assert entity != null : "HCsCR: Parameter 'entity' is null.";
         // No thread checks here because this can be called from the integrated server.
 
         //? if >=1.20.1 {
         return entity.level(); // Implicit NPE for 'entity'
-        //?} else
-        /*return entity.level;*/ // Implicit NPE for 'entity'
+        //?} else {
+        /*return entity.level; // Implicit NPE for 'entity'
+        *///?}
     }
 
     /**
@@ -258,7 +267,7 @@ public final class HStonecutter {
      */
     @SuppressWarnings({"deprecation", "RedundantSuppression"}) // <- Forge 1.16.5.
     @Contract(pure = true)
-    public static boolean isEntityRemoved(Entity entity) {
+    public static boolean isEntityRemoved(final Entity entity) {
         // Validate.
         assert entity != null : "HCsCR: Parameter 'entity' is null.";
         assert Minecraft.getInstance().isSameThread() : "HCsCR: Checking entity removal NOT from the main thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ')';
@@ -266,8 +275,9 @@ public final class HStonecutter {
         // Delegate.
         //? if >=1.17.1 {
         return entity.isRemoved(); // Implicit NPE for 'entity'
-        //?} else
-        /*return entity.removed;*/ // Implicit NPE for 'entity'
+        //?} else {
+        /*return entity.removed; // Implicit NPE for 'entity'
+        *///?}
     }
 
     /**
@@ -278,7 +288,7 @@ public final class HStonecutter {
      */
     @Contract(pure = true)
     @Nullable
-    public static Entity collisionContextEntity(EntityCollisionContext ctx) {
+    public static Entity collisionContextEntity(final EntityCollisionContext ctx) {
         // Validate.
         assert ctx != null : "HCsCR: Parameter 'ctx' is null.";
         // No thread checks here because this can be called from the integrated server.
@@ -300,7 +310,7 @@ public final class HStonecutter {
      * @param entity Target entity to remove
      * @see #isEntityRemoved(Entity)
      */
-    public static void removeEntity(Entity entity) {
+    public static void removeEntity(final Entity entity) {
         // Validate.
         assert entity != null : "HCsCR: Parameter 'entity' is null.";
         assert Minecraft.getInstance().isSameThread() : "HCsCR: Removing an entity NOT from the main thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ')';
@@ -308,8 +318,9 @@ public final class HStonecutter {
         // Delegate.
         //? if >=1.17.1 {
         entity.discard(); // Implicit NPE for 'entity'
-        //?} else
-        /*entity.remove();*/ // Implicit NPE for 'entity'
+        //?} else {
+        /*entity.remove(); // Implicit NPE for 'entity'
+        *///?}
     }
 
     /**
@@ -322,7 +333,7 @@ public final class HStonecutter {
      */
     @SuppressWarnings({"deprecation", "RedundantSuppression"}) // <- Used in vanilla code. (1.21.3+)
     @CheckReturnValue
-    public static boolean hurtEntity(Entity entity, DamageSource source, float amount) {
+    public static boolean hurtEntity(final Entity entity, final DamageSource source, final float amount) {
         // Validate.
         assert entity != null : "HCsCR: Parameter 'entity' is null. (source: " + source + ", amount: " + ')';
         assert source != null : "HCsCR: Parameter 'source' is null. (entity: " + entity + ", amount: " + ')';
@@ -332,8 +343,9 @@ public final class HStonecutter {
         // Delegate.
         //? if >=1.21.3 {
         return entity.hurtOrSimulate(source, amount); // Implicit NPE for 'entity', 'source'
-        //?} else
-        /*return entity.hurt(source, amount);*/ // Implicit NPE for 'entity', 'source'
+        //?} else {
+        /*return entity.hurt(source, amount); // Implicit NPE for 'entity', 'source'
+        *///?}
     }
 
     /**
@@ -343,7 +355,8 @@ public final class HStonecutter {
      * @param player Target player
      * @param map    Player's attribute map
      */
-    public static void addEffectAttributes(MobEffectInstance effect, LocalPlayer player, AttributeMap map) {
+    public static void addEffectAttributes(final MobEffectInstance effect, final LocalPlayer player,
+                                           final AttributeMap map) {
         // Validate.
         assert effect != null : "HCsCR: Parameter 'effect' is null. (player: " + player + ", map: " + map + ')';
         assert player != null : "HCsCR: Parameter 'player' is null. (effect: " + effect + ", map: " + map + ')';
@@ -370,7 +383,8 @@ public final class HStonecutter {
      * @param player Target player
      * @param map    Player's attribute map
      */
-    public static void removeEffectAttributes(MobEffectInstance effect, LocalPlayer player, AttributeMap map) {
+    public static void removeEffectAttributes(final MobEffectInstance effect, final LocalPlayer player,
+                                              final AttributeMap map) {
         // Validate.
         assert effect != null : "HCsCR: Parameter 'effect' is null. (player: " + player + ", map: " + map + ')';
         assert player != null : "HCsCR: Parameter 'player' is null. (effect: " + effect + ", map: " + map + ')';
@@ -397,7 +411,7 @@ public final class HStonecutter {
      * @return {@code true} if the bed will explode, {@code false} if the player will sleep
      */
     @Contract(pure = true)
-    public static boolean willBedExplode(Level level) {
+    public static boolean willBedExplode(final Level level) {
         // Validate.
         assert level != null : "HCsCR: Parameter 'level' is null.";
         assert Minecraft.getInstance().isSameThread() : "HCsCR: Checking bed explosion status NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ')';
@@ -406,10 +420,10 @@ public final class HStonecutter {
         //? if >=1.21.11 {
         // Environmental attributes from 25w42a for BED_WORKS are NOT synced to the client,
         // so we just guess and check by comparing if the dimension doesn't have an OVERWORLD skybox.
-        // TODO(VidTu): Check this in the 1.21.11 development cycle, as of 25w45a (and 1.21.11-rc1) it is a enum, might change.
         return level.dimensionType().skybox() != net.minecraft.world.level.dimension.DimensionType.Skybox.OVERWORLD; // Implicit NPE for 'level'
-        //?} else
-        /*return !net.minecraft.world.level.block.BedBlock.canSetSpawn(level);*/ // Implicit NPE for 'level'
+        //?} else {
+        /*return !net.minecraft.world.level.block.BedBlock.canSetSpawn(level); // Implicit NPE for 'level'
+        *///?}
     }
 
     /**
@@ -419,7 +433,7 @@ public final class HStonecutter {
      * @return {@code true} if the anchor will explode, {@code false} if the player will set the spawn point
      */
     @Contract(pure = true)
-    public static boolean willAnchorExplode(Level level) {
+    public static boolean willAnchorExplode(final Level level) {
         // Validate.
         assert level != null : "HCsCR: Parameter 'level' is null.";
         assert Minecraft.getInstance().isSameThread() : "HCsCR: Checking anchor explosion status NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ')';
@@ -428,10 +442,10 @@ public final class HStonecutter {
         //? if >=1.21.11 {
         // Environmental attributes from 25w42a for RESPAWN_ANCHOR_WORKS are NOT synced to the client,
         // so we just guess and check by comparing if the dimension "doesn't" have skybox like NETHER.
-        // TODO(VidTu): Check this in the 1.21.11 development cycle, as of 25w45a (and 1.21.11-rc1) it is a enum, might change.
         return level.dimensionType().skybox() != net.minecraft.world.level.dimension.DimensionType.Skybox.NONE; // Implicit NPE for 'level'
-        //?} else
-        /*return !net.minecraft.world.level.block.RespawnAnchorBlock.canSetSpawn(level);*/ // Implicit NPE for 'level'
+        //?} else {
+        /*return !net.minecraft.world.level.block.RespawnAnchorBlock.canSetSpawn(level); // Implicit NPE for 'level'
+        *///?}
     }
 
     /**
@@ -441,7 +455,7 @@ public final class HStonecutter {
      * @return {@code true} if the Shift key is down, {@code false} if not
      */
     @Contract(pure = true)
-    public static boolean isShiftKeyDown(Minecraft client) {
+    public static boolean isShiftKeyDown(final Minecraft client) {
         // Validate.
         assert client != null : "HCsCR: Parameter 'client' is null.";
         assert client.isSameThread() : "HCsCR: Checking the shift key state NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
@@ -449,8 +463,9 @@ public final class HStonecutter {
         // Delegate.
         //? if >=1.21.10 {
         return client.hasShiftDown(); // Implicit NPE for 'client'
-        //?} else
-        /*return net.minecraft.client.gui.screens.Screen.hasShiftDown();*/
+        //?} else {
+        /*return net.minecraft.client.gui.screens.Screen.hasShiftDown();
+        *///?}
     }
 
     /**
@@ -468,9 +483,10 @@ public final class HStonecutter {
      * @return A new button instance
      */
     @Contract(value = "_, _, _, _, _, _, _, _, _ -> new", pure = true)
-    public static Button createButton(Font font, int x, int y, int width, int height, Component message,
-                                      Component tooltip, BiConsumer<Button, Consumer<Component>> handler,
-                                      Consumer<List<FormattedCharSequence>> tooltipRenderer) {
+    public static Button createButton(final Font font, final int x, final int y, final int width, final int height,
+                                      final Component message, final Component tooltip,
+                                      final BiConsumer<Button, Consumer<Component>> handler,
+                                      final Consumer<List<FormattedCharSequence>> tooltipRenderer) {
         // Validate.
         assert font != null : "HCsCR: Parameter 'font' is null. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
         assert (x >= -320) && (x <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320)) : "HCsCR: Parameter 'x' is not in the [" + -320 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
@@ -485,23 +501,24 @@ public final class HStonecutter {
 
         // Create.
         //? if >=1.19.4 {
-        Button button = Button.builder(message, btn -> handler.accept(btn, tip -> { // Implicit NPE for 'handler'
-            btn.setTooltip(net.minecraft.client.gui.components.Tooltip.create(tip));
-            btn.setTooltipDelay(TOOLTIP_DURATION);
+        final Button button = Button.builder(message, (final Button innerButton) -> handler.accept(innerButton, (final Component tip) -> { // Implicit NPE for 'handler'
+            innerButton.setTooltip(net.minecraft.client.gui.components.Tooltip.create(tip));
+            innerButton.setTooltipDelay(TOOLTIP_DURATION);
         })).tooltip(net.minecraft.client.gui.components.Tooltip.create(tooltip)).bounds(x, y, width, height).build();
         button.setTooltipDelay(TOOLTIP_DURATION);
         return button;
         //?} else {
-        /*org.apache.commons.lang3.mutable.Mutable<List<FormattedCharSequence>> tipHolder = new org.apache.commons.lang3.mutable.MutableObject<>(font.split(tooltip, 170)); // Implicit NPE for 'font', 'tooltip'
-        return new Button(x, y, width, height, message, btn -> handler.accept(btn, tip -> tipHolder.setValue(font.split(tip, 170)))) { // Implicit NPE for 'handler'
+        /*final org.apache.commons.lang3.mutable.Mutable<List<FormattedCharSequence>> tipHolder = new org.apache.commons.lang3.mutable.MutableObject<>(font.split(tooltip, 170)); // Implicit NPE for 'font', 'tooltip'
+        return new Button(x, y, width, height, message, (final Button innerButton) -> handler.accept(innerButton, (final Component tip) -> tipHolder.setValue(font.split(tip, 170)))) { // Implicit NPE for 'handler'
             /^*
              * Last time when the mouse was NOT over this element in units of {@link System#nanoTime()}.
              ^/
-            private long lastAway = System.nanoTime();
+            private /^non-final^/ long lastAway = System.nanoTime();
 
             @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") // <- Parameter names are not provided by Mojmap.
             @Override
-            public void renderButton(com.mojang.blaze3d.vertex.PoseStack graphics, int mouseX, int mouseY, float delta) {
+            public void renderButton(final com.mojang.blaze3d.vertex.PoseStack graphics, final int mouseX,
+                                     final int mouseY, final float delta) {
                 // Render the element itself.
                 super.renderButton(graphics, mouseX, mouseY, delta);
 
@@ -536,8 +553,9 @@ public final class HStonecutter {
      */
     @SuppressWarnings("BooleanParameter") // <- Boolean method used as a state, not as control flow. (checkbox "checked" state)
     @Contract(value = "_, _, _, _, _, _, _, _ -> new", pure = true)
-    public static Checkbox createCheckbox(Font font, int x, int y, Component message, Component tooltip, boolean check,
-                                          BooleanConsumer handler, Consumer<List<FormattedCharSequence>> tooltipRenderer) {
+    public static Checkbox createCheckbox(final Font font, final int x, final int y, final Component message,
+                                          final Component tooltip, final boolean check, final BooleanConsumer handler,
+                                          final Consumer<List<FormattedCharSequence>> tooltipRenderer) {
         // Validate.
         assert font != null : "HCsCR: Parameter 'font' is null. (x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
         assert (x >= -320) && (x <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320)) : "HCsCR: Parameter 'x' is not in the [" + -320 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
@@ -550,14 +568,14 @@ public final class HStonecutter {
 
         // Create.
         //? if >=1.20.4 {
-        Checkbox box = Checkbox.builder(message, font) // Implicit NPE for 'message', 'font'
+        final Checkbox box = Checkbox.builder(message, font) // Implicit NPE for 'message', 'font'
                 .pos(x - ((font.width(message) + 24) / 2), y)
                 .selected(check)
-                .onValueChange((checkbox, value) -> handler.accept(value)) // Implicit NPE for 'handler'
+                .onValueChange((final Checkbox checkbox, final boolean value) -> handler.accept(value)) // Implicit NPE for 'handler'
                 .build();
         //?} else {
-        /*int width = font.width(message) + 24; // Implicit NPE for 'font', 'message'
-        Checkbox box = new Checkbox(x - (width / 2), y, width, 20, message, check) {
+        /*final int width = font.width(message) + 24; // Implicit NPE for 'font', 'message'
+        final Checkbox box = new Checkbox(x - (width / 2), y, width, 20, message, check) {
             @Override
             public void onPress() {
                 // Toggle the checkbox.
@@ -576,11 +594,12 @@ public final class HStonecutter {
             /^¹*
              * Last time when the mouse was NOT over this element in units of {@link System#nanoTime()}.
              ¹^/
-            private long lastAway = System.nanoTime();
+            private /^¹non-final¹^/ long lastAway = System.nanoTime();
 
             @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") // <- Parameter names are not provided by Mojmap.
             @Override
-            public void renderButton(com.mojang.blaze3d.vertex.PoseStack graphics, int mouseX, int mouseY, float delta) {
+            public void renderButton(final com.mojang.blaze3d.vertex.PoseStack graphics, final int mouseX,
+                                     final int mouseY, final float delta) {
                 // Render the element itself.
                 super.renderButton(graphics, mouseX, mouseY, delta);
 
@@ -624,10 +643,11 @@ public final class HStonecutter {
      * @return A new slider instance
      */
     @Contract(value = "_, _, _, _, _, _, _, _, _, _, _, _ -> new", pure = true)
-    public static AbstractSliderButton createSlider(Font font, int x, int y, int width, int height,
-                                                    IntFunction<Component> provider, Component tooltip,
-                                                    int value, int min, int max, IntConsumer handler,
-                                                    Consumer<List<FormattedCharSequence>> tooltipRenderer) {
+    public static AbstractSliderButton createSlider(final Font font, final int x, final int y, final int width,
+                                                    final int height, final IntFunction<Component> provider,
+                                                    final Component tooltip, final int value, final int min,
+                                                    final int max, final IntConsumer handler,
+                                                    final Consumer<List<FormattedCharSequence>> tooltipRenderer) {
         // Validate.
         assert font != null : "HCsCR: Parameter 'font' is null. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
         assert (x >= -320) && (x <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320)) : "HCsCR: Parameter 'x' is not in the [" + -320 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
@@ -644,13 +664,13 @@ public final class HStonecutter {
         assert Minecraft.getInstance().isSameThread() : "HCsCR: Creating a slider NOT from the main thread. (thread: " + Thread.currentThread() + ", font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
 
         // Create the slider.
-        int clamped = Mth.clamp(value, min, max);
-        double normalized = (double) (clamped - min) / (max - min);
-        AbstractSliderButton slider = new AbstractSliderButton(x, y, width, height, provider.apply(clamped), normalized) { // Implicit NPE for 'provider'
+        final int clamped = Mth.clamp(value, min, max);
+        final double normalized = (double) (clamped - min) / (max - min);
+        final AbstractSliderButton slider = new AbstractSliderButton(x, y, width, height, provider.apply(clamped), normalized) { // Implicit NPE for 'provider'
             /**
              * A denormalized value, i.e. back in its original range.
              */
-            private int denormalized = clamped;
+            private /*non-final*/ int denormalized = clamped;
 
             @Override
             protected void updateMessage() {
@@ -659,7 +679,7 @@ public final class HStonecutter {
 
             @Override
             protected void applyValue() {
-                int denormalized = this.denormalized = (int) Math.round(Mth.lerp(this.value, min, max));
+                final int denormalized = this.denormalized = (int) Math.round(Mth.lerp(this.value, min, max));
                 handler.accept(denormalized); // Implicit NPE for 'handler'
             }
 
@@ -672,11 +692,12 @@ public final class HStonecutter {
             /^*
              * Last time when the mouse was NOT over this element in units of {@link System#nanoTime()}.
              ^/
-            private long lastAway = System.nanoTime();
+            private /^non-final^/ long lastAway = System.nanoTime();
 
             @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") // <- Parameter names are not provided by Mojmap.
             @Override
-            public void renderButton(com.mojang.blaze3d.vertex.PoseStack graphics, int mouseX, int mouseY, float delta) {
+            public void renderButton(final com.mojang.blaze3d.vertex.PoseStack graphics, final int mouseX,
+                                     final int mouseY, final float delta) {
                 // Render the element itself.
                 super.renderButton(graphics, mouseX, mouseY, delta);
 

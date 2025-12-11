@@ -80,7 +80,8 @@ public final class BlockBehaviour_BlockStateBaseMixin {
      */
     @DoNotCall("Called by Mixin")
     @Inject(method = "getCollisionShape(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/phys/shapes/VoxelShape;", at = @At("HEAD"), cancellable = true)
-    private void hcscr_getCollisionShape_head(BlockGetter level, BlockPos pos, CollisionContext context, CallbackInfoReturnable<VoxelShape> cir) {
+    private void hcscr_getCollisionShape_head(final BlockGetter level, final BlockPos pos, final CollisionContext context,
+                                              final CallbackInfoReturnable<VoxelShape> cir) {
         // Validate.
         assert level != null : "HCsCR: Parameter 'level' is null. (pos: " + pos + ", context: " + context + ", cir: " + cir + ", state: " + this + ')';
         assert pos != null : "HCsCR: Parameter 'pos' is null. (level: " + level + ", context: " + context + ", cir: " + cir + ", state: " + this + ')';

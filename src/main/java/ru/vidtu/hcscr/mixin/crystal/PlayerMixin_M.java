@@ -76,9 +76,11 @@ public final class PlayerMixin_M {
     @DoNotCall("Called by Mixin")
     //? if >=1.21.3 {
     @Redirect(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurtOrSimulate(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
-    //?} else
-    /*@Redirect(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))*/
-    private boolean hcscr_attack_hurtOrSimulate(Entity target, DamageSource damageSource, float totalDamage) {
+    //?} else {
+    /*@Redirect(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
+    *///?}
+    private boolean hcscr_attack_hurtOrSimulate(final Entity target, final DamageSource damageSource,
+                                                final float totalDamage) {
         // Validate.
         assert target != null : "HCsCR: Parameter 'target' is null. (damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", player: " + this + ')';
         assert damageSource != null : "HCsCR: Parameter 'damageSource' is null. (target: " + target + ", totalDamage: " + totalDamage + ", player: " + this + ')';

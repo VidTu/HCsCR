@@ -45,6 +45,10 @@ import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.config.BlockMode;
 import ru.vidtu.hcscr.config.HConfig;
 
+//? if <1.20.6 {
+/*import net.minecraft.world.InteractionHand;
+*///?}
+
 /**
  * Mixin that allows beds to be removed via right click.
  *
@@ -94,7 +98,9 @@ public final class BedBlockMixin {
      */
     @DoNotCall("Called by Mixin")
     @Inject(method = "useWithoutItem", at = @At("HEAD"))
-    private void hcscr_useWithoutItem_head(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
+    private void hcscr_useWithoutItem_head(final BlockState state, final Level level, final BlockPos pos,
+                                           final Player player, final BlockHitResult hitResult,
+                                           final CallbackInfoReturnable<InteractionResult> cir) {
         // Validate.
         assert state != null : "HCsCR: Parameter 'state' is null. (level: " + level + ", pos: " + pos + ", player: " + player + ", hitResult: " + hitResult + ", bed: " + this + ')';
         assert level != null : "HCsCR: Parameter 'level' is null. (state: " + state + ", pos: " + pos + ", player: " + player + ", hitResult: " + hitResult + ", bed: " + this + ')';
@@ -123,8 +129,8 @@ public final class BedBlockMixin {
         switch (HConfig.blocks()) {
             case COLLISION:
                 // Get the bed's other part.
-                BlockPos otherPosCollision = pos.relative(BedBlock.getConnectedDirection(state)); // Implicit NPE for 'pos', 'state'
-                BlockState otherStateCollision = level.getBlockState(otherPosCollision);
+                final BlockPos otherPosCollision = pos.relative(BedBlock.getConnectedDirection(state)); // Implicit NPE for 'pos', 'state'
+                final BlockState otherStateCollision = level.getBlockState(otherPosCollision);
 
                 // Clip.
                 HCsCR.CLIPPING_BLOCKS.put(pos, state);
@@ -137,8 +143,8 @@ public final class BedBlockMixin {
                 break;
             case FULL:
                 // Get the bed's other part.
-                BlockPos otherPosFull = pos.relative(BedBlock.getConnectedDirection(state)); // Implicit NPE for 'pos', 'state'
-                BlockState otherStateFull = level.getBlockState(otherPosFull);
+                final BlockPos otherPosFull = pos.relative(BedBlock.getConnectedDirection(state)); // Implicit NPE for 'pos', 'state'
+                final BlockState otherStateFull = level.getBlockState(otherPosFull);
 
                 // Remove.
                 level.removeBlock(pos, false);
@@ -175,9 +181,9 @@ public final class BedBlockMixin {
      ^/
     @DoNotCall("Called by Mixin")
     @Inject(method = "use", at = @At("HEAD"))
-    private void hcscr_use_head(BlockState state, Level level, BlockPos pos, Player player,
-                                net.minecraft.world.InteractionHand hand, BlockHitResult hitResult,
-                                CallbackInfoReturnable<InteractionResult> cir) {
+    private void hcscr_use_head(final BlockState state, final Level level, final BlockPos pos, final Player player,
+                                final InteractionHand hand, final BlockHitResult hitResult,
+                                final CallbackInfoReturnable<InteractionResult> cir) {
         // Validate.
         assert state != null : "HCsCR: Parameter 'state' is null. (level: " + level + ", pos: " + pos + ", player: " + player + ", hand: " + hand + ", hitResult: " + hitResult + ", bed: " + this + ')';
         assert level != null : "HCsCR: Parameter 'level' is null. (state: " + state + ", pos: " + pos + ", player: " + player + ", hand: " + hand + ", hitResult: " + hitResult + ", bed: " + this + ')';
@@ -204,8 +210,8 @@ public final class BedBlockMixin {
         switch (HConfig.blocks()) {
             case COLLISION:
                 // Get the bed's other part.
-                BlockPos otherPosCollision = pos.relative(BedBlock.getConnectedDirection(state)); // Implicit NPE for 'pos', 'state'
-                BlockState otherStateCollision = level.getBlockState(otherPosCollision);
+                final BlockPos otherPosCollision = pos.relative(BedBlock.getConnectedDirection(state)); // Implicit NPE for 'pos', 'state'
+                final BlockState otherStateCollision = level.getBlockState(otherPosCollision);
 
                 // Clip.
                 HCsCR.CLIPPING_BLOCKS.put(pos, state);
@@ -218,8 +224,8 @@ public final class BedBlockMixin {
                 break;
             case FULL:
                 // Get the bed's other part.
-                BlockPos otherPosFull = pos.relative(BedBlock.getConnectedDirection(state)); // Implicit NPE for 'pos', 'state'
-                BlockState otherStateFull = level.getBlockState(otherPosFull);
+                final BlockPos otherPosFull = pos.relative(BedBlock.getConnectedDirection(state)); // Implicit NPE for 'pos', 'state'
+                final BlockState otherStateFull = level.getBlockState(otherPosFull);
 
                 // Remove.
                 level.removeBlock(pos, false);
