@@ -125,7 +125,8 @@ public final class HFabric implements ClientModInitializer {
         PayloadTypeRegistry.playS2C().register(type, codec);
         ClientConfigurationNetworking.registerGlobalReceiver(type, (final CustomPacketPayload payload, final ClientConfigurationNetworking.Context context) -> {
             // Validate.
-            assert context != null : "HCsCR: Parameter 'context' is null. (payload:" + payload + ')';
+            assert payload != null : "HCsCR: Parameter 'payload' is null. (context: " + context + ')';
+            assert context != null : "HCsCR: Parameter 'context' is null. (payload: " + payload + ')';
             final PacketSender sender = context.responseSender(); // Implicit NPE for 'context'
             assert sender != null : "HCsCR: Response sender is null. (payload: " + payload + ", context: " + context + ')';
 
@@ -134,7 +135,8 @@ public final class HFabric implements ClientModInitializer {
         });
         ClientPlayNetworking.registerGlobalReceiver(type, (final CustomPacketPayload payload, final ClientPlayNetworking.Context context) -> {
             // Validate.
-            assert context != null : "HCsCR: Parameter 'context' is null. (payload:" + payload + ')';
+            assert payload != null : "HCsCR: Parameter 'payload' is null. (context: " + context + ')';
+            assert context != null : "HCsCR: Parameter 'context' is null. (payload: " + payload + ')';
             final PacketSender sender = context.responseSender(); // Implicit NPE for 'context'
             assert sender != null : "HCsCR: Response sender is null. (payload: " + payload + ", context: " + context + ')';
 

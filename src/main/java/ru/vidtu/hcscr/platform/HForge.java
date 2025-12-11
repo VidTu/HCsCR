@@ -259,12 +259,12 @@ public final class HForge {
         /^final IEventBus bus = ctx.getModEventBus(); // Implicit NPE for 'ctx'
         ^///?}
         //? if >=1.19.2 {
-        bus.addListener((final RegisterKeyMappingsEvent event) -> {
+        bus.addListener((final RegisterKeyMappingsEvent event) -> { // Implicit NPE for 'bus'
             // Validate.
             assert event != null : "HCsCR: Parameter 'event' is null.";
 
             // Register.
-            event.register(HCsCR.CONFIG_BIND);
+            event.register(HCsCR.CONFIG_BIND); // Implicit NPE for 'event'
             event.register(HCsCR.TOGGLE_BIND);
         });
         //?} else {
@@ -301,7 +301,7 @@ public final class HForge {
             assert event != null : "HCsCR: Parameter 'event' is null.";
 
             // Handle.
-            if (event.phase != TickEvent.Phase.END) return;
+            if (event.phase != TickEvent.Phase.END) return; // Implicit NPE for 'event'
             HCsCR.handleClientTickEnd(Minecraft.getInstance());
         });
         ^///?}
@@ -329,7 +329,7 @@ public final class HForge {
             assert event != null : "HCsCR: Parameter 'event' is null.";
 
             // Handle.
-            if (event.phase != TickEvent.Phase.END) return;
+            if (event.phase != TickEvent.Phase.END) return; // Implicit NPE for 'event'
             HCsCR.handleClientMainLoop(Minecraft.getInstance());
         });
         ^///?}

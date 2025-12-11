@@ -54,7 +54,7 @@ public final class EntityCollisionContextMixin implements HEntityCollisionContex
      ^/
     @Unique
     @Nullable
-    private /^non-final^/ Entity hcscr_entity;
+    private /^non-final^/ Entity hcscr_entity; // Unfortunate it's not final.
 
     /^*
      * An instance of this class cannot be created.
