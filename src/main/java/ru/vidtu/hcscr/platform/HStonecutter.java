@@ -59,6 +59,92 @@ import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
 
+//? if >=1.21.11 {
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.profiling.Profiler;
+import net.minecraft.world.level.dimension.DimensionType;
+import java.time.Duration;
+//?} else if >=1.21.8 {
+/*import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.profiling.Profiler;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.RespawnAnchorBlock;
+import java.time.Duration;
+*///?} else if >=1.21.4 {
+/*import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.profiling.Profiler;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.RespawnAnchorBlock;
+import java.time.Duration;
+*///?} else if >=1.21.3 {
+/*import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.profiling.Profiler;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.RespawnAnchorBlock;
+import java.time.Duration;
+*///?} else if >=1.20.6 {
+/*import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.RespawnAnchorBlock;
+import java.time.Duration;
+*///?} else if >=1.19.4 {
+/*import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.RespawnAnchorBlock;
+*///?} else if >=1.19.2 {
+/*import com.mojang.blaze3d.vertex.PoseStack;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.RespawnAnchorBlock;
+import org.apache.commons.lang3.mutable.MutableObject;
+*///?} else if >=1.17.1 {
+/*import com.mojang.blaze3d.vertex.PoseStack;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.RespawnAnchorBlock;
+import org.apache.commons.lang3.mutable.MutableObject;
+*///?} else {
+/*import com.mojang.blaze3d.vertex.PoseStack;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.RespawnAnchorBlock;
+import org.apache.commons.lang3.mutable.MutableObject;
+import ru.vidtu.hcscr.HEntityCollisionContext;
+*///?}
+
+//? if fabric {
+import net.fabricmc.loader.api.FabricLoader;
+//?} elif neoforge {
+/*import net.neoforged.fml.loading.FMLPaths;
+*///?} else {
+/*import net.minecraftforge.fml.loading.FMLPaths;
+*///?}
+
 /**
  * A helper class that contains methods that depend on Stonecutter, a Java source code preprocessor.
  *
@@ -72,11 +158,9 @@ public final class HStonecutter {
      * Game config directory.
      */
     //? if fabric {
-    public static final Path CONFIG_DIRECTORY = net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir();
-    //?} elif neoforge {
-    /*public static final Path CONFIG_DIRECTORY = net.neoforged.fml.loading.FMLPaths.CONFIGDIR.get();
-    *///?} else {
-    /*public static final Path CONFIG_DIRECTORY = net.minecraftforge.fml.loading.FMLPaths.CONFIGDIR.get();
+    public static final Path CONFIG_DIRECTORY = FabricLoader.getInstance().getConfigDir();
+    //?} else {
+    /*public static final Path CONFIG_DIRECTORY = FMLPaths.CONFIGDIR.get();
     *///?}
 
     //? if >=1.21.10 {
@@ -87,15 +171,15 @@ public final class HStonecutter {
      */
         //? if neoforge {
             /*//? if >=1.21.11 {
-    /^/^¹package-private¹^/ static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(net.minecraft.resources.Identifier.fromNamespaceAndPath("hcscr", "root"));
+    /^/^¹package-private¹^/ static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(Identifier.fromNamespaceAndPath("hcscr", "root"));
             ^///?} else {
-    /^package-private^/ static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));
+    /^package-private^/ static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(ResourceLocation.fromNamespaceAndPath("hcscr", "root"));
             //?}
         *///?} else {
             //? if >=1.21.11 {
-    private static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(net.minecraft.resources.Identifier.fromNamespaceAndPath("hcscr", "root"));
+    private static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("hcscr", "root"));
             //?} else {
-    /*private static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "root"));
+    /*private static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(ResourceLocation.fromNamespaceAndPath("hcscr", "root"));
             *///?}
         //?}
     //?}
@@ -104,18 +188,18 @@ public final class HStonecutter {
      * A channel identifier for servers to know that this mod is installed.
      */
     //? if >=1.21.11 {
-    /*package-private*/ static final net.minecraft.resources.Identifier CHANNEL_IDENTIFIER = net.minecraft.resources.Identifier.fromNamespaceAndPath("hcscr", "imhere");
+    /*package-private*/ static final Identifier CHANNEL_IDENTIFIER = Identifier.fromNamespaceAndPath("hcscr", "imhere");
     //?} elif >=1.21.1 || (forge && (!hacky_neoforge) && >=1.18.2 && (!1.20.2)) {
-    /*/^package-private^/ static final net.minecraft.resources.ResourceLocation CHANNEL_IDENTIFIER = net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "imhere");
+    /*/^package-private^/ static final ResourceLocation CHANNEL_IDENTIFIER = ResourceLocation.fromNamespaceAndPath("hcscr", "imhere");
     *///?} else {
-    /*/^package-private^/ static final net.minecraft.resources.ResourceLocation CHANNEL_IDENTIFIER = new net.minecraft.resources.ResourceLocation("hcscr", "imhere");
+    /*/^package-private^/ static final ResourceLocation CHANNEL_IDENTIFIER = new ResourceLocation("hcscr", "imhere");
     *///?}
 
     /**
      * A duration for tooltips in version-dependant units. Currently {@code 250} milliseconds.
      */
     //? if >=1.20.6 {
-    private static final java.time.Duration TOOLTIP_DURATION = java.time.Duration.ofMillis(250L);
+    private static final Duration TOOLTIP_DURATION = Duration.ofMillis(250L);
     //?} elif >=1.19.4 {
     /*private static final int TOOLTIP_DURATION = 250; // Millis.
     *///?} else {
@@ -148,9 +232,9 @@ public final class HStonecutter {
         // Ideally, an array-baked map should be always used here. Due to a bug in fastutil, setValue(int) is not
         // supported until 8.5.12: https://github.com/vigna/fastutil/blob/fcac58f7d3df8e7d903fad533f4caada7f4937cf/CHANGES#L4
         //? if >=1.21.4 {
-        return new it.unimi.dsi.fastutil.objects.Object2IntArrayMap<>(0);
+        return new Object2IntArrayMap<>(0);
         //?} else {
-        /*return new it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap<>(0);
+        /*return new Object2IntOpenHashMap<>(0);
         *///?}
     }
 
@@ -196,7 +280,7 @@ public final class HStonecutter {
         //? if >=1.19.2 {
         return Component.translatable(key);
         //?} else {
-        /*return new net.minecraft.network.chat.TranslatableComponent(key);
+        /*return new TranslatableComponent(key);
         *///?}
     }
 
@@ -221,7 +305,7 @@ public final class HStonecutter {
         //? if >=1.19.2 {
         return Component.translatable(key, args);
         //?} else {
-        /*return new net.minecraft.network.chat.TranslatableComponent(key, args);
+        /*return new TranslatableComponent(key, args);
         *///?}
     }
 
@@ -242,7 +326,7 @@ public final class HStonecutter {
         // TODO(VidTu): Integrate with HCompile?
         // Delegate.
         //? if >=1.21.3 {
-        return net.minecraft.util.profiling.Profiler.get();
+        return Profiler.get();
         //?} else {
         /*return client.getProfiler(); // Implicit NPE for 'client'
         *///?}
@@ -315,7 +399,7 @@ public final class HStonecutter {
         /*return ctx.getEntity().orElse(null); // Implicit NPE for 'ctx'
         *///?} else {
         /*//noinspection CastToIncompatibleInterface // <- Mixin Accessor.
-        return ((ru.vidtu.hcscr.HEntityCollisionContext) ctx).hcscr_entity(); // Implicit NPE for 'ctx'
+        return ((HEntityCollisionContext) ctx).hcscr_entity(); // Implicit NPE for 'ctx'
         *///?}
     }
 
@@ -445,9 +529,9 @@ public final class HStonecutter {
         //? if >=1.21.11 {
         // Environmental attributes from 25w42a for BED_WORKS are NOT synced to the client,
         // so we just guess and check by comparing if the dimension doesn't have an OVERWORLD skybox.
-        return level.dimensionType().skybox() != net.minecraft.world.level.dimension.DimensionType.Skybox.OVERWORLD; // Implicit NPE for 'level'
+        return level.dimensionType().skybox() != DimensionType.Skybox.OVERWORLD; // Implicit NPE for 'level'
         //?} else {
-        /*return !net.minecraft.world.level.block.BedBlock.canSetSpawn(level); // Implicit NPE for 'level'
+        /*return !BedBlock.canSetSpawn(level); // Implicit NPE for 'level'
         *///?}
     }
 
@@ -469,9 +553,9 @@ public final class HStonecutter {
         //? if >=1.21.11 {
         // Environmental attributes from 25w42a for RESPAWN_ANCHOR_WORKS are NOT synced to the client,
         // so we just guess and check by comparing if the dimension "doesn't" have skybox like NETHER.
-        return level.dimensionType().skybox() != net.minecraft.world.level.dimension.DimensionType.Skybox.NONE; // Implicit NPE for 'level'
+        return level.dimensionType().skybox() != DimensionType.Skybox.NONE; // Implicit NPE for 'level'
         //?} else {
-        /*return !net.minecraft.world.level.block.RespawnAnchorBlock.canSetSpawn(level); // Implicit NPE for 'level'
+        /*return !RespawnAnchorBlock.canSetSpawn(level); // Implicit NPE for 'level'
         *///?}
     }
 
@@ -493,7 +577,7 @@ public final class HStonecutter {
         //? if >=1.21.10 {
         return client.hasShiftDown(); // Implicit NPE for 'client'
         //?} else {
-        /*return net.minecraft.client.gui.screens.Screen.hasShiftDown();
+        /*return Screen.hasShiftDown();
         *///?}
     }
 
@@ -532,22 +616,31 @@ public final class HStonecutter {
 
         // Create.
         //? if >=1.19.4 {
-        final Button button = Button.builder(message, (final Button innerButton) -> handler.accept(innerButton, (final Component tip) -> { // Implicit NPE for 'handler'
+        final Button button = Button.builder(message, (final Button innerButton) -> handler.accept(innerButton, (final Component newTip) -> { // Implicit NPE for 'handler'
             // Validate.
             if (HCompile.DEBUG_ASSERTS) {
-                assert (tip != null) : "HCsCR: Parameter 'tip' is null. (innerButton: " + innerButton + ')';
-                assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Setting a button tip NOT from the main thread. (thread: " + Thread.currentThread() + ", innerButton: " + innerButton + ')';
+                assert (newTip != null) : "HCsCR: Parameter 'newTip' is null. (innerButton: " + innerButton + ')';
+                assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Setting a button tip NOT from the main thread. (thread: " + Thread.currentThread() + ", newTip: " + newTip + ", innerButton: " + innerButton + ')';
             }
 
             // Set.
-            innerButton.setTooltip(net.minecraft.client.gui.components.Tooltip.create(tip));
+            innerButton.setTooltip(Tooltip.create(newTip));
             innerButton.setTooltipDelay(TOOLTIP_DURATION);
-        })).tooltip(net.minecraft.client.gui.components.Tooltip.create(tooltip)).bounds(x, y, width, height).build();
+        })).tooltip(Tooltip.create(tooltip)).bounds(x, y, width, height).build();
         button.setTooltipDelay(TOOLTIP_DURATION);
         return button;
         //?} else {
-        /*final org.apache.commons.lang3.mutable.Mutable<List<FormattedCharSequence>> tipHolder = new org.apache.commons.lang3.mutable.MutableObject<>(font.split(tooltip, 170)); // Implicit NPE for 'font', 'tooltip'
-        return new Button(x, y, width, height, message, (final Button innerButton) -> handler.accept(innerButton, (final Component tip) -> tipHolder.setValue(font.split(tip, 170)))) { // Implicit NPE for 'handler'
+        /*final MutableObject<List<FormattedCharSequence>> tipHolder = new MutableObject<>(font.split(tooltip, 170)); // Implicit NPE for 'font', 'tooltip'
+        return new Button(x, y, width, height, message, (final Button innerButton) -> handler.accept(innerButton, (final Component newTip) -> { // Implicit NPE for 'handler'
+            // Validate.
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (newTip != null) : "HCsCR: Parameter 'newTip' is null. (innerButton: " + innerButton + ')';
+                assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Setting a button tip NOT from the main thread. (thread: " + Thread.currentThread() + ", newTip: " + newTip + ", innerButton: " + innerButton + ')';
+            }
+
+            // Set.
+            tipHolder.setValue(font.split(newTip, 170));
+        })) {
             /^*
              * Last time when the mouse was NOT over this element in units of {@link System#nanoTime()}.
              ^/
@@ -555,8 +648,7 @@ public final class HStonecutter {
 
             @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") // <- Parameter names are not provided by Mojmap.
             @Override
-            public void renderButton(final com.mojang.blaze3d.vertex.PoseStack graphics, final int mouseX,
-                                     final int mouseY, final float delta) {
+            public void renderButton(final PoseStack graphics, final int mouseX, final int mouseY, final float delta) {
                 // Render the element itself.
                 super.renderButton(graphics, mouseX, mouseY, delta);
 
@@ -638,8 +730,7 @@ public final class HStonecutter {
 
             @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") // <- Parameter names are not provided by Mojmap.
             @Override
-            public void renderButton(final com.mojang.blaze3d.vertex.PoseStack graphics, final int mouseX,
-                                     final int mouseY, final float delta) {
+            public void renderButton(final PoseStack graphics, final int mouseX, final int mouseY, final float delta) {
                 // Render the element itself.
                 super.renderButton(graphics, mouseX, mouseY, delta);
 
@@ -659,7 +750,7 @@ public final class HStonecutter {
         };
         *///?}
         //? if >=1.19.4 {
-        box.setTooltip(net.minecraft.client.gui.components.Tooltip.create(tooltip));
+        box.setTooltip(Tooltip.create(tooltip));
         box.setTooltipDelay(TOOLTIP_DURATION);
         //?}
         return box;
@@ -738,8 +829,7 @@ public final class HStonecutter {
 
             @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") // <- Parameter names are not provided by Mojmap.
             @Override
-            public void renderButton(final com.mojang.blaze3d.vertex.PoseStack graphics, final int mouseX,
-                                     final int mouseY, final float delta) {
+            public void renderButton(final PoseStack graphics, final int mouseX, final int mouseY, final float delta) {
                 // Render the element itself.
                 super.renderButton(graphics, mouseX, mouseY, delta);
 
@@ -758,7 +848,7 @@ public final class HStonecutter {
             *///?}
         };
         //? if >=1.19.4 {
-        slider.setTooltip(net.minecraft.client.gui.components.Tooltip.create(tooltip));
+        slider.setTooltip(Tooltip.create(tooltip));
         slider.setTooltipDelay(TOOLTIP_DURATION);
         //?}
         return slider;
