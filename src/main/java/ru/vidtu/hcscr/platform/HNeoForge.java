@@ -100,13 +100,17 @@ public final class HNeoForge {
      ^/
     public HNeoForge(final Dist dist, final ModContainer container, final IEventBus bus) {
         // Validate.
-        assert dist != null : "HCsCR: Parameter 'dist' is null. (container: " + container + ", bus: " + bus + ", mod: " + this + ')';
-        assert container != null : "HCsCR: Parameter 'container' is null. (dist: " + dist + ", bus: " + bus + ", mod: " + this + ')';
-        assert bus != null : "HCsCR: Parameter 'bus' is null. (dist: " + dist + ", container: " + container + ", mod: " + this + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (dist != null) : "HCsCR: Parameter 'dist' is null. (container: " + container + ", bus: " + bus + ", mod: " + this + ')';
+            assert (container != null) : "HCsCR: Parameter 'container' is null. (dist: " + dist + ", bus: " + bus + ", mod: " + this + ')';
+            assert (bus != null) : "HCsCR: Parameter 'bus' is null. (dist: " + dist + ", container: " + container + ", mod: " + this + ')';
+        }
 
         // Log.
         final long start = System.nanoTime();
-        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Loading... (platform: neoforge)");
+        final String modVersion = HNeoForge.class.getPackage().getImplementationVersion();
+        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Loading... (platform: neoforge, modVersion: {})", modVersion);
+        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Debug flags enabled: '" + (HCompile.DEBUG_ASSERTS ? "Asserts" : "") + (HCompile.DEBUG_LOGS ? "Logs" : "") + (HCompile.DEBUG_PROFILER ? "Profiler" : "") + '\'');
 
         // Not sure how long the Forge does have the "clientSideOnly" field in the TOML,
         // so I'll do an additional exception check here.
@@ -121,7 +125,9 @@ public final class HNeoForge {
         //? if >=1.20.6 {
         bus.addListener(RegisterPayloadHandlersEvent.class, (final RegisterPayloadHandlersEvent event) -> { // Implicit NPE for 'bus'
             // Validate.
-            assert event != null : "HCsCR: Parameter 'event' is null.";
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (event != null) : "HCsCR: Parameter 'event' is null.";
+            }
 
             // Prepare.
             final CustomPacketPayload.Type<CustomPacketPayload> type = new CustomPacketPayload.Type<>(HStonecutter.CHANNEL_IDENTIFIER);
@@ -140,10 +146,12 @@ public final class HNeoForge {
             };
             final StreamCodec<FriendlyByteBuf, CustomPacketPayload> codec = StreamCodec.of((final FriendlyByteBuf output, final CustomPacketPayload value) -> {
                 // Throw unconditionally.
-                throw new IllegalStateException("HCsCR: Client-side mod should not send/encode this packet. (output: " + output + ", value: " + value + ')');
+                throw new UnsupportedOperationException("HCsCR: Client-side mod should not send/encode this packet. (output: " + output + ", value: " + value + ')');
             }, (final FriendlyByteBuf input) -> {
                 // Validate.
-                assert input != null : "HCsCR: Parameter 'input' is null.";
+                if (HCompile.DEBUG_ASSERTS) {
+                    assert (input != null) : "HCsCR: Parameter 'input' is null.";
+                }
 
                 // Skip bytes. (whatever they are)
                 input.skipBytes(input.readableBytes()); // Implicit NPE for 'input'
@@ -153,8 +161,10 @@ public final class HNeoForge {
             // Register.
             event.registrar("hcscr").optional().commonToClient(type, codec, (final CustomPacketPayload payload, final IPayloadContext context) -> { // Implicit NPE for 'event'
                 // Validate.
-                assert payload != null : "HCsCR: Parameter 'payload' is null. (context: " + context + ')';
-                assert context != null : "HCsCR: Parameter 'context' is null. (payload: " + payload + ')';
+                if (HCompile.DEBUG_ASSERTS) {
+                    assert (payload != null) : "HCsCR: Parameter 'payload' is null. (context: " + context + ')';
+                    assert (context != null) : "HCsCR: Parameter 'context' is null. (payload: " + payload + ')';
+                }
 
                 // Close the connection.
                 context.disconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'context'
@@ -163,7 +173,9 @@ public final class HNeoForge {
         //?} elif >=1.20.4 {
         /^bus.addListener(RegisterPayloadHandlerEvent.class, (final RegisterPayloadHandlerEvent event) -> { // Implicit NPE for 'bus'
             // Validate.
-            assert event != null : "HCsCR: Parameter 'event' is null.";
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (event != null) : "HCsCR: Parameter 'event' is null.";
+            }
 
             // Prepare.
             CustomPacketPayload instance = new CustomPacketPayload() {
@@ -171,7 +183,7 @@ public final class HNeoForge {
                 @Override
                 public void write(FriendlyByteBuf output) {
                     // Throw unconditionally.
-                    throw new IllegalStateException("HCsCR: Client-side mod should not send/encode this packet. (output: " + output + ", packet: " + this + ')');
+                    throw new UnsupportedOperationException("HCsCR: Client-side mod should not send/encode this packet. (output: " + output + ", packet: " + this + ')');
                 }
 
                 @Contract(pure = true)
@@ -190,17 +202,24 @@ public final class HNeoForge {
             // Register.
             event.registrar("hcscr").optional().common(HStonecutter.CHANNEL_IDENTIFIER, (final FriendlyByteBuf input) -> { // Implicit NPE for 'event'
                 // Validate.
-                assert input != null : "HCsCR: Parameter 'input' is null.";
+                if (HCompile.DEBUG_ASSERTS) {
+                    assert (input != null) : "HCsCR: Parameter 'input' is null.";
+                }
 
                 // Skip bytes. (whatever they are)
                 input.skipBytes(input.readableBytes()); // Implicit NPE for 'input'
                 return instance;
             }, (final CustomPacketPayload payload, final IPayloadContext context) -> {
                 // Validate.
-                assert payload != null : "HCsCR: Parameter 'payload' is null. (context: " + context + ')';
-                assert context != null : "HCsCR: Parameter 'context' is null. (payload: " + payload + ')';
-                final IReplyHandler handler = context.replyHandler(); // Implicit NPE for 'context'
-                assert handler != null : "HCsCR: Reply handler is null. (payload: " + payload + ", context: " + context + ')';
+                final IReplyHandler handler;
+                if (HCompile.DEBUG_ASSERTS) {
+                    assert (payload != null) : "HCsCR: Parameter 'payload' is null. (context: " + context + ')';
+                    assert (context != null) : "HCsCR: Parameter 'context' is null. (payload: " + payload + ')';
+                    handler = context.replyHandler(); // Implicit NPE for 'context'
+                    assert (handler != null) : "HCsCR: Reply handler is null. (payload: " + payload + ", context: " + context + ')';
+                } else {
+                    handler = context.replyHandler(); // Implicit NPE for 'context'
+                }
 
                 // Close the connection.
                 handler.disconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'handler'
@@ -209,20 +228,26 @@ public final class HNeoForge {
         ^///?} else {
         /^NetworkRegistry.newEventChannel(HStonecutter.CHANNEL_IDENTIFIER, () -> "hcscr", (final String version) -> true, (final String version) -> true).addListener((final NetworkEvent event) -> {
             // Validate.
-            assert event != null : "HCsCR: Parameter 'event' is null.";
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (event != null) : "HCsCR: Parameter 'event' is null.";
+            }
 
             // Skip if there's no payload. (e.g., a channel registration)
             if (event.getPayload() == null) return; // Implicit NPE for 'event'
 
             // Check if coming from the server.
             final NetworkEvent.Context source = event.getSource();
-            assert source != null : "HCsCR: Source is null. (event: " + event + ')';
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (source != null) : "HCsCR: Source is null. (event: " + event + ')';
+            }
             if (source.getDirection().getReceptionSide() != LogicalSide.CLIENT) return; // Implicit NPE for 'source'
             source.setPacketHandled(true);
 
             // Close the connection.
             final Connection connection = source.getNetworkManager();
-            assert connection != null : "HCsCR: Connection is null. (event: " + event + ", source: " + source + ')';
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (connection != null) : "HCsCR: Connection is null. (event: " + event + ", source: " + source + ')';
+            }
             connection.disconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'connection'
         });
         ^///?}
@@ -230,7 +255,9 @@ public final class HNeoForge {
         // Register the binds.
         bus.addListener(RegisterKeyMappingsEvent.class, (final RegisterKeyMappingsEvent event) -> { // Implicit NPE for 'bus'
             // Validate.
-            assert event != null : "HCsCR: Parameter 'event' is null.";
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (event != null) : "HCsCR: Parameter 'event' is null.";
+            }
 
             // Register.
             //? if >=1.21.10 {
@@ -244,7 +271,9 @@ public final class HNeoForge {
         //? if >=1.20.6 {
         NeoForge.EVENT_BUS.addListener(ClientTickEvent.Post.class, (final ClientTickEvent.Post event) -> {
             // Validate.
-            assert event != null : "HCsCR: Parameter 'event' is null.";
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (event != null) : "HCsCR: Parameter 'event' is null.";
+            }
 
             // Handle.
             HCsCR.handleClientTickEnd(Minecraft.getInstance());
@@ -252,7 +281,9 @@ public final class HNeoForge {
         //?} else {
         /^NeoForge.EVENT_BUS.addListener(TickEvent.ClientTickEvent.class, (final TickEvent.ClientTickEvent event) -> {
             // Validate.
-            assert event != null : "HCsCR: Parameter 'event' is null.";
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (event != null) : "HCsCR: Parameter 'event' is null.";
+            }
 
             // Handle.
             if (event.phase != TickEvent.Phase.END) return; // Implicit NPE for 'event'
@@ -264,7 +295,9 @@ public final class HNeoForge {
         //? if >=1.20.6 {
         NeoForge.EVENT_BUS.addListener(RenderFrameEvent.Post.class, (final RenderFrameEvent.Post event) -> {
             // Validate.
-            assert event != null : "HCsCR: Parameter 'event' is null.";
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (event != null) : "HCsCR: Parameter 'event' is null.";
+            }
 
             // Handle.
             HCsCR.handleClientMainLoop(Minecraft.getInstance());
@@ -272,7 +305,9 @@ public final class HNeoForge {
         //?} else {
         /^NeoForge.EVENT_BUS.addListener(TickEvent.RenderTickEvent.class, (final TickEvent.RenderTickEvent event) -> {
             // Validate.
-            assert event != null : "HCsCR: Parameter 'event' is null.";
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (event != null) : "HCsCR: Parameter 'event' is null.";
+            }
 
             // Handle.
             if (event.phase != TickEvent.Phase.END) return; // Implicit NPE for 'event'
@@ -284,7 +319,9 @@ public final class HNeoForge {
         //? if >=1.21.1 {
         container.registerExtensionPoint(IConfigScreenFactory.class, (final ModContainer innerContainer, final Screen modListScreen) -> { // Implicit NPE for 'container'
             // Validate.
-            assert innerContainer != null : "HCsCR: Parameter 'innerContainer' is null. (innerContainer: " + innerContainer + ')';
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (innerContainer != null) : "HCsCR: Parameter 'innerContainer' is null. (innerContainer: " + innerContainer + ')';
+            }
 
             // Return.
             return new HScreen(modListScreen);
@@ -292,7 +329,9 @@ public final class HNeoForge {
         //?} else if >=1.20.6 {
         /^container.registerExtensionPoint(IConfigScreenFactory.class, (final Minecraft mcClient, final Screen modListScreen) -> { // Implicit NPE for 'container'
             // Validate.
-            assert mcClient != null : "HCsCR: Parameter 'mcClient' is null. (mcClient: " + mcClient + ')';
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (mcClient != null) : "HCsCR: Parameter 'mcClient' is null. (mcClient: " + mcClient + ')';
+            }
 
             // Return.
             return new HScreen(modListScreen);
@@ -300,7 +339,9 @@ public final class HNeoForge {
         ^///?} else {
         /^container.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((final Minecraft mcClient, final Screen modsScreen) -> { // Implicit NPE for 'container'
             // Validate.
-            assert mcClient != null : "HCsCR: Parameter 'mcClient' is null. (modsScreen: " + modsScreen + ')';
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (mcClient != null) : "HCsCR: Parameter 'mcClient' is null. (modsScreen: " + modsScreen + ')';
+            }
 
             // Return.
             return new HScreen(modsScreen);
@@ -309,7 +350,7 @@ public final class HNeoForge {
         ^///?}
 
         // Done.
-        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / 1_000_000L);
+        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / HCsCR.NANOS_IN_MS);
     }
 
     @Contract(pure = true)

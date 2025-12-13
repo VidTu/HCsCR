@@ -32,6 +32,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import ru.vidtu.hcscr.HCsCR;
+import ru.vidtu.hcscr.platform.HCompile;
 import ru.vidtu.hcscr.platform.HPlugin;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
@@ -82,12 +83,14 @@ public final class PlayerMixin_M {
     private boolean hcscr_attack_hurtOrSimulate(final Entity target, final DamageSource damageSource,
                                                 final float totalDamage) {
         // Validate.
-        assert target != null : "HCsCR: Parameter 'target' is null. (damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", player: " + this + ')';
-        assert damageSource != null : "HCsCR: Parameter 'damageSource' is null. (target: " + target + ", totalDamage: " + totalDamage + ", player: " + this + ')';
-        assert Float.isFinite(totalDamage) : "HCsCR: Parameter 'totalDamage' is not finite. (target: " + target + ", damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", player: " + this + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (target != null) : "HCsCR: Parameter 'target' is null. (damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", player: " + this + ')';
+            assert (damageSource != null) : "HCsCR: Parameter 'damageSource' is null. (target: " + target + ", totalDamage: " + totalDamage + ", player: " + this + ')';
+            assert (Float.isFinite(totalDamage)) : "HCsCR: Parameter 'totalDamage' is not finite. (target: " + target + ", damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", player: " + this + ')';
+        }
 
         // Delegate.
         //noinspection NonShortCircuitBooleanExpression // <- Needs to call both methods.
-        return HStonecutter.hurtEntity(target, damageSource, totalDamage) | HCsCR.handlePlayerHittingEntity(target, damageSource, totalDamage);
+        return (HStonecutter.hurtEntity(target, damageSource, totalDamage) | HCsCR.handlePlayerHittingEntity(target, damageSource, totalDamage));
     }
 }

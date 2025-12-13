@@ -165,8 +165,10 @@ public final class HStonecutter {
     @Contract(value = "_ -> new", pure = true)
     public static KeyMapping keyBind(final String id) {
         // Validate.
-        assert id != null : "HCsCR: Parameter 'id' is null.";
-        assert !id.isEmpty() : "HCsCR: Creating a key binding with an empty ID.";
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (id != null) : "HCsCR: Parameter 'id' is null.";
+            assert (!id.isEmpty()) : "HCsCR: Creating a key binding with an empty ID.";
+        }
 
         // Delegate.
         //? if >=1.21.10 {
@@ -185,8 +187,10 @@ public final class HStonecutter {
     @Contract(value = "_ -> new", pure = true)
     public static MutableComponent translate(final String key) {
         // Validate.
-        assert key != null : "HCsCR: Parameter 'key' is null.";
-        assert !key.isEmpty() : "HCsCR: Creating a translatable component with an empty key.";
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (key != null) : "HCsCR: Parameter 'key' is null.";
+            assert (!key.isEmpty()) : "HCsCR: Creating a translatable component with an empty key.";
+        }
 
         // Delegate.
         //? if >=1.19.2 {
@@ -206,10 +210,12 @@ public final class HStonecutter {
     @Contract(value = "_, _ -> new", pure = true)
     public static MutableComponent translate(final String key, final Object... args) {
         // Validate.
-        assert key != null : "HCsCR: Parameter 'key' is null. (args: " + Arrays.toString(args) + ')';
-        assert args != null : "HCsCR: Parameter 'args' is null. (key: " + key + ')';
-        assert !key.isEmpty() : "HCsCR: Creating a translatable component with an empty key. (args: " + Arrays.toString(args) + ')';
-        assert args.length != 0 : "HCsCR: Creating a translatable components with empty args array. (key: " + key + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (key != null) : "HCsCR: Parameter 'key' is null. (args: " + Arrays.toString(args) + ')';
+            assert (args != null) : "HCsCR: Parameter 'args' is null. (key: " + key + ')';
+            assert (!key.isEmpty()) : "HCsCR: Creating a translatable component with an empty key. (args: " + Arrays.toString(args) + ')';
+            assert (args.length != 0) : "HCsCR: Creating a translatable components with empty args array. (key: " + key + ')';
+        }
 
         // Delegate.
         //? if >=1.19.2 {
@@ -228,9 +234,12 @@ public final class HStonecutter {
     @Contract(pure = true)
     public static ProfilerFiller profilerOfClient(final Minecraft client) {
         // Validate.
-        assert client != null : "HCsCR: Parameter 'client' is null.";
-        assert client.isSameThread() : "HCsCR: Getting the client profiler NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (client != null) : "HCsCR: Parameter 'client' is null.";
+            assert (client.isSameThread()) : "HCsCR: Getting the client profiler NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
+        }
 
+        // TODO(VidTu): Integrate with HCompile?
         // Delegate.
         //? if >=1.21.3 {
         return net.minecraft.util.profiling.Profiler.get();
@@ -248,8 +257,10 @@ public final class HStonecutter {
     @Contract(pure = true)
     public static Level levelOfEntity(final Entity entity) {
         // Validate.
-        assert entity != null : "HCsCR: Parameter 'entity' is null.";
-        // No thread checks here because this can be called from the integrated server.
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (entity != null) : "HCsCR: Parameter 'entity' is null.";
+            // No thread checks here because this can be called from the integrated server.
+        }
 
         //? if >=1.20.1 {
         return entity.level(); // Implicit NPE for 'entity'
@@ -269,8 +280,10 @@ public final class HStonecutter {
     @Contract(pure = true)
     public static boolean isEntityRemoved(final Entity entity) {
         // Validate.
-        assert entity != null : "HCsCR: Parameter 'entity' is null.";
-        assert Minecraft.getInstance().isSameThread() : "HCsCR: Checking entity removal NOT from the main thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (entity != null) : "HCsCR: Parameter 'entity' is null.";
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Checking entity removal NOT from the main thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ')';
+        }
 
         // Delegate.
         //? if >=1.17.1 {
@@ -290,8 +303,10 @@ public final class HStonecutter {
     @Nullable
     public static Entity collisionContextEntity(final EntityCollisionContext ctx) {
         // Validate.
-        assert ctx != null : "HCsCR: Parameter 'ctx' is null.";
-        // No thread checks here because this can be called from the integrated server.
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (ctx != null) : "HCsCR: Parameter 'ctx' is null.";
+            // No thread checks here because this can be called from the integrated server.
+        }
 
         // Delegate.
         //? if >=1.18.2 {
@@ -312,8 +327,10 @@ public final class HStonecutter {
      */
     public static void removeEntity(final Entity entity) {
         // Validate.
-        assert entity != null : "HCsCR: Parameter 'entity' is null.";
-        assert Minecraft.getInstance().isSameThread() : "HCsCR: Removing an entity NOT from the main thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (entity != null) : "HCsCR: Parameter 'entity' is null.";
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Removing an entity NOT from the main thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ')';
+        }
 
         // Delegate.
         //? if >=1.17.1 {
@@ -335,10 +352,12 @@ public final class HStonecutter {
     @CheckReturnValue
     public static boolean hurtEntity(final Entity entity, final DamageSource source, final float amount) {
         // Validate.
-        assert entity != null : "HCsCR: Parameter 'entity' is null. (source: " + source + ", amount: " + ')';
-        assert source != null : "HCsCR: Parameter 'source' is null. (entity: " + entity + ", amount: " + ')';
-        assert Float.isFinite(amount) : "HCsCR: Parameter 'amount' is not finite. (entity: " + entity + ", source: " + source + ", amount: " + ')';
-        // No thread checks here because this can be called from the integrated server.
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (entity != null) : "HCsCR: Parameter 'entity' is null. (source: " + source + ", amount: " + ')';
+            assert (source != null) : "HCsCR: Parameter 'source' is null. (entity: " + entity + ", amount: " + ')';
+            assert (Float.isFinite(amount)) : "HCsCR: Parameter 'amount' is not finite. (entity: " + entity + ", source: " + source + ", amount: " + ')';
+            // No thread checks here because this can be called from the integrated server.
+        }
 
         // Delegate.
         //? if >=1.21.3 {
@@ -358,13 +377,15 @@ public final class HStonecutter {
     public static void addEffectAttributes(final MobEffectInstance effect, final LocalPlayer player,
                                            final AttributeMap map) {
         // Validate.
-        assert effect != null : "HCsCR: Parameter 'effect' is null. (player: " + player + ", map: " + map + ')';
-        assert player != null : "HCsCR: Parameter 'player' is null. (effect: " + effect + ", map: " + map + ')';
-        assert map != null : "HCsCR: Parameter 'map' is null. (effect: " + effect + ", player: " + player + ')';
-        //noinspection ObjectEquality // <- Should be the same reference.
-        assert player.getAttributes() == map : "HCsCR: Provided map is not from the provided player while adding attributes. (effect: " + effect + ", player: " + player + ", map: " + map + ", playerMap: " + player.getAttributes() + ')';
-        assert player.getActiveEffects().contains(effect) : "HCsCR: Provided effect is not active for the player while adding attributes. (effect: " + effect + ", player: " + player + ", map: " + map + ", playerEffects: " + player.getActiveEffects() + ')';
-        assert Minecraft.getInstance().isSameThread() : "HCsCR: Adding effect attributes NOT from the main thread. (thread: " + Thread.currentThread() + ", effect: " + effect + ", player: " + player + ", map: " + map + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (effect != null) : "HCsCR: Parameter 'effect' is null. (player: " + player + ", map: " + map + ')';
+            assert (player != null) : "HCsCR: Parameter 'player' is null. (effect: " + effect + ", map: " + map + ')';
+            assert (map != null) : "HCsCR: Parameter 'map' is null. (effect: " + effect + ", player: " + player + ')';
+            //noinspection ObjectEquality // <- Should be the same reference.
+            assert (player.getAttributes() == map) : "HCsCR: Provided map is not from the provided player while adding attributes. (effect: " + effect + ", player: " + player + ", map: " + map + ", playerMap: " + player.getAttributes() + ')';
+            assert (player.getActiveEffects().contains(effect)) : "HCsCR: Provided effect is not active for the player while adding attributes. (effect: " + effect + ", player: " + player + ", map: " + map + ", playerEffects: " + player.getActiveEffects() + ')';
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Adding effect attributes NOT from the main thread. (thread: " + Thread.currentThread() + ", effect: " + effect + ", player: " + player + ", map: " + map + ')';
+        }
 
         // Delegate.
         //? if >=1.20.6 {
@@ -386,13 +407,15 @@ public final class HStonecutter {
     public static void removeEffectAttributes(final MobEffectInstance effect, final LocalPlayer player,
                                               final AttributeMap map) {
         // Validate.
-        assert effect != null : "HCsCR: Parameter 'effect' is null. (player: " + player + ", map: " + map + ')';
-        assert player != null : "HCsCR: Parameter 'player' is null. (effect: " + effect + ", map: " + map + ')';
-        assert map != null : "HCsCR: Parameter 'map' is null. (effect: " + effect + ", player: " + player + ')';
-        //noinspection ObjectEquality // <- Should be the same reference.
-        assert player.getAttributes() == map : "HCsCR: Provided map is not from the provided player while removing attributes. (effect: " + effect + ", player: " + player + ", map: " + map + ", playerMap: " + player.getAttributes() + ')';
-        assert player.getActiveEffects().contains(effect) : "HCsCR: Provided effect is not active for the player while removing attributes. (effect: " + effect + ", player: " + player + ", map: " + map + ", playerEffects: " + player.getActiveEffects() + ')';
-        assert Minecraft.getInstance().isSameThread() : "HCsCR: Removing effect attributes NOT from the main thread. (thread: " + Thread.currentThread() + ", effect: " + effect + ", player: " + player + ", map: " + map + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (effect != null) : "HCsCR: Parameter 'effect' is null. (player: " + player + ", map: " + map + ')';
+            assert (player != null) : "HCsCR: Parameter 'player' is null. (effect: " + effect + ", map: " + map + ')';
+            assert (map != null) : "HCsCR: Parameter 'map' is null. (effect: " + effect + ", player: " + player + ')';
+            //noinspection ObjectEquality // <- Should be the same reference.
+            assert (player.getAttributes() == map) : "HCsCR: Provided map is not from the provided player while removing attributes. (effect: " + effect + ", player: " + player + ", map: " + map + ", playerMap: " + player.getAttributes() + ')';
+            assert (player.getActiveEffects().contains(effect)) : "HCsCR: Provided effect is not active for the player while removing attributes. (effect: " + effect + ", player: " + player + ", map: " + map + ", playerEffects: " + player.getActiveEffects() + ')';
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Removing effect attributes NOT from the main thread. (thread: " + Thread.currentThread() + ", effect: " + effect + ", player: " + player + ", map: " + map + ')';
+        }
 
         // Delegate.
         //? if >=1.20.6 {
@@ -413,8 +436,10 @@ public final class HStonecutter {
     @Contract(pure = true)
     public static boolean willBedExplode(final Level level) {
         // Validate.
-        assert level != null : "HCsCR: Parameter 'level' is null.";
-        assert Minecraft.getInstance().isSameThread() : "HCsCR: Checking bed explosion status NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (level != null) : "HCsCR: Parameter 'level' is null.";
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Checking bed explosion status NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ')';
+        }
 
         // Delegate.
         //? if >=1.21.11 {
@@ -435,8 +460,10 @@ public final class HStonecutter {
     @Contract(pure = true)
     public static boolean willAnchorExplode(final Level level) {
         // Validate.
-        assert level != null : "HCsCR: Parameter 'level' is null.";
-        assert Minecraft.getInstance().isSameThread() : "HCsCR: Checking anchor explosion status NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (level != null) : "HCsCR: Parameter 'level' is null.";
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Checking anchor explosion status NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ')';
+        }
 
         // Delegate.
         //? if >=1.21.11 {
@@ -457,8 +484,10 @@ public final class HStonecutter {
     @Contract(pure = true)
     public static boolean isShiftKeyDown(final Minecraft client) {
         // Validate.
-        assert client != null : "HCsCR: Parameter 'client' is null.";
-        assert client.isSameThread() : "HCsCR: Checking the shift key state NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (client != null) : "HCsCR: Parameter 'client' is null.";
+            assert (client.isSameThread()) : "HCsCR: Checking the shift key state NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
+        }
 
         // Delegate.
         //? if >=1.21.10 {
@@ -488,20 +517,29 @@ public final class HStonecutter {
                                       final BiConsumer<Button, Consumer<Component>> handler,
                                       final Consumer<List<FormattedCharSequence>> tooltipRenderer) {
         // Validate.
-        assert font != null : "HCsCR: Parameter 'font' is null. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert (x >= -320) && (x <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320)) : "HCsCR: Parameter 'x' is not in the [" + -320 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert (y >= -240) && (y <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240)) : "HCsCR: Parameter 'y' is not in the [" + -240 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert width == 200 : "HCsCR: Parameter 'width' is not 200. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert height == 20 : "HCsCR: Parameter 'height' is 20. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert message != null : "HCsCR: Parameter 'message' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert tooltip != null : "HCsCR: Parameter 'tooltip' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert handler != null : "HCsCR: Parameter 'handler' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert tooltipRenderer != null : "HCsCR: Parameter 'tooltipRenderer' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ')';
-        assert Minecraft.getInstance().isSameThread() : "HCsCR: Creating a button NOT from the main thread. (thread: " + Thread.currentThread() + ", font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (font != null) : "HCsCR: Parameter 'font' is null. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert ((x >= -320) && (x <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320))) : "HCsCR: Parameter 'x' is not in the [" + -320 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert ((y >= -240) && (y <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240))) : "HCsCR: Parameter 'y' is not in the [" + -240 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert (width == 200) : "HCsCR: Parameter 'width' is not 200. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert (height == 20) : "HCsCR: Parameter 'height' is 20. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert (message != null) : "HCsCR: Parameter 'message' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert (tooltip != null) : "HCsCR: Parameter 'tooltip' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert (handler != null) : "HCsCR: Parameter 'handler' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert (tooltipRenderer != null) : "HCsCR: Parameter 'tooltipRenderer' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ')';
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Creating a button NOT from the main thread. (thread: " + Thread.currentThread() + ", font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+        }
 
         // Create.
         //? if >=1.19.4 {
         final Button button = Button.builder(message, (final Button innerButton) -> handler.accept(innerButton, (final Component tip) -> { // Implicit NPE for 'handler'
+            // Validate.
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (tip != null) : "HCsCR: Parameter 'tip' is null. (innerButton: " + innerButton + ')';
+                assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Setting a button tip NOT from the main thread. (thread: " + Thread.currentThread() + ", innerButton: " + innerButton + ')';
+            }
+
+            // Set.
             innerButton.setTooltip(net.minecraft.client.gui.components.Tooltip.create(tip));
             innerButton.setTooltipDelay(TOOLTIP_DURATION);
         })).tooltip(net.minecraft.client.gui.components.Tooltip.create(tooltip)).bounds(x, y, width, height).build();
@@ -557,14 +595,16 @@ public final class HStonecutter {
                                           final Component tooltip, final boolean check, final BooleanConsumer handler,
                                           final Consumer<List<FormattedCharSequence>> tooltipRenderer) {
         // Validate.
-        assert font != null : "HCsCR: Parameter 'font' is null. (x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert (x >= -320) && (x <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320)) : "HCsCR: Parameter 'x' is not in the [" + -320 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert (y >= -240) && (y <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240)) : "HCsCR: Parameter 'y' is not in the [" + -240 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert message != null : "HCsCR: Parameter 'message' is null. (font: " + font + ", x: " + x + ", y: " + y + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert tooltip != null : "HCsCR: Parameter 'tooltip' is null. (font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert handler != null : "HCsCR: Parameter 'handler' is null. (font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert tooltipRenderer != null : "HCsCR: Parameter 'tooltipRenderer' is null. (font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ')';
-        assert Minecraft.getInstance().isSameThread() : "HCsCR: Creating a checkbox NOT from the main thread. (thread: " + Thread.currentThread() + ", font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (font != null) : "HCsCR: Parameter 'font' is null. (x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert ((x >= -320) && (x <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320))) : "HCsCR: Parameter 'x' is not in the [" + -320 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert ((y >= -240) && (y <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240))) : "HCsCR: Parameter 'y' is not in the [" + -240 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert (message != null) : "HCsCR: Parameter 'message' is null. (font: " + font + ", x: " + x + ", y: " + y + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert (tooltip != null) : "HCsCR: Parameter 'tooltip' is null. (font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert (handler != null) : "HCsCR: Parameter 'handler' is null. (font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert (tooltipRenderer != null) : "HCsCR: Parameter 'tooltipRenderer' is null. (font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ')';
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Creating a checkbox NOT from the main thread. (thread: " + Thread.currentThread() + ", font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+        }
 
         // Create.
         //? if >=1.20.4 {
@@ -649,19 +689,21 @@ public final class HStonecutter {
                                                     final int max, final IntConsumer handler,
                                                     final Consumer<List<FormattedCharSequence>> tooltipRenderer) {
         // Validate.
-        assert font != null : "HCsCR: Parameter 'font' is null. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert (x >= -320) && (x <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320)) : "HCsCR: Parameter 'x' is not in the [" + -320 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert (y >= -240) && (y <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240)) : "HCsCR: Parameter 'y' is not in the [" + -240 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert width == 200 : "HCsCR: Parameter 'width' is not 200. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert height == 20 : "HCsCR: Parameter 'height' is 20. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert provider != null : "HCsCR: Parameter 'provider' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert tooltip != null : "HCsCR: Parameter 'tooltip' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert max > min : "HCsCR: Parameter 'min' is not bigger than 'max'. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert value >= min : "HCsCR: Parameter 'value' is smaller than 'min'. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert value <= max : "HCsCR: Parameter 'value' is bigger than 'max'. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert handler != null : "HCsCR: Parameter 'handler' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", tooltipRenderer: " + tooltipRenderer + ')';
-        assert tooltipRenderer != null : "HCsCR: Parameter 'tooltipRenderer' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ')';
-        assert Minecraft.getInstance().isSameThread() : "HCsCR: Creating a slider NOT from the main thread. (thread: " + Thread.currentThread() + ", font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (font != null) : "HCsCR: Parameter 'font' is null. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert ((x >= -320) && (x <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320))) : "HCsCR: Parameter 'x' is not in the [" + -320 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert ((y >= -240) && (y <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240))) : "HCsCR: Parameter 'y' is not in the [" + -240 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert (width == 200) : "HCsCR: Parameter 'width' is not 200. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert (height == 20) : "HCsCR: Parameter 'height' is 20. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert (provider != null) : "HCsCR: Parameter 'provider' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert (tooltip != null) : "HCsCR: Parameter 'tooltip' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert (max > min) : "HCsCR: Parameter 'min' is not bigger than 'max'. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert (value >= min) : "HCsCR: Parameter 'value' is smaller than 'min'. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert (value <= max) : "HCsCR: Parameter 'value' is bigger than 'max'. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert (handler != null) : "HCsCR: Parameter 'handler' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", tooltipRenderer: " + tooltipRenderer + ')';
+            assert (tooltipRenderer != null) : "HCsCR: Parameter 'tooltipRenderer' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ')';
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Creating a slider NOT from the main thread. (thread: " + Thread.currentThread() + ", font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+        }
 
         // Create the slider.
         final int clamped = Mth.clamp(value, min, max);

@@ -39,6 +39,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.config.BlockMode;
+import ru.vidtu.hcscr.platform.HCompile;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
@@ -83,10 +84,12 @@ public final class BlockBehaviour_BlockStateBaseMixin {
     private void hcscr_getCollisionShape_head(final BlockGetter level, final BlockPos pos, final CollisionContext context,
                                               final CallbackInfoReturnable<VoxelShape> cir) {
         // Validate.
-        assert level != null : "HCsCR: Parameter 'level' is null. (pos: " + pos + ", context: " + context + ", cir: " + cir + ", state: " + this + ')';
-        assert pos != null : "HCsCR: Parameter 'pos' is null. (level: " + level + ", context: " + context + ", cir: " + cir + ", state: " + this + ')';
-        assert context != null : "HCsCR: Parameter 'context' is null. (level: " + level + ", pos: " + pos + ", cir: " + cir + ", state: " + this + ')';
-        assert cir != null : "HCsCR: Parameter 'cir' is null. (level: " + level + ", pos: " + pos + ", context: " + context + ", state: " + this + ')';
+        if (HCompile.DEBUG_LOGS) {
+            assert (level != null) : "HCsCR: Parameter 'level' is null. (pos: " + pos + ", context: " + context + ", cir: " + cir + ", state: " + this + ')';
+            assert (pos != null) : "HCsCR: Parameter 'pos' is null. (level: " + level + ", context: " + context + ", cir: " + cir + ", state: " + this + ')';
+            assert (context != null) : "HCsCR: Parameter 'context' is null. (level: " + level + ", pos: " + pos + ", cir: " + cir + ", state: " + this + ')';
+            assert (cir != null) : "HCsCR: Parameter 'cir' is null. (level: " + level + ", pos: " + pos + ", context: " + context + ", state: " + this + ')';
+        }
 
         // Do NOT remove collision if any of the following conditions is met:
         // - The current collision context lacks an entity.

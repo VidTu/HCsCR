@@ -38,6 +38,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import ru.vidtu.hcscr.HCsCR;
+import ru.vidtu.hcscr.platform.HCompile;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
@@ -94,14 +95,23 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
     private void hcscr_updateLevelInEngines_return(@Nullable final ClientLevel level, final CallbackInfo ci) {
     *///?}
         // Validate.
-        assert this.isSameThread() : "HCsCR: Updating level in engines NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ", client: " + this + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (this.isSameThread()) : "HCsCR: Updating level in engines NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ", client: " + this + ')';
+        }
 
         // Get and push the profiler.
-        final ProfilerFiller profiler = this.hcscr_minecraftmixin_profiler();
-        profiler.push("hcscr:clear_data");
+        final ProfilerFiller profiler;
+        if (HCompile.DEBUG_PROFILER) {
+            profiler = this.hcscr_minecraftmixin_profiler();
+            profiler.push("hcscr:clear_data");
+        } else {
+            profiler = null;
+        }
 
         // Log. (**TRACE**)
-        HCSCR_LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Clearing data... (level: {}, client: {})", level, this);
+        if (HCompile.DEBUG_LOGS) {
+            HCSCR_LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Clearing data... (level: {}, client: {})", level, this);
+        }
 
         // Clear the maps.
         HCsCR.SCHEDULED_ENTITIES.clear();
@@ -109,10 +119,14 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
         HCsCR.CLIPPING_BLOCKS.clear();
 
         // Log. (**DEBUG**)
-        HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Cleared data. (level: {}, client: {})", level, this);
+        if (HCompile.DEBUG_LOGS) {
+            HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Cleared data. (level: {}, client: {})", level, this);
+        }
 
         // Pop the profiler.
-        profiler.pop();
+        if (HCompile.DEBUG_PROFILER) {
+            profiler.pop();
+        }
     }
 
     //? if fabric {

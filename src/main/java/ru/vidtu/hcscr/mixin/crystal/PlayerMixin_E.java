@@ -33,6 +33,7 @@ import org.jspecify.annotations.NullMarked;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import ru.vidtu.hcscr.HCsCR;
+import ru.vidtu.hcscr.platform.HCompile;
 import ru.vidtu.hcscr.platform.HPlugin;
 
 /**
@@ -82,13 +83,15 @@ public final class PlayerMixin_E {
     private boolean hcscr_attack_hurtOrSimulate(final Entity target, final DamageSource damageSource,
                                                 final float totalDamage, final Operation<Boolean> original) {
         // Validate.
-        assert target != null : "HCsCR: Parameter 'target' is null. (damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", original: " + original + ", player: " + this + ')';
-        assert damageSource != null : "HCsCR: Parameter 'damageSource' is null. (target: " + target + ", totalDamage: " + totalDamage + ", original: " + original + ", player: " + this + ')';
-        assert Float.isFinite(totalDamage) : "HCsCR: Parameter 'totalDamage' is not finite. (target: " + target + ", damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", original: " + original + ", player: " + this + ')';
-        assert original != null : "HCsCR: Parameter 'original' is null. (target: " + target + ", damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", player: " + this + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (target != null) : "HCsCR: Parameter 'target' is null. (damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", original: " + original + ", player: " + this + ')';
+            assert (damageSource != null) : "HCsCR: Parameter 'damageSource' is null. (target: " + target + ", totalDamage: " + totalDamage + ", original: " + original + ", player: " + this + ')';
+            assert (Float.isFinite(totalDamage)) : "HCsCR: Parameter 'totalDamage' is not finite. (target: " + target + ", damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", original: " + original + ", player: " + this + ')';
+            assert (original != null) : "HCsCR: Parameter 'original' is null. (target: " + target + ", damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", player: " + this + ')';
+        }
 
         // Delegate.
         //noinspection NonShortCircuitBooleanExpression // <- Needs to call both methods.
-        return original.call(target, damageSource, totalDamage) | HCsCR.handlePlayerHittingEntity(target, damageSource, totalDamage);
+        return (original.call(target, damageSource, totalDamage) | HCsCR.handlePlayerHittingEntity(target, damageSource, totalDamage));
     }
 }

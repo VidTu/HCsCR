@@ -36,6 +36,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.vidtu.hcscr.HCsCR;
+import ru.vidtu.hcscr.platform.HCompile;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
@@ -85,7 +86,9 @@ public final class EntityMixin {
     private void hcscr_getBoundingBox_head(final CallbackInfoReturnable<AABB> cir) {
         // Validate.
         final Level level = this.hcscr_entitymixin_level();
-        assert level != null : "HCsCR: Getting entity bounding box with null level. (cir: " + cir + ", entity: " + this + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (level != null) : "HCsCR: Getting entity bounding box with null level. (cir: " + cir + ", entity: " + this + ')';
+        }
 
         // Do NOT hide entity if any of the following conditions is met:
         // - The current level (world) is not client-side. (e.g., integrated server world)

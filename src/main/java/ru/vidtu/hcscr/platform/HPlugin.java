@@ -96,11 +96,20 @@ public final class HPlugin implements IMixinConfigPlugin {
     @Contract(pure = true)
     @Override
     public boolean shouldApplyMixin(final String targetClassName, final String mixinClassName) {
+        // Validate.
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (targetClassName != null) : "HCsCR: Parameter 'targetClassName' is null. (mixinClassName: " + mixinClassName + ", plugin: " + this + ')';
+            assert (mixinClassName != null) : "HCsCR: Parameter 'mixinClassName' is null. (targetClassName: " + targetClassName + ", plugin: " + this + ')';
+        }
+
         // If the Mixin class is not from HCsCR, don't touch it and allow it to be applied.
         if (!mixinClassName.startsWith("ru.vidtu.hcscr.mixin.")) { // Implicit NPE for 'mixinClassName'
             // Log. (**TRACE**)
-            if (!LOGGER.isTraceEnabled(HCSCR_MARKER)) return true;
-            LOGGER.trace(HCSCR_MARKER, "HCsCR: Skipping and applying mixin, because it's not a part of HCsCR... (mixinExtras: {}, plugin: {}, targetClassName: {}, mixinClassName: {})", this.mixinExtras, this, targetClassName, mixinClassName);
+            if (HCompile.DEBUG_LOGS && LOGGER.isTraceEnabled(HCSCR_MARKER)) {
+                LOGGER.trace(HCSCR_MARKER, "HCsCR: Skipping and applying mixin, because it's not a part of HCsCR... (plugin: {}, targetClassName: {}, mixinClassName: {})", this, targetClassName, mixinClassName);
+            }
+
+            // Unconditionally apply.
             return true;
         }
 
@@ -115,10 +124,12 @@ public final class HPlugin implements IMixinConfigPlugin {
         }
 
         // Log. (**DEBUG**)
-        if (applyMixin) {
-            LOGGER.debug(HCSCR_MARKER, "HCsCR: Mixin hasn't been ruled out due to MixinExtras rules, mixin WILL be applied. (mixinExtras: {}, plugin: {}, targetClassName: {}, mixinClassName: {})", this.mixinExtras, this, targetClassName, mixinClassName);
-        } else {
-            LOGGER.debug(HCSCR_MARKER, "HCsCR: Mixin has been ruled out due to MixinExtras rules, mixin WON'T be applied. (mixinExtras: {}, plugin: {}, targetClassName: {}, mixinClassName: {})", this.mixinExtras, this, targetClassName, mixinClassName);
+        if (HCompile.DEBUG_LOGS) {
+            if (applyMixin) {
+                LOGGER.debug(HCSCR_MARKER, "HCsCR: Mixin hasn't been ruled out due to MixinExtras rules, mixin WILL be applied. (plugin: {}, targetClassName: {}, mixinClassName: {})", this, targetClassName, mixinClassName);
+            } else {
+                LOGGER.debug(HCSCR_MARKER, "HCsCR: Mixin has been ruled out due to MixinExtras rules, mixin WON'T be applied. (plugin: {}, targetClassName: {}, mixinClassName: {})", this, targetClassName, mixinClassName);
+            }
         }
 
         // Return.
@@ -135,6 +146,11 @@ public final class HPlugin implements IMixinConfigPlugin {
     @Contract(pure = true)
     @Override
     public void onLoad(final String mixinPackage) {
+        // Validate.
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (mixinPackage != null) : "HCsCR: Parameter 'mixinPackage' is null. (plugin: " + this + ')';
+        }
+
         // NO-OP
     }
 
@@ -163,6 +179,12 @@ public final class HPlugin implements IMixinConfigPlugin {
     @Contract(pure = true)
     @Override
     public void acceptTargets(final Set<String> myTargets, final Set<String> otherTargets) {
+        // Validate.
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (myTargets != null) : "HCsCR: Parameter 'myTargets' is null. (otherTargets: " + otherTargets + ", plugin: " + this + ')';
+            assert (otherTargets != null) : "HCsCR: Parameter 'otherTargets' is null. (myTargets: " + myTargets + ", plugin: " + this + ')';
+        }
+
         // NO-OP
     }
 
@@ -194,6 +216,14 @@ public final class HPlugin implements IMixinConfigPlugin {
     @Override
     public void preApply(final String targetClassName, final ClassNode targetClass,
                          final String mixinClassName, final IMixinInfo mixinInfo) {
+        // Validate.
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (targetClassName != null) : "HCsCR: Parameter 'targetClassName' is null. (targetClass: " + targetClass + ", mixinClassName: " + mixinClassName + ", mixinInfo: " + mixinInfo + ", plugin: " + this + ')';
+            assert (targetClass != null) : "HCsCR: Parameter 'targetClass' is null. (targetClassName: " + targetClassName + ", mixinClassName: " + mixinClassName + ", mixinInfo: " + mixinInfo + ", plugin: " + this + ')';
+            assert (mixinClassName != null) : "HCsCR: Parameter 'mixinClassName' is null. (targetClassName: " + targetClassName + ", targetClass: " + targetClass + ", mixinInfo: " + mixinInfo + ", plugin: " + this + ')';
+            assert (mixinInfo != null) : "HCsCR: Parameter 'mixinInfo' is null. (targetClassName: " + targetClassName + ", targetClass: " + targetClass + ", mixinClassName: " + mixinClassName + ", plugin: " + this + ')';
+        }
+
         // NO-OP
     }
 
@@ -211,6 +241,14 @@ public final class HPlugin implements IMixinConfigPlugin {
     @Override
     public void postApply(final String targetClassName, final ClassNode targetClass,
                           final String mixinClassName, final IMixinInfo mixinInfo) {
+        // Validate.
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (targetClassName != null) : "HCsCR: Parameter 'targetClassName' is null. (targetClass: " + targetClass + ", mixinClassName: " + mixinClassName + ", mixinInfo: " + mixinInfo + ", plugin: " + this + ')';
+            assert (targetClass != null) : "HCsCR: Parameter 'targetClass' is null. (targetClassName: " + targetClassName + ", mixinClassName: " + mixinClassName + ", mixinInfo: " + mixinInfo + ", plugin: " + this + ')';
+            assert (mixinClassName != null) : "HCsCR: Parameter 'mixinClassName' is null. (targetClassName: " + targetClassName + ", targetClass: " + targetClass + ", mixinInfo: " + mixinInfo + ", plugin: " + this + ')';
+            assert (mixinInfo != null) : "HCsCR: Parameter 'mixinInfo' is null. (targetClassName: " + targetClassName + ", targetClass: " + targetClass + ", mixinClassName: " + mixinClassName + ", plugin: " + this + ')';
+        }
+
         // NO-OP
     }
 
@@ -277,7 +315,11 @@ public final class HPlugin implements IMixinConfigPlugin {
         } catch (final Throwable t) {
             // Log.
             LOGGER.info(HCSCR_MARKER, "HCsCR: MixinExtras has NOT been found, and it won't be used.");
-            LOGGER.debug(HCSCR_MARKER, "HCsCR: Unable to provide compat for MixinExtras, it's probably not installed. (plugin: {})", this, t);
+
+            // Log. (**DEBUG**)
+            if (HCompile.DEBUG_LOGS) {
+                LOGGER.debug(HCSCR_MARKER, "HCsCR: Unable to provide compat for MixinExtras, it's probably not installed. (plugin: {})", this, t);
+            }
 
             // Disable.
             return false;

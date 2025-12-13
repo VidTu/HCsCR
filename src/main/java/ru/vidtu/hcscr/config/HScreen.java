@@ -35,6 +35,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
+import ru.vidtu.hcscr.platform.HCompile;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.util.List;
@@ -95,10 +96,12 @@ public final class HScreen extends Screen {
     protected void init() {
         // Validate.
         final Font font = this.font;
-        assert font != null : "HCsCR: Font renderer is not initialized at screen initializing. (screen: " + this + ')';
         final Minecraft minecraft = this.minecraft;
-        assert minecraft != null : "HCsCR: Minecraft client instance is not initialized at screen initializing. (screen: " + this + ')';
-        assert minecraft.isSameThread() : "HCsCR: Initializing the config screen NOT from the main thread. (thread: " + Thread.currentThread() + ", screen: " + this + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (font != null) : "HCsCR: Font renderer is not initialized at screen initializing. (screen: " + this + ')';
+            assert (minecraft != null) : "HCsCR: Minecraft client instance is not initialized at screen initializing. (screen: " + this + ')';
+            assert (minecraft.isSameThread()) : "HCsCR: Initializing the config screen NOT from the main thread. (thread: " + Thread.currentThread() + ", screen: " + this + ')';
+        }
 
         // Enable.
         /*non-final*/ int index = 0;
@@ -159,8 +162,10 @@ public final class HScreen extends Screen {
     public void onClose() {
         // Validate.
         final Minecraft minecraft = this.minecraft;
-        assert minecraft != null : "HCsCR: Minecraft client instance is not initialized at screen closing. (screen: " + this + ')';
-        assert minecraft.isSameThread() : "HCsCR: Closing the config screen NOT from the main thread. (thread: " + Thread.currentThread() + ", screen: " + this + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (minecraft != null) : "HCsCR: Minecraft client instance is not initialized at screen closing. (screen: " + this + ')';
+            assert (minecraft.isSameThread()) : "HCsCR: Closing the config screen NOT from the main thread. (thread: " + Thread.currentThread() + ", screen: " + this + ')';
+        }
 
         // Save.
         HConfig.save();
@@ -187,13 +192,15 @@ public final class HScreen extends Screen {
     /*public void render(final PoseStack graphics, final int mouseX, final int mouseY, final float tickDelta) {
     *///?}
         // Validate.
-        assert graphics != null : "HCsCR: Parameter 'graphics' is null. (mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
-        assert (tickDelta >= 0.0F) && (tickDelta < Float.POSITIVE_INFINITY) : "HCsCR: Parameter 'tickDelta' is not in the [0..INF) range. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
         final Font font = this.font;
-        assert font != null : "HCsCR: Font renderer is not initialized at screen rendering. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
         final Minecraft minecraft = this.minecraft;
-        assert minecraft != null : "HCsCR: Minecraft client instance is not initialized at screen rendering. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
-        assert minecraft.isSameThread() : "HCsCR: Rendering the config screen NOT from the main thread. (thread: " + Thread.currentThread() + ", graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (graphics != null) : "HCsCR: Parameter 'graphics' is null. (mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
+            assert ((tickDelta >= 0.0F) && (tickDelta < Float.POSITIVE_INFINITY)) : "HCsCR: Parameter 'tickDelta' is not in the [0..INF) range. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
+            assert (font != null) : "HCsCR: Font renderer is not initialized at screen rendering. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
+            assert (minecraft != null) : "HCsCR: Minecraft client instance is not initialized at screen rendering. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
+            assert (minecraft.isSameThread()) : "HCsCR: Rendering the config screen NOT from the main thread. (thread: " + Thread.currentThread() + ", graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
+        }
 
         // Render background and widgets.
         //? if <1.20.2 {
@@ -224,7 +231,9 @@ public final class HScreen extends Screen {
      */
     private void addVersionedWidget(final AbstractWidget widget) {
         // Validate.
-        assert widget != null : "HCsCR: Parameter 'widget' is null. (screen: " + this + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (widget != null) : "HCsCR: Parameter 'widget' is null. (screen: " + this + ')';
+        }
 
         // Delegate.
         //? if >=1.17.1 {
@@ -241,7 +250,9 @@ public final class HScreen extends Screen {
      */
     private void tooltip(final List<FormattedCharSequence> tooltip) {
         // Validate.
-        assert tooltip != null : "HCsCR: Parameter 'tooltip' is null. (screen: " + this + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert tooltip != null : "HCsCR: Parameter 'tooltip' is null. (screen: " + this + ')';
+        }
 
         // Assign.
         //? if <1.19.4 {
@@ -268,6 +279,12 @@ public final class HScreen extends Screen {
      */
     @Contract(pure = true)
     private static int calculateWidgetY(final int index) {
+        // Validate.
+        if (HCompile.DEBUG_ASSERTS) {
+            assert ((index >= 0) && (index <= Byte.MAX_VALUE)) : "HCsCR: Parameter 'index' is not in the [0.." + Byte.MAX_VALUE + "]. (index: " + index + ')';
+        }
+
+        // Calculate.
         return (20 + (index * 24));
     }
 }

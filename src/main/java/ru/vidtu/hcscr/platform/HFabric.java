@@ -89,7 +89,9 @@ public final class HFabric implements ClientModInitializer {
     public void onInitializeClient() {
         // Log.
         final long start = System.nanoTime();
-        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Loading... (platform: fabric)");
+        final String modVersion = HFabric.class.getPackage().getImplementationVersion();
+        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Loading... (platform: fabric, modVersion: {})", modVersion);
+        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Debug flags enabled: '" + (HCompile.DEBUG_ASSERTS ? "Asserts" : "") + (HCompile.DEBUG_LOGS ? "Logs" : "") + (HCompile.DEBUG_PROFILER ? "Profiler" : "") + '\'');
 
         // Load the config.
         HConfig.load();
@@ -112,10 +114,12 @@ public final class HFabric implements ClientModInitializer {
         };
         final StreamCodec<FriendlyByteBuf, CustomPacketPayload> codec = StreamCodec.of((final FriendlyByteBuf output, final CustomPacketPayload value) -> {
             // Throw unconditionally.
-            throw new IllegalStateException("HCsCR: Client-side mod should not send/encode this packet. (output: " + output + ", value: " + value + ')');
+            throw new UnsupportedOperationException("HCsCR: Client-side mod should not send/encode this packet. (output: " + output + ", value: " + value + ')');
         }, (final FriendlyByteBuf input) -> {
             // Validate.
-            assert input != null : "HCsCR: Parameter 'input' is null.";
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (input != null) : "HCsCR: Parameter 'input' is null.";
+            }
 
             // Skip bytes. (whatever they are)
             input.skipBytes(input.readableBytes()); // Implicit NPE for 'input'
@@ -125,20 +129,30 @@ public final class HFabric implements ClientModInitializer {
         PayloadTypeRegistry.playS2C().register(type, codec);
         ClientConfigurationNetworking.registerGlobalReceiver(type, (final CustomPacketPayload payload, final ClientConfigurationNetworking.Context context) -> {
             // Validate.
-            assert payload != null : "HCsCR: Parameter 'payload' is null. (context: " + context + ')';
-            assert context != null : "HCsCR: Parameter 'context' is null. (payload: " + payload + ')';
-            final PacketSender sender = context.responseSender(); // Implicit NPE for 'context'
-            assert sender != null : "HCsCR: Response sender is null. (payload: " + payload + ", context: " + context + ')';
+            final PacketSender sender;
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (payload != null) : "HCsCR: Parameter 'payload' is null. (context: " + context + ')';
+                assert (context != null) : "HCsCR: Parameter 'context' is null. (payload: " + payload + ')';
+                sender = context.responseSender(); // Implicit NPE for 'context'
+                assert (sender != null) : "HCsCR: Response sender is null. (payload: " + payload + ", context: " + context + ')';
+            } else {
+                sender = context.responseSender(); // Implicit NPE for 'context'
+            }
 
             // Close the connection.
             sender.disconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'sender'
         });
         ClientPlayNetworking.registerGlobalReceiver(type, (final CustomPacketPayload payload, final ClientPlayNetworking.Context context) -> {
             // Validate.
-            assert payload != null : "HCsCR: Parameter 'payload' is null. (context: " + context + ')';
-            assert context != null : "HCsCR: Parameter 'context' is null. (payload: " + payload + ')';
-            final PacketSender sender = context.responseSender(); // Implicit NPE for 'context'
-            assert sender != null : "HCsCR: Response sender is null. (payload: " + payload + ", context: " + context + ')';
+            final PacketSender sender;
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (payload != null) : "HCsCR: Parameter 'payload' is null. (context: " + context + ')';
+                assert (context != null) : "HCsCR: Parameter 'context' is null. (payload: " + payload + ')';
+                sender = context.responseSender(); // Implicit NPE for 'context'
+                assert (sender != null) : "HCsCR: Response sender is null. (payload: " + payload + ", context: " + context + ')';
+            } else {
+                sender = context.responseSender(); // Implicit NPE for 'context'
+            }
 
             // Close the connection.
             sender.disconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'sender'
@@ -146,20 +160,24 @@ public final class HFabric implements ClientModInitializer {
         //?} elif >=1.20.2 {
         /*ClientConfigurationNetworking.registerGlobalReceiver(HStonecutter.CHANNEL_IDENTIFIER, (final Minecraft client, final ClientConfigurationPacketListenerImpl handler, final FriendlyByteBuf buf, final PacketSender responseSender) -> {
             // Validate.
-            assert client != null : "HCsCR: Parameter 'client' is null. (handler: " + handler + ", buf: " + buf + ", responseSender: " + responseSender + ')';
-            assert handler != null : "HCsCR: Parameter 'handler' is null. (client: " + client + ", buf: " + buf + ", responseSender: " + responseSender + ')';
-            assert buf != null : "HCsCR: Parameter 'buf' is null. (client: " + client + ", handler: " + handler + ", responseSender: " + responseSender + ')';
-            assert responseSender != null : "HCsCR: Parameter 'responseSender' is null. (client: " + client + ", handler: " + handler + ", buf: " + buf + ')';
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (client != null) : "HCsCR: Parameter 'client' is null. (handler: " + handler + ", buf: " + buf + ", responseSender: " + responseSender + ')';
+                assert (handler != null) : "HCsCR: Parameter 'handler' is null. (client: " + client + ", buf: " + buf + ", responseSender: " + responseSender + ')';
+                assert (buf != null) : "HCsCR: Parameter 'buf' is null. (client: " + client + ", handler: " + handler + ", responseSender: " + responseSender + ')';
+                assert (responseSender != null) : "HCsCR: Parameter 'responseSender' is null. (client: " + client + ", handler: " + handler + ", buf: " + buf + ')';
+            }
 
             // Close the connection.
             handler.onDisconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'handler'
         });
         ClientPlayNetworking.registerGlobalReceiver(HStonecutter.CHANNEL_IDENTIFIER, (final Minecraft client, final ClientPacketListener handler, final FriendlyByteBuf buf, final PacketSender responseSender) -> {
             // Validate.
-            assert client != null : "HCsCR: Parameter 'client' is null. (handler: " + handler + ", buf: " + buf + ", responseSender: " + responseSender + ')';
-            assert handler != null : "HCsCR: Parameter 'handler' is null. (client: " + client + ", buf: " + buf + ", responseSender: " + responseSender + ')';
-            assert buf != null : "HCsCR: Parameter 'buf' is null. (client: " + client + ", handler: " + handler + ", responseSender: " + responseSender + ')';
-            assert responseSender != null : "HCsCR: Parameter 'responseSender' is null. (client: " + client + ", handler: " + handler + ", buf: " + buf + ')';
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (client != null) : "HCsCR: Parameter 'client' is null. (handler: " + handler + ", buf: " + buf + ", responseSender: " + responseSender + ')';
+                assert (handler != null) : "HCsCR: Parameter 'handler' is null. (client: " + client + ", buf: " + buf + ", responseSender: " + responseSender + ')';
+                assert (buf != null) : "HCsCR: Parameter 'buf' is null. (client: " + client + ", handler: " + handler + ", responseSender: " + responseSender + ')';
+                assert (responseSender != null) : "HCsCR: Parameter 'responseSender' is null. (client: " + client + ", handler: " + handler + ", buf: " + buf + ')';
+            }
 
             // Close the connection.
             handler.onDisconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'handler'
@@ -167,10 +185,12 @@ public final class HFabric implements ClientModInitializer {
         *///?} else {
         /*ClientPlayNetworking.registerGlobalReceiver(HStonecutter.CHANNEL_IDENTIFIER, (final Minecraft client, final ClientPacketListener handler, final FriendlyByteBuf buf, final PacketSender responseSender) -> {
             // Validate.
-            assert client != null : "HCsCR: Parameter 'client' is null. (handler: " + handler + ", buf: " + buf + ", responseSender: " + responseSender + ')';
-            assert handler != null : "HCsCR: Parameter 'handler' is null. (client: " + client + ", buf: " + buf + ", responseSender: " + responseSender + ')';
-            assert buf != null : "HCsCR: Parameter 'buf' is null. (client: " + client + ", handler: " + handler + ", responseSender: " + responseSender + ')';
-            assert responseSender != null : "HCsCR: Parameter 'responseSender' is null. (client: " + client + ", handler: " + handler + ", buf: " + buf + ')';
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (client != null) : "HCsCR: Parameter 'client' is null. (handler: " + handler + ", buf: " + buf + ", responseSender: " + responseSender + ')';
+                assert (handler != null) : "HCsCR: Parameter 'handler' is null. (client: " + client + ", buf: " + buf + ", responseSender: " + responseSender + ')';
+                assert (buf != null) : "HCsCR: Parameter 'buf' is null. (client: " + client + ", handler: " + handler + ", responseSender: " + responseSender + ')';
+                assert (responseSender != null) : "HCsCR: Parameter 'responseSender' is null. (client: " + client + ", handler: " + handler + ", buf: " + buf + ')';
+            }
 
             // Close the connection.
             handler.onDisconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'handler'

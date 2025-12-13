@@ -108,6 +108,7 @@ import java.util.function.Supplier;
 /^import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -119,6 +120,7 @@ import java.util.function.Supplier;
 ^///?} elif >=1.17.1 {
 /^import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -133,6 +135,7 @@ import java.util.function.Supplier;
 ^///?} else {
 /^import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -172,8 +175,10 @@ public final class HForge {
      ¹^/
     public HForge(final ModContainer container, final IEventBus bus) {
         // Validate.
-        assert container != null : "HCsCR: Parameter 'container' is null. (bus: " + bus + ", mod: " + this + ')';
-        assert bus != null : "HCsCR: Parameter 'bus' is null. (container: " + container + ", mod: " + this + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (container != null) : "HCsCR: Parameter 'container' is null. (bus: " + bus + ", mod: " + this + ')';
+            assert (bus != null) : "HCsCR: Parameter 'bus' is null. (container: " + container + ", mod: " + this + ')';
+        }
     ^///?} elif >=1.19.2 && (!1.20.2) {
     /^*
      * Creates and loads a new mod.
@@ -183,7 +188,9 @@ public final class HForge {
      ^/
     public HForge(final FMLJavaModLoadingContext ctx) {
         // Validate.
-        assert ctx != null : "HCsCR: Parameter 'ctx' is null. (mod: " + this + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (ctx != null) : "HCsCR: Parameter 'ctx' is null. (mod: " + this + ')';
+        }
     //?} else {
     /^/^¹*
      * Creates a new mod.
@@ -191,10 +198,14 @@ public final class HForge {
      * @apiNote Do not call, called by Forge
      ¹^/
     public HForge() {
+        // Get the context.
+        FMLJavaModLoadingContext ctx = FMLJavaModLoadingContext.get();
     ^///?}
         // Log.
         final long start = System.nanoTime();
-        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Loading... (platform: forge)");
+        final String modVersion = HForge.class.getPackage().getImplementationVersion();
+        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Loading... (platform: forge, modVersion: {})", modVersion);
+        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Debug flags enabled: '" + (HCompile.DEBUG_ASSERTS ? "Asserts" : "") + (HCompile.DEBUG_LOGS ? "Logs" : "") + (HCompile.DEBUG_PROFILER ? "Profiler" : "") + '\'');
 
         // Not sure how long the Forge does have the "clientSideOnly" field in the TOML,
         // so I'll do an additional exception check here.
@@ -209,41 +220,55 @@ public final class HForge {
         //? if >=1.20.2 {
         ChannelBuilder.named(HStonecutter.CHANNEL_IDENTIFIER).networkProtocolVersion(1).acceptedVersions((final Channel.VersionTest.Status status, final int version) -> true).eventNetworkChannel().addListener((final CustomPayloadEvent event) -> {
             // Validate.
-            assert event != null : "HCsCR: Parameter 'event' is null.";
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (event != null) : "HCsCR: Parameter 'event' is null.";
+            }
 
             // Skip if there's no payload. (e.g., a channel registration)
             if (event.getPayload() == null) return; // Implicit NPE for 'event'
 
             // Check if coming from the server.
             final CustomPayloadEvent.Context source = event.getSource();
-            assert source != null : "HCsCR: Source is null. (event: " + event + ')';
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (source != null) : "HCsCR: Source is null. (event: " + event + ')';
+            }
             if (!source.isClientSide()) return; // Implicit NPE for 'source'
             source.setPacketHandled(true);
 
             // Close the connection.
             final Connection connection = source.getConnection();
-            assert connection != null : "HCsCR: Connection is null. (event: " + event + ", source: " + source + ')';
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (connection != null) : "HCsCR: Connection is null. (event: " + event + ", source: " + source + ')';
+            }
             connection.disconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'connection'
         });
         //?} else {
         /^NetworkRegistry.newEventChannel(HStonecutter.CHANNEL_IDENTIFIER, () -> "hcscr", (final String version) -> true, (final String version) -> true).addListener((final NetworkEvent event) -> {
             // Validate.
-            assert event != null : "HCsCR: Parameter 'event' is null.";
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (event != null) : "HCsCR: Parameter 'event' is null.";
+            }
 
             // Skip if there's no payload. (e.g., a channel registration)
             if (event.getPayload() == null) return; // Implicit NPE for 'event'
 
             // Check if coming from the server.
             final Supplier<NetworkEvent.Context> sourceGetter = event.getSource();
-            assert sourceGetter != null : "HCsCR: Source getter is null. (event: " + event + ')';
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (sourceGetter != null) : "HCsCR: Source getter is null. (event: " + event + ')';
+            }
             final NetworkEvent.Context source = sourceGetter.get(); // Implicit NPE for 'sourceGetter'
-            assert source != null : "HCsCR: Source is null. (event: " + event + ", sourceGetter: " + sourceGetter + ')';
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (source != null) : "HCsCR: Source is null. (event: " + event + ", sourceGetter: " + sourceGetter + ')';
+            }
             if (source.getDirection().getReceptionSide() != LogicalSide.CLIENT) return; // Implicit NPE for 'source'
             source.setPacketHandled(true);
 
             // Close the connection.
             final Connection connection = source.getNetworkManager();
-            assert connection != null : "HCsCR: Connection is null. (event: " + event + ", sourceGetter: " + sourceGetter + ", source: " + source + ')';
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (connection != null) : "HCsCR: Connection is null. (event: " + event + ", sourceGetter: " + sourceGetter + ", source: " + source + ')';
+            }
             connection.disconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'connection'
         });
         ^///?}
@@ -253,24 +278,26 @@ public final class HForge {
         /^final EventBus<RegisterKeyMappingsEvent> bus = RegisterKeyMappingsEvent.BUS;
         ^///?} elif >=1.21.8 {
         final EventBus<RegisterKeyMappingsEvent> bus = RegisterKeyMappingsEvent.getBus(ctx.getModBusGroup()); // Implicit NPE for 'ctx'
-        //?} elif 1.20.2 {
-        /^final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        ^///?} elif >=1.19.2 && (!hacky_neoforge) {
+        //?} elif !hacky_neoforge {
         /^final IEventBus bus = ctx.getModEventBus(); // Implicit NPE for 'ctx'
         ^///?}
         //? if >=1.19.2 {
         bus.addListener((final RegisterKeyMappingsEvent event) -> { // Implicit NPE for 'bus'
             // Validate.
-            assert event != null : "HCsCR: Parameter 'event' is null.";
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (event != null) : "HCsCR: Parameter 'event' is null.";
+            }
 
             // Register.
             event.register(HCsCR.CONFIG_BIND); // Implicit NPE for 'event'
             event.register(HCsCR.TOGGLE_BIND);
         });
         //?} else {
-        /^FMLJavaModLoadingContext.get().getModEventBus().addListener((final FMLClientSetupEvent event) -> {
+        /^bus.addListener((final FMLClientSetupEvent event) -> {
             // Validate.
-            assert event != null : "HCsCR: Parameter 'event' is null.";
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (event != null) : "HCsCR: Parameter 'event' is null.";
+            }
 
             // Register.
             ClientRegistry.registerKeyBinding(HCsCR.CONFIG_BIND);
@@ -282,7 +309,9 @@ public final class HForge {
         //? if >=1.21.8 {
         TickEvent.ClientTickEvent.Post.BUS.addListener((final TickEvent.ClientTickEvent.Post event) -> {
             // Validate.
-            assert event != null : "HCsCR: Parameter 'event' is null.";
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (event != null) : "HCsCR: Parameter 'event' is null.";
+            }
 
             // Handle.
             HCsCR.handleClientTickEnd(Minecraft.getInstance());
@@ -290,7 +319,9 @@ public final class HForge {
         //?} elif >=1.20.4 {
         /^MinecraftForge.EVENT_BUS.addListener((final TickEvent.ClientTickEvent.Post event) -> {
             // Validate.
-            assert event != null : "HCsCR: Parameter 'event' is null.";
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (event != null) : "HCsCR: Parameter 'event' is null.";
+            }
 
             // Handle.
             HCsCR.handleClientTickEnd(Minecraft.getInstance());
@@ -298,7 +329,9 @@ public final class HForge {
         ^///?} else {
         /^MinecraftForge.EVENT_BUS.addListener((final TickEvent.ClientTickEvent event) -> {
             // Validate.
-            assert event != null : "HCsCR: Parameter 'event' is null.";
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (event != null) : "HCsCR: Parameter 'event' is null.";
+            }
 
             // Handle.
             if (event.phase != TickEvent.Phase.END) return; // Implicit NPE for 'event'
@@ -310,7 +343,9 @@ public final class HForge {
         //? if >=1.21.8 {
         TickEvent.RenderTickEvent.Post.BUS.addListener((final TickEvent.RenderTickEvent.Post event) -> {
             // Validate.
-            assert event != null : "HCsCR: Parameter 'event' is null.";
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (event != null) : "HCsCR: Parameter 'event' is null.";
+            }
 
             // Handle.
             HCsCR.handleClientMainLoop(Minecraft.getInstance());
@@ -318,7 +353,9 @@ public final class HForge {
         //?} elif >=1.20.4 {
         /^MinecraftForge.EVENT_BUS.addListener((final TickEvent.RenderTickEvent.Post event) -> {
             // Validate.
-            assert event != null : "HCsCR: Parameter 'event' is null.";
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (event != null) : "HCsCR: Parameter 'event' is null.";
+            }
 
             // Handle.
             HCsCR.handleClientMainLoop(Minecraft.getInstance());
@@ -326,7 +363,9 @@ public final class HForge {
         ^///?} else {
         /^MinecraftForge.EVENT_BUS.addListener((final TickEvent.RenderTickEvent event) -> {
             // Validate.
-            assert event != null : "HCsCR: Parameter 'event' is null.";
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (event != null) : "HCsCR: Parameter 'event' is null.";
+            }
 
             // Handle.
             if (event.phase != TickEvent.Phase.END) return; // Implicit NPE for 'event'
@@ -338,7 +377,9 @@ public final class HForge {
         //? if hacky_neoforge {
         /^container.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((final Minecraft mcClient, final Screen modsScreen) -> {
             // Validate.
-            assert mcClient != null : "HCsCR: Parameter 'mcClient' is null. (modsScreen: " + modsScreen + ')';
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (mcClient != null) : "HCsCR: Parameter 'mcClient' is null. (modsScreen: " + modsScreen + ')';
+            }
 
             // Create.
             return new HScreen(modsScreen);
@@ -347,7 +388,9 @@ public final class HForge {
         ^///?} elif 1.20.2 {
         /^ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((final Minecraft mcClient, final Screen modsScreen) -> {
             // Validate.
-            assert mcClient != null : "HCsCR: Parameter 'mcClient' is null. (modsScreen: " + modsScreen + ')';
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (mcClient != null) : "HCsCR: Parameter 'mcClient' is null. (modsScreen: " + modsScreen + ')';
+            }
 
             // Create.
             return new HScreen(modsScreen);
@@ -362,7 +405,9 @@ public final class HForge {
         ^///?} elif >=1.17.1 {
         /^ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, () -> new ConfigGuiHandler.ConfigGuiFactory((final Minecraft mcClient, final Screen modsScreen) -> {
             // Validate.
-            assert mcClient != null : "HCsCR: Parameter 'mcClient' is null. (modsScreen: " + modsScreen + ')';
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (mcClient != null) : "HCsCR: Parameter 'mcClient' is null. (modsScreen: " + modsScreen + ')';
+            }
 
             // Create.
             return new HScreen(modsScreen);
@@ -371,7 +416,9 @@ public final class HForge {
         ^///?} else {
         /^ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> (final Minecraft mcClient, final Screen modsScreen) -> {
             // Validate.
-            assert mcClient != null : "HCsCR: Parameter 'mcClient' is null. (modsScreen: " + modsScreen + ')';
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (mcClient != null) : "HCsCR: Parameter 'mcClient' is null. (modsScreen: " + modsScreen + ')';
+            }
 
             // Create.
             return new HScreen(modsScreen);
@@ -380,7 +427,7 @@ public final class HForge {
         ^///?}
 
         // Done.
-        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / 1_000_000L);
+        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / HCsCR.NANOS_IN_MS);
     }
 
     @Contract(pure = true)

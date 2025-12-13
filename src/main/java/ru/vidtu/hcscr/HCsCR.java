@@ -52,12 +52,14 @@ import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.UnknownNullability;
 import org.jspecify.annotations.NullMarked;
 import ru.vidtu.hcscr.config.CrystalMode;
 import ru.vidtu.hcscr.config.HConfig;
 import ru.vidtu.hcscr.config.HScreen;
 import ru.vidtu.hcscr.mixin.block.BlockBehaviour_BlockStateBaseMixin;
 import ru.vidtu.hcscr.mixin.crystal.EntityMixin;
+import ru.vidtu.hcscr.platform.HCompile;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.util.Iterator;
@@ -178,12 +180,19 @@ public final class HCsCR {
      */
     public static void handleClientTickEnd(final Minecraft client) {
         // Validate.
-        assert client != null : "HCsCR: Parameter 'client' is null.";
-        assert client.isSameThread() : "HCsCR: Handling a client game tick end NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (client != null) : "HCsCR: Parameter 'client' is null.";
+            assert (client.isSameThread()) : "HCsCR: Handling a client game tick end NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
+        }
 
         // Get and push the profiler.
-        final ProfilerFiller profiler = HStonecutter.profilerOfClient(client); // Implicit NPE for 'client'
-        profiler.push("hcscr:client_tick_end");
+        final ProfilerFiller profiler;
+        if (HCompile.DEBUG_PROFILER) {
+            profiler = HStonecutter.profilerOfClient(client); // Implicit NPE for 'client'
+            profiler.push("hcscr:client_tick_end");
+        } else {
+            profiler = null;
+        }
 
         // Keybinds.
         handleConfigBind(client, profiler); // Implicit NPE for 'client'
@@ -194,7 +203,9 @@ public final class HCsCR {
         cleanClippingBlocks(client, profiler); // Implicit NPE for 'client'
 
         // Pop the profiler.
-        profiler.pop();
+        if (HCompile.DEBUG_PROFILER) {
+            profiler.pop();
+        }
     }
 
     /**
@@ -204,17 +215,28 @@ public final class HCsCR {
      */
     public static void handleClientMainLoop(final Minecraft client) {
         // Validate.
-        assert client != null : "HCsCR: Parameter 'client' is null.";
-        assert client.isSameThread() : "HCsCR: Handling client main loop NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (client != null) : "HCsCR: Parameter 'client' is null.";
+            assert (client.isSameThread()) : "HCsCR: Handling client main loop NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
+        }
 
         // Get and push the profiler.
-        final ProfilerFiller profiler = HStonecutter.profilerOfClient(client); // Implicit NPE for 'client'
-        profiler.push("hcscr:client_main_loop");
+        final ProfilerFiller profiler;
+        if (HCompile.DEBUG_PROFILER) {
+            profiler = HStonecutter.profilerOfClient(client); // Implicit NPE for 'client'
+            profiler.push("hcscr:client_main_loop");
+        } else {
+            profiler = null;
+        }
 
         // Skip if there's no entities to remove.
         if (SCHEDULED_ENTITIES.isEmpty()) {
-            // Pop, stop.
-            profiler.pop();
+            // Pop the profiler.
+            if (HCompile.DEBUG_PROFILER) {
+                profiler.pop();
+            }
+
+            // Stop.
             return;
         }
 
@@ -235,8 +257,11 @@ public final class HCsCR {
                 iterator.remove();
 
                 // Log. (**DEBUG**)
-                if (!LOGGER.isDebugEnabled(HCSCR_MARKER)) continue;
-                LOGGER.debug(HCSCR_MARKER, "HCsCR: Forgot hit entity. (now: {}, entity: {}, expiry: {})", now, entity, expiry);
+                if (HCompile.DEBUG_LOGS && LOGGER.isDebugEnabled(HCSCR_MARKER)) {
+                    LOGGER.debug(HCSCR_MARKER, "HCsCR: Forgot hit entity. (now: {}, entity: {}, expiry: {})", now, entity, expiry);
+                }
+
+                // Continue.
                 continue;
             }
 
@@ -254,12 +279,15 @@ public final class HCsCR {
             }
 
             // Log. (**DEBUG**)
-            if (!LOGGER.isDebugEnabled(HCSCR_MARKER)) continue;
-            LOGGER.debug(HCSCR_MARKER, "HCsCR: Removed/hidden hit entity. (now: {}, entity: {}, expiry: {})", now, entity, expiry);
+            if (HCompile.DEBUG_LOGS && LOGGER.isDebugEnabled(HCSCR_MARKER)) {
+                LOGGER.debug(HCSCR_MARKER, "HCsCR: Removed/hidden hit entity. (now: {}, entity: {}, expiry: {})", now, entity, expiry);
+            }
         }
 
         // Pop the profiler.
-        profiler.pop();
+        if (HCompile.DEBUG_PROFILER) {
+            profiler.pop();
+        }
     }
 
     /**
@@ -278,9 +306,11 @@ public final class HCsCR {
      */
     public static boolean handlePlayerHittingEntity(final Entity entity, final DamageSource source, final float amount) {
         // Validate.
-        assert entity != null : "HCsCR: Parameter 'entity' is null. (source: " + source + ", amount: " + amount + ')';
-        assert source != null : "HCsCR: Parameter 'source' is null. (entity: " + entity + ", amount: " + amount + ')';
-        assert Float.isFinite(amount) : "HCsCR: Parameter 'amount' is not finite. (entity: " + entity + ", source: " + source + ", amount: " + amount + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (entity != null) : "HCsCR: Parameter 'entity' is null. (source: " + source + ", amount: " + amount + ')';
+            assert (source != null) : "HCsCR: Parameter 'source' is null. (entity: " + entity + ", amount: " + amount + ')';
+            assert (Float.isFinite(amount)) : "HCsCR: Parameter 'amount' is not finite. (entity: " + entity + ", source: " + source + ", amount: " + amount + ')';
+        }
 
         // Do NOT process hit if any of the following conditions is met:
         // - The current level (world) is not client-side. (e.g., integrated server world)
@@ -295,8 +325,10 @@ public final class HCsCR {
 
         // Validate.
         //noinspection ObjectEquality // <- Should be the same reference.
-        assert (source.getEntity() instanceof LocalPlayer) && (source.getEntity() == source.getDirectEntity()) && (source.getEntity() == Minecraft.getInstance().player) : "HCsCR: Source entity is not LocalPlayer. (entity: " + entity + ", source: " + source + ", amount: " + amount + ", sourceEntity: " + source.getEntity() + ", sourceDirectEntity: " + source.getDirectEntity() + ')';
-        assert Minecraft.getInstance().isSameThread() : "HCsCR: Handling entity attack NOT from the main thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ", source: " + source + ", amount: " + amount + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert ((source.getEntity() instanceof LocalPlayer) && (source.getEntity() == source.getDirectEntity()) && (source.getEntity() == Minecraft.getInstance().player)) : "HCsCR: Source entity is not LocalPlayer. (entity: " + entity + ", source: " + source + ", amount: " + amount + ", sourceEntity: " + source.getEntity() + ", sourceDirectEntity: " + source.getDirectEntity() + ')';
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Handling entity attack NOT from the main thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ", source: " + source + ", amount: " + amount + ')';
+        }
 
         // Don't process player hits that deal zero damage, e.g. with the weakness effect.
         final LocalPlayer player = (LocalPlayer) source.getEntity(); // Implicit NPE for 'source'
@@ -385,25 +417,37 @@ public final class HCsCR {
      * @see #handleClientTickEnd(Minecraft)
      * @see #handleToggleBind(Minecraft, ProfilerFiller)
      */
-    private static void handleConfigBind(final Minecraft client, final ProfilerFiller profiler) {
+    private static void handleConfigBind(final Minecraft client, @UnknownNullability("depends on the HCompile.DEBUG_PROFILER") final ProfilerFiller profiler) {
         // Validate.
-        assert client != null : "HCsCR: Parameter 'client' is null. (profiler: " + profiler + ')';
-        assert profiler != null : "HCsCR: Parameter 'profiler' is null. (client: " + client + ')';
-        assert client.isSameThread() : "HCsCR: Handling the config bind NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ", profiler: " + profiler + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (client != null) : "HCsCR: Parameter 'client' is null. (profiler: " + profiler + ')';
+            if (HCompile.DEBUG_PROFILER) {
+                assert (profiler != null) : "HCsCR: Parameter 'profiler' is null. (client: " + client + ')';
+            }
+            assert (client.isSameThread()) : "HCsCR: Handling the config bind NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ", profiler: " + profiler + ')';
+        }
 
         // Push the profiler.
-        profiler.push("hcscr:config_bind"); // Implicit NPE for 'profiler'
+        if (HCompile.DEBUG_PROFILER) {
+            profiler.push("hcscr:config_bind"); // Implicit NPE for 'profiler'
+        }
 
         // Consume the bind.
         while (CONFIG_BIND.consumeClick()) {
             // Log. (**TRACE**)
-            LOGGER.trace(HCSCR_MARKER, "HCsCR: Config keybind was consumed, opening the config screen. (client: {}, keybind: {})", client, CONFIG_BIND);
+            if (HCompile.DEBUG_LOGS) {
+                LOGGER.trace(HCSCR_MARKER, "HCsCR: Config keybind was consumed, opening the config screen. (client: {}, keybind: {})", client, CONFIG_BIND);
+            }
 
             // Check the open screen.
             final Screen currentScreen = client.screen; // Implicit NPE for 'client'
             if (currentScreen != null) {
-                // Log, continue. (**DEBUG**)
-                LOGGER.debug(HCSCR_MARKER, "HCsCR: Can't open the config screen via the keybind, screen is open. (client: {}, currentScreen: {}, keybind: {})", client, currentScreen, CONFIG_BIND);
+                // Log. (**DEBUG**)
+                if (HCompile.DEBUG_LOGS) {
+                    LOGGER.debug(HCSCR_MARKER, "HCsCR: Can't open the config screen via the keybind, screen is open. (client: {}, currentScreen: {}, keybind: {})", client, currentScreen, CONFIG_BIND);
+                }
+
+                // Continue.
                 continue;
             }
 
@@ -412,11 +456,15 @@ public final class HCsCR {
             client.setScreen(screen);
 
             // Log. (**DEBUG**)
-            LOGGER.debug(HCSCR_MARKER, "HCsCR: Opened the config screen via the keybind. (client: {}, screen: {}, keybind: {})", client, screen, CONFIG_BIND);
+            if (HCompile.DEBUG_LOGS) {
+                LOGGER.debug(HCSCR_MARKER, "HCsCR: Opened the config screen via the keybind. (client: {}, screen: {}, keybind: {})", client, screen, CONFIG_BIND);
+            }
         }
 
         // Pop the profiler.
-        profiler.pop();
+        if (HCompile.DEBUG_PROFILER) {
+            profiler.pop();
+        }
     }
 
     /**
@@ -427,19 +475,27 @@ public final class HCsCR {
      * @see #handleClientTickEnd(Minecraft)
      * @see #handleConfigBind(Minecraft, ProfilerFiller)
      */
-    private static void handleToggleBind(final Minecraft client, final ProfilerFiller profiler) {
+    private static void handleToggleBind(final Minecraft client, @UnknownNullability("depends on the HCompile.DEBUG_PROFILER") final ProfilerFiller profiler) {
         // Validate.
-        assert client != null : "HCsCR: Parameter 'client' is null. (profiler: " + profiler + ')';
-        assert profiler != null : "HCsCR: Parameter 'profiler' is null. (client: " + client + ')';
-        assert client.isSameThread() : "HCsCR: Handling the toggle bind NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ", profiler: " + profiler + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (client != null) : "HCsCR: Parameter 'client' is null. (profiler: " + profiler + ')';
+            if (HCompile.DEBUG_PROFILER) {
+                assert (profiler != null) : "HCsCR: Parameter 'profiler' is null. (client: " + client + ')';
+            }
+            assert (client.isSameThread()) : "HCsCR: Handling the toggle bind NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ", profiler: " + profiler + ')';
+        }
 
         // Push the profiler.
-        profiler.push("hcscr:toggle_bind"); // Implicit NPE for 'profiler'
+        if (HCompile.DEBUG_PROFILER) {
+            profiler.push("hcscr:toggle_bind"); // Implicit NPE for 'profiler'
+        }
 
         // Consume the bind.
         while (TOGGLE_BIND.consumeClick()) {
             // Log. (**TRACE**)
-            LOGGER.trace(HCSCR_MARKER, "HCsCR: Toggle keybind was consumed, toggling the mode. (client: {}, keybind: {})", client, TOGGLE_BIND);
+            if (HCompile.DEBUG_LOGS) {
+                LOGGER.trace(HCSCR_MARKER, "HCsCR: Toggle keybind was consumed, toggling the mode. (client: {}, keybind: {})", client, TOGGLE_BIND);
+            }
 
             // Toggle the mod.
             final boolean newState = HConfig.toggle();
@@ -451,11 +507,15 @@ public final class HCsCR {
             client.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING, newState ? 2.0F : 0.0F));
 
             // Log. (**DEBUG**)
-            LOGGER.debug(HCSCR_MARKER, "HCsCR: Mod has been toggled via the keybind. (client: {}, newState: {}, keybind: {})", client, newState, TOGGLE_BIND);
+            if (HCompile.DEBUG_LOGS) {
+                LOGGER.debug(HCSCR_MARKER, "HCsCR: Mod has been toggled via the keybind. (client: {}, newState: {}, keybind: {})", client, newState, TOGGLE_BIND);
+            }
         }
 
         // Pop the profiler.
-        profiler.pop();
+        if (HCompile.DEBUG_PROFILER) {
+            profiler.pop();
+        }
     }
 
     /**
@@ -468,33 +528,53 @@ public final class HCsCR {
      * @see #HIDDEN_ENTITIES
      * @see #handlePlayerHittingEntity(Entity, DamageSource, float)
      */
-    private static void cleanHiddenEntities(final Minecraft client, final ProfilerFiller profiler) {
+    private static void cleanHiddenEntities(final Minecraft client, @UnknownNullability("depends on the HCompile.DEBUG_PROFILER") final ProfilerFiller profiler) {
         // Validate.
-        assert client != null : "HCsCR: Parameter 'client' is null. (profiler: " + profiler + ')';
-        assert profiler != null : "HCsCR: Parameter 'profiler' is null. (client: " + client + ')';
-        assert client.isSameThread() : "HCsCR: Cleaning hidden entities NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ", profiler: " + profiler + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (client != null) : "HCsCR: Parameter 'client' is null. (profiler: " + profiler + ')';
+            if (HCompile.DEBUG_PROFILER) {
+                assert (profiler != null) : "HCsCR: Parameter 'profiler' is null. (client: " + client + ')';
+            }
+            assert (client.isSameThread()) : "HCsCR: Cleaning hidden entities NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ", profiler: " + profiler + ')';
+        }
 
         // Push the profiler.
-        profiler.push("hcscr:clean_hidden_entities"); // Implicit NPE for 'profiler'
+        if (HCompile.DEBUG_PROFILER) {
+            profiler.push("hcscr:clean_hidden_entities"); // Implicit NPE for 'profiler'
+        }
 
         // Skip if no hidden entities.
         if (HIDDEN_ENTITIES.isEmpty()) {
-            // Pop, stop.
-            profiler.pop();
+            // Pop the profiler.
+            if (HCompile.DEBUG_PROFILER) {
+                profiler.pop();
+            }
+
+            // Stop.
             return;
         }
 
         // Nuke all entities, if level is empty.
         if (client.level == null) { // Implicit NPE for 'client'
             // Log. (**TRACE**)
-            LOGGER.trace(HCSCR_MARKER, "HCsCR: Level has been unloaded, nuking hidden entities...");
+            if (HCompile.DEBUG_LOGS) {
+                LOGGER.trace(HCSCR_MARKER, "HCsCR: Level has been unloaded, nuking hidden entities...");
+            }
 
             // Clear.
             HIDDEN_ENTITIES.clear();
 
-            // Log, pop, stop. (**DEBUG**)
-            LOGGER.debug(HCSCR_MARKER, "HCsCR: Level has been unloaded, nuked hidden entities.");
-            profiler.pop();
+            // Log. (**DEBUG**)
+            if (HCompile.DEBUG_LOGS) {
+                LOGGER.debug(HCSCR_MARKER, "HCsCR: Level has been unloaded, nuked hidden entities.");
+            }
+
+            // Pop the profiler.
+            if (HCompile.DEBUG_PROFILER) {
+                profiler.pop();
+            }
+
+            // Stop.
             return;
         }
 
@@ -507,7 +587,7 @@ public final class HCsCR {
             final int ticksBeforeResync = entry.getIntValue();
 
             // Log. (**TRACE**)
-            if (LOGGER.isTraceEnabled(HCSCR_MARKER)) {
+            if (HCompile.DEBUG_LOGS && LOGGER.isTraceEnabled(HCSCR_MARKER)) {
                 LOGGER.trace(HCSCR_MARKER, "HCsCR: Ticking hidden entity... (entity: {}, ticksBeforeResync: {})", entity, ticksBeforeResync);
             }
 
@@ -516,9 +596,12 @@ public final class HCsCR {
                 // Remove from the map.
                 iterator.remove();
 
-                // Log, continue. (**DEBUG**)
-                if (!LOGGER.isDebugEnabled(HCSCR_MARKER)) continue;
-                LOGGER.debug(HCSCR_MARKER, "HCsCR: Removed hidden entity. (entity: {}, ticksBeforeResync: {})", entity, ticksBeforeResync);
+                // Log. (**DEBUG**)
+                if (HCompile.DEBUG_LOGS && LOGGER.isDebugEnabled(HCSCR_MARKER)) {
+                    LOGGER.debug(HCSCR_MARKER, "HCsCR: Removed hidden entity. (entity: {}, ticksBeforeResync: {})", entity, ticksBeforeResync);
+                }
+
+                // Continue.
                 continue;
             }
 
@@ -528,8 +611,11 @@ public final class HCsCR {
                 iterator.remove();
 
                 // Log, continue. (**DEBUG**)
-                if (!LOGGER.isDebugEnabled(HCSCR_MARKER)) continue;
-                LOGGER.debug(HCSCR_MARKER, "HCsCR: Resynced hidden entity. (entity: {}, ticksBeforeResync: {})", entity, ticksBeforeResync);
+                if (HCompile.DEBUG_LOGS && LOGGER.isDebugEnabled(HCSCR_MARKER)) {
+                    LOGGER.debug(HCSCR_MARKER, "HCsCR: Resynced hidden entity. (entity: {}, ticksBeforeResync: {})", entity, ticksBeforeResync);
+                }
+
+                // Continue.
                 continue;
             }
 
@@ -538,7 +624,9 @@ public final class HCsCR {
         }
 
         // Pop the profiler.
-        profiler.pop();
+        if (HCompile.DEBUG_PROFILER) {
+            profiler.pop();
+        }
     }
 
     /**
@@ -549,19 +637,29 @@ public final class HCsCR {
      * @see #handleClientTickEnd(Minecraft)
      * @see #CLIPPING_BLOCKS
      */
-    private static void cleanClippingBlocks(final Minecraft client, final ProfilerFiller profiler) {
+    private static void cleanClippingBlocks(final Minecraft client, @UnknownNullability("depends on the HCompile.DEBUG_PROFILER") final ProfilerFiller profiler) {
         // Validate.
-        assert client != null : "HCsCR: Parameter 'client' is null. (profiler: " + profiler + ')';
-        assert profiler != null : "HCsCR: Parameter 'profiler' is null. (client: " + client + ')';
-        assert client.isSameThread() : "HCsCR: Cleaning clipping blocks NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ", profiler: " + profiler + ')';
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (client != null) : "HCsCR: Parameter 'client' is null. (profiler: " + profiler + ')';
+            if (HCompile.DEBUG_PROFILER) {
+                assert (profiler != null) : "HCsCR: Parameter 'profiler' is null. (client: " + client + ')';
+            }
+            assert (client.isSameThread()) : "HCsCR: Cleaning clipping blocks NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ", profiler: " + profiler + ')';
+        }
 
         // Push the profiler.
-        profiler.push("hcscr:clean_clipping_blocks"); // Implicit NPE for 'profiler'
+        if (HCompile.DEBUG_PROFILER) {
+            profiler.push("hcscr:clean_clipping_blocks"); // Implicit NPE for 'profiler'
+        }
 
         // Skip if no clipping blocks.
         if (CLIPPING_BLOCKS.isEmpty()) {
-            // Pop, stop.
-            profiler.pop();
+            // Pop the profiler.
+            if (HCompile.DEBUG_PROFILER) {
+                profiler.pop();
+            }
+
+            // Stop.
             return;
         }
 
@@ -569,14 +667,24 @@ public final class HCsCR {
         final ClientLevel level = client.level; // Implicit NPE for 'client'
         if (level == null) {
             // Log. (**TRACE**)
-            LOGGER.trace(HCSCR_MARKER, "HCsCR: Level has been unloaded, nuking clipping blocks...");
+            if (HCompile.DEBUG_LOGS) {
+                LOGGER.trace(HCSCR_MARKER, "HCsCR: Level has been unloaded, nuking clipping blocks...");
+            }
 
             // Clear.
             CLIPPING_BLOCKS.clear();
 
-            // Log, pop, stop. (**DEBUG**)
-            LOGGER.debug(HCSCR_MARKER, "HCsCR: Level has been unloaded, nuked clipping blocks.");
-            profiler.pop();
+            // Log. (**DEBUG**)
+            if (HCompile.DEBUG_LOGS) {
+                LOGGER.debug(HCSCR_MARKER, "HCsCR: Level has been unloaded, nuked clipping blocks.");
+            }
+
+            // Pop the profiler.
+            if (HCompile.DEBUG_PROFILER) {
+                profiler.pop();
+            }
+
+            // Stop.
             return;
         }
 
@@ -589,7 +697,9 @@ public final class HCsCR {
             final BlockState expectedState = entry.getValue();
 
             // Log. (**TRACE**)
-            LOGGER.trace(HCSCR_MARKER, "HCsCR: Ticking clipping block... (pos: {}, expectedState: {})", pos, expectedState);
+            if (HCompile.DEBUG_LOGS) {
+                LOGGER.trace(HCSCR_MARKER, "HCsCR: Ticking clipping block... (pos: {}, expectedState: {})", pos, expectedState);
+            }
 
             // Skip if block is still there.
             final BlockState actualState = level.getBlockState(pos);
@@ -599,10 +709,14 @@ public final class HCsCR {
             iterator.remove();
 
             // Log. (**DEBUG**)
-            LOGGER.debug(HCSCR_MARKER, "HCsCR: Removed clipping block. (pos: {}, expectedState: {}, actualState: {})", pos, expectedState, actualState);
+            if (HCompile.DEBUG_LOGS) {
+                LOGGER.debug(HCSCR_MARKER, "HCsCR: Removed clipping block. (pos: {}, expectedState: {}, actualState: {})", pos, expectedState, actualState);
+            }
         }
 
         // Pop the profiler.
-        profiler.pop();
+        if (HCompile.DEBUG_PROFILER) {
+            profiler.pop();
+        }
     }
 }
