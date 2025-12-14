@@ -324,8 +324,8 @@ public final class HCsCR {
                 !HConfig.shouldProcess(entity)) return false;
 
         // Validate.
-        //noinspection ObjectEquality // <- Should be the same reference.
         if (HCompile.DEBUG_ASSERTS) {
+            //noinspection ObjectEquality // <- Should be the same reference.
             assert ((source.getEntity() instanceof LocalPlayer) && (source.getEntity() == source.getDirectEntity()) && (source.getEntity() == Minecraft.getInstance().player)) : "HCsCR: Source entity is not LocalPlayer. (entity: " + entity + ", source: " + source + ", amount: " + amount + ", sourceEntity: " + source.getEntity() + ", sourceDirectEntity: " + source.getDirectEntity() + ')';
             assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Handling entity attack NOT from the main thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ", source: " + source + ", amount: " + amount + ')';
         }
@@ -368,15 +368,20 @@ public final class HCsCR {
         // Get the enveloped entities.
         final AABB entityBox = entity.getBoundingBox();
         final List<Entity> entities = HStonecutter.levelOfEntity(entity).getEntities(entity, entity.getBoundingBox(), (final Entity other) -> {
+            // Validate.
+            if (HCompile.DEBUG_ASSERTS) {
+                assert (other != null) : "HCsCR: Parameter 'other' is null. (entity: " + entity + ')';
+            }
+
             // Do NOT process hit if any of the following conditions is met:
             // - The damaged entity is already scheduled for removal.
             // - This entity type shouldn't be processed at all (e.g. any living entity) or by the current config (e.g. slime).
             // - The other entity is not fully contained inside the enveloping entity.
             if (HStonecutter.isEntityRemoved(other) || !HConfig.shouldProcess(other)) return false;
-            AABB otherBox = other.getBoundingBox();
-            return (otherBox.minX >= entityBox.minX) && (otherBox.maxX <= entityBox.maxX) &&
+            final AABB otherBox = other.getBoundingBox();
+            return ((otherBox.minX >= entityBox.minX) && (otherBox.maxX <= entityBox.maxX) &&
                     (otherBox.minY >= entityBox.minY) && (otherBox.maxY <= entityBox.maxY) &&
-                    (otherBox.minZ >= entityBox.minZ) && (otherBox.maxZ <= entityBox.maxZ);
+                    (otherBox.minZ >= entityBox.minZ) && (otherBox.maxZ <= entityBox.maxZ));
         });
 
         // Remove/hide the entities, if there's no delay.
@@ -503,8 +508,8 @@ public final class HCsCR {
             // Show the bar, play the sound.
             client.gui.setOverlayMessage(HStonecutter.translate("hcscr." + newState) // Implicit NPE for 'client'
                     .withStyle(newState ? ChatFormatting.GREEN : ChatFormatting.RED)
-                    .withStyle(ChatFormatting.BOLD), /*rainbow=*/false);
-            client.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING, newState ? 2.0F : 0.0F));
+                    .withStyle(ChatFormatting.BOLD), /*animate=*/false);
+            client.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING, newState ? 2.0f : 0.0f));
 
             // Log. (**DEBUG**)
             if (HCompile.DEBUG_LOGS) {

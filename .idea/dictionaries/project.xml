@@ -1,36 +1,29 @@
 <component name="ProjectDictionaryState">
   <dictionary name="project">
     <words>
+      <w>Architectury</w>
+      <w>Dminecraft</w>
+      <w>Dorg</w>
+      <w>Lnet</w>
+      <w>Modrinth</w>
+      <w>Mojang</w>
+      <w>Mojmap</w>
+      <w>Offenderify</w>
       <w>aarch</w>
       <w>alnum</w>
       <w>appname</w>
-      <w>architectury</w>
       <w>axform</w>
       <w>cdpath</w>
       <w>configdir</w>
       <w>configguifactory</w>
       <w>configureondemand</w>
-      <w>damagesource</w>
-      <w>dfabric</w>
-      <w>dfile</w>
       <w>displaytest</w>
       <w>distmarker</w>
-      <w>dists</w>
       <w>distxform</w>
-      <w>djava</w>
-      <w>djdk</w>
-      <w>dline</w>
-      <w>dmax</w>
-      <w>dminecraft</w>
-      <w>dmixin</w>
-      <w>dorg</w>
-      <w>dslf</w>
-      <w>dterminal</w>
-      <w>enableassertions</w>
-      <w>enablesystemassertions</w>
       <w>endlocal</w>
       <w>entrypoints</w>
       <w>errorlevel</w>
+      <w>fatjar</w>
       <w>fmlclient</w>
       <w>fmllegacy</w>
       <w>foojay</w>
@@ -40,19 +33,13 @@
       <w>javacmd</w>
       <w>javafmlmod</w>
       <w>jvmargs</w>
-      <w>kiku</w>
       <w>kikugie</w>
-      <w>lnet</w>
-      <w>minecraftmixin</w>
+      <w>minecraft</w>
       <w>modlauncher</w>
-      <w>modrinth</w>
-      <w>mojang</w>
-      <w>mojmap</w>
-      <w>mspt</w>
+      <w>modmenu</w>
+      <w>neoforge</w>
       <w>nolookups</w>
       <w>nsfe</w>
-      <w>offenderify</w>
-      <w>qfapi</w>
       <w>readarray</w>
       <w>refmap</w>
       <w>registrydump</w>

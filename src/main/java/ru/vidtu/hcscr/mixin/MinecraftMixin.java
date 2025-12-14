@@ -102,7 +102,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
         // Get and push the profiler.
         final ProfilerFiller profiler;
         if (HCompile.DEBUG_PROFILER) {
-            profiler = this.hcscr_minecraftmixin_profiler();
+            profiler = HStonecutter.profilerOfClient((Minecraft) (Object) this);
             profiler.push("hcscr:clear_data");
         } else {
             profiler = null;
@@ -149,16 +149,4 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
         HCsCR.handleClientMainLoop((Minecraft) (Object) this);
     }
     //?}
-
-    /**
-     * A hacky method to call the {@link HStonecutter#profilerOfClient(Minecraft)}
-     * with IntelliJ not marking it as unreachable code.
-     *
-     * @return Game profiler
-     */
-    @Contract(pure = true)
-    @Unique
-    private ProfilerFiller hcscr_minecraftmixin_profiler() {
-        return HStonecutter.profilerOfClient((Minecraft) (Object) this);
-    }
 }

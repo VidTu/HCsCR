@@ -205,7 +205,11 @@ public final class HForge {
         final long start = System.nanoTime();
         final String modVersion = HForge.class.getPackage().getImplementationVersion();
         LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Loading... (platform: forge, modVersion: {})", modVersion);
-        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Debug flags enabled: '" + (HCompile.DEBUG_ASSERTS ? "Asserts" : "") + (HCompile.DEBUG_LOGS ? "Logs" : "") + (HCompile.DEBUG_PROFILER ? "Profiler" : "") + '\'');
+        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: This build of the mod has " +
+                "asserts " + (HCompile.DEBUG_ASSERTS ? "ON" : "OFF") +
+                ", logs " + (HCompile.DEBUG_LOGS ? "ON" : "OFF") +
+                ", profiler " + (HCompile.DEBUG_PROFILER ? "ON" : "OFF") +
+                '.');
 
         // Not sure how long the Forge does have the "clientSideOnly" field in the TOML,
         // so I'll do an additional exception check here.

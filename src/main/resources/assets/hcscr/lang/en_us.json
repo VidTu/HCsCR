@@ -14,7 +14,7 @@
   "hcscr.crystals.direct": "Direct",
   "hcscr.crystals.direct.tip": "Only direct crystal hits will cause them to be instantly removed via left mouse click. This is the recommended mode for most situations and is the default/only mode in other crystal optimizers.",
   "hcscr.crystals.enveloping": "Enveloping",
-  "hcscr.crystals.enveloping.tip": "Direct crystal hits as well as hitting some invisible entities enveloping the crystals will cause crystals to be instantly removed. This can be used on a server which uses those entities to combat hacks. BEWARE: May cause issues with anti-cheat plugins.",
+  "hcscr.crystals.enveloping.tip": "Direct crystal hits as well as hitting some invisible entities enveloping the crystals will cause crystals to be instantly removed. This can be used on a server, which uses those entities to combat hacks. BEWARE: May cause issues with anti-cheat plugins.",
   "hcscr.crystalsDelay": "Crystals Delay",
   "hcscr.crystalsDelay.tip": "Crystals removal delay after left mouse click. Some users report that setting the delay to the server's MSPT value actually makes crystal spamming a bit faster.",
   "hcscr.crystalsResync": "Crystals Resync",

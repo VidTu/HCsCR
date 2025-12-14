@@ -168,7 +168,7 @@ public final class HConfig {
         } finally {
             // Clamp.
             crystals = MoreObjects.firstNonNull(crystals, CrystalMode.DIRECT);
-            crystalsDelay = Mth.clamp((crystalsDelay / 1_000_000) * 1_000_000, 0, 200_000_000);
+            crystalsDelay = Mth.clamp(((crystalsDelay / 1_000_000) * 1_000_000), 0, 200_000_000);
             crystalsResync = Mth.clamp(crystalsResync, 0, 50);
             blocks = MoreObjects.firstNonNull(blocks, BlockMode.COLLISION);
         }
@@ -286,7 +286,7 @@ public final class HConfig {
      * @see #crystalsDelay()
      */
     /*package-private*/ static void crystalsDelay(@Range(from = 0L, to = 200_000_000L) final int crystalsDelay) {
-        HConfig.crystalsDelay = Mth.clamp((crystalsDelay / 1_000_000) * 1_000_000, 0, 200_000_000);
+        HConfig.crystalsDelay = Mth.clamp(((crystalsDelay / 1_000_000) * 1_000_000), 0, 200_000_000);
     }
 
     /**
@@ -358,13 +358,13 @@ public final class HConfig {
         // Check depending on the mode.
         switch (crystals) {
             case DIRECT:
-                return entity instanceof EndCrystal;
+                return (entity instanceof EndCrystal);
             case ENVELOPING:
                 //? if >=1.19.4 {
                 //noinspection SimplifiableIfStatement // <- Preprocessor Statement.
                 if (entity instanceof Interaction) return true;
                 //?}
-                return (entity instanceof EndCrystal) || ((entity instanceof Slime) && entity.isInvisible());
+                return ((entity instanceof EndCrystal) || ((entity instanceof Slime) && entity.isInvisible()));
             default:
                 return false;
         }

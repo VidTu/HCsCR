@@ -616,17 +616,25 @@ public final class HStonecutter {
 
         // Create.
         //? if >=1.19.4 {
-        final Button button = Button.builder(message, (final Button innerButton) -> handler.accept(innerButton, (final Component newTip) -> { // Implicit NPE for 'handler'
+        final Button button = Button.builder(message, (final Button innerButton) -> {
             // Validate.
             if (HCompile.DEBUG_ASSERTS) {
-                assert (newTip != null) : "HCsCR: Parameter 'newTip' is null. (innerButton: " + innerButton + ')';
-                assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Setting a button tip NOT from the main thread. (thread: " + Thread.currentThread() + ", newTip: " + newTip + ", innerButton: " + innerButton + ')';
+                assert (innerButton != null) : "HCsCR: Parameter 'innerButton' is null.";
             }
 
-            // Set.
-            innerButton.setTooltip(Tooltip.create(newTip));
-            innerButton.setTooltipDelay(TOOLTIP_DURATION);
-        })).tooltip(Tooltip.create(tooltip)).bounds(x, y, width, height).build();
+            // Click.
+            handler.accept(innerButton, (final Component newTip) -> { // Implicit NPE for 'handler'
+                // Validate.
+                if (HCompile.DEBUG_ASSERTS) {
+                    assert (newTip != null) : "HCsCR: Parameter 'newTip' is null. (innerButton: " + innerButton + ')';
+                    assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Setting a button tip NOT from the main thread. (thread: " + Thread.currentThread() + ", newTip: " + newTip + ", innerButton: " + innerButton + ')';
+                }
+
+                // Set.
+                innerButton.setTooltip(Tooltip.create(newTip));
+                innerButton.setTooltipDelay(TOOLTIP_DURATION);
+            });
+        }).tooltip(Tooltip.create(tooltip)).bounds(x, y, width, height).build();
         button.setTooltipDelay(TOOLTIP_DURATION);
         return button;
         //?} else {
