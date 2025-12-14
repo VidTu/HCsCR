@@ -41,7 +41,7 @@ public final class HCompile {
      * Whether the debug features are enabled.
      */
     @CompileTimeConstant
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     /**
      * Whether the additional Java assertions are enabled.
