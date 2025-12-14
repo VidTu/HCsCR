@@ -25,6 +25,7 @@ package ru.vidtu.hcscr.platform;
 import com.google.errorprone.annotations.CompileTimeConstant;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 
 /**
@@ -39,6 +40,7 @@ public final class HCompile {
     /**
      * Whether the debug features are enabled.
      */
+    @CompileTimeConstant
     private static final boolean DEBUG = true;
 
     /**
@@ -58,4 +60,17 @@ public final class HCompile {
      */
     @CompileTimeConstant
     public static final boolean DEBUG_PROFILER = DEBUG;
+
+    /**
+     * An instance of this class cannot be created.
+     *
+     * @throws AssertionError Always
+     * @deprecated Always throws
+     */
+    @ApiStatus.ScheduledForRemoval
+    @Deprecated
+    @Contract(value = "-> fail", pure = true)
+    private HCompile() {
+        throw new AssertionError("HCsCR: No instances.");
+    }
 }

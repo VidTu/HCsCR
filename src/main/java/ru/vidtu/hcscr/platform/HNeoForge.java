@@ -50,7 +50,7 @@ import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-//?} else if >=1.20.4 {
+//?} elif >=1.20.4 {
 /^import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
@@ -326,7 +326,7 @@ public final class HNeoForge {
             // Return.
             return new HScreen(modListScreen);
         });
-        //?} else if >=1.20.6 {
+        //?} elif >=1.20.6 {
         /^container.registerExtensionPoint(IConfigScreenFactory.class, (final Minecraft mcClient, final Screen modListScreen) -> { // Implicit NPE for 'container'
             // Validate.
             if (HCompile.DEBUG_ASSERTS) {

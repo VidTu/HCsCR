@@ -46,7 +46,9 @@ import ru.vidtu.hcscr.config.BlockMode;
 import ru.vidtu.hcscr.config.HConfig;
 import ru.vidtu.hcscr.platform.HCompile;
 
-//? if <1.20.6 {
+//? if >=1.20.6 {
+import ru.vidtu.hcscr.platform.HStonecutter;
+//?} else {
 /*import net.minecraft.world.InteractionHand;
 *///?}
 
@@ -121,7 +123,7 @@ public final class BedBlockMixin {
         // - The mod is disabled via config or keybind.
         // - The bed doesn't explode in the current environment/dimension.
         // - The "remove blocks" feature is OFF. (in switch block)
-        if (!level.isClientSide() || !HConfig.enable() || !ru.vidtu.hcscr.platform.HStonecutter.willBedExplode(level)) { // Implicit NPE for 'level'
+        if (!level.isClientSide() || !HConfig.enable() || !HStonecutter.willBedExplode(level)) { // Implicit NPE for 'level'
             // Log. (**DEBUG**)
             if (HCompile.DEBUG_LOGS) {
                 HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped bed right click removing. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);

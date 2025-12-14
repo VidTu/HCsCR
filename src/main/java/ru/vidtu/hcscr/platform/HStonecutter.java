@@ -66,7 +66,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.profiling.Profiler;
 import net.minecraft.world.level.dimension.DimensionType;
 import java.time.Duration;
-//?} else if >=1.21.8 {
+//?} elif >=1.21.8 {
 /*import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
@@ -75,7 +75,7 @@ import net.minecraft.util.profiling.Profiler;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.RespawnAnchorBlock;
 import java.time.Duration;
-*///?} else if >=1.21.4 {
+*///?} elif >=1.21.4 {
 /*import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
@@ -84,7 +84,7 @@ import net.minecraft.util.profiling.Profiler;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.RespawnAnchorBlock;
 import java.time.Duration;
-*///?} else if >=1.21.3 {
+*///?} elif >=1.21.3 {
 /*import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
@@ -93,7 +93,7 @@ import net.minecraft.util.profiling.Profiler;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.RespawnAnchorBlock;
 import java.time.Duration;
-*///?} else if >=1.20.6 {
+*///?} elif >=1.20.6 {
 /*import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
@@ -101,14 +101,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.RespawnAnchorBlock;
 import java.time.Duration;
-*///?} else if >=1.19.4 {
+*///?} elif >=1.19.4 {
 /*import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.RespawnAnchorBlock;
-*///?} else if >=1.19.2 {
+*///?} elif >=1.19.2 {
 /*import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.gui.screens.Screen;
@@ -116,7 +116,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.RespawnAnchorBlock;
 import org.apache.commons.lang3.mutable.MutableObject;
-*///?} else if >=1.17.1 {
+*///?} elif >=1.17.1 {
 /*import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.gui.screens.Screen;
@@ -799,7 +799,11 @@ public final class HStonecutter {
         // Create the slider.
         final int clamped = Mth.clamp(value, min, max);
         final double normalized = (double) (clamped - min) / (max - min);
-        final AbstractSliderButton slider = new AbstractSliderButton(x, y, width, height, provider.apply(clamped), normalized) { // Implicit NPE for 'provider'
+        final Component message = provider.apply(clamped);
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (message != null) : "HCsCR: Slider's message was returned null initially. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
+        }
+        final AbstractSliderButton slider = new AbstractSliderButton(x, y, width, height, message, normalized) { // Implicit NPE for 'provider'
             /**
              * A denormalized value, i.e. back in its original range.
              */
@@ -807,7 +811,11 @@ public final class HStonecutter {
 
             @Override
             protected void updateMessage() {
-                this.setMessage(provider.apply(this.denormalized));
+                final Component message = provider.apply(this.denormalized);
+                if (HCompile.DEBUG_ASSERTS) {
+                    assert (message != null) : "HCsCR: Slider's message was returned null after updating. (provider: " + provider + ", slider: " + this + ')';
+                }
+                this.setMessage(message);
             }
 
             @Override

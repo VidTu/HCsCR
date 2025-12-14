@@ -45,7 +45,9 @@ import ru.vidtu.hcscr.config.BlockMode;
 import ru.vidtu.hcscr.config.HConfig;
 import ru.vidtu.hcscr.platform.HCompile;
 
-//? if <1.20.6 {
+//? if >=1.20.6 {
+import ru.vidtu.hcscr.platform.HStonecutter;
+//?} else {
 /*import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Shadow;
@@ -124,7 +126,7 @@ public final class RespawnAnchorBlockMixin {
         // - The anchor doesn't explode in the current environment/dimension.
         // - The "remove blocks" feature is OFF. (in switch block)
         if (!level.isClientSide() || (state.getValue(RespawnAnchorBlock.CHARGE) == 0) || // Implicit NPE for 'level', 'state'
-                !HConfig.enable() || !ru.vidtu.hcscr.platform.HStonecutter.willAnchorExplode(level)) {
+                !HConfig.enable() || !HStonecutter.willAnchorExplode(level)) {
             // Log. (**DEBUG**)
             if (HCompile.DEBUG_LOGS) {
                 HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, anchor: {})", state, level, pos, player, hitResult, this);
@@ -229,8 +231,8 @@ public final class RespawnAnchorBlockMixin {
 
         // Skip if charging.
         final ItemStack itemInHand = player.getItemInHand(hand); // Implicit NPE for 'player'
-        if (((hand == net.minecraft.world.InteractionHand.MAIN_HAND) && !isRespawnFuel(itemInHand) && // Implicit NPE for 'itemInHand'
-                isRespawnFuel(player.getItemInHand(net.minecraft.world.InteractionHand.OFF_HAND))) ||
+        if (((hand == InteractionHand.MAIN_HAND) && !isRespawnFuel(itemInHand) && // Implicit NPE for 'itemInHand'
+                isRespawnFuel(player.getItemInHand(InteractionHand.OFF_HAND))) ||
                 (isRespawnFuel(itemInHand) && canBeCharged(state))) {
             // Log. (**DEBUG**)
             if (HCompile.DEBUG_LOGS) {
