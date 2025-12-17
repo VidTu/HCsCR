@@ -19,7 +19,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 name: 'Build'
-permissions: {}
+permissions: { }
 on:
   push:
     branches: [ '!main' ]
