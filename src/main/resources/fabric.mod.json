@@ -36,6 +36,7 @@
   ],
   "depends": {
     "minecraft": "${minecraft}",
+    "fabricloader": "*",
     "fabric-key-binding-api-v1": "*",
     "fabric-lifecycle-events-v1": "*",
     "fabric-networking-api-v1": "*",

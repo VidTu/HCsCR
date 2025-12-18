@@ -270,9 +270,12 @@ tasks.withType<ProcessResources> {
 
     // Determine and replace the platform version range requirement.
     val platformRequirement = "${project.property("stonecutter.platform-requirement")}"
-    // TODO(VidTu): Platform requirements for Fabric too.
-    if (loom.isForge || loom.isNeoForge) require(platformRequirement.isNotBlank() && platformRequirement != "[STONECUTTER]") { "Platform requirement is not provided via 'stonecutter.platform-requirement' in $project." }
-    inputs.property("platformRequirement", platformRequirement)
+    if (loom.isForge || loom.isNeoForge) {
+        require(platformRequirement.isNotBlank() && platformRequirement != "[STONECUTTER]") { "Platform requirement is not provided via 'stonecutter.platform-requirement' in $project." }
+        inputs.property("platformRequirement", platformRequirement)
+    } else {
+        require(platformRequirement == "[STONECUTTER]") { "Platform requirement is provided via 'stonecutter.platform-requirement' in $project, but Fabric builds ignore it." }
+    }
 
     // Expand Minecraft requirement that can be manually overridden for reasons. (e.g., snapshots)
     val minecraftRequirementProperty = findProperty("stonecutter.minecraft-requirement")
