@@ -249,6 +249,11 @@ tasks.withType<ProcessResources> {
     // Exclude not needed loader entrypoint files.
     if (loom.isForge) {
         exclude("fabric.mod.json", "quilt.mod.json", "META-INF/neoforge.mods.toml")
+
+        // Determine and replace the Forge version range requirement.
+        val forgeRequirement = "${project.property("stonecutter.forge-requirement")}"
+        require(forgeRequirement.isNotBlank() && forgeRequirement != "[STONECUTTER]") { "Forge requirement is not provided via 'stonecutter.forge-requirement' in $project." }
+        inputs.property("forgeRequirement", forgeRequirement)
     } else if (loom.isNeoForge) {
         if (stonecutter.eval(minecraft, ">=1.20.6")) {
             exclude("fabric.mod.json", "quilt.mod.json", "META-INF/mods.toml")

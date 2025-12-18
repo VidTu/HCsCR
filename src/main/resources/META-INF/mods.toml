@@ -56,7 +56,7 @@ side = "CLIENT"
 modId = "${platform}"
 type = "required"
 mandatory = true
-versionRange = "*"
+versionRange = "${forgeRequirement}"
 ordering = "NONE"
 side = "CLIENT"
 
