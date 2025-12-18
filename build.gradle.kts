@@ -163,7 +163,7 @@ dependencies {
     require(minecraftDependencyProperty != minecraft) { "Unneeded 'stonecutter.minecraft-dependency' property set to $minecraftDependencyProperty in $project, it already uses this version." }
     val minecraftDependency = minecraftDependencyProperty ?: minecraft
     minecraft("com.mojang:minecraft:$minecraftDependency")
-    if (stonecutter.eval(minecraft, "<26.1") {
+    if (stonecutter.eval(minecraft, "<26.1")) {
         mappings(loom.officialMojangMappings())
     }
 
