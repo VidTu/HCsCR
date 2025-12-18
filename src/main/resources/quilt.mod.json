@@ -62,7 +62,7 @@
       {
         "id": "modmenu",
         "versions": "*",
-        "reason": "HCsCR recommends ModMenu for configuration access.",
+        "reason": "HCsCR recommends installing ModMenu to use the configuration screen.",
         "optional": true
       }
     ],
