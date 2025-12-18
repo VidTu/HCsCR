@@ -29,7 +29,10 @@
     ]
   },
   "mixins": [
-    "hcscr.mixins.json"
+    {
+      "config": "hcscr.mixins.json",
+      "environment": "client"
+    }
   ],
   "depends": {
     "minecraft": "${minecraft}",

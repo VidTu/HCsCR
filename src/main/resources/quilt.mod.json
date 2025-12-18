@@ -74,7 +74,10 @@
   "minecraft": {
     "environment": "client"
   },
-  "mixin": "hcscr.mixins.json",
+  "mixin": {
+    "config": "hcscr.mixins.json",
+    "environment": "client"
+  },
   "modmenu": {
     "links": {
       "modmenu.github_releases": "https://github.com/VidTu/HCsCR/releases",
