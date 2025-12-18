@@ -163,6 +163,8 @@ dependencies {
     require(minecraftDependencyProperty != minecraft) { "Unneeded 'stonecutter.minecraft-dependency' property set to $minecraftDependencyProperty in $project, it already uses this version." }
     val minecraftDependency = minecraftDependencyProperty ?: minecraft
     minecraft("com.mojang:minecraft:$minecraftDependency")
+
+    // Mappings.
     if (stonecutter.eval(minecraft, "<26.1")) {
         mappings(loom.officialMojangMappings())
     }
@@ -275,6 +277,13 @@ tasks.withType<ProcessResources> {
         inputs.property("platformRequirement", platformRequirement)
     } else {
         require(platformRequirement == "[STONECUTTER]") { "Platform requirement is provided via 'stonecutter.platform-requirement' in $project, but Fabric builds ignore it." }
+    }
+
+    // Expand the updater URL for Forge-like loaders.
+    if (loom.isNeoForge || hackyNeoForge) {
+        inputs.property("forgeUpdaterUrl", "https://raw.githubusercontent.com/VidTu/HCsCR/main/updater_hcscr_neoforge.json")
+    } else if (loom.isForge) {
+        inputs.property("forgeUpdaterUrl", "https://raw.githubusercontent.com/VidTu/HCsCR/main/updater_hcscr_forge.json")
     }
 
     // Expand Minecraft requirement that can be manually overridden for reasons. (e.g., snapshots)
