@@ -279,9 +279,14 @@ tasks.withType<ProcessResources> {
     val minecraftRequirement = minecraftRequirementProperty ?: minecraft
     inputs.property("minecraft", minecraftRequirement)
 
+    // Expand Mixin java version. It's pretty much the same Java, except the Forge 1.20.6 edge case,
+    // where it must not be JAVA_21 (even tho we're using Java 21), but instead a Java 18 due to Mixin 0.8.5:
+    // https://github.com/SpongePowered/Mixin/blob/releases/0.8.5/src/main/java/org/spongepowered/asm/mixin/MixinEnvironment.java#L747
+    val mixinJava = if (loom.isForge && minecraft == "1.20.6") 18 else javaTarget
+    inputs.property("mixinJava", mixinJava)
+
     // Expand version and dependencies.
     inputs.property("version", version)
-    inputs.property("java", javaTarget)
     inputs.property("platform", platform)
     filesMatching(listOf("fabric.mod.json", "quilt.mod.json", "hcscr.mixins.json", "META-INF/mods.toml", "META-INF/neoforge.mods.toml")) {
         expand(inputs.properties)
