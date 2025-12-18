@@ -39,7 +39,8 @@ val hackyNeoForge = (name == "1.20.1-neoforge")
 val minecraft = stonecutter.current.version
 
 // Language.
-val javaTarget = if (stonecutter.eval(minecraft, ">=1.20.6")) 21
+val javaTarget = if (stonecutter.eval(minecraft, ">=26.1")) 25
+else if (stonecutter.eval(minecraft, ">=1.20.6")) 21
 else if (stonecutter.eval(minecraft, ">=1.18.2")) 17
 else if (stonecutter.eval(minecraft, ">=1.17.1")) 16
 else 8
@@ -162,7 +163,9 @@ dependencies {
     require(minecraftDependencyProperty != minecraft) { "Unneeded 'stonecutter.minecraft-dependency' property set to $minecraftDependencyProperty in $project, it already uses this version." }
     val minecraftDependency = minecraftDependencyProperty ?: minecraft
     minecraft("com.mojang:minecraft:$minecraftDependency")
-    mappings(loom.officialMojangMappings())
+    if (stonecutter.eval(minecraft, "<26.1") {
+        mappings(loom.officialMojangMappings())
+    }
 
     // MixinExtras.
     if (loom.isForge) {
