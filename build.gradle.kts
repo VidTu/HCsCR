@@ -183,14 +183,14 @@ dependencies {
         if (hackyNeoForge) {
             // Legacy NeoForge.
             val neoforge = "${property("stonecutter.neoforge")}"
-            require(neoforge.isNotBlank() && neoforge != "[STONECUTTER]") { "NeoForge (legacy) version is not provided in $project." }
+            require(neoforge.isNotBlank() && neoforge != "[STONECUTTER]") { "NeoForge (legacy) version is not provided via 'stonecutter.neoforge' in $project." }
             val extractedMinecraft = neoforge.substringBefore('-')
             require(minecraft == extractedMinecraft) { "NeoForge (legacy) version '$neoforge' provides Minecraft $extractedMinecraft in $project, but we want $minecraft." }
             "forge"("net.neoforged:forge:$neoforge")
         } else {
             // Forge.
             val forge = "${property("stonecutter.forge")}"
-            require(forge.isNotBlank() && forge != "[STONECUTTER]") { "Forge version is not provided in $project." }
+            require(forge.isNotBlank() && forge != "[STONECUTTER]") { "Forge version is not provided via 'stonecutter.forge' in $project." }
             val extractedMinecraft = forge.substringBefore('-')
             require(minecraft == extractedMinecraft) { "Forge version '$forge' provides Minecraft $extractedMinecraft in $project, but we want $minecraft." }
             "forge"("net.minecraftforge:forge:$forge")
@@ -198,22 +198,23 @@ dependencies {
     } else if (loom.isNeoForge) {
         // Forge.
         val neoforge = "${property("stonecutter.neoforge")}"
-        require(neoforge.isNotBlank() && neoforge != "[STONECUTTER]") { "NeoForge version is not provided in $project." }
+        require(neoforge.isNotBlank() && neoforge != "[STONECUTTER]") { "NeoForge version is not provided via 'stonecutter.neoforge' in $project." }
         val extractedMinecraft = "1.${neoforge.substringBeforeLast('.')}"
         require(minecraft == extractedMinecraft) { "NeoForge version '$neoforge' provides Minecraft $extractedMinecraft in $project, but we want $minecraft." }
         "neoForge"("net.neoforged:neoforge:$neoforge")
     } else {
         // Fabric.
         val fapi = "${property("stonecutter.fabric-api")}"
-        require(fapi.isNotBlank() && fapi != "[STONECUTTER]") { "Fabric API version is not provided in $project." }
+        require(fapi.isNotBlank() && fapi != "[STONECUTTER]") { "Fabric API version is not provided via 'stonecutter.fabric-api' in $project." }
+        val resourceLoader = if (stonecutter.eval(minecraft, ">=1.21.10")) "v1" else "v0"
+        val modmenu = "${property("stonecutter.modmenu")}"
+        require(modmenu.isNotBlank() && modmenu != "[STONECUTTER]") { "ModMenu version is not provided via 'stonecutter.modmenu' in $project." }
         modImplementation(libs.fabric.loader)
         modImplementation(fabricApi.module("fabric-key-binding-api-v1", fapi)) // Handles the keybinds.
         modImplementation(fabricApi.module("fabric-lifecycle-events-v1", fapi)) // Handles game ticks.
         modImplementation(fabricApi.module("fabric-networking-api-v1", fapi)) // Registers the channel, see README.
-        modImplementation(fabricApi.module("fabric-resource-loader-v0", fapi)) // Loads languages.
+        modImplementation(fabricApi.module("fabric-resource-loader-$resourceLoader", fapi)) // Loads languages.
         modImplementation(fabricApi.module("fabric-screen-api-v1", fapi)) // ModMenu dependency.
-        val modmenu = "${property("stonecutter.modmenu")}"
-        require(modmenu.isNotBlank() && modmenu != "[STONECUTTER]") { "ModMenu version is not provided in $project." }
         // Sometimes, ModMenu is not yet updated for the version. (it almost never updates to snapshots nowadays)
         // So we should depend on it compile-time (it is really an optional dependency for us) to allow both
         // compilation of an optional ModMenu compatibility class (HModMenu.java) and launching the game.
@@ -253,6 +254,10 @@ tasks.withType<ProcessResources> {
         }
     } else {
         exclude("META-INF/mods.toml", "META-INF/neoforge.mods.toml")
+
+        // Determine and replace the Fabric Resource Loader version.
+        val fabricResourceLoader = if (stonecutter.eval(minecraft, ">=1.21.10")) "v1" else "v0"
+        inputs.property("fabricResourceLoader", fabricResourceLoader)
     }
 
     // Expand version and dependencies. The requirement may be manually specified for example for snapshots.

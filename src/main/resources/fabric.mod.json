@@ -36,7 +36,7 @@
     "fabric-key-binding-api-v1": "*",
     "fabric-lifecycle-events-v1": "*",
     "fabric-networking-api-v1": "*",
-    "fabric-resource-loader-v0": "*"
+    "fabric-resource-loader-${fabricResourceLoader}": "*"
   },
   "recommends": {
     "fabric": "*",
