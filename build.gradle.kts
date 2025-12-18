@@ -217,7 +217,6 @@ dependencies {
         modImplementation(fabricApi.module("fabric-lifecycle-events-v1", fapi)) // Handles game ticks.
         modImplementation(fabricApi.module("fabric-networking-api-v1", fapi)) // Registers the channel, see README.
         modImplementation(fabricApi.module("fabric-resource-loader-$resourceLoader", fapi)) // Loads languages.
-        modImplementation(fabricApi.module("fabric-screen-api-v1", fapi)) // ModMenu dependency.
 
         // ModMenu.
         val modmenu = "${property("stonecutter.modmenu")}"
@@ -229,6 +228,8 @@ dependencies {
             modCompileOnly("com.terraformersmc:modmenu:$modmenu")
         } else {
             modImplementation("com.terraformersmc:modmenu:$modmenu")
+            modImplementation(fabricApi.module("fabric-resource-loader-v0", fapi)) // ModMenu dependency.
+            modImplementation(fabricApi.module("fabric-screen-api-v1", fapi)) // ModMenu dependency.
         }
     }
 }
