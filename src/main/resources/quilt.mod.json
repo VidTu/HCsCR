@@ -49,7 +49,7 @@
         "reason": "HCsCR requires Fabric API (or QFAPI/QSL) to properly implement its functionality."
       },
       {
-        "id": "fabric-resource-loader-v0",
+        "id": "fabric-resource-loader-${fabricResourceLoader}",
         "versions": "*",
         "reason": "HCsCR requires Fabric API (or QFAPI/QSL) to properly implement its functionality."
       },
