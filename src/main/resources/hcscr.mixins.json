@@ -4,7 +4,6 @@
   "compatibilityLevel": "JAVA_${mixinJava}",
   "package": "ru.vidtu.hcscr.mixin",
   "plugin": "ru.vidtu.hcscr.platform.HPlugin",
-  "refmap": "hcscr.mixins.refmap.json",
   "client": [
     "MinecraftMixin",
     "block.BedBlockMixin",

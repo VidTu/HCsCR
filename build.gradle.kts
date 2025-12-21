@@ -1,3 +1,4 @@
+
 /*
  * HCsCR is a third-party mod for Minecraft Java Edition
  * that allows removing the end crystals faster.
@@ -24,8 +25,6 @@ import com.google.gson.Gson
 import com.google.gson.JsonElement
 import net.fabricmc.loom.task.RemapJarTask
 import net.fabricmc.loom.task.RunGameTask
-import net.fabricmc.loom.util.ZipUtils
-import net.fabricmc.loom.util.ZipUtils.UnsafeUnaryOperator
 
 plugins {
     alias(libs.plugins.architectury.loom)
@@ -110,11 +109,8 @@ loom {
     // Configure Mixin.
     @Suppress("UnstableApiUsage") // <- Required to configure Mixin.
     mixin {
-        // Some platforms don't set this and fail processing the Mixin.
-        useLegacyMixinAp = true
-
-        // Set the Mixin refmap name. This is completely optional.
-        defaultRefmapName = "hcscr.mixins.refmap.json"
+        // Use direct remapping instead of annotation processor and refmaps.
+        useLegacyMixinAp = false
     }
 
     // Add Mixin configs.
@@ -342,13 +338,4 @@ tasks.withType<Jar> {
 tasks.withType<RemapJarTask> {
     // Output into "build/libs" instead of "versions/<ver>/build/libs".
     destinationDirectory = rootProject.layout.buildDirectory.file("libs").get().asFile
-
-    // Minify JSON files. (after Fabric Loom processing)
-    val minifier = UnsafeUnaryOperator<String> { Gson().fromJson(it, JsonElement::class.java).toString() }
-    doLast {
-        ZipUtils.transformString(archiveFile.get().asFile.toPath(), mapOf(
-            "hcscr.mixins.json" to minifier,
-            "hcscr.mixins.refmap.json" to minifier,
-        ))
-    }
 }
