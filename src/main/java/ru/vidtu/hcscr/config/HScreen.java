@@ -281,7 +281,7 @@ public final class HScreen extends Screen {
     private static int calculateWidgetY(final int index) {
         // Validate.
         if (HCompile.DEBUG_ASSERTS) {
-            assert ((index >= 0) && (index <= Byte.MAX_VALUE)) : "HCsCR: Parameter 'index' is not in the [0.." + Byte.MAX_VALUE + "]. (index: " + index + ')';
+            assert ((index >= 0) && (index <= Byte.MAX_VALUE)) : "HCsCR: Parameter 'index' is not in the [0.." + Byte.MAX_VALUE + "] range. (index: " + index + ')';
         }
 
         // Calculate.

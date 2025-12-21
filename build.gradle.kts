@@ -36,13 +36,17 @@ val platform = loom.platform.get().id()!!
 // NeoForge 1.20.1 is loosely Forge, but not Forge. It uses ModPlatform.FORGE loom platform
 // and Forge packages, but diverges from (can't keep up with) the (Lex/Upstream) MCForge 1.20.1.
 val hackyNeoForge = (name == "1.20.1-neoforge")
-val minecraft = stonecutter.current.version
+
+// Extract versions.
+val mc = sc.current
+val mcv = mc.version // Literal version. (toString)
+val mcp = mc.parsed // Comparable version. (operator overloading)
 
 // Language.
-val javaTarget = if (stonecutter.eval(minecraft, ">=26.1")) 25
-else if (stonecutter.eval(minecraft, ">=1.20.6")) 21
-else if (stonecutter.eval(minecraft, ">=1.18.2")) 17
-else if (stonecutter.eval(minecraft, ">=1.17.1")) 16
+val javaTarget = if (mcp >= "26.1") 25
+else if (mcp >= "1.20.6") 21
+else if (mcp >= "1.18.2") 17
+else if (mcp >= "1.17.1") 16
 else 8
 val javaVersion = JavaVersion.toVersion(javaTarget)!!
 java {
@@ -57,7 +61,7 @@ base.archivesName = "HCsCR"
 version = "$version+$name"
 description = "Remove your end crystals before the server even knows you hit 'em!"
 
-stonecutter {
+sc {
     // Define Stonecutter preprocessor variables.
     constants["hacky_neoforge"] = hackyNeoForge
     constants {
@@ -66,9 +70,7 @@ stonecutter {
 
     // Process the JSON files via Stonecutter.
     // This is needed for the Mixin configuration.
-    filters {
-        include("**/*.json")
-    }
+    filters.include("**/*.json")
 }
 
 loom {
@@ -95,7 +97,7 @@ loom {
 
             // AuthLib for 1.16.5 is bugged, disable Mojang API
             // to fix issues with MP testing.
-            if (minecraft == "1.16.5") {
+            if (mcp eq "1.16.5") {
                 vmArgs(
                     "-Dminecraft.api.auth.host=http://0.0.0.0:0/",
                     "-Dminecraft.api.account.host=http://0.0.0.0:0/",
@@ -146,7 +148,7 @@ repositories {
     } else {
         maven("https://maven.fabricmc.net/") // Fabric.
         maven("https://maven.terraformersmc.com/releases/") // ModMenu.
-        if (minecraft == "1.20.4") { // Fix for ModMenu not shading Text Placeholder API.
+        if (mcp eq "1.20.4") { // Fix for ModMenu not shading Text Placeholder API.
             maven("https://maven.nucleoid.xyz/") // ModMenu. (Text Placeholder API)
         }
     }
@@ -159,13 +161,13 @@ dependencies {
     compileOnly(libs.error.prone.annotations)
 
     // Minecraft. The dependency may be manually specified for example for snapshots.
-    val minecraftDependencyProperty = findProperty("stonecutter.minecraft-dependency")
-    require(minecraftDependencyProperty != minecraft) { "Unneeded 'stonecutter.minecraft-dependency' property set to $minecraftDependencyProperty in $project, it already uses this version." }
-    val minecraftDependency = minecraftDependencyProperty ?: minecraft
+    val minecraftDependencyProperty = findProperty("sc.minecraft-dependency")
+    require(minecraftDependencyProperty != mcv) { "Unneeded 'sc.minecraft-dependency' property set to $minecraftDependencyProperty in $project, it already uses this version." }
+    val minecraftDependency = minecraftDependencyProperty ?: mcv
     minecraft("com.mojang:minecraft:$minecraftDependency")
 
     // Mappings.
-    if (stonecutter.eval(minecraft, "<26.1")) {
+    if (mcp < "26.1") {
         mappings(loom.officialMojangMappings())
     }
 
@@ -187,46 +189,46 @@ dependencies {
     if (loom.isForge) {
         if (hackyNeoForge) {
             // Legacy NeoForge.
-            val neoforge = "${property("stonecutter.neoforge")}"
-            require(neoforge.isNotBlank() && neoforge != "[STONECUTTER]") { "NeoForge (legacy) version is not provided via 'stonecutter.neoforge' in $project." }
+            val neoforge = "${property("sc.neoforge")}"
+            require(neoforge.isNotBlank() && neoforge != "[SC]") { "NeoForge (legacy) version is not provided via 'sc.neoforge' in $project." }
             val extractedMinecraft = neoforge.substringBefore('-')
-            require(minecraft == extractedMinecraft) { "NeoForge (legacy) version '$neoforge' provides Minecraft $extractedMinecraft in $project, but we want $minecraft." }
+            require(mcp eq extractedMinecraft) { "NeoForge (legacy) version '$neoforge' provides Minecraft $extractedMinecraft in $project, but we want $mcv." }
             "forge"("net.neoforged:forge:$neoforge")
         } else {
             // Forge.
-            val forge = "${property("stonecutter.forge")}"
-            require(forge.isNotBlank() && forge != "[STONECUTTER]") { "Forge version is not provided via 'stonecutter.forge' in $project." }
+            val forge = "${property("sc.forge")}"
+            require(forge.isNotBlank() && forge != "[SC]") { "Forge version is not provided via 'sc.forge' in $project." }
             val extractedMinecraft = forge.substringBefore('-')
-            require(minecraft == extractedMinecraft) { "Forge version '$forge' provides Minecraft $extractedMinecraft in $project, but we want $minecraft." }
+            require(mcp eq extractedMinecraft) { "Forge version '$forge' provides Minecraft $extractedMinecraft in $project, but we want $mcv." }
             "forge"("net.minecraftforge:forge:$forge")
         }
     } else if (loom.isNeoForge) {
         // NeoForge.
-        val neoforge = "${property("stonecutter.neoforge")}"
-        require(neoforge.isNotBlank() && neoforge != "[STONECUTTER]") { "NeoForge version is not provided via 'stonecutter.neoforge' in $project." }
+        val neoforge = "${property("sc.neoforge")}"
+        require(neoforge.isNotBlank() && neoforge != "[SC]") { "NeoForge version is not provided via 'sc.neoforge' in $project." }
         val extractedMinecraft = "1.${neoforge.substringBeforeLast('.')}"
-        require(minecraft == extractedMinecraft) { "NeoForge version '$neoforge' provides Minecraft $extractedMinecraft in $project, but we want $minecraft." }
+        require(mcp eq extractedMinecraft) { "NeoForge version '$neoforge' provides Minecraft $extractedMinecraft in $project, but we want $mcv." }
         "neoForge"("net.neoforged:neoforge:$neoforge")
     } else {
         // Fabric Loader.
         modImplementation(libs.fabric.loader)
 
         // Modular Fabric API.
-        val fapi = "${property("stonecutter.fabric-api")}"
-        require(fapi.isNotBlank() && fapi != "[STONECUTTER]") { "Fabric API version is not provided via 'stonecutter.fabric-api' in $project." }
-        val resourceLoader = if (stonecutter.eval(minecraft, ">=1.21.10")) "v1" else "v0"
+        val fapi = "${property("sc.fabric-api")}"
+        require(fapi.isNotBlank() && fapi != "[SC]") { "Fabric API version is not provided via 'sc.fabric-api' in $project." }
+        val resourceLoader = if (mcp >= "1.21.10") "v1" else "v0"
         modImplementation(fabricApi.module("fabric-key-binding-api-v1", fapi)) // Handles the keybinds.
         modImplementation(fabricApi.module("fabric-lifecycle-events-v1", fapi)) // Handles game ticks.
         modImplementation(fabricApi.module("fabric-networking-api-v1", fapi)) // Registers the channel, see README.
         modImplementation(fabricApi.module("fabric-resource-loader-$resourceLoader", fapi)) // Loads languages.
 
         // ModMenu.
-        val modmenu = "${property("stonecutter.modmenu")}"
-        require(modmenu.isNotBlank() && modmenu != "[STONECUTTER]") { "ModMenu version is not provided via 'stonecutter.modmenu' in $project." }
+        val modmenu = "${property("sc.modmenu")}"
+        require(modmenu.isNotBlank() && modmenu != "[SC]") { "ModMenu version is not provided via 'sc.modmenu' in $project." }
         // Sometimes, ModMenu is not yet updated for the version. (it almost never updates to snapshots nowadays)
         // So we should depend on it compile-time (it is really an optional dependency for us) to allow both
         // compilation of an optional ModMenu compatibility class (HModMenu.java) and launching the game.
-        if ("${findProperty("stonecutter.modmenu.compile-only")}".toBoolean()) {
+        if ("${findProperty("sc.modmenu.compile-only")}".toBoolean()) {
             modCompileOnly("com.terraformersmc:modmenu:$modmenu")
         } else {
             modImplementation("com.terraformersmc:modmenu:$modmenu")
@@ -257,7 +259,7 @@ tasks.withType<ProcessResources> {
     if (loom.isForge) {
         exclude("fabric.mod.json", "quilt.mod.json", "META-INF/neoforge.mods.toml")
     } else if (loom.isNeoForge) {
-        if (stonecutter.eval(minecraft, ">=1.20.6")) {
+        if (mcp >= "1.20.6") {
             exclude("fabric.mod.json", "quilt.mod.json", "META-INF/mods.toml")
         } else {
             exclude("fabric.mod.json", "quilt.mod.json", "META-INF/neoforge.mods.toml")
@@ -266,17 +268,17 @@ tasks.withType<ProcessResources> {
         exclude("META-INF/mods.toml", "META-INF/neoforge.mods.toml")
 
         // Determine and replace the Fabric Resource Loader version.
-        val fabricResourceLoader = if (stonecutter.eval(minecraft, ">=1.21.10")) "v1" else "v0"
+        val fabricResourceLoader = if (mcp >= "1.21.10") "v1" else "v0"
         inputs.property("fabricResourceLoader", fabricResourceLoader)
     }
 
     // Determine and replace the platform version range requirement.
-    val platformRequirement = "${project.property("stonecutter.platform-requirement")}"
+    val platformRequirement = "${project.property("sc.platform-requirement")}"
     if (loom.isForge || loom.isNeoForge) {
-        require(platformRequirement.isNotBlank() && platformRequirement != "[STONECUTTER]") { "Platform requirement is not provided via 'stonecutter.platform-requirement' in $project." }
+        require(platformRequirement.isNotBlank() && platformRequirement != "[SC]") { "Platform requirement is not provided via 'sc.platform-requirement' in $project." }
         inputs.property("platformRequirement", platformRequirement)
     } else {
-        require(platformRequirement == "[STONECUTTER]") { "Platform requirement is provided via 'stonecutter.platform-requirement' in $project, but Fabric builds ignore it." }
+        require(platformRequirement == "[SC]") { "Platform requirement is provided via 'sc.platform-requirement' in $project, but Fabric builds ignore it." }
     }
 
     // Expand the updater URL for Forge-like loaders.
@@ -287,15 +289,15 @@ tasks.withType<ProcessResources> {
     }
 
     // Expand Minecraft requirement that can be manually overridden for reasons. (e.g., snapshots)
-    val minecraftRequirementProperty = findProperty("stonecutter.minecraft-requirement")
-    require(minecraftRequirementProperty != minecraft) { "Unneeded 'stonecutter.minecraft-requirement' property set to $minecraftRequirementProperty in $project, it already uses this version." }
-    val minecraftRequirement = minecraftRequirementProperty ?: minecraft
+    val minecraftRequirementProperty = findProperty("sc.minecraft-requirement")
+    require(minecraftRequirementProperty != mcv) { "Unneeded 'sc.minecraft-requirement' property set to $minecraftRequirementProperty in $project, it already uses this version." }
+    val minecraftRequirement = minecraftRequirementProperty ?: mcv
     inputs.property("minecraft", minecraftRequirement)
 
-    // Expand Mixin java version. It's pretty much the same Java, except the Forge 1.20.6 edge case,
+    // Expand Mixin Java version. It's pretty much the same Java, except the Forge 1.20.6 edge case,
     // where it must not be JAVA_21 (even tho we're using Java 21), but instead a Java 18 due to Mixin 0.8.5:
     // https://github.com/SpongePowered/Mixin/blob/releases/0.8.5/src/main/java/org/spongepowered/asm/mixin/MixinEnvironment.java#L747
-    val mixinJava = if (loom.isForge && minecraft == "1.20.6") 18 else javaTarget
+    val mixinJava = if (loom.isForge && mcp eq "1.20.6") 18 else javaTarget
     inputs.property("mixinJava", mixinJava)
 
     // Expand version and dependencies.
