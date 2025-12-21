@@ -67,10 +67,6 @@ sc {
     constants {
         match(platform, "fabric", "forge", "neoforge")
     }
-
-    // Process the JSON files via Stonecutter.
-    // This is needed for the Mixin configuration.
-    filters.include("**/*.json")
 }
 
 loom {
