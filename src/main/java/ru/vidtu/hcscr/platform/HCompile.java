@@ -23,6 +23,7 @@
 package ru.vidtu.hcscr.platform;
 
 import com.google.errorprone.annotations.CompileTimeConstant;
+import name.remal.gradle_plugins.build_time_constants.api.BuildTimeConstants;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
@@ -41,7 +42,7 @@ public final class HCompile {
      * Whether the debug features are enabled.
      */
     @CompileTimeConstant
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = BuildTimeConstants.getBooleanProperty("debug");
 
     /**
      * Whether the additional Java assertions are enabled.

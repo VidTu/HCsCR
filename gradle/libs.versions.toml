@@ -26,9 +26,11 @@ jetbrains-annotations = "26.0.2"
 jspecify = "1.0.0"
 log4j = "2.25.3"
 mixinextras = "0.5.0"
+buildtimeconstants = "2.1.0"
 
 [plugins]
 architectury-loom = { id = "dev.architectury.loom", version.ref = "architectury-loom" }
+buildtimeconstants = { id = "name.remal.build-time-constants", version.ref = "buildtimeconstants" }
 
 [libraries]
 error_prone_annotations = { module = "com.google.errorprone:error_prone_annotations", version.ref = "error_prone_annotations" }
