@@ -1,4 +1,3 @@
-
 /*
  * HCsCR is a third-party mod for Minecraft Java Edition
  * that allows removing the end crystals faster.
@@ -28,6 +27,7 @@ import net.fabricmc.loom.task.RunGameTask
 
 plugins {
     alias(libs.plugins.architectury.loom)
+    alias(libs.plugins.buildtimeconstants)
 }
 
 // Extract the platform and Minecraft version.
@@ -40,6 +40,22 @@ val hackyNeoForge = (name == "1.20.1-neoforge")
 val mc = sc.current
 val mcv = mc.version // Literal version. (toString)
 val mcp = mc.parsed // Comparable version. (operator overloading)
+
+// NOTE(ffi): Using the listener like that is required because otherwise the task graph is not populated
+gradle.taskGraph.addTaskExecutionGraphListener {
+    buildTimeConstants {
+        // Get the debug configuration and pass it to the plugin.
+        // Can be enabled by setting the `debug` property to true at build-time
+        // (by passing `-Pdebug=true` to the Gradle invocation), but is also done automatically
+        // for some cases (i.e. whenever the runClient task is used.)
+        property(
+            "debug", when (val rawProperty = project.findProperty("debug")) {
+                is Boolean -> rawProperty
+                is String -> rawProperty.toBoolean()
+                else -> it.allTasks.any { task -> task is RunGameTask }
+            })
+    }
+}
 
 // Language.
 val javaTarget = if (mcp >= "26.1") 25
