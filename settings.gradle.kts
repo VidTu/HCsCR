@@ -46,13 +46,13 @@ stonecutter {
     create(rootProject) {
         for (version in versions) {
             for (type in types) {
-                val id = "$version-$type"
-                val subPath = file("versions/$id")
+                val id = "${version}-${type}"
+                val subPath = file("versions/${id}")
                 if (subPath.resolve(".ignored").isFile) {
                     ignored.add(id)
                     continue
                 }
-                version("$version-$type", version)
+                version("${version}-${type}", version)
             }
         }
         vcsVersion = "${versions[0]}-${types[0]}"

@@ -1,4 +1,3 @@
-
 /*
  * HCsCR is a third-party mod for Minecraft Java Edition
  * that allows removing the end crystals faster.
@@ -57,7 +56,7 @@ java {
 // Metadata.
 group = "ru.vidtu.hcscr"
 base.archivesName = "HCsCR"
-version = "$version+$name"
+version = "${version}+${name}"
 description = "Remove your end crystals before the server even knows you hit 'em!"
 
 sc {
@@ -154,9 +153,9 @@ dependencies {
 
     // Minecraft. The dependency may be manually specified for example for snapshots.
     val minecraftDependencyProperty = findProperty("sc.minecraft-dependency")
-    require(minecraftDependencyProperty != mcv) { "Unneeded 'sc.minecraft-dependency' property set to $minecraftDependencyProperty in $project, it already uses this version." }
+    require(minecraftDependencyProperty != mcv) { "Unneeded 'sc.minecraft-dependency' property set to ${minecraftDependencyProperty} in ${project}, it already uses this version." }
     val minecraftDependency = minecraftDependencyProperty ?: mcv
-    minecraft("com.mojang:minecraft:$minecraftDependency")
+    minecraft("com.mojang:minecraft:${minecraftDependency}")
 
     // Mappings.
     if (mcp < "26.1") {
@@ -182,48 +181,48 @@ dependencies {
         if (hackyNeoForge) {
             // Legacy NeoForge.
             val neoforge = "${property("sc.neoforge")}"
-            require(neoforge.isNotBlank() && neoforge != "[SC]") { "NeoForge (legacy) version is not provided via 'sc.neoforge' in $project." }
+            require(neoforge.isNotBlank() && neoforge != "[SC]") { "NeoForge (legacy) version is not provided via 'sc.neoforge' in ${project}." }
             val extractedMinecraft = neoforge.substringBefore('-')
-            require(mcp eq extractedMinecraft) { "NeoForge (legacy) version '$neoforge' provides Minecraft $extractedMinecraft in $project, but we want $mcv." }
-            "forge"("net.neoforged:forge:$neoforge")
+            require(mcp eq extractedMinecraft) { "NeoForge (legacy) version '${neoforge}' provides Minecraft ${extractedMinecraft} in ${project}, but we want ${mcv}." }
+            "forge"("net.neoforged:forge:${neoforge}")
         } else {
             // Forge.
             val forge = "${property("sc.forge")}"
-            require(forge.isNotBlank() && forge != "[SC]") { "Forge version is not provided via 'sc.forge' in $project." }
+            require(forge.isNotBlank() && forge != "[SC]") { "Forge version is not provided via 'sc.forge' in ${project}." }
             val extractedMinecraft = forge.substringBefore('-')
-            require(mcp eq extractedMinecraft) { "Forge version '$forge' provides Minecraft $extractedMinecraft in $project, but we want $mcv." }
-            "forge"("net.minecraftforge:forge:$forge")
+            require(mcp eq extractedMinecraft) { "Forge version '${forge}' provides Minecraft ${extractedMinecraft} in ${project}, but we want ${mcv}." }
+            "forge"("net.minecraftforge:forge:${forge}")
         }
     } else if (loom.isNeoForge) {
         // NeoForge.
         val neoforge = "${property("sc.neoforge")}"
-        require(neoforge.isNotBlank() && neoforge != "[SC]") { "NeoForge version is not provided via 'sc.neoforge' in $project." }
+        require(neoforge.isNotBlank() && neoforge != "[SC]") { "NeoForge version is not provided via 'sc.neoforge' in ${project}." }
         val extractedMinecraft = "1.${neoforge.substringBeforeLast('.')}"
-        require(mcp eq extractedMinecraft) { "NeoForge version '$neoforge' provides Minecraft $extractedMinecraft in $project, but we want $mcv." }
-        "neoForge"("net.neoforged:neoforge:$neoforge")
+        require(mcp eq extractedMinecraft) { "NeoForge version '${neoforge}' provides Minecraft ${extractedMinecraft} in ${project}, but we want ${mcv}." }
+        "neoForge"("net.neoforged:neoforge:${neoforge}")
     } else {
         // Fabric Loader.
         modImplementation(libs.fabric.loader)
 
         // Modular Fabric API.
         val fapi = "${property("sc.fabric-api")}"
-        require(fapi.isNotBlank() && fapi != "[SC]") { "Fabric API version is not provided via 'sc.fabric-api' in $project." }
+        require(fapi.isNotBlank() && fapi != "[SC]") { "Fabric API version is not provided via 'sc.fabric-api' in ${project}." }
         val resourceLoader = if (mcp >= "1.21.10") "v1" else "v0"
         modImplementation(fabricApi.module("fabric-key-binding-api-v1", fapi)) // Handles the keybinds.
         modImplementation(fabricApi.module("fabric-lifecycle-events-v1", fapi)) // Handles game ticks.
         modImplementation(fabricApi.module("fabric-networking-api-v1", fapi)) // Registers the channel, see README.
-        modImplementation(fabricApi.module("fabric-resource-loader-$resourceLoader", fapi)) // Loads languages.
+        modImplementation(fabricApi.module("fabric-resource-loader-${resourceLoader}", fapi)) // Loads languages.
 
         // ModMenu.
         val modmenu = "${property("sc.modmenu")}"
-        require(modmenu.isNotBlank() && modmenu != "[SC]") { "ModMenu version is not provided via 'sc.modmenu' in $project." }
+        require(modmenu.isNotBlank() && modmenu != "[SC]") { "ModMenu version is not provided via 'sc.modmenu' in ${project}." }
         // Sometimes, ModMenu is not yet updated for the version. (it almost never updates to snapshots nowadays)
         // So we should depend on it compile-time (it is really an optional dependency for us) to allow both
         // compilation of an optional ModMenu compatibility class (HModMenu.java) and launching the game.
         if ("${findProperty("sc.modmenu.compile-only")}".toBoolean()) {
-            modCompileOnly("com.terraformersmc:modmenu:$modmenu")
+            modCompileOnly("com.terraformersmc:modmenu:${modmenu}")
         } else {
-            modImplementation("com.terraformersmc:modmenu:$modmenu")
+            modImplementation("com.terraformersmc:modmenu:${modmenu}")
             modImplementation(fabricApi.module("fabric-resource-loader-v0", fapi)) // ModMenu dependency.
             modImplementation(fabricApi.module("fabric-screen-api-v1", fapi)) // ModMenu dependency.
         }
@@ -267,10 +266,10 @@ tasks.withType<ProcessResources> {
     // Determine and replace the platform version range requirement.
     val platformRequirement = "${project.property("sc.platform-requirement")}"
     if (loom.isForge || loom.isNeoForge) {
-        require(platformRequirement.isNotBlank() && platformRequirement != "[SC]") { "Platform requirement is not provided via 'sc.platform-requirement' in $project." }
+        require(platformRequirement.isNotBlank() && platformRequirement != "[SC]") { "Platform requirement is not provided via 'sc.platform-requirement' in ${project}." }
         inputs.property("platformRequirement", platformRequirement)
     } else {
-        require(platformRequirement == "[SC]") { "Platform requirement is provided via 'sc.platform-requirement' in $project, but Fabric builds ignore it." }
+        require(platformRequirement == "[SC]") { "Platform requirement is provided via 'sc.platform-requirement' in ${project}, but Fabric builds ignore it." }
     }
 
     // Expand the updater URL for Forge-like loaders.
@@ -282,7 +281,7 @@ tasks.withType<ProcessResources> {
 
     // Expand Minecraft requirement that can be manually overridden for reasons. (e.g., snapshots)
     val minecraftRequirementProperty = findProperty("sc.minecraft-requirement")
-    require(minecraftRequirementProperty != mcv) { "Unneeded 'sc.minecraft-requirement' property set to $minecraftRequirementProperty in $project, it already uses this version." }
+    require(minecraftRequirementProperty != mcv) { "Unneeded 'sc.minecraft-requirement' property set to ${minecraftRequirementProperty} in ${project}, it already uses this version." }
     val minecraftRequirement = minecraftRequirementProperty ?: mcv
     inputs.property("minecraft", minecraftRequirement)
 
