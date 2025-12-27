@@ -323,7 +323,11 @@ public final class HStonecutter {
             assert (client.isSameThread()) : "HCsCR: Getting the client profiler NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
         }
 
-        // TODO(VidTu): Integrate with HCompile?
+        // Throw unconditionally.
+        if (!HCompile.DEBUG_PROFILER) {
+            throw new AssertionError("HCsCR: This mod build hasn't been compiled with profiler support.");
+        }
+
         // Delegate.
         //? if >=1.21.3 {
         return Profiler.get();

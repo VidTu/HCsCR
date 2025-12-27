@@ -52,7 +52,7 @@ stonecutter {
                     ignored.add(id)
                     continue
                 }
-                version("${version}-${type}", version)
+                version(id, version)
             }
         }
         vcsVersion = "${versions[0]}-${types[0]}"
