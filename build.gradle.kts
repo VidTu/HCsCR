@@ -20,6 +20,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// This is the main (multi-version loader) buildscript. It is processed by the
+// Stonecutter multiple times, for each version and each loader. (compiled once)
+// Based on Architectury Loom and processes the preparation/complation/building
+// of the most of the mod that is not covered by the Stonecutter or Blossom.
+// See "compile" for the compile-time constants and Blossom configuration.
+// See "stonecutter.gradle.kts" for the Stonecutter configuration.
+// See "settings.gradle.kts" for the Gradle configuration.
+
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import net.fabricmc.loom.task.RemapJarTask
@@ -150,6 +158,9 @@ dependencies {
     compileOnly(libs.jspecify)
     compileOnly(libs.jetbrains.annotations)
     compileOnly(libs.error.prone.annotations)
+
+    // Compile-time constants. (Blossom)
+    compileOnly(project(":compile"))
 
     // Minecraft. The dependency may be manually specified for example for snapshots.
     val minecraftDependencyProperty = findProperty("sc.minecraft-dependency")
@@ -328,7 +339,7 @@ tasks.withType<Jar> {
             "Specification-Vendor" to "VidTu",
             "Implementation-Title" to "HCsCR",
             "Implementation-Version" to version,
-            "Implementation-Vendor" to "VidTu, Offenderify",
+            "Implementation-Vendor" to "VidTu, Offenderify, libffi",
             "MixinConfigs" to "hcscr.mixins.json"
         )
     }

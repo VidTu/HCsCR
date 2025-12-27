@@ -20,6 +20,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// This is the root Gradle entrypoint. It installs the Stonecutter preprocessor,
+// and various root Gradle things, as well as includes and generates every
+// virtual subproject by the Stonecutter. Also includes compile-time project.
+// See "build.gradle.kts" for the per-version Gradle buildscript.
+// See "compile" for the compile-time constants and Blossom configuration.
+// See "stonecutter.gradle.kts" for the Stonecutter configuration.
+
+// Plugins.
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -35,8 +43,13 @@ plugins {
     id("dev.kikugie.stonecutter") version "0.8"
 }
 
+// Project.
 rootProject.name = "HCsCR"
 
+// Compile-only constants. (blossom)
+include(":compile")
+
+// Stonecutter.
 val types = listOf("fabric", "forge", "neoforge")
 val versions = listOf("1.21.11", "1.21.10", "1.21.8", "1.21.5", "1.21.4", "1.21.3", "1.21.1", "1.20.6", "1.20.4", "1.20.2", "1.20.1", "1.19.4", "1.19.2", "1.18.2", "1.17.1", "1.16.5")
 val ignored = mutableListOf<String>()

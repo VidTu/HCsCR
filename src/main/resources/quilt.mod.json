@@ -10,7 +10,8 @@
       "license": "Apache-2.0",
       "contributors": {
         "VidTu": "Owner",
-        "Offenderify": "Author"
+        "Offenderify": "Author",
+        "libffi": "Contributor"
       },
       "contact": {
         "homepage": "https://github.com/VidTu/HCsCR",

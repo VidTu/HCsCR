@@ -23,16 +23,19 @@
 package ru.vidtu.hcscr.platform;
 
 import com.google.errorprone.annotations.CompileTimeConstant;
-import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 
 /**
  * A class that contains compile-time boolean flags.
+ * <p>
+ * <b>Note:</b> This class is NEVER found in the final JAR. It <b>MUST NOT</b>
+ * contain any references that are not inlined by the Java compiler.
  *
  * @author VidTu
  * @apiNote Internal use only
+ * @see <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-15.html#jls-15.28">Compile-time References</a>
  */
 @ApiStatus.Internal
 @NullMarked
@@ -41,7 +44,7 @@ public final class HCompile {
      * Whether the debug features are enabled.
      */
     @CompileTimeConstant
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = {{ debug }};
 
     /**
      * Whether the additional Java assertions are enabled.
@@ -56,7 +59,7 @@ public final class HCompile {
     public static final boolean DEBUG_LOGS = DEBUG;
 
     /**
-     * Whether the Minecraft's {@link ProfilerFiller} class is used.
+     * Whether the Minecraft's {@code ProfilerFiller} class is used.
      */
     @CompileTimeConstant
     public static final boolean DEBUG_PROFILER = DEBUG;

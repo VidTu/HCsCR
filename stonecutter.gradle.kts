@@ -20,14 +20,24 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// This is the root Stonecutter entrypoint. It configures some
+// version-independent aspects of the Stonecutter preprocessor.
+// See "build.gradle.kts" for the per-version Gradle buildscript.
+// See "compile" for the compile-time constants and Blossom configuration.
+// See "settings.gradle.kts" for the Gradle configuration.
+
+// Plugins.
 plugins {
     id("dev.kikugie.stonecutter")
 }
 
+// Active Stonecutter version. See:
+// https://stonecutter.kikugie.dev/wiki/glossary#active-version
+// https://stonecutter.kikugie.dev/wiki/glossary#vcs-version
 stonecutter active "1.21.11-fabric" /* [SC] DO NOT EDIT */
 
+// Process the JSON files via Stonecutter.
+// This is needed for the Mixin configuration.
 stonecutter handlers {
-    // Process the JSON files via Stonecutter.
-    // This is needed for the Mixin configuration.
     inherit("java", "json")
 }
