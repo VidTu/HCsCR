@@ -21,10 +21,7 @@
  */
 
 // This is the buildscript for the compile-time constants used by the project.
-// Stonecutter multiple times, for each version and each loader. (compiled once)
-// Based on Architectury Loom and processes the preparation/complation/building
-// of the most of the mod that is not covered by the Stonecutter or Blossom.
-// See "compile" for the compile-time constants and Blossom configuration.
+// See "build.gradle.kts" in the root for the per-version Gradle buildscript.
 // See "stonecutter.gradle.kts" for the Stonecutter configuration.
 // See "settings.gradle.kts" for the Gradle configuration.
 
