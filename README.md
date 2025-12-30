@@ -196,7 +196,7 @@ To compile all versions of the mod from the source code:
 
 #### One Version (Faster)
 
-To compile one specific (Minecraft) version the mod from the source code:
+To compile one specific (Minecraft) version of the mod from the source code:
 
 1. Have 4 GB of free RAM, 5 GB of free disk space,
    and an active internet connection.
