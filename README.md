@@ -203,7 +203,9 @@ To compile one specific (Minecraft) version the mod from the source code:
 2. Install Java 25 and dump it into PATH and/or JAVA_HOME.
 3. Run
    `./gradlew -Dru.vidtu.hcscr.only=<version>-<loader> <version>-<loader>:assemble`
-   from the terminal/PowerShell.
+   from the terminal/PowerShell. (for example: 
+   `./gradlew -Dru.vidtu.hcscr.only=1.16.5-fabric 1.16.5-fabric:assemble`
+   )
 4. Grab the JAR from the `./build/libs/` folder.
 
 ### Developing/Debugging
