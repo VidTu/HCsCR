@@ -67,8 +67,8 @@ base.archivesName = "HCsCR"
 version = "${version}+${name}"
 description = "Remove your end crystals before the server even knows you hit 'em!"
 
+// Define Stonecutter preprocessor variables/constants.
 sc {
-    // Define Stonecutter preprocessor variables.
     constants["hacky_neoforge"] = hackyNeoForge
     constants {
         match(platform, "fabric", "forge", "neoforge")
@@ -345,7 +345,7 @@ tasks.withType<Jar> {
     }
 }
 
+// Output into "build/libs" instead of "versions/<ver>/build/libs".
 tasks.withType<RemapJarTask> {
-    // Output into "build/libs" instead of "versions/<ver>/build/libs".
     destinationDirectory = rootProject.layout.buildDirectory.file("libs").get().asFile
 }

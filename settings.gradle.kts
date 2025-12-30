@@ -46,7 +46,7 @@ plugins {
 // Project.
 rootProject.name = "HCsCR"
 
-// Compile-only constants. (blossom)
+// Compile-time constants. (Blossom)
 include(":compile")
 
 // Stonecutter.
