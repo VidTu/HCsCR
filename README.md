@@ -61,6 +61,9 @@ You'll need a GitHub account to download these.
 **Note**: These versions are *NOT* supported and are included for informational
 purposes. They are probably buggy, laggy, and don't have new features.
 
+**Q**: Why support so many Minecraft versions?  
+**A**: Because I can.
+
 **Q**: Do I need Fabric API or Quilt Standard Libraries?  
 **A**: Yes, you'll need Fabric API for Fabric and QFAPI/QSL for Quilt.
 Obviously, you don't need them for Forge or NeoForge.
@@ -122,6 +125,27 @@ it depends on the ping, server MSPT, etc.
 <img alt="Grandma is happy with the crystal optimizer" src="https://i.imgur.com/Iz9GGfP.png"/>
 </details>
 
+**Q**: How to compile for only one Minecraft version?
+I can't stand waiting hours for the project to initialize.  
+**A**: Run the `./gradlew` script with `ru.vidtu.hcscr.only` system property
+set to the desired `<version>-<loader>` combination, for example:
+`./gradlew -Dru.vidtu.hcscr.only=1.16.5-fabric build`.
+Note that due to the Stonecutter requirements, the latest
+version may still be initialized, because it is the
+[VCS Version](https://stonecutter.kikugie.dev/wiki/glossary#vcs-version)
+of the HCsCR by design.
+
+**Q**: Why so much yapping in this README?  
+**A**: ~~I paid for the whole LLM, I'm going to use the whole LLM.~~
+Because writing READMEs (even though I don't use AI except
+for grammar checks) is easier than writing actual code.
+
+**Q**: Do you use AI/LLM/Code Generation/Copilot/etc.?  
+**A**: Except for the aftermentioned grammar checkers above, no. I use only
+the laggiest IntelliJ IDEA inspections based on the buggiest algorithms.
+Can't be sure for contributors, but most of the code is written
+by the project author. Also I don't care about AI personally.
+
 ## License
 
 This project is provided under the Apache 2.0 License.
@@ -160,13 +184,27 @@ It also uses [Gradle](https://gradle.org/) and [Java](https://java.com/).
 
 ### Building (Compiling)
 
-To compile the mod from the source code:
+#### All Versions (Slower)
+
+To compile all versions of the mod from the source code:
 
 1. Have 8 GB of free RAM, 20 GB of free disk space,
    and an active internet connection.
-2. Install Java 21 and dump it into PATH and/or JAVA_HOME.
+2. Install Java 25 and dump it into PATH and/or JAVA_HOME.
 3. Run `./gradlew assemble` from the terminal/PowerShell.
 4. Grab the JARs from the `./build/libs/` folder.
+
+#### One Version (Faster)
+
+To compile one specific (Minecraft) version the mod from the source code:
+
+1. Have 4 GB of free RAM, 5 GB of free disk space,
+   and an active internet connection.
+2. Install Java 25 and dump it into PATH and/or JAVA_HOME.
+3. Run
+   `./gradlew -Dru.vidtu.hcscr.only=<version>-<loader> <version>-<loader>:assemble`
+   from the terminal/PowerShell.
+4. Grab the JAR from the `./build/libs/` folder.
 
 ### Developing/Debugging
 
