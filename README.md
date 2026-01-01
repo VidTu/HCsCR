@@ -36,6 +36,8 @@ on your server. Ask the admins to install one if the command doesn't exist.
 
 ## FAQ
 
+### For Users
+
 **Q**: I need help, have some questions, or have some other feedback.  
 **A**: You can join the [Discord server](https://discord.gg/Q6saSVSuYQ).
 
@@ -85,12 +87,6 @@ considered legitimate.
 **Q**: Is this designed to be a hack?  
 **A**: No.
 
-**Q**: I want to block this mod as a server owner, can I do this?  
-**A**: A [plugin channel](https://minecraft.wiki/w/Java_Edition_protocol/Plugin_channels)
-called `hcscr:imhere` is registered by this mod. *Beware*: Other mods similar to
-this one don't offer a way to block them. Consider investing your time/resources
-into an anti-cheat plugin, if you want to block all of them.
-
 **Q**: I've found a bug.  
 **A**: Report it [here](https://github.com/VidTu/HCsCR/issues). If you are not
 sure whether this is a bug or a simple question, you can join the
@@ -125,6 +121,15 @@ it depends on the ping, server MSPT, etc.
 <img alt="Grandma is happy with the crystal optimizer" src="https://i.imgur.com/Iz9GGfP.png"/>
 </details>
 
+### For Developers
+
+**Q**: I want to block this mod as a server owner, can I do this?  
+**A**: A [plugin channel](https://minecraft.wiki/w/Java_Edition_protocol/Plugin_channels)
+called `hcscr:imhere` is registered by this mod. Older versions used a different
+channel, but the namespace was always `hcscr`. *Beware*: Other mods similar to
+this one don't offer a way to block them. Consider investing your time/resources
+into an anti-cheat plugin, if you want to block all of them.
+
 **Q**: How to compile for only one Minecraft version?
 I can't stand waiting hours for the project to initialize.  
 **A**: Run the `./gradlew` script with `ru.vidtu.hcscr.only` system property
@@ -145,6 +150,22 @@ for grammar checks) is easier than writing actual code.
 the laggiest IntelliJ IDEA inspections based on the buggiest algorithms.
 Can't be sure for contributors, but most of the code is written
 by the project author. Also I don't care about AI personally.
+
+**Q**: Does HCsCR have a public API?  
+**A**: Nope. Except the plugin channel mentioned above, there's no
+public-facing API in this mod. All classes/packages are marked as
+[@ApiStatus.Internal](https://javadoc.io/static/org.jetbrains/annotations/26.0.2/org/jetbrains/annotations/ApiStatus.Internal.html)
+for that reason.
+
+**Q**: Can I still *link* to the mod? What about the
+[SemVer](https://semver.org/) versioning used by the mod?  
+**A**: You can, at your own risk. SemVer-compatible versioning is used by HCsCR
+for the ease of use (and also Fabric uses it internally to compare versions),
+but it is used arbitrarily, that is: major versions usually bumps after a huge
+code refactoring or a major change, minor version usually bumps after a minor
+code addition, patch version usually bumps after bug-fixes/optimization/ports
+to newer versions. This mod does not declare a public API, therefore, breaking
+source/binary changes may and will occur even between minor and patch versions.
 
 ## License
 
