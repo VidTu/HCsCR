@@ -72,13 +72,13 @@ Obviously, you don't need them for Forge or NeoForge.
 
 **Q**: Is this mod open source?  
 **A**: [Yes.](https://github.com/VidTu/HCsCR) (Licensed
-under [Apache 2.0 License](https://github.com/VidTu/HCsCR/blob/main/LICENSE))
+under the [Apache 2.0 License](https://github.com/VidTu/HCsCR/blob/main/LICENSE))
 
 **Q**: Is this mod client-side or server-side?  
-**A**: This mod works on the client-side.
+**A**: This mod works on the client side. There is no server-side version.
 
 **Q**: Is this a hack?  
-**A**: It depends on your opinion on what's hack and what's not. This mod
+**A**: It depends on your opinion on what's a hack and what's not. This mod
 reduces the role that ping (latency) plays in combat with crystals.
 Specifically, it does affect how fast the crystals are removed. Crystal
 placement is NOT affected. It cannot be affected in a way that's
@@ -99,7 +99,7 @@ is not required. Monetization and redistribution are allowed as per the
 [Apache 2.0 License](https://github.com/VidTu/HCsCR/blob/main/LICENSE).
 *Beware*: This mod may be considered a hack by some people.
 
-**Q**: Why is this mod not on the Modrinth or CurseForge?  
+**Q**: Why is this mod not on Modrinth or CurseForge?  
 **A**: Modrinth
 [says](https://github.com/user-attachments/assets/437df1a1-3331-499c-ac49-6ec114494bd4)
 it violates their [rules](https://modrinth.com/legal/rules). CurseForge has a
@@ -108,7 +108,7 @@ terrible API and I don't want to deal with it.
 **Q**: Why does this mod exist, when there are server-side crystal optimizers?  
 **A**: Firstly, this mod was created in 2023 before the server-side crystal
 optimizers. Secondly, not every server has a server-side crystal optimizer.
-Thirdly, I have updated it in 2025, because I needed to learn the
+Thirdly, I updated it in 2025 because I needed to learn the
 [Stonecutter](https://stonecutter.kikugie.dev/) preprocessor.
 Now it's not hard to maintain, so why not.
 
@@ -128,17 +128,17 @@ it depends on the ping, server MSPT, etc.
 called `hcscr:imhere` is registered by this mod. Older versions used a different
 channel, but the namespace was always `hcscr`. *Beware*: Other mods similar to
 this one don't offer a way to block them. Consider investing your time/resources
-into an anti-cheat plugin, if you want to block all of them.
+into an anti-cheat plugin if you want to block all of them.
 
 **Q**: How to compile for only one Minecraft version?
 I can't stand waiting hours for the project to initialize.  
-**A**: Run the `./gradlew` script with `ru.vidtu.hcscr.only` system property
+**A**: Run the `./gradlew` script with the `ru.vidtu.hcscr.only` system property
 set to the desired `<version>-<loader>` combination, for example:
 `./gradlew -Dru.vidtu.hcscr.only=1.16.5-fabric build`.
 Note that due to the Stonecutter requirements, the latest
-version may still be initialized, because it is the
+version may still be initialized because it is the
 [VCS Version](https://stonecutter.kikugie.dev/wiki/glossary#vcs-version)
-of the HCsCR by design.
+of HCsCR by design.
 
 **Q**: Why so much yapping in this README?  
 **A**: ~~I paid for the whole LLM, I'm going to use the whole LLM.~~
@@ -146,13 +146,13 @@ Because writing READMEs (even though I don't use AI except
 for grammar checks) is easier than writing actual code.
 
 **Q**: Do you use AI/LLM/Code Generation/Copilot/etc.?  
-**A**: Except for the aftermentioned grammar checkers above, no. I use only
+**A**: Except for the aforementioned grammar checkers above, no. I use only
 the laggiest IntelliJ IDEA inspections based on the buggiest algorithms.
 Can't be sure for contributors, but most of the code is written
-by the project author. Also I don't care about AI personally.
+by the project author. Also, I don't care about AI personally.
 
 **Q**: Does HCsCR have a public API?  
-**A**: Nope. Except the plugin channel mentioned above, there's no
+**A**: Nope. Except for the plugin channel mentioned above, there's no
 public-facing API in this mod. All classes/packages are marked as
 [@ApiStatus.Internal](https://javadoc.io/static/org.jetbrains/annotations/26.0.2/org/jetbrains/annotations/ApiStatus.Internal.html)
 for that reason.
@@ -160,10 +160,10 @@ for that reason.
 **Q**: Can I still *link* to the mod? What about the
 [SemVer](https://semver.org/) versioning used by the mod?  
 **A**: You can, at your own risk. SemVer-compatible versioning is used by HCsCR
-for the ease of use (and also Fabric uses it internally to compare versions),
-but it is used arbitrarily, that is: major versions usually bumps after a huge
+for ease of use (and also Fabric uses it internally to compare versions),
+but it is used arbitrarily, that is: major version usually bumps after a huge
 code refactoring or a major change, minor version usually bumps after a minor
-code addition, patch version usually bumps after bug-fixes/optimization/ports
+code addition, patch version usually bumps after bug fixes/optimizations/ports
 to newer versions. This mod does not declare a public API, therefore, breaking
 source/binary changes may and will occur even between minor and patch versions.
 
@@ -211,7 +211,7 @@ To compile all versions of the mod from the source code:
 
 1. Have 8 GB of free RAM, 20 GB of free disk space,
    and an active internet connection.
-2. Install Java 25 and dump it into PATH and/or JAVA_HOME.
+2. Install Java 25 and dump it into `PATH` and/or `JAVA_HOME`.
 3. Run `./gradlew assemble` from the terminal/PowerShell.
 4. Grab the JARs from the `./build/libs/` folder.
 
@@ -221,10 +221,10 @@ To compile one specific (Minecraft) version of the mod from the source code:
 
 1. Have 4 GB of free RAM, 5 GB of free disk space,
    and an active internet connection.
-2. Install Java 25 and dump it into PATH and/or JAVA_HOME.
+2. Install Java 25 and dump it into `PATH` and/or `JAVA_HOME`.
 3. Run
    `./gradlew -Dru.vidtu.hcscr.only=<version>-<loader> <version>-<loader>:assemble`
-   from the terminal/PowerShell. (for example: 
+   from the terminal/PowerShell. (for example:
    `./gradlew -Dru.vidtu.hcscr.only=1.16.5-fabric 1.16.5-fabric:assemble`
    )
 4. Grab the JAR from the `./build/libs/` folder.
@@ -238,10 +238,10 @@ agent will work if supported by your JVM.
 
 Switch between the current target (by Stonecutter) versions by using
 `./switch <version>`[^2] command. It is discouraged to modify code commented
-out by the preprocessor, switch to the version instead.
+out by the preprocessor, switch to the required version instead.
 
-Reset to the default target before commiting changes
-via `./reset`[^3] command to avoid mess.
+Reset to the default target before committing changes
+via `./reset`[^3] command to avoid a mess.
 
 Running the client via generated tasks (e.g., for IntelliJ IDEA) may work, but
 you might need to make some adjustments. Launching the game directly
