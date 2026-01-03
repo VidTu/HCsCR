@@ -130,7 +130,7 @@ loom {
     }
 }
 
-// Make the game run with the comptable Java. (e.g,. Java 17 for 1.20.1)
+// Make the game run with the compatible Java. (e.g,. Java 17 for 1.20.1)
 tasks.withType<RunGameTask> {
     javaLauncher = javaToolchains.launcherFor(java.toolchain)
 }
