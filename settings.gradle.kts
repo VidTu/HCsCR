@@ -55,6 +55,15 @@ val versions = listOf("1.21.11", "1.21.10", "1.21.8", "1.21.5", "1.21.4", "1.21.
 val ignored = mutableListOf<String>()
 val onlyId = System.getProperty("ru.vidtu.hcscr.only")
 val latestId = "${versions[0]}-${types[0]}"
+if (onlyId != null) {
+    logger.warn("Processing only version '${onlyId}' via 'ru.vidtu.hcscr.only'.")
+    val idx = onlyId.indexOf('-')
+    require(idx != -1) { "Invalid only version '${onlyId}', no '-' delimiter extracted from 'ru.vidtu.hcscr.only'." }
+    val onlyVersion = onlyId.substring(0, idx)
+    val onlyType = onlyId.substring(idx + 1)
+    require(versions.contains(onlyVersion)) { "Invalid only version '${onlyId}', version number '${onlyVersion}' extracted from 'ru.vidtu.hcscr.only' not found in ${types.joinToString()}." }
+    require(types.contains(onlyType)) { "Invalid only version '${onlyId}', type '${onlyType}' extracted from 'ru.vidtu.hcscr.only' not found in ${versions.joinToString()}." }
+}
 stonecutter {
     kotlinController = true
     centralScript = "build.gradle.kts"
@@ -74,4 +83,6 @@ stonecutter {
         vcsVersion = latestId
     }
 }
-logger.warn("Ignored versions: ${ignored.joinToString()}")
+if (ignored.isNotEmpty()) {
+    logger.warn("Ignored versions: ${ignored.joinToString()}")
+}
