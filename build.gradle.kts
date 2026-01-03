@@ -98,7 +98,7 @@ loom {
             runDir = "../../run"
 
             // AuthLib for 1.16.5 is bugged, disable Mojang API
-            // to fix issues with MP testing.
+            // to fix issues with multiplayer testing.
             if (mcp eq "1.16.5") {
                 vmArgs(
                     "-Dminecraft.api.auth.host=http://0.0.0.0:0/",
@@ -130,7 +130,7 @@ loom {
     }
 }
 
-// Make the game run with the required Java path.
+// Make the game run with the comptable Java. (e.g,. Java 17 for 1.20.1)
 tasks.withType<RunGameTask> {
     javaLauncher = javaToolchains.launcherFor(java.toolchain)
 }
@@ -147,7 +147,7 @@ repositories {
     } else {
         maven("https://maven.fabricmc.net/") // Fabric.
         maven("https://maven.terraformersmc.com/releases/") // ModMenu.
-        if (mcp eq "1.20.4") { // Fix for ModMenu not shading Text Placeholder API.
+        if (mcp eq "1.20.4") { // Fix for ModMenu not providing Text Placeholder API.
             maven("https://maven.nucleoid.xyz/") // ModMenu. (Text Placeholder API)
         }
     }
@@ -173,7 +173,7 @@ dependencies {
         mappings(loom.officialMojangMappings())
     }
 
-    // MixinExtras.
+    // MixinExtras. (automatically provided by Fabric/NeoForge)
     if (loom.isForge) {
         compileOnly(libs.mixinextras)
         annotationProcessor(libs.mixinextras)
@@ -330,8 +330,16 @@ tasks.withType<ProcessResources> {
 // Add LICENSE and manifest into the JAR file.
 // Manifest also controls Mixin/mod loading on some loaders/versions.
 tasks.withType<Jar> {
+    // Add LICENSE and NOTICE.
     from(rootDir.resolve("LICENSE"))
     from(rootDir.resolve("NOTICE"))
+
+    // Remove package-info.class, unless package debug is on. (to save space)
+    if (!"${findProperty("ru.vidtu.hcscr.debug.package")}".toBoolean()) {
+        exclude("**/package-info.class")
+    }
+
+    // Add manifest.
     manifest {
         attributes(
             "Specification-Title" to "HCsCR",
