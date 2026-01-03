@@ -4,6 +4,8 @@
 
 Удаляй свои кристаллы края, прежде чем сервер даже узнает, что ты ударил их!
 
+## Язык (Language)
+
 [English](README.md) | **Русский**
 
 ## Скачать
@@ -67,7 +69,7 @@ PvP на кристаллах ("кпвп" или "cpvp") стало достат
 Скорее всего они забагованные, лагающие и без нового функционала.
 
 **Q**: Зачем поддерживать столько версий Minecraft?  
-**A**: Потому то я могу.
+**A**: Потому что я могу.
 
 **Q**: Нужно ли мне ставить Fabric API или Quilt Standard Libraries?  
 **A**: Да, вам нужен Fabric API для Fabric или QFAPI/QSL для Quilt.
@@ -82,7 +84,7 @@ PvP на кристаллах ("кпвп" или "cpvp") стало достат
 то он влияет на скорость удаления кристаллов. На установку кристаллов мод НЕ
 влияет, так как не существует честного (не читерского) способа сделать это.
 
-**Q**: Это задумывалось, как чит?  
+**Q**: Это задумывалось как чит?  
 **A**: Нет.
 
 **Q**: Я нашёл баг.  
@@ -153,7 +155,7 @@ PvP на кристаллах ("кпвп" или "cpvp") стало достат
 кода пишет автор проекта. А ещё, мне без разницы на использование AI.
 
 **Q**: У HCsCR есть публичное API?  
-**A**: Неа. Кроме упомянутого "plugin channel", никаких публичных API в моде
+**A**: Неа. Кроме упомянутого plugin channel, никаких публичных API в моде
 нет. По этой причине, все классы/пакеты дополнительно помечены
 [@ApiStatus.Internal](https://javadoc.io/static/org.jetbrains/annotations/26.0.2/org/jetbrains/annotations/ApiStatus.Internal.html).
 
@@ -221,7 +223,7 @@ PvP на кристаллах ("кпвп" или "cpvp") стало достат
 
 #### Одна версия (быстрее)
 
-To compile one specific (Minecraft) version of the mod from the source code:
+Для сборки мода для одной версии Minecraft из исходного кода:
 
 1. Требуется 4 ГБ свободной RAM, 5 ГБ свободного места
    на диске и активный доступ к интернету.
@@ -237,32 +239,32 @@ To compile one specific (Minecraft) version of the mod from the source code:
 
 Читай на английском пока, лень переводить.
 
-Run the `./launch <version>`[^1] (e.g. `./launch 1.16.5-fabric`) command to
-launch the game client. You can attach a debugger to that process. Hotswap is
-supported. "Enhanced" hotswap (class redefinition) and hotswap
-agent will work if supported by your JVM.
+Выполните команду `./launch <версия>`[^1] (например, `./launch 1.16.5-fabric`)
+для запуска игрового клиента. К этому процессу можно подсоединить отладчик.
+Поддерживается хот-свап. "Улучшенный" хот-свап (class redefinition) и
+хот-свап агент будут работать, если это поддерживается вашей JVM.
 
-Switch between the current target (by Stonecutter) versions by using
-`./switch <version>`[^2] command. It is discouraged to modify code commented
-out by the preprocessor, switch to the required version instead.
+Переключайтесь между текущей версией Stonecutter используя команду
+`./switch <версия>`[^2]. Не рекомендуется изменять закомментированный
+пропроцессором код, лучше переключитесь на нужную версию.
 
-Reset to the default target before committing changes
-via `./reset`[^3] command to avoid a mess.
+Перед коммитом изменений, сбросьте версию Stonecutter
+командой `./reset`[^3] во избежание бардака в diff.
 
-Running the client via generated tasks (e.g., for IntelliJ IDEA) may work, but
-you might need to make some adjustments. Launching the game directly
-(without Gradle) might also work, but it is also not supported.
+Запуск клиента через сгенерированные задачи (например, для IntelliJ IDEA), может
+быть, работает, но скорее всего вам нужно будет что-то подчинить. Запуск игры
+напрямую (в обход Gradle) тоже может заработать, но это тоже не поддерживается.
 
-The development environment has stricter preconditions: Mixin checks,
-Netty detector, Java assertions, etc. Code with bugs might (and probably will)
-fail faster here than in a production environment.
+Среда разработки более строгая, тут есть: проверки Mixin, детектор Netty,
+assert-ы Java и т.д. Код с багами скорее всего сломается быстрее тут, чем
+на продакшне.
 
-The recommended IDE for development is IntelliJ IDEA (Community or Ultimate)
-with the Minecraft Development plugin. This is not a strict requirement,
-however. Any IDE/editor should work just fine.
+Рекомендуемая IDE для разработки - IntelliJ IDEA (Community или Ultimate)
+с плагином Minecraft Development. тем не мене, это не строгое требование.
+Любая IDE/редактор будет работать нормально.
 
-[^1]: This is a shortcut for `./gradlew "<version>:runClient"`.
+[^1]: Сокращение для `./gradlew "<версия>:runClient"`.
 
-[^2]: This is a shortcut for `./gradlew "Set active project to <version>"`.
+[^2]: Сокращение для `./gradlew "Set active project to <версия>"`.
 
-[^3]: This is a shortcut for `./gradlew "Reset active project"`.
+[^3]: Сокращение для `./gradlew "Reset active project"`.

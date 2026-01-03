@@ -4,6 +4,8 @@
 
 Remove your end crystals before the server even knows you hit 'em!
 
+## Language
+
 **English** | [Русский](README_ru.md)
 
 ## Downloads
@@ -222,7 +224,7 @@ To compile all versions of the mod from the source code:
 
 #### One Version (Faster)
 
-To compile one specific (Minecraft) version of the mod from the source code:
+To compile one specific Minecraft version of the mod from the source code:
 
 1. Have 4 GB of free RAM, 5 GB of free disk space,
    and an active internet connection.
@@ -241,12 +243,12 @@ launch the game client. You can attach a debugger to that process. Hotswap is
 supported. "Enhanced" hotswap (class redefinition) and hotswap
 agent will work if supported by your JVM.
 
-Switch between the current target (by Stonecutter) versions by using
-`./switch <version>`[^2] command. It is discouraged to modify code commented
-out by the preprocessor, switch to the required version instead.
+Switch the current active Stonecutter version by using `./switch <version>`[^2]
+command. It is discouraged to modify code commented out by the preprocessor,
+switch to the required version instead.
 
-Reset to the default target before committing changes
-via `./reset`[^3] command to avoid a mess.
+Reset to the VCS Stonecutter version before committing
+changes via `./reset`[^3] command to avoid a diff mess.
 
 Running the client via generated tasks (e.g., for IntelliJ IDEA) may work, but
 you might need to make some adjustments. Launching the game directly
