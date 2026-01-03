@@ -41,28 +41,22 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public final class HCompile {
     /**
-     * Whether the debug features are enabled.
-     */
-    @CompileTimeConstant
-    private static final boolean DEBUG = {{ debug }};
-
-    /**
      * Whether the additional Java assertions are enabled.
      */
     @CompileTimeConstant
-    public static final boolean DEBUG_ASSERTS = DEBUG;
+    public static final boolean DEBUG_ASSERTS = {{ debugAsserts }};
 
     /**
      * Whether the {@code DEBUG} and {@code TRACE} logs are generated.
      */
     @CompileTimeConstant
-    public static final boolean DEBUG_LOGS = DEBUG;
+    public static final boolean DEBUG_LOGS = {{ debugLogs }};
 
     /**
      * Whether the Minecraft's {@code ProfilerFiller} class is used.
      */
     @CompileTimeConstant
-    public static final boolean DEBUG_PROFILER = DEBUG;
+    public static final boolean DEBUG_PROFILER = {{ debugProfiler }};
 
     /**
      * An instance of this class cannot be created.

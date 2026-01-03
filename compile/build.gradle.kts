@@ -58,8 +58,9 @@ dependencies {
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
     options.compilerArgs.addAll(listOf("-g", "-parameters"))
-    // JDK 8 (used by this buildscript) doesn't support the "-release" flag
-    // (at the top of the file), so we must NOT specify it or the "javac" will fail.
+    // JDK 8 (used by this project) doesn't support the "-release" flag and
+    // uses "-source" and "-target" ones (see the top of the file),
+    // so we must NOT specify it, or the "javac" will fail.
     // If we ever gonna compile on newer Java versions, uncomment this line.
     // options.release = 8
 }
@@ -67,9 +68,11 @@ tasks.withType<JavaCompile> {
 // Expand the debug.
 sourceSets.main {
     blossom.javaSources {
-        property("debug", provider {
-            "${gradle.taskGraph.allTasks.any { it.name == "runClient" }}"
-        })
+        val fallbackProvider = providers.gradleProperty("ru.vidtu.hcscr.debug")
+            .orElse(provider { "${gradle.taskGraph.allTasks.any { it.name == "runClient" }}" })
+        property("debugAsserts", providers.gradleProperty("ru.vidtu.hcscr.debug.asserts").orElse(fallbackProvider))
+        property("debugLogs", providers.gradleProperty("ru.vidtu.hcscr.debug.logs").orElse(fallbackProvider))
+        property("debugProfiler", providers.gradleProperty("ru.vidtu.hcscr.debug.profiler").orElse(fallbackProvider))
     }
 }
 
