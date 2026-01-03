@@ -4,6 +4,8 @@
 
 Remove your end crystals before the server even knows you hit 'em!
 
+**English** | [Русский](README_ru.md)
+
 ## Downloads
 
 - [GitHub Releases](https://github.com/VidTu/HCsCR/releases)
@@ -13,30 +15,30 @@ Remove your end crystals before the server even knows you hit 'em!
 - Fabric Loader, Quilt Loader, Forge, or NeoForge
 - Minecraft (1.16.5, 1.17.1, 1.18.2, 1.19.2, 1.19.4, 1.20.1, 1.20.2, 1.20.4,
   1.20.6, 1.21.1, 1.21.3, 1.21.4, 1.21.5, 1.21.8, 1.21.10, or 1.21.11)
-- **Fabric/Quilt only**: [Fabric API](https://modrinth.com/mod/fabric-api) or
-  [QFAPI/QSL](https://modrinth.com/mod/qsl) (*Required*)
+- **Fabric/Quilt only**: [Fabric API](https://modrinth.com/mod/fabric-api)
+  or [QFAPI/QSL](https://modrinth.com/mod/qsl) (*Required*)
 - **Fabric/Quilt only**: [Mod Menu](https://modrinth.com/mod/modmenu)
   (*Optional*)
 
 ## About
 
-Crystal PvP has become a pretty popular combat mode in Minecraft. Crystals
-themselves were never designed to be used in combat. Because of this, a client
-ping (latency) plays a significant role in a crystal PvP fight, affecting how
-fast you can spam. This mod helps to reduce (but does NOT fully remove) the ping
-factor from crystal PvP fights. This is commonly called a *client-side crystal
-optimizer* mod. It also removes the ping factor for PvP with anchors, though
-the ping doesn't play a big role in anchor fights, and it might even be
+Crystal PvP ("cpvp") has become a pretty popular combat mode in Minecraft.
+Crystals themselves were never designed to be used in combat. Because of this, a
+client ping (latency) plays a significant role in a crystal PvP fight, affecting
+how fast you can spam. This mod helps to reduce (but does NOT fully remove) the
+ping factor from crystal PvP fights. This is commonly called a *client-side
+crystal optimizer* mod. It also removes the ping factor for PvP with anchors,
+though the ping doesn't play a big role in anchor fights, and it might even be
 beneficial to have high ping in these fights. This is not the only crystal
 optimizer mod available, but it's the most configurable out there.
 
-*Note*: A server-side crystal optimizer plugin (not this mod) is much more
+*NOTE*: A server-side crystal optimizer plugin (not this mod) is much more
 effective. Consider checking the `/fastcrystals` command or similar commands
 on your server. Ask the admins to install one if the command doesn't exist.
 
 ## FAQ
 
-### For Users
+### For Players
 
 **Q**: I need help, have some questions, or have some other feedback.  
 **A**: You can join the [Discord server](https://discord.gg/Q6saSVSuYQ).
@@ -60,8 +62,8 @@ You'll need a GitHub account to download these.
 [1.21.2](https://github.com/VidTu/HCsCR/releases/tag/1.1.1) (Fabric/Quilt only),
 [1.21.6/1.21.7](https://github.com/VidTu/HCsCR/releases/tag/2.1.1), and
 [1.21.9](https://github.com/VidTu/HCsCR/releases/tag/2.1.3).
-**Note**: These versions are *NOT* supported and are included for informational
-purposes. They are probably buggy, laggy, and don't have new features.
+**NOTE**: These versions are *NOT* supported and are included "as-is".
+They are probably buggy, laggy, and don't have new features.
 
 **Q**: Why support so many Minecraft versions?  
 **A**: Because I can.
@@ -69,10 +71,6 @@ purposes. They are probably buggy, laggy, and don't have new features.
 **Q**: Do I need Fabric API or Quilt Standard Libraries?  
 **A**: Yes, you'll need Fabric API for Fabric and QFAPI/QSL for Quilt.
 Obviously, you don't need them for Forge or NeoForge.
-
-**Q**: Is this mod open source?  
-**A**: [Yes.](https://github.com/VidTu/HCsCR) (Licensed
-under the [Apache 2.0 License](https://github.com/VidTu/HCsCR/blob/main/LICENSE))
 
 **Q**: Is this mod client-side or server-side?  
 **A**: This mod works on the client side. There is no server-side version.
@@ -97,7 +95,7 @@ sure whether this is a bug or a simple question, you can join the
 **A**: Sure. Credit (e.g., a link to the mod's GitHub page) is appreciated but
 is not required. Monetization and redistribution are allowed as per the
 [Apache 2.0 License](https://github.com/VidTu/HCsCR/blob/main/LICENSE).
-*Beware*: This mod may be considered a hack by some people.
+*BEWARE*: This mod may be considered a hack by some people.
 
 **Q**: Why is this mod not on Modrinth or CurseForge?  
 **A**: Modrinth
@@ -118,15 +116,20 @@ it depends on the ping, server MSPT, etc.
 
 <details>
 <summary>Totally Real™ Reviews From Happy Users</summary>
-<img alt="Grandma is happy with the crystal optimizer" src="https://i.imgur.com/Iz9GGfP.png"/>
+<img alt="Grandma is happy with the crystal optimizer" src="totally_legit_review_en.png"/>
 </details>
 
 ### For Developers
 
+**Q**: Is this mod open source?  
+**A**: [Yes.](https://github.com/VidTu/HCsCR) (Licensed
+under the [Apache 2.0 License](https://github.com/VidTu/HCsCR/blob/main/LICENSE))
+
 **Q**: I want to block this mod as a server owner, can I do this?  
-**A**: A [plugin channel](https://minecraft.wiki/w/Java_Edition_protocol/Plugin_channels)
+**A**: A
+[plugin channel](https://minecraft.wiki/w/Java_Edition_protocol/Plugin_channels)
 called `hcscr:imhere` is registered by this mod. Older versions used a different
-channel, but the namespace was always `hcscr`. *Beware*: Other mods similar to
+channel, but the namespace was always `hcscr`. *BEWARE*: Other mods similar to
 this one don't offer a way to block them. Consider investing your time/resources
 into an anti-cheat plugin if you want to block all of them.
 
