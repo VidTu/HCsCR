@@ -157,7 +157,7 @@ public-facing API in this mod. All classes/packages are marked as
 [@ApiStatus.Internal](https://javadoc.io/static/org.jetbrains/annotations/26.0.2/org/jetbrains/annotations/ApiStatus.Internal.html)
 for that reason.
 
-**Q**: Can I still *link* to the mod? What about the
+**Q**: Can I still *link*/compile against to the mod? What about the
 [SemVer](https://semver.org/) versioning used by the mod?  
 **A**: You can, at your own risk. SemVer-compatible versioning is used by HCsCR
 for ease of use (and also Fabric uses it internally to compare versions),
@@ -185,6 +185,8 @@ but it wouldn't be possible without:
   [Architectury](https://github.com/architectury). (and contributors; plus
   upstream [Fabric Loom](https://github.com/FabricMC/fabric-loom)
   by [FabricMC](https://github.com/FabricMC) and contributors)
+- [Blossom](https://github.com/KyoriPowered/blossom) by
+  [Kyori](https://github.com/KyoriPowered). (and contributors)
 - [Fabric Loader](https://github.com/FabricMC/fabric-loader) and
   [Fabric API](https://github.com/FabricMC/fabric) by
   [FabricMC](https://github.com/FabricMC). (and contributors)
