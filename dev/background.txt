@@ -1,5 +1,0 @@
-./src/main/resources/hcscr_background.png
-Seed: -5947091785374813890
-Pos: -330.55 129.00 -147.41 61.65 -12.45
-Game: 1.21.1 (NeoForge)
-World Type: AMPLIFIED
