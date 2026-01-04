@@ -20,7 +20,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Fail on error, fail on unbound, verbose mode, xtrace mode.
+# Fail on error, fail on unbound variable, verbose mode, xtrace mode.
 set -euvx
 
 # Iterate.
