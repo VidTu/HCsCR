@@ -83,8 +83,17 @@ tasks.withType<ProcessResources> {
 
 // Add LICENSE and manifest into the JAR file.
 tasks.withType<Jar> {
+    // Add LICENSE and NOTICE.
     from(rootDir.resolve("LICENSE"))
     from(rootDir.resolve("NOTICE"))
+
+    // Remove package-info.class, unless package debug is on. (to save space)
+    // NOTE(VidTu): This is technically useless, since it is compileOnly.
+    if (!"${findProperty("ru.vidtu.hcscr.debug.package")}".toBoolean()) {
+        exclude("**/package-info.class")
+    }
+
+    // Add manifest.
     manifest {
         attributes(
             "Specification-Title" to "HCsCR",

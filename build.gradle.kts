@@ -348,7 +348,7 @@ tasks.withType<Jar> {
             "Implementation-Title" to "HCsCR",
             "Implementation-Version" to version,
             "Implementation-Vendor" to "VidTu, Offenderify, libffi",
-            "MixinConfigs" to "hcscr.mixins.json"
+            "MixinConfigs" to "hcscr.mixins.json" // Forge and old NeoForge.
         )
     }
 }
