@@ -227,7 +227,7 @@ To compile all versions of the mod from the source code:
 
 To compile one specific Minecraft version of the mod from the source code:
 
-1. Have 4 GB of free RAM, 5 GB of free disk space,
+1. Have 4 GB of free RAM, 10 GB of free disk space,
    and an active internet connection.
 2. Install Java 25 and dump it into `PATH` and/or `JAVA_HOME`.
 3. Run
