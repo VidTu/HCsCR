@@ -1,4 +1,4 @@
-<img src="hcscr.png" alt="Иконка HCsCR" width=128 height=128/>
+<img alt src=hcscr.png>
 
 # HCsCR
 
