@@ -1,0 +1,5 @@
+Forge 1.16.5 is currently not supported due to its active
+usage of MCP mappings instead of Mojang mappings.
+
+This is, strictly speaking a TODO FIXME task (intentional markers),
+but I at the time of writing I don't have enough energy for that.

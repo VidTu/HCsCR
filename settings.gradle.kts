@@ -92,7 +92,6 @@ stonecutter {
             for (type in types) {
                 // Extract the ID.
                 val id = "${version}-${type}"
-                if (id == "1.16.5-forge") continue // FIXME
 
                 // Process the "only" version.
                 if ((onlyId != null) && (id != onlyId) && (id != latestId)) continue
