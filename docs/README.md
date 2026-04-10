@@ -193,8 +193,9 @@ but it wouldn't be possible without:
   [Fabric API](https://github.com/FabricMC/fabric), and
   [Fabric Loom](https://github.com/FabricMC/fabric-loom) by
   [FabricMC](https://github.com/FabricMC). (and contributors)
-- [NeoForge](https://github.com/neoforged/NeoForge) and
-  [NeoGradle](https://github.com/neoforged/NeoGradle) by
+- [NeoForge](https://github.com/neoforged/NeoForge),
+  [NeoGradle](https://github.com/neoforged/NeoGradle), and
+  [ModDevGradle](https://github.com/neoforged/ModDevGradle) by
   [NeoForged](https://github.com/neoforged). (and contributors)
 - [Forge](https://github.com/MinecraftForge/MinecraftForge),
   [ForgeGradle](https://github.com/MinecraftForge/ForgeGradle), and
@@ -204,6 +205,8 @@ but it wouldn't be possible without:
   [TerraformersMC](https://github.com/TerraformersMC). (and contributors)
 - [Mixin](https://github.com/SpongePowered/Mixin) by
   [SpongePowered](https://github.com/SpongePowered). (and contributors)
+- [MixinExtras](https://github.com/LlamaLad7/MixinExtras) by
+  [LlamaLad7](https://github.com/LlamaLad7). (and contributors)
 - [Minecraft](https://minecraft.net/) by
   [Mojang](https://mojang.com/).
 

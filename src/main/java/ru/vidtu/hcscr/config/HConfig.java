@@ -29,7 +29,6 @@ import com.google.gson.annotations.SerializedName;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
-import net.minecraft.world.entity.monster.Slime;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
@@ -48,9 +47,15 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 
-//? if >=1.19.4 {
+//? if >=26.2 {
 import net.minecraft.world.entity.Interaction;
-//?}
+import net.minecraft.world.entity.monster.cubemob.AbstractCubeMob;
+//?} elif >=1.19.4 {
+/*import net.minecraft.world.entity.Interaction;
+import net.minecraft.world.entity.monster.Slime;
+*///?} else {
+/*import net.minecraft.world.entity.monster.Slime;
+*///?}
 
 /**
  * HCsCR config storage.
@@ -364,7 +369,12 @@ public final class HConfig {
                 //noinspection SimplifiableIfStatement // <- Preprocessor Statement.
                 if (entity instanceof Interaction) return true;
                 //?}
-                return ((entity instanceof EndCrystal) || ((entity instanceof Slime) && entity.isInvisible()));
+                //? if >=26.2 {
+                if ((entity instanceof AbstractCubeMob) && entity.isInvisible()) return true;
+                //?} else {
+                /*if ((entity instanceof Slime) && entity.isInvisible()) return true;
+                *///?}
+                return (entity instanceof EndCrystal);
             default:
                 return false;
         }

@@ -186,23 +186,26 @@ PvP на кристаллах ("кпвп" или "cpvp") стало достат
 - [Контрибьюторы](https://github.com/VidTu/HCsCR/graphs/contributors).
 - [Stonecutter](https://codeberg.org/stonecutter/stonecutter) от
   [KikuGie](https://codeberg.org/KikuGie). (и контрибьюторов)
-- [Architectury Loom](https://github.com/architectury/architectury-loom) от
-  [Architectury](https://github.com/architectury). (и контрибьюторов, а ещё
-  [Fabric Loom](https://github.com/FabricMC/fabric-loom)
-  от [FabricMC](https://github.com/FabricMC) и контрибьюторов)
 - [Blossom](https://github.com/KyoriPowered/blossom) от
   [Kyori](https://github.com/KyoriPowered). (и контрибьюторов)
-- [Fabric Loader](https://github.com/FabricMC/fabric-loader) и
-  [Fabric API](https://github.com/FabricMC/fabric) от
+- [Fabric Loader](https://github.com/FabricMC/fabric-loader),
+  [Fabric API](https://github.com/FabricMC/fabric) и
+  [Fabric Loom](https://github.com/FabricMC/fabric-loom) от
   [FabricMC](https://github.com/FabricMC). (и контрибьюторов)
-- [NeoForge](https://github.com/neoforged/NeoForge) от
+- [NeoForge](https://github.com/neoforged/NeoForge),
+  [NeoGradle](https://github.com/neoforged/NeoGradle) и
+  [ModDevGradle](https://github.com/neoforged/ModDevGradle) от
   [NeoForged](https://github.com/neoforged). (и контрибьюторов)
-- [Forge](https://github.com/MinecraftForge/MinecraftForge) от
+- [Forge](https://github.com/MinecraftForge/MinecraftForge),
+  [ForgeGradle](https://github.com/MinecraftForge/ForgeGradle) и
+  [renamer](https://github.com/MinecraftForge/renamer) от
   [Minecraft Forge](https://github.com/MinecraftForge). (и контрибьюторов)
 - [Mod Menu](https://github.com/TerraformersMC/ModMenu) от
   [TerraformersMC](https://github.com/TerraformersMC). (и контрибьюторов)
 - [Mixin](https://github.com/SpongePowered/Mixin) от
   [SpongePowered](https://github.com/SpongePowered). (и контрибьюторов)
+- [MixinExtras](https://github.com/LlamaLad7/MixinExtras) от
+  [LlamaLad7](https://github.com/LlamaLad7). (и контрибьюторов)
 - [Minecraft](https://minecraft.net/) от
   [Mojang](https://mojang.com/).
 

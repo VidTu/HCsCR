@@ -445,7 +445,7 @@ public final class HCsCR {
             }
 
             // Check the open screen.
-            final Screen currentScreen = client.screen; // Implicit NPE for 'client'
+            final Screen currentScreen = HStonecutter.activeScreen(client); // Implicit NPE for 'client'
             if (currentScreen != null) {
                 // Log. (**DEBUG**)
                 if (HCompile.DEBUG_LOGS) {
@@ -458,7 +458,7 @@ public final class HCsCR {
 
             // Open the screen.
             final HScreen screen = new HScreen(null);
-            client.setScreen(screen);
+            HStonecutter.setScreen(client, screen);
 
             // Log. (**DEBUG**)
             if (HCompile.DEBUG_LOGS) {
@@ -506,9 +506,9 @@ public final class HCsCR {
             final boolean newState = HConfig.toggle();
 
             // Show the bar, play the sound.
-            client.gui.setOverlayMessage(HStonecutter.translate("hcscr." + newState) // Implicit NPE for 'client'
+            HStonecutter.displayActionBar(client, HStonecutter.translate("hcscr." + newState) // Implicit NPE for 'client'
                     .withStyle(newState ? ChatFormatting.GREEN : ChatFormatting.RED)
-                    .withStyle(ChatFormatting.BOLD), /*animate=*/false);
+                    .withStyle(ChatFormatting.BOLD));
             client.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING, newState ? 2.0f : 0.0f));
 
             // Log. (**DEBUG**)

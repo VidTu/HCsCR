@@ -173,7 +173,7 @@ public final class HScreen extends Screen {
         HConfig.save();
 
         // Close.
-        minecraft.setScreen(this.parent); // Implicit NPE for 'minecraft'
+        HStonecutter.setScreen(minecraft, this.parent); // Implicit NPE for 'minecraft'
     }
 
     /**

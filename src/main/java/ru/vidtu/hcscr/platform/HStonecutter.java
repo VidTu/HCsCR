@@ -31,6 +31,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -560,6 +561,72 @@ public final class HStonecutter {
         return level.dimensionType().skybox() != DimensionType.Skybox.NONE; // Implicit NPE for 'level'
         //?} else {
         /*return !RespawnAnchorBlock.canSetSpawn(level); // Implicit NPE for 'level'
+        *///?}
+    }
+
+    /**
+     * Displays the action bar (above hotbar) message in-game.
+     *
+     * @param client  Client game instance
+     * @param message Message to display
+     */
+    public static void displayActionBar(final Minecraft client, final Component message) {
+        // Validate.
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (client != null) : "HCsCR: Parameter 'client' is null. (message: " + message + ')';
+            assert (message != null) : "HCsCR: Parameter 'message' is null. (client: " + client + ')';
+            assert (client.isSameThread()) : "HCsCR: Displaying an action bar message NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ", message: " + message + ')';
+        }
+
+        // Delegate.
+        //? if >=26.2 {
+        client.gui.hud.setOverlayMessage(message, /*animate=*/false); // Implicit NPE for 'client', 'message'
+        //?} else {
+        /*client.gui.setOverlayMessage(message, /^animate=^/false); // Implicit NPE for 'client', 'message'
+        *///?}
+    }
+
+    /**
+     * Gets the currently displayed (active) game UI screen.
+     *
+     * @param client Client game instance
+     * @return Currently displayed screen, {@code null} if no screen is displayed (in-game)
+     */
+    @Contract(pure = true)
+    @Nullable
+    public static Screen activeScreen(final Minecraft client) {
+        // Validate.
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (client != null) : "HCsCR: Parameter 'client' is null.";
+            assert (client.isSameThread()) : "HCsCR: Getting the active screen NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
+        }
+
+        // Delegate.
+        //? if >=26.2 {
+        return client.gui.screen(); // Implicit NPE for 'client'
+        //?} else {
+        /*return client.screen; // Implicit NPE for 'client'
+        *///?}
+    }
+
+    /**
+     * Sets the currently displayed (active) game UI screen.
+     *
+     * @param client Client game instance
+     * @param screen Screen to display, {@code null} to return in-game
+     */
+    public static void setScreen(final Minecraft client, @Nullable final Screen screen) {
+        // Validate.
+        if (HCompile.DEBUG_ASSERTS) {
+            assert (client != null) : "HCsCR: Parameter 'client' is null. (screen: " + screen + ')';
+            assert (client.isSameThread()) : "HCsCR: Setting an active screen NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ", screen: " + screen + ')';
+        }
+
+        // Delegate.
+        //? if >=26.2 {
+        client.gui.setScreen(screen); // Implicit NPE for 'client'
+        //?} else {
+        /*client.setScreen(screen); // Implicit NPE for 'client'
         *///?}
     }
 
