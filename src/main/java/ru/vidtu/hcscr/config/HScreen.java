@@ -42,9 +42,11 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
 
-//? if >=1.20.1 {
-import net.minecraft.client.gui.GuiGraphics;
-//?} else {
+//? if >=26.1.2 {
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+//? } elif >=1.20.1 {
+/*import net.minecraft.client.gui.GuiGraphics;
+*///?} else {
 /*import com.mojang.blaze3d.vertex.PoseStack;
 *///?}
 
@@ -186,9 +188,11 @@ public final class HScreen extends Screen {
     @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") // <- Parameter names are not provided by Mojmap.
     @DoNotCall("Called by Minecraft")
     @Override
-    //? if >=1.20.1 {
-    public void render(final GuiGraphics graphics, final int mouseX, final int mouseY, final float tickDelta) {
-    //?} else {
+    //? if >=26.1.2 {
+    public void extractRenderState(final GuiGraphicsExtractor graphics, final int mouseX, final int mouseY, final float tickDelta) {
+    //? } elif >=1.20.1 {
+    /*public void render(final GuiGraphics graphics, final int mouseX, final int mouseY, final float tickDelta) {
+    *///?} else {
     /*public void render(final PoseStack graphics, final int mouseX, final int mouseY, final float tickDelta) {
     *///?}
         // Validate.
@@ -202,16 +206,24 @@ public final class HScreen extends Screen {
             assert (minecraft.isSameThread()) : "HCsCR: Rendering the config screen NOT from the main thread. (thread: " + Thread.currentThread() + ", graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
         }
 
-        // Render background and widgets.
+        // Render background.
         //? if <1.20.2 {
         /*this.renderBackground(graphics); // Implicit NPE for 'graphics'
         *///?}
-        super.render(graphics, mouseX, mouseY, tickDelta); // Implicit NPE for 'graphics'
+
+        // Render widgets.
+        //? if >=26.1.2 {
+        super.extractRenderState(graphics, mouseX, mouseY, tickDelta); // Implicit NPE for 'graphics'
+        //?} else {
+        /*super.render(graphics, mouseX, mouseY, tickDelta); // Implicit NPE for 'graphics'
+        *///?}
 
         // Render title.
-        //? if >=1.20.1 {
-        graphics.drawCenteredString(font, this.title, this.width / 2, 5, 0xFF_FF_FF_FF);
-        //?} else {
+        //? if >=26.1.2 {
+        graphics.centeredText(font, this.title, this.width / 2, 5, 0xFF_FF_FF_FF);
+        //?} elif >=1.20.1 {
+        /*graphics.drawCenteredString(font, this.title, this.width / 2, 5, 0xFF_FF_FF_FF);
+        *///?} else {
         /*drawCenteredString(graphics, font, this.title, this.width / 2, 5, 0xFF_FF_FF_FF);
         *///?}
 

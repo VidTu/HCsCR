@@ -22,7 +22,11 @@
 
 // This is the root Stonecutter entrypoint. It configures some
 // version-independent aspects of the Stonecutter preprocessor.
-// See "build.gradle.kts" for the per-version Gradle buildscript.
+// See "build.fabric-intermediary.gradle.kts" for legacy Intermediary Fabric.
+// See "build.fabric-mojmap.gradle.kts" for modern Mojmap Fabric.
+// See "build.forge.gradle.kts" for Forge.
+// See "build.neoforge.gradle.kts" for NeoForge.
+// See "build.neoforge-hacky.gradle.kts" for NeoForge ugly hack for 1.20.1.
 // See "compile" for the compile-time constants and Blossom configuration.
 // See "settings.gradle.kts" for the Gradle configuration.
 
@@ -34,7 +38,7 @@ plugins {
 // Active Stonecutter version. See:
 // https://stonecutter.kikugie.dev/wiki/glossary#active-version
 // https://stonecutter.kikugie.dev/wiki/glossary#vcs-version
-stonecutter active "1.21.11-fabric" /* [SC] DO NOT EDIT */
+stonecutter active "26.1.2-fabric" /* [SC] DO NOT EDIT */
 
 // Process the JSON files via Stonecutter.
 // This is needed for the Mixin configuration.

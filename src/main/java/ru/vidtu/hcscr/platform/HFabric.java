@@ -26,7 +26,6 @@ package ru.vidtu.hcscr.platform;
 import com.google.errorprone.annotations.DoNotCall;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.network.FriendlyByteBuf;
@@ -38,18 +37,27 @@ import org.jspecify.annotations.NullMarked;
 import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.config.HConfig;
 
-//? if >=1.20.6 {
+//? if >=26.1.2 {
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-//?} elif >=1.20.2 {
-/*import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
+//?} elif >=1.20.6 {
+/*import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+*///?} elif >=1.20.2 {
+/*import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientConfigurationPacketListenerImpl;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 *///?} else {
-/*import net.minecraft.client.Minecraft;
+/*import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 *///?}
 
@@ -129,8 +137,13 @@ public final class HFabric implements ClientModInitializer {
             input.skipBytes(input.readableBytes()); // Implicit NPE for 'input'
             return instance;
         });
-        PayloadTypeRegistry.configurationS2C().register(type, codec);
-        PayloadTypeRegistry.playS2C().register(type, codec);
+            //? if >=26.1.2 {
+        PayloadTypeRegistry.clientboundConfiguration().register(type, codec);
+        PayloadTypeRegistry.clientboundPlay().register(type, codec);
+            //? } else {
+        /*PayloadTypeRegistry.configurationS2C().register(type, codec);
+        PayloadTypeRegistry.playS2C().register(type, codec);*/
+            //? }
         ClientConfigurationNetworking.registerGlobalReceiver(type, (final CustomPacketPayload payload, final ClientConfigurationNetworking.Context context) -> {
             // Validate.
             final PacketSender sender;
@@ -202,8 +215,13 @@ public final class HFabric implements ClientModInitializer {
         *///?}
 
         // Register the binds.
-        KeyBindingHelper.registerKeyBinding(HCsCR.CONFIG_BIND);
+        //? if >=26.1.2 {
+        KeyMappingHelper.registerKeyMapping(HCsCR.CONFIG_BIND);
+        KeyMappingHelper.registerKeyMapping(HCsCR.TOGGLE_BIND);
+        //?} else {
+        /*KeyBindingHelper.registerKeyBinding(HCsCR.CONFIG_BIND);
         KeyBindingHelper.registerKeyBinding(HCsCR.TOGGLE_BIND);
+        *///?}
 
         // Register the client tick end handler.
         ClientTickEvents.END_CLIENT_TICK.register(HCsCR::handleClientTickEnd);

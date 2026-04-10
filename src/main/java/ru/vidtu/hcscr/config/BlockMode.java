@@ -60,7 +60,7 @@ public enum BlockMode {
     /**
      * The anchor/bed will be instantly removed via right mouse click.
      * <p>
-     * Will disable the \"air place\" mechanic.
+     * Will make the "air place" mechanic significantly harder to use.
      */
     FULL;
 

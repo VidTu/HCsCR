@@ -17,7 +17,7 @@ Remove your end crystals before the server even knows you hit 'em!
 
 - Fabric Loader, Quilt Loader, Forge, or NeoForge
 - Minecraft (1.16.5, 1.17.1, 1.18.2, 1.19.2, 1.19.4, 1.20.1, 1.20.2, 1.20.4,
-  1.20.6, 1.21.1, 1.21.3, 1.21.4, 1.21.5, 1.21.8, 1.21.10, or 1.21.11)
+  1.20.6, 1.21.1, 1.21.3, 1.21.4, 1.21.5, 1.21.8, 1.21.10, 1.21.11, or 26.1.2)
 - **Fabric/Quilt only**: [Fabric API](https://modrinth.com/mod/fabric-api)
   or [QFAPI/QSL](https://modrinth.com/mod/qsl) (*Required*)
 - **Fabric/Quilt only**: [Mod Menu](https://modrinth.com/mod/modmenu)
@@ -57,7 +57,7 @@ You'll need a GitHub account to download these.
 
 **Q**: Which Minecraft versions are supported?  
 **A**: Minecraft 1.16.5, 1.17.1, 1.18.2, 1.19.2, 1.19.4, 1.20.1, 1.20.2, 1.20.4,
-1.20.6, 1.21.1, 1.21.3, 1.21.4, 1.21.5, 1.21.8, 1.21.10, and 1.21.11.
+1.20.6, 1.21.1, 1.21.3, 1.21.4, 1.21.5, 1.21.8, 1.21.10, 1.21.11, and 26.1.2.
 
 **Q**: Which Minecraft versions were previously supported?  
 **A**: Previously supported Minecraft versions were
@@ -187,18 +187,18 @@ but it wouldn't be possible without:
 - [Contributors](https://github.com/VidTu/HCsCR/graphs/contributors).
 - [Stonecutter](https://codeberg.org/stonecutter/stonecutter) by
   [KikuGie](https://codeberg.org/KikuGie). (and contributors)
-- [Architectury Loom](https://github.com/architectury/architectury-loom) by
-  [Architectury](https://github.com/architectury). (and contributors; plus
-  upstream [Fabric Loom](https://github.com/FabricMC/fabric-loom)
-  by [FabricMC](https://github.com/FabricMC) and contributors)
 - [Blossom](https://github.com/KyoriPowered/blossom) by
   [Kyori](https://github.com/KyoriPowered). (and contributors)
-- [Fabric Loader](https://github.com/FabricMC/fabric-loader) and
-  [Fabric API](https://github.com/FabricMC/fabric) by
+- [Fabric Loader](https://github.com/FabricMC/fabric-loader),
+  [Fabric API](https://github.com/FabricMC/fabric), and
+  [Fabric Loom](https://github.com/FabricMC/fabric-loom) by
   [FabricMC](https://github.com/FabricMC). (and contributors)
-- [NeoForge](https://github.com/neoforged/NeoForge) by
+- [NeoForge](https://github.com/neoforged/NeoForge) and
+  [NeoGradle](https://github.com/neoforged/NeoGradle) by
   [NeoForged](https://github.com/neoforged). (and contributors)
-- [Forge](https://github.com/MinecraftForge/MinecraftForge) by
+- [Forge](https://github.com/MinecraftForge/MinecraftForge),
+  [ForgeGradle](https://github.com/MinecraftForge/ForgeGradle), and
+  [renamer](https://github.com/MinecraftForge/renamer) by
   [Minecraft Forge](https://github.com/MinecraftForge). (and contributors)
 - [Mod Menu](https://github.com/TerraformersMC/ModMenu) by
   [TerraformersMC](https://github.com/TerraformersMC). (and contributors)
@@ -217,9 +217,11 @@ It also uses [Gradle](https://gradle.org/) and [Java](https://java.com/).
 
 To compile all versions of the mod from the source code:
 
-1. Have 8 GB of free RAM, 20 GB of free disk space,
+1. Have 8 GB of free RAM, 30 GB of free disk space,
    and an active internet connection.
-2. Install Java 25 and dump it into `PATH` and/or `JAVA_HOME`.
+2. Install Java 25 (for Gradle; you'll also need 8, 16, 17, and 21 for the
+   compilation, download either of those, the others will be automatically
+   downloaded via Java toolchains) and dump it into `PATH` and/or `JAVA_HOME`.
 3. Run `./gradlew assemble` from the terminal/PowerShell.
 4. Grab the JARs from the `./build/libs/` folder.
 
@@ -229,7 +231,9 @@ To compile one specific Minecraft version of the mod from the source code:
 
 1. Have 4 GB of free RAM, 10 GB of free disk space,
    and an active internet connection.
-2. Install Java 25 and dump it into `PATH` and/or `JAVA_HOME`.
+2. Install Java 25 (for Gradle; you may also need 8, 16, 17, or 21 for the
+   compilation, download either of those, the other will be automatically
+   downloaded via Java toolchains) and dump it into `PATH` and/or `JAVA_HOME`.
 3. Run
    `./gradlew -Dru.vidtu.hcscr.only=<version>-<loader> <version>-<loader>:assemble`
    from the terminal/PowerShell. (for example:

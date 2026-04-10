@@ -38,7 +38,7 @@
   "depends": {
     "minecraft": "${minecraft}",
     "fabricloader": "*",
-    "fabric-key-binding-api-v1": "*",
+    "fabric-key-${fabricKey}-api-v1": "*",
     "fabric-lifecycle-events-v1": "*",
     "fabric-networking-api-v1": "*",
     "fabric-resource-loader-${fabricResourceLoader}": "*"
@@ -56,10 +56,10 @@
     },
     "catalogue": {
       "icon": {
-        "image": "hcscr_64.png",
-        "item": "minecraft:end_crystal"
+        "image": "hcscr.png",
+        "item": "end_crystal"
       },
-      "banner": "hcscr_240.png",
+      "banner": "hcscr.png",
       "background": "hcscr_background.png"
     }
   }

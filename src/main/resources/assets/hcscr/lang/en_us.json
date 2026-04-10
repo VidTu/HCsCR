@@ -25,7 +25,7 @@
   "hcscr.blocks.collision": "Collision",
   "hcscr.blocks.collision.tip": "Only the player collision for blocks (anchors/beds) will be instantly removed via right mouse click. This is the recommended mode for most situations and is the default/only mode in other optimizers.",
   "hcscr.blocks.full": "Full",
-  "hcscr.blocks.full.tip": "The block (anchor/bed) will be instantly removed via right mouse click. The \"air place\" strategy will stop working.",
+  "hcscr.blocks.full.tip": "The block (anchor/bed) will be instantly removed via right mouse click. The \"air place\" strategy will become harder to use.",
   "hcscr.delay.off": "Disabled",
   "hcscr.delay.format": "%sms",
   "modmenu.descriptionTranslation.hcscr": "Remove your end crystals before the server even knows you hit 'em!",

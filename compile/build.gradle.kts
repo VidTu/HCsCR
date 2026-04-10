@@ -21,7 +21,11 @@
  */
 
 // This is the buildscript for the compile-time constants used by the project.
-// See "build.gradle.kts" in the root for the per-version Gradle buildscript.
+// See "build.fabric-intermediary.gradle.kts" for legacy Intermediary Fabric.
+// See "build.fabric-mojmap.gradle.kts" for modern Mojmap Fabric.
+// See "build.forge.gradle.kts" for Forge.
+// See "build.neoforge.gradle.kts" for NeoForge.
+// See "build.neoforge-hacky.gradle.kts" for NeoForge ugly hack for 1.20.1.
 // See "stonecutter.gradle.kts" for the Stonecutter configuration.
 // See "settings.gradle.kts" for the Gradle configuration.
 
