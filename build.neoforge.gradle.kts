@@ -27,6 +27,7 @@
 // See "build.fabric-intermediary.gradle.kts" for legacy Intermediary Fabric.
 // See "build.fabric-mojmap.gradle.kts" for modern Mojmap Fabric.
 // See "build.forge.gradle.kts" for Forge.
+// See "build.neoforge-hacky.gradle.kts" for NeoForge ugly hack for 1.20.1.
 // See "compile" for the compile-time constants and Blossom configuration.
 // See "stonecutter.gradle.kts" for the Stonecutter configuration.
 // See "settings.gradle.kts" for the Gradle configuration.
