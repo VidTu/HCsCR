@@ -71,9 +71,9 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
     private MinecraftMixin() {
         //? if >=26.1.2 {
         super(null, false);
-        //? } else {
+        //?} else {
         /*super(null);
-        *///? }
+        *///?}
         throw new AssertionError("HCsCR: No instances.");
     }
 

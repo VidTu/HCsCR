@@ -5,8 +5,8 @@
   "package": "ru.vidtu.hcscr.mixin",
   "plugin": "ru.vidtu.hcscr.platform.HPlugin",
   //? if forge && <1.20.6 {
-  "refmap": "hcscr.mixins.refmap.json",
-  //?}
+  /*"refmap": "hcscr.mixins.refmap.json",
+  *///?}
   "client": [
     "MinecraftMixin",
     "block.BedBlockMixin",

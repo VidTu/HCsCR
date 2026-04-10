@@ -140,10 +140,10 @@ public final class HFabric implements ClientModInitializer {
             //? if >=26.1.2 {
         PayloadTypeRegistry.clientboundConfiguration().register(type, codec);
         PayloadTypeRegistry.clientboundPlay().register(type, codec);
-            //? } else {
+            //?} else {
         /*PayloadTypeRegistry.configurationS2C().register(type, codec);
-        PayloadTypeRegistry.playS2C().register(type, codec);*/
-            //? }
+        PayloadTypeRegistry.playS2C().register(type, codec);
+            *///?}
         ClientConfigurationNetworking.registerGlobalReceiver(type, (final CustomPacketPayload payload, final ClientConfigurationNetworking.Context context) -> {
             // Validate.
             final PacketSender sender;

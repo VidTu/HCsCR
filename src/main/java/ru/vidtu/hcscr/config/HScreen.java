@@ -44,7 +44,7 @@ import java.util.function.IntFunction;
 
 //? if >=26.1.2 {
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-//? } elif >=1.20.1 {
+//?} elif >=1.20.1 {
 /*import net.minecraft.client.gui.GuiGraphics;
 *///?} else {
 /*import com.mojang.blaze3d.vertex.PoseStack;
@@ -190,7 +190,7 @@ public final class HScreen extends Screen {
     @Override
     //? if >=26.1.2 {
     public void extractRenderState(final GuiGraphicsExtractor graphics, final int mouseX, final int mouseY, final float tickDelta) {
-    //? } elif >=1.20.1 {
+    //?} elif >=1.20.1 {
     /*public void render(final GuiGraphics graphics, final int mouseX, final int mouseY, final float tickDelta) {
     *///?} else {
     /*public void render(final PoseStack graphics, final int mouseX, final int mouseY, final float tickDelta) {
