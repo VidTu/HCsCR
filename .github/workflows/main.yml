@@ -28,7 +28,7 @@ jobs:
   main:
     name: 'Build (Main)'
     runs-on: 'ubuntu-24.04'
-    timeout-minutes: 60
+    timeout-minutes: 90
     permissions:
       contents: 'write'
     steps:
@@ -54,7 +54,7 @@ jobs:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           dependency-graph: 'generate-and-submit'
       - name: 'Build (Main)'
-        timeout-minutes: 60
+        timeout-minutes: 90
         run: './gradlew assemble'
       - name: 'Upload'
         timeout-minutes: 10

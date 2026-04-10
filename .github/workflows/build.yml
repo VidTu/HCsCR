@@ -29,7 +29,7 @@ jobs:
   build:
     name: 'Build'
     runs-on: 'ubuntu-24.04'
-    timeout-minutes: 60
+    timeout-minutes: 90
     permissions:
       contents: 'read'
     steps:
@@ -50,7 +50,7 @@ jobs:
         with:
           dependency-graph: 'generate'
       - name: 'Build'
-        timeout-minutes: 60
+        timeout-minutes: 90
         run: './gradlew assemble'
       - name: 'Upload'
         timeout-minutes: 10
