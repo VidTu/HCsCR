@@ -225,7 +225,7 @@ To compile all versions of the mod from the source code:
 2. Install Java 25 (for Gradle; you'll also need 8, 16, 17, and 21 for the
    compilation, download either of those, the others will be automatically
    downloaded via Java toolchains) and dump it into `PATH` and/or `JAVA_HOME`.
-3. Run `./gradlew assemble` from the terminal/PowerShell.
+3. Run `./compileall` from the terminal/PowerShell.
 4. Grab the JARs from the `./build/libs/` folder.
 
 #### One Version (Faster)
@@ -237,11 +237,8 @@ To compile one specific Minecraft version of the mod from the source code:
 2. Install Java 25 (for Gradle; you may also need 8, 16, 17, or 21 for the
    compilation, download either of those, the other will be automatically
    downloaded via Java toolchains) and dump it into `PATH` and/or `JAVA_HOME`.
-3. Run
-   `./gradlew -Dru.vidtu.hcscr.only=<version>-<loader> <version>-<loader>:assemble`
-   from the terminal/PowerShell. (for example:
-   `./gradlew -Dru.vidtu.hcscr.only=1.16.5-fabric 1.16.5-fabric:assemble`
-   )
+3. Run `./compileone <version>-<loader>` from the terminal/PowerShell.
+   (for example: `./compileone 1.16.5-fabric`)
 4. Grab the JAR from the `./build/libs/` folder.
 
 ### Developing/Debugging
