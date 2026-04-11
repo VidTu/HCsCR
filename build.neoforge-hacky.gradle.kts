@@ -61,7 +61,7 @@ description = "Remove your end crystals before the server even knows you hit 'em
 sc {
     constants["fabric"] = false
     constants["forge"] = true // Yes, that's correct for NeoForge 1.20.1.
-    constants["hacky_neoforge"] = true
+    constants["hacky_neoforge"] = true // And that's extremely correct.
     constants["neoforge"] = false // Yes, that's also correct.
 }
 
@@ -72,7 +72,14 @@ legacyForge {
     val extractedMinecraft = neoforge.substringBefore('-')
     require(extractedMinecraft == "1.20.1") { "NeoForge (Hacky) version '${neoforge}' provides Minecraft ${extractedMinecraft} in ${project}, but we want 1.20.1." }
     enable {
+        // Set the version.
         neoForgeVersion = neoforge
+
+        // Enable recompilation for CI.
+        // NOTE: Binpatching produces uncompilable artifacts for
+        // NeoForge 1.20.1, at least for HCsCR. Specifically, it
+        // has issues with anonymous classes in HStonecutter.java.
+        setDisableRecompilation(false)
     }
 
     // Set up runs.
