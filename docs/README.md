@@ -117,7 +117,7 @@ it depends on the ping, server MSPT, etc.
 
 <details>
 <summary>Totally Real™ Reviews From Happy Users</summary>
-<img alt="Grandma is happy with the crystal optimizer" src="totally_legit_review_en.png"/>
+<img alt="Grandma is happy with the crystal optimizer" src=totally_legit_review_en.png">
 </details>
 
 ### For Developers
@@ -136,11 +136,9 @@ into an anti-cheat plugin if you want to block all of them.
 
 **Q**: How to compile for only one Minecraft version?
 I can't stand waiting hours for the project to initialize.  
-**A**: Run the `./gradlew` script with the `ru.vidtu.hcscr.only` system property
-set to the desired `<version>-<loader>` combination, for example:
-`./gradlew -Dru.vidtu.hcscr.only=1.16.5-fabric build`.
-Note that due to the Stonecutter requirements, the latest
-version may still be initialized because it is the
+**A**: Run the `./compileone <version>-<loader>` script with a desired version,
+for example: `./compileone 1.16.5-fabric`. Note that due to the Stonecutter
+requirements, the latest version may still be initialized because it is the
 [VCS Version](https://stonecutter.kikugie.dev/wiki/glossary#vcs-version)
 of HCsCR by design.
 
@@ -241,17 +239,17 @@ To compile one specific Minecraft version of the mod from the source code:
 
 ### Developing/Debugging
 
-Run the `./launch <version>`[^1] (e.g. `./launch 1.16.5-fabric`) command to
-launch the game client. You can attach a debugger to that process. Hotswap is
-supported. "Enhanced" hotswap (class redefinition) and hotswap
-agent will work if supported by your JVM.
+Run the `./launch <version>` (e.g. `./launch 1.16.5-fabric`) command to
+launch the game client. You can attach a debugger to that process.
+Hotswap is supported. "Enhanced" hotswap (class redefinition) and
+hotswap agent will work if supported by your JVM.
 
-Switch the current active Stonecutter version by using `./switch <version>`[^2]
+Switch the current active Stonecutter version by using `./switch <version>`
 command. It is discouraged to modify code commented out by the preprocessor,
 switch to the required version instead.
 
 Reset to the VCS Stonecutter version before committing
-changes via `./reset`[^3] command to avoid a diff mess.
+changes via `./reset` command to avoid a diff mess.
 
 Running the client via generated tasks (e.g., for IntelliJ IDEA) may work, but
 you might need to make some adjustments. Launching the game directly
@@ -264,9 +262,3 @@ fail faster here than in a production environment.
 The recommended IDE for development is IntelliJ IDEA (Community or Ultimate)
 with the Minecraft Development plugin. This is not a strict requirement,
 however. Any IDE/editor should work just fine.
-
-[^1]: This is a shortcut for `./gradlew "<version>:runClient"`.
-
-[^2]: This is a shortcut for `./gradlew "Set active project to <version>"`.
-
-[^3]: This is a shortcut for `./gradlew "Reset active project"`.
