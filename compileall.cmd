@@ -18,9 +18,5 @@
 ::
 :: SPDX-License-Identifier: Apache-2.0
 
-:: Clean.
-cmd.exe /C gradlew.bat clean --no-daemon --no-configuration-cache --no-build-cache --rerun-tasks
-
 :: Build.
-cmd.exe /C gradlew.bat assemble --no-daemon --no-configuration-cache --no-build-cache --rerun-tasks
-
+gradlew.bat assemble

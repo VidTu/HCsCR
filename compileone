@@ -23,8 +23,5 @@
 # Fail on error, fail on unbound variable, verbose mode, xtrace mode.
 set -euvx
 
-# Clean.
-./gradlew "-Dru.vidtu.hcscr.only=${1}" "${1}:clean" --no-daemon --no-configuration-cache --no-build-cache --rerun-tasks
-
 # Build.
-./gradlew "-Dru.vidtu.hcscr.only=${1}" "${1}:assemble" --no-daemon --no-configuration-cache --no-build-cache --rerun-tasks
+./gradlew "-Dru.vidtu.hcscr.only=${1}" "${1}:assemble"

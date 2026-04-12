@@ -23,8 +23,5 @@
 # Fail on error, fail on unbound variable, verbose mode, xtrace mode.
 set -euvx
 
-# Clean.
-./gradlew clean --no-daemon --no-configuration-cache --no-build-cache --rerun-tasks
-
 # Build.
-./gradlew assemble --no-daemon --no-configuration-cache --no-build-cache --rerun-tasks
+./gradlew assemble

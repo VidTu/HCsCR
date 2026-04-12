@@ -18,8 +18,5 @@
 ::
 :: SPDX-License-Identifier: Apache-2.0
 
-:: Clean.
-cmd.exe /C gradlew.bat "-Dru.vidtu.hcscr.only=%1" "%1:clean" --no-daemon --no-configuration-cache --no-build-cache --rerun-tasks
-
 :: Build.
-cmd.exe /C gradlew.bat "-Dru.vidtu.hcscr.only=%1" "%1:assemble" --no-daemon --no-configuration-cache --no-build-cache --rerun-tasks
+gradlew.bat "-Dru.vidtu.hcscr.only=%1" "%1:assemble"
