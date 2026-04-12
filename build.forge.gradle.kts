@@ -34,6 +34,7 @@
 
 import com.google.gson.Gson
 import com.google.gson.JsonElement
+import net.minecraftforge.renamer.gradle.RenameJar
 
 // Configure plugins.
 plugins {
@@ -257,12 +258,15 @@ if (mcp >= "1.20.6") {
             jar(tasks.named<Jar>("jar"))
         }
 
+        // Use Mixin mappings for field remapping.
         classes(tasks.named<Jar>("jar")) {
-            // Use Mixin mappings for field remapping.
             mappings(renamer.mixin.generatedMappings)
-
-            // Output remapped JAR into "build/libs" instead of "versions/<ver>/build/libs".
-            output = rootProject.layout.buildDirectory.file("libs").get().asFile.resolve("HCsCR-${version}.jar")
+            archiveClassifier = "srg"
         }
+    }
+
+    // Output remapped JAR into "build/libs" instead of "versions/<ver>/build/libs".
+    tasks.withType<RenameJar> {
+        output = rootProject.layout.buildDirectory.file("libs").get().asFile.resolve("HCsCR-${version}.jar")
     }
 }
