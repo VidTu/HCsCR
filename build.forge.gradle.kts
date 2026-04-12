@@ -22,7 +22,7 @@
 
 // This is the Forge loader buildscript. It is processed by the
 // Stonecutter multiple times, for each version. (compiled once)
-// Based on Architectury Loom and processes the preparation/complation/building
+// Based on ForgeGradle and processes the preparation/complation/building
 // of the most of the mod that is not covered by the Stonecutter or Blossom.
 // See "build.fabric-intermediary.gradle.kts" for legacy Intermediary Fabric.
 // See "build.fabric-mojmap.gradle.kts" for modern Mojmap Fabric.

@@ -22,7 +22,7 @@
 
 // This is the main (multi-version loader) buildscript. It is processed by the
 // Stonecutter multiple times, for each version and each loader. (compiled once)
-// Based on Architectury Loom and processes the preparation/complation/building
+// Based on ModDevGradle and processes the preparation/complation/building
 // of the most of the mod that is not covered by the Stonecutter or Blossom.
 // See "build.fabric-intermediary.gradle.kts" for legacy Intermediary Fabric.
 // See "build.fabric-mojmap.gradle.kts" for modern Mojmap Fabric.
@@ -40,6 +40,7 @@
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 
+// Configure plugins.
 plugins {
     alias(libs.plugins.moddevgradle.legacy)
 }
@@ -90,10 +91,21 @@ legacyForge {
             client()
 
             // Set up debug VM args.
-            //jvmArguments("@../dev/args.vm.txt")
+            jvmArguments.addAll(rootDir.resolve("dev/args.vm.txt")
+                    .readLines()
+                    .filter { "line.separator" !in it }
+                    .filter { it.isNotBlank() })
+            loggingConfigFile = rootDir.resolve("dev/log4j2.xml")
 
             // Set the run dir.
-            //workingDirectory = file("../../run")
+            gameDirectory = file("../../run")
+        }
+    }
+
+    // Register sourcesets for debugging.
+    mods {
+        register("hcscr") {
+            sourceSet(sourceSets["main"])
         }
     }
 }

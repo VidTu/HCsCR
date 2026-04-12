@@ -22,7 +22,7 @@
 
 // This is the main (multi-version loader) buildscript. It is processed by the
 // Stonecutter multiple times, for each version and each loader. (compiled once)
-// Based on Architectury Loom and processes the preparation/complation/building
+// Based on NeoGradle and processes the preparation/complation/building
 // of the most of the mod that is not covered by the Stonecutter or Blossom.
 // See "build.fabric-intermediary.gradle.kts" for legacy Intermediary Fabric.
 // See "build.fabric-mojmap.gradle.kts" for modern Mojmap Fabric.
@@ -35,6 +35,7 @@
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 
+// Configure plugins.
 plugins {
     alias(libs.plugins.neogradle)
 }

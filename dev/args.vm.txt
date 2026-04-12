@@ -26,6 +26,7 @@
 -Dterminal.ansi=true
 -Dterminal.jline=false
 -Dslf4j.internal.verbosity=DEBUG
+-Dlog4j2.configurationFile=../dev/log4j2.xml
 -Dlog4j2.formatMsgNoLookups=true
 -Dlog4j2.enableJndiLookup=false
 -Dlog4j2.enableJndiContextSelector=false
