@@ -24,4 +24,4 @@
 set -euvx
 
 # Launch.
-./gradlew "${1}:runClient"
+./gradlew "-Dru.vidtu.hcscr.only=${1}" "${1}:runClient"

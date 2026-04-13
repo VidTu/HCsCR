@@ -18,4 +18,4 @@
 ::
 :: SPDX-License-Identifier: Apache-2.0
 
-gradlew.bat "%1:runClient"
+gradlew.bat "-Dru.vidtu.hcscr.only=%1" "%1:runClient"
