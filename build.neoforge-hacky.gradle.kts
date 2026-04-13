@@ -179,7 +179,7 @@ tasks.withType<ProcessResources> {
 
     // Expand version and dependencies.
     inputs.property("version", version)
-    inputs.property("platform", "forge")
+    inputs.property("platform", "forge") // Yes, that's correct for NeoForge 1.20.1.
     filesMatching(listOf("hcscr.mixins.json", "META-INF/mods.toml")) {
         expand(inputs.properties)
     }
