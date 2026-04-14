@@ -64,6 +64,7 @@ sc {
     constants["forge"] = true // Yes, that's correct for NeoForge 1.20.1.
     constants["hacky_neoforge"] = true // And that's extremely correct.
     constants["neoforge"] = false // Yes, that's also correct.
+    swaps["minecraft_version"] = "\"1.20.1\""
 }
 
 legacyForge {

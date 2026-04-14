@@ -68,6 +68,7 @@ sc {
     constants["forge"] = false
     constants["hacky_neoforge"] = false
     constants["neoforge"] = true
+    swaps["minecraft_version"] = "\"${mcv}\""
 }
 
 // Set up runs.

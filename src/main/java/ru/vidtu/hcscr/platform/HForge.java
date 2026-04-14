@@ -203,8 +203,10 @@ public final class HForge {
     ^///?}
         // Log.
         final long start = System.nanoTime();
-        final String modVersion = HForge.class.getPackage().getImplementationVersion();
-        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Loading... (platform: forge, modVersion: {})", modVersion);
+        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Loading... (platform: forge, version: " + HCompile.VERSION + ", mc: " +
+                //$ minecraft_version
+                "26.1.2"
+                + ')');
         LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: This build of the mod has " +
                 "asserts " + (HCompile.DEBUG_ASSERTS ? "ON" : "OFF") +
                 ", logs " + (HCompile.DEBUG_LOGS ? "ON" : "OFF") +

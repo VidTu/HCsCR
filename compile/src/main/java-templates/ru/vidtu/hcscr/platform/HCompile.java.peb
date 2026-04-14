@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 
 /**
- * A class that contains compile-time boolean flags.
+ * A class that contains compile-time variables.
  * <p>
  * <b>Note:</b> This class is NEVER found in the final JAR. It <b>MUST NOT</b>
  * contain any references that are not inlined by the Java compiler.
@@ -40,6 +40,12 @@ import org.jspecify.annotations.NullMarked;
 @ApiStatus.Internal
 @NullMarked
 public final class HCompile {
+    /**
+     * Mod version. This version is provided <b>WITHOUT</b> the loader type.
+     */
+    @CompileTimeConstant
+    public static final String VERSION = "{{ version }}";
+
     /**
      * Whether the additional Java assertions are enabled.
      */
