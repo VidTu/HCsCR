@@ -72,8 +72,8 @@ if (onlyId != null) {
     require(idx != -1) { "Invalid only version '${onlyId}', no '-' delimiter extracted from 'ru.vidtu.hcscr.only'." }
     val onlyVersion = onlyId.substring(0, idx)
     val onlyType = onlyId.substring(idx + 1)
-    require(versions.contains(onlyVersion)) { "Invalid only version '${onlyId}', version number '${onlyVersion}' extracted from 'ru.vidtu.hcscr.only' not found in ${types.joinToString()}." }
-    require(types.contains(onlyType)) { "Invalid only version '${onlyId}', type '${onlyType}' extracted from 'ru.vidtu.hcscr.only' not found in ${versions.joinToString()}." }
+    require(versions.contains(onlyVersion)) { "Invalid only version '${onlyId}', version number '${onlyVersion}' extracted from 'ru.vidtu.hcscr.only' not found in ${versions.joinToString()}." }
+    require(types.contains(onlyType)) { "Invalid only version '${onlyId}', type '${onlyType}' extracted from 'ru.vidtu.hcscr.only' not found in ${types.joinToString()}." }
 }
 
 // Create the "ignored" version list.
