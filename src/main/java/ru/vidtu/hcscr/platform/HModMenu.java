@@ -33,6 +33,8 @@ import ru.vidtu.hcscr.config.HConfig;
 import ru.vidtu.hcscr.config.HScreen;
 
 //? if >=1.20.4 {
+import com.google.common.escape.Escaper;
+import com.google.common.escape.Escapers;
 import com.google.common.net.HttpHeaders;
 import com.google.errorprone.annotations.CompileTimeConstant;
 import com.terraformersmc.modmenu.api.UpdateChannel;
@@ -139,10 +141,38 @@ public final class HModMenu implements ModMenuApi {
          *
          * @see HttpHeaders#USER_AGENT
          */
-        private static final String USER_AGENT = "VidTu/HCsCR/%s (update checker; https://github.com/VidTu/HCsCR; pig@vidtu.ru)".formatted(Updater.class.getPackage().getImplementationVersion());
+        @CompileTimeConstant
+        private static final String USER_AGENT = "VidTu/HCsCR/" + HCompile.VERSION + " (update checker; https://github.com/VidTu/HCsCR; pig@vidtu.ru) MinecraftJava/" +
+            //$ minecraft_version
+            "26.2"
+            + " Fabric";
+
+        /**
+         * Maximum length for the updater response to prevent abuse.
+         * <p>
+         * Equals to {@code 32767} units.
+         * <p>
+         * Depending on the implementation, this might be counted
+         * in either or both UTF-8 codepoints or UTF-8 bytes.
+         */
+        @CompileTimeConstant
+        private static final int MAX_BODY_LENGTH = 32767;
+
+        /**
+         * Maximum length for the updater single component to prevent abuse.
+         * <p>
+         * Equals to {@code 255} units.
+         * <p>
+         * Depending on the implementation, this might be counted
+         * in either or both UTF-8 codepoints or UTF-8 bytes.
+         */
+        @CompileTimeConstant
+        private static final int MAX_COMPONENT_LENGTH = 255;
 
         /**
          * Timeout for update checking.
+         * <p>
+         * Equals to {@code 30} seconds.
          */
         private static final Duration TIMEOUT = Duration.ofSeconds(30L);
 
@@ -150,6 +180,30 @@ public final class HModMenu implements ModMenuApi {
          * Logger for this class.
          */
         private static final Logger LOGGER = LogManager.getLogger("HCsCR/HModMenu$Updater");
+
+        /**
+         * Escaper for the body, escapes ASCII controls in messages for printing.
+         */
+        private static final Escaper SANITIZER;
+        static {
+            final Escapers.Builder builder = Escapers.builder();
+            for (char c = 0; c < 32; c++) {
+                builder.addEscape(c, "\\u%04X".formatted((int) c));
+            }
+            SANITIZER = builder
+                .addEscape('\0', "\\0")
+                .addEscape('\b', "\\b")
+                .addEscape('\t', "\\t")
+                .addEscape('\n', "\\n")
+                .addEscape('\f', "\\f")
+                .addEscape('\r', "\\r")
+                // .addEscape('\s', "\\s") // Don't escape spaces.
+                .addEscape('\"', "\\\"")
+                .addEscape('\'', "\\'")
+                .addEscape('\\', "\\\\")
+                .addEscape((char) 127, "\\u007F")
+                .build();
+        }
 
         /**
          * Creates a new updater.
@@ -209,7 +263,7 @@ public final class HModMenu implements ModMenuApi {
 
                     // Log. (**TRACE**)
                     if (HCompile.DEBUG_LOGS) {
-                        LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Will check updates for '{}' game version and '{}' channel...", gameVersion, channel);
+                        LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Will check updates for '{}' game version and '{}' channel... (ua: " + USER_AGENT + ')', gameVersion, channel);
                     }
 
                     // Send the request.
@@ -218,18 +272,32 @@ public final class HModMenu implements ModMenuApi {
                             .timeout(TIMEOUT)
                             .header(HttpHeaders.USER_AGENT, USER_AGENT)
                             .GET()
-                            .build(), HttpResponse.BodyHandlers.ofString());
+                            //? if >=26.1.2 {
+                            .build(), HttpResponse.BodyHandlers.limiting(HttpResponse.BodyHandlers.ofString(), MAX_BODY_LENGTH));
+                            //? } else {
+                            /*.build(), HttpResponse.BodyHandlers.ofString());
+                            *///?}
+
+                    // Extract.
+                    final String body = response.body();
+                    final int code = response.statusCode();
+
+                    // Validate the length.
+                    final int bodyLength = body.length();
+                    if (bodyLength > MAX_BODY_LENGTH) {
+                        throw new IllegalStateException("HCsCR: HTTP response body is too long for update checking. (code: " + code + ", response: " + response + ", bodyLength: " + bodyLength + ')');
+                    }
 
                     // Log. (**DEBUG**)
-                    final int code = response.statusCode();
-                    final String body = response.body();
                     if (HCompile.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.HCSCR_MARKER)) {
-                        LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Got a response from the update API. (code: {}, response: {}, body: {})", code, response, body);
+                        final String sanitizedBody = SANITIZER.escape(body);
+                        LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Got a response from the update API. (code: {}, response: {}, sanitizedBody: '{}')", code, response, sanitizedBody);
                     }
 
                     // Check the code.
                     if ((code < 200) || (code >= 300)) {
-                        throw new IllegalStateException("Non-success HTTP code returned for update checking. (code: " + code + ", response: " + response + ", body: " + body + ')');
+                        final String sanitizedBody = SANITIZER.escape(body);
+                        throw new IllegalStateException("HCsCR: Non-success HTTP code returned for update checking. (code: " + code + ", response: " + response + ", sanitizedBody: '" + sanitizedBody + "')");
                     }
 
                     // Parse the properties.
@@ -238,31 +306,43 @@ public final class HModMenu implements ModMenuApi {
                         properties.load(reader);
                     }
 
-                    // Get the version.
-                    final String versionKey = (gameVersion + '@' + channel + "@version");
-
                     // Get the version, return nothing if not found.
+                    final String versionKey = (gameVersion + '@' + channel + "@version");
                     final String rawVersion = properties.getProperty(versionKey);
                     if ((rawVersion == null) || rawVersion.isBlank()) {
                         // Log. (**DEBUG**)
-                        if (HCompile.DEBUG_LOGS) {
-                            LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: No update property found for key '{}'. (keys: {})", versionKey, properties.keySet());
+                        if (HCompile.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.HCSCR_MARKER)) {
+                            final String sanitizedKeys = '[' + properties.keySet().stream()
+                                .map((final Object key) -> '"' + SANITIZER.escape(key.toString()) + '"')
+                                .reduce((final String f, final String s) -> f + ", " + s)
+                                .orElse("") + ']';
+                            LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: No update property found for key '{}'. (sanitizedKeys: {})", versionKey, sanitizedKeys);
                         }
 
                         // Stop.
                         return null;
                     }
 
+                    // Validate the version length.
+                    final int rawVersionLength = rawVersion.length();
+                    if (rawVersionLength > MAX_COMPONENT_LENGTH) {
+                        final String sanitizedRawVersion = SANITIZER.escape(rawVersion);
+                        throw new IllegalStateException("HCsCR: Version is too long for update checking. (sanitizedRawVersion: '" + sanitizedRawVersion + "', rawVersionLength: " + rawVersionLength + ')');
+                    }
+
                     // Parse the versions. skip if already up-to-date.
-                    final Version currentVersion = FabricLoader.getInstance().getModContainer("hcscr")
+                    final Version currentVersionMeta = FabricLoader.getInstance().getModContainer("hcscr")
                             .orElseThrow()
                             .getMetadata()
                             .getVersion();
+                    final Version currentVersionConstant = Version.parse(HCompile.VERSION);
                     final Version remoteVersion = Version.parse(rawVersion);
-                    if (currentVersion.compareTo(remoteVersion) >= 0) {
+                    if ((currentVersionMeta.compareTo(remoteVersion) >= 0) &&
+                        (currentVersionConstant.compareTo(remoteVersion) >= 0)) {
                         // Log. (**DEBUG**)
-                        if (HCompile.DEBUG_LOGS) {
-                            LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Current version '{}' is at least as up-to-date as the remote version '{}'.", currentVersion, remoteVersion);
+                        if (HCompile.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.HCSCR_MARKER)) {
+                            final String sanitizedRemoteVersion = SANITIZER.escape(remoteVersion.toString());
+                            LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Both current version from meta '{}' and from compilation '{}' are at least as up-to-date as the remote version '{}'.", currentVersionMeta, currentVersionConstant, sanitizedRemoteVersion);
                         }
 
                         // Stop.
@@ -271,13 +351,33 @@ public final class HModMenu implements ModMenuApi {
 
                     // Extract the link.
                     final String linkKey = (gameVersion + '@' + channel + "@link");
-                    final String link = properties.getProperty(linkKey, FALLBACK_LINK);
+                    final String rawLink = properties.getProperty(linkKey, FALLBACK_LINK);
+
+                    // Validate the link.
+                    final int rawLinkLength = rawLink.length();
+                    if (rawLinkLength > MAX_COMPONENT_LENGTH) {
+                        final String sanitizedRawLink = SANITIZER.escape(rawLink);
+                        throw new IllegalStateException("HCsCR: Link is too long for update checking. (sanitizedRawLink: '" + sanitizedRawLink + "', rawLinkLength: " + rawLinkLength + ')');
+                    }
+                    final URI link;
+                    try {
+                        link = new URI(rawLink);
+                    } catch (final Throwable t) {
+                        final String sanitizedRawLink = SANITIZER.escape(rawLink);
+                        throw new IllegalStateException("HCsCR: Invalid link URI for update checking. (sanitizedRawLink: '" + sanitizedRawLink + "')", t);
+                    }
+                    final String asciiLink = link.toASCIIString();
+                    if (!"https".equals(link.getScheme()) || !"github.com".equals(link.getHost()) ||
+                        (link.getPort() != -1) || (link.getRawQuery() != null) ||
+                        (link.getRawFragment() != null) || (link.getRawUserInfo() != null)) {
+                        throw new IllegalStateException("HCsCR: Invalid link data for update checking. (link: '" + asciiLink + "')");
+                    }
 
                     // Log.
-                    LOGGER.warn(HCsCR.HCSCR_MARKER, "HCsCR: Found an update from '{}' to '{}' (for {}/{}). Download at: {}", currentVersion, remoteVersion, rawVersion, channel, link);
+                    LOGGER.warn(HCsCR.HCSCR_MARKER, "HCsCR: Found an update from '{}' or '{}' to '{}' (for Minecraft '{}' and channel '{}'). Download at: {}", currentVersionMeta, currentVersionConstant, remoteVersion, rawVersion, channel, asciiLink);
 
                     // Create an update.
-                    return new Update(channel, link, remoteVersion.getFriendlyString());
+                    return new Update(channel, asciiLink, remoteVersion.getFriendlyString());
                 } finally {
                     // Close the client if it's closable. (Java 21+)
                     if (client instanceof final AutoCloseable closeable) closeable.close();
