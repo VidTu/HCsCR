@@ -86,7 +86,6 @@ tasks.withType<ProcessResources> {
     filteringCharset = "UTF-8"
 }
 
-// Add LICENSE and manifest into the JAR file.
 tasks.withType<Jar> {
     // Add LICENSE and NOTICE.
     from(rootDir.resolve("LICENSE"))
@@ -96,17 +95,5 @@ tasks.withType<Jar> {
     // NOTE(VidTu): This is technically useless, since it is compileOnly.
     if (!"${findProperty("ru.vidtu.hcscr.debug.package")}".toBoolean()) {
         exclude("**/package-info.class")
-    }
-
-    // Add manifest.
-    manifest {
-        attributes(
-            "Specification-Title" to "HCsCR",
-            "Specification-Version" to version,
-            "Specification-Vendor" to "VidTu",
-            "Implementation-Title" to "HCsCR-compile",
-            "Implementation-Version" to version,
-            "Implementation-Vendor" to "VidTu, Offenderify, libffi"
-        )
     }
 }
