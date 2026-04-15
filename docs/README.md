@@ -144,14 +144,14 @@ of HCsCR by design.
 
 **Q**: Why so much yapping in this README?  
 **A**: ~~I paid for the whole LLM, I'm going to use the whole LLM.~~
-Because writing READMEs (even though I don't use AI except
-for grammar checks) is easier than writing actual code.
+Because writing READMEs is easier than writing actual code.
 
 **Q**: Do you use AI/LLM/Code Generation/Copilot/etc.?  
-**A**: Except for the aforementioned grammar checkers above, no. I use only
-the laggiest IntelliJ IDEA inspections based on the buggiest algorithms.
-Can't be sure for contributors, but most of the code is written
-by the project author. Also, I don't care about AI personally.
+**A**: [Perhaps](https://github.com/VidTu/HCsCR/commit/1fd405d66e447c2dbdb775a39e3ca066b20e2fc4),
+but with [consequences](https://github.com/VidTu/HCsCR/commit/1898f1dc49a3b9e154cc89b40652a5cb30ef8459).
+Mostly, no, the code is 99.67% human-written, because AI is generating dumb
+stuff, especially for Minecraft. If you (or some contributors) will use AI and
+it will magically® work™, good for you. I don't promote AI nor am I against it.
 
 **Q**: Does HCsCR have a public API?  
 **A**: Nope. Except for the plugin channel mentioned above, there's no
