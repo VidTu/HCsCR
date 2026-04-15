@@ -44,7 +44,7 @@ on your server. Ask the admins to install one if the command doesn't exist.
 | -------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | Beta&nbsp;&#x1F195;  | 26.2                                                                                                    | Newly supported versions. May be unstable, but *active* feature development happens here, bugs are *actively* fixed.                        |
 | Active&nbsp;&#x2705; | 26.1.2, 1.21.11, 1.21.1, 1.20.1                                                                         | Actively supported versions. Well tested, features are *often* backported and bugs are *actively* fixed.                                    |
-| Legacy&nbsp;&#x26A0; | 1.21.10, 1.21.8, 1.21.5, 1.21.4, 1.21.3, 1.20.6, 1.20.4, 1.20.2, 1.19.4, 1.19.2, 1.18.2, 1.17.1, 1.16.5 | Versions supported on a best-effort basis. Features are backported *sometimes*. Bugs are fixed *often*. Critical bugs are *actively* fixed. |
+| Legacy&nbsp;&#x2753; | 1.21.10, 1.21.8, 1.21.5, 1.21.4, 1.21.3, 1.20.6, 1.20.4, 1.20.2, 1.19.4, 1.19.2, 1.18.2, 1.17.1, 1.16.5 | Versions supported on a best-effort basis. Features are backported *sometimes*. Bugs are fixed *often*. Critical bugs are *actively* fixed. |
 | Ended&nbsp;&#x274C;  | 1.21.9, 1.21.7, 1.21.6, 1.21.2, 1.19.3                                                                  | No support. Outdated. **Use at your own risk.**                                                                                             |
 
 ## FAQ
@@ -117,7 +117,7 @@ it depends on the ping, server MSPT, etc.
 
 <details>
 <summary>Totally Real™ Reviews From Happy Users</summary>
-<img alt="Grandma is happy with the crystal optimizer" src=totally_legit_review_en.png">
+<img alt="Grandma is happy with the crystal optimizer" src=totally_legit_review_en.png>
 </details>
 
 ### For Developers
