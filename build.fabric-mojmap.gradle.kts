@@ -152,7 +152,6 @@ dependencies {
         compileOnly("com.terraformersmc:modmenu:${modmenu}")
     } else {
         implementation("com.terraformersmc:modmenu:${modmenu}")
-        implementation(fabricApi.module("fabric-resource-loader-v0", fapi)) // ModMenu dependency.
         implementation(fabricApi.module("fabric-screen-api-v1", fapi)) // ModMenu dependency.
     }
 }
@@ -173,11 +172,15 @@ tasks.withType<ProcessResources> {
 
     // Replace the Fabric Resource Loader version.
     // >=26.1.2 has consistent v1, this is used by Intermediary.
-    inputs.property("fabricResourceLoader", "v1")
+    inputs.property("fabricResourceLoaderRevision", "v1")
 
     // Replace Fabric Keybinding/Keymapping module name.
     // >=26.1.2 has "mapping", previous versions have "binding".
-    inputs.property("fabricKey", "mapping")
+    inputs.property("fabricKeyApiName", "mapping")
+
+    // Replace the Fabric API module name.
+    // >=26.1.2 has consistent fabric-api, this is used by Intermediary.
+    inputs.property("fabricApiName", "fabric-api")
 
     // Determine and replace the platform version range requirement.
     val platformRequirement = "${project.property("sc.platform-requirement")}"

@@ -37,13 +37,13 @@
   ],
   "depends": {
     "minecraft": "${minecraft}",
-    "fabric-key-${fabricKey}-api-v1": "*",
+    "fabric-key-${fabricKeyApiName}-api-v1": "*",
     "fabric-lifecycle-events-v1": "*",
     "fabric-networking-api-v1": "*",
-    "fabric-resource-loader-${fabricResourceLoader}": "*"
+    "fabric-resource-loader-${fabricResourceLoaderRevision}": "*"
   },
   "recommends": {
-    "fabric": "*",
+    "${fabricApiName}": "*",
     "modmenu": "*"
   },
   "custom": {

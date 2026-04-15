@@ -165,11 +165,11 @@ dependencies {
     // Modular Fabric API.
     val fapi = "${property("sc.fabric-api")}"
     require(fapi.isNotBlank() && fapi != "[SC]") { "Fabric API version is not provided via 'sc.fabric-api' in ${project}." }
-    val resourceLoaderModuleRevision = if (mcp >= "1.21.10") "v1" else "v0"
+    val fabricResourceLoaderRevision = if (mcp >= "1.21.10") "v1" else "v0"
     modImplementation(fabricApi.module("fabric-key-binding-api-v1", fapi)) // Handles the keybinds. (NOTE: >=26.1.2 script uses "mapping", not "binding")
     modImplementation(fabricApi.module("fabric-lifecycle-events-v1", fapi)) // Handles game ticks.
     modImplementation(fabricApi.module("fabric-networking-api-v1", fapi)) // Registers the channel, see README.
-    modImplementation(fabricApi.module("fabric-resource-loader-${resourceLoaderModuleRevision}", fapi)) // Loads languages.
+    modImplementation(fabricApi.module("fabric-resource-loader-${fabricResourceLoaderRevision}", fapi)) // Loads languages.
 
     // ModMenu.
     val modmenu = "${property("sc.modmenu")}"
@@ -181,7 +181,9 @@ dependencies {
         modCompileOnly("com.terraformersmc:modmenu:${modmenu}")
     } else {
         modImplementation("com.terraformersmc:modmenu:${modmenu}")
-        modImplementation(fabricApi.module("fabric-resource-loader-v0", fapi)) // ModMenu dependency.
+        if (mcp eq "1.21.10") {
+            modImplementation(fabricApi.module("fabric-resource-loader-v0", fapi)) // ModMenu dependency.
+        }
         modImplementation(fabricApi.module("fabric-screen-api-v1", fapi)) // ModMenu dependency.
     }
 }
@@ -207,12 +209,16 @@ tasks.withType<ProcessResources> {
     exclude("META-INF/mods.toml", "META-INF/neoforge.mods.toml", "pack.mcmeta")
 
     // Determine and replace the Fabric Resource Loader version.
-    val fabricResourceLoader = if (mcp >= "1.21.10") "v1" else "v0"
-    inputs.property("fabricResourceLoader", fabricResourceLoader)
+    val fabricResourceLoaderRevision = if (mcp >= "1.21.10") "v1" else "v0"
+    inputs.property("fabricResourceLoaderRevision", fabricResourceLoaderRevision)
 
     // Replace Fabric Keybinding/Keymapping module name.
     // >=26.1.2 has "mapping", previous versions have "binding".
-    inputs.property("fabricKey", "binding")
+    inputs.property("fabricKeyApiName", "binding")
+
+    // Determine and replace the Fabric API module name.
+    val fabricApiName = if (mcp >= "1.18.2") "fabric-api" else "fabric"
+    inputs.property("fabricApiName", fabricApiName)
 
     // Determine and replace the platform version range requirement.
     val platformRequirement = "${project.property("sc.platform-requirement")}"
