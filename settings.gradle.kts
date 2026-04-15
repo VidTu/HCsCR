@@ -57,6 +57,15 @@ include(":compile")
 val types = listOf("fabric", "forge", "neoforge")
 val versions = listOf("26.2", "26.1.2", "1.21.11", "1.21.10", "1.21.8", "1.21.5", "1.21.4", "1.21.3", "1.21.1", "1.20.6", "1.20.4", "1.20.2", "1.20.1", "1.19.4", "1.19.2", "1.18.2", "1.17.1", "1.16.5")
 
+// Actively supported version system. See README.md for the support policy.
+// Depends on the "ru.vidtu.hcscr.legacy" boolean system property:
+// - "false" (default): Compile only versions listed in "supportedVersions".
+// - "true": Compile all versions listed in "versions".
+// If "only" version feature is used, this is ignored.
+val supportedVersions = setOf("26.2", "26.1.2", "1.21.11", "1.21.1", "1.20.1")
+require(versions.containsAll(supportedVersions)) { "Not all actively supported versions '${supportedVersions}' are listed in all supported versions '${versions}'." }
+val includeLegacyVersions = System.getProperty("ru.vidtu.hcscr.legacy").toBoolean()
+
 // Process the "only" version feature.
 // Pass the "ru.vidtu.hcscr.only" system property with "<version>-<type>"
 // to the Gradle daemon and it will compile only* the required version,
@@ -76,9 +85,8 @@ if (onlyId != null) {
     require(types.contains(onlyType)) { "Invalid only version '${onlyId}', type '${onlyType}' extracted from 'ru.vidtu.hcscr.only' not found in ${types.joinToString()}." }
 }
 
-// Create the "ignored" version list.
-// It serves no real purpose, just to warn.
-val ignored = mutableListOf<String>()
+// Create the "excluded" version list. It serves no real purpose, just to log.
+val excluded = mutableListOf<String>()
 
 // Setup stonecutter.
 stonecutter {
@@ -89,17 +97,25 @@ stonecutter {
     create(rootProject) {
         // Create projects.
         for (version in versions) {
+            // Process the "supported" versions.
+            // Note: There's no concept of "supported" loaders.
+            if ((onlyId == null) && !includeLegacyVersions && !supportedVersions.contains(version)) {
+                excluded.add(version)
+                continue
+            }
+
+            // Iterate types.
             for (type in types) {
                 // Extract the ID.
                 val id = "${version}-${type}"
 
-                // Process the "only" version.
+                // Process the "only" version ID.
                 if ((onlyId != null) && (id != onlyId) && (id != latestId)) continue
 
                 // Check if version is ignored.
                 val subPath = file("versions/${id}")
                 if (subPath.resolve(".ignored").isFile) {
-                    ignored.add(id)
+                    excluded.add(id)
                     continue
                 }
 
@@ -131,7 +147,11 @@ stonecutter {
     }
 }
 
-// Warn about ignored versions.
-if (ignored.isNotEmpty()) {
-    logger.warn("Ignored versions: ${ignored.joinToString()}")
+// Log about excluded versions.
+if (excluded.isNotEmpty()) {
+    if (includeLegacyVersions) {
+        logger.lifecycle("Excluded versions: ${excluded.joinToString()}. Ignored (.ignore) versions are always excluded. Legacy versions were included.")
+    } else {
+        logger.lifecycle("Excluded versions: ${excluded.joinToString()}. Ignored (.ignore) versions are always excluded. Legacy versions were excluded, use 'ru.vidtu.hcscr.legacy' property or '--legacy' script flag to include them.")
+    }
 }

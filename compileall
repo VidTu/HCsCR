@@ -23,5 +23,12 @@
 # Fail on error, fail on unbound variable, verbose mode, xtrace mode.
 set -euvx
 
-# Build.
-./gradlew assemble
+# Check legacy state.
+for arg in "$@"; do [ "${arg}" = '--legacy' ] && HCSCR_LEGACY=true; done
+if [ "${HCSCR_LEGACY:-}" = "true" ]; then
+    # Build with legacy.
+    ./gradlew -Dru.vidtu.hcscr.legacy=true assemble
+else
+    # Build without legacy.
+    ./gradlew assemble
+fi

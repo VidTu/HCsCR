@@ -18,5 +18,14 @@
 ::
 :: SPDX-License-Identifier: Apache-2.0
 
-:: Build.
-gradlew.bat assemble
+:: Check legacy state.
+for %%a in (%*) do (
+    if "%%~a"=="--legacy" set HCSCR_LEGACY=1
+)
+if "%HCSCR_LEGACY%"=="true" (
+    :: Build with legacy.
+    gradlew.bat -Dru.vidtu.hcscr.legacy=true assemble
+) else (
+    :: Build without legacy.
+    gradlew.bat assemble
+)
