@@ -20,7 +20,7 @@
 
 :: Check legacy state.
 for %%a in (%*) do (
-    if "%%~a"=="--legacy" set HCSCR_LEGACY=1
+    if "%%~a"=="--legacy" set HCSCR_LEGACY=true
 )
 if "%HCSCR_LEGACY%"=="true" (
     :: Build with legacy.
