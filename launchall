@@ -20,11 +20,14 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Fail on error, fail on unbound variable, verbose mode, xtrace mode.
-set -euvx
+# Fail on error, fail on unbound variable, verbose mode, xtrace mode, pipefail mode.
+set -euvxo pipefail
 
 # Iterate.
 for folder in versions/*; do
+    # Extract the version (only the folder name) from the full relative path.
     version=$(basename -- "${folder}")
-    [ -f "${folder}/.ignored" ] || ./gradlew "${version}:runClient"
+
+    # Launch, unless ".ignored" exists.
+    [ -f "${folder}/.ignored" ] || ./gradlew "-Dru.vidtu.hcscr.only=${version}" "${version}:runClient"
 done

@@ -18,6 +18,9 @@
 ::
 :: SPDX-License-Identifier: Apache-2.0
 
+:: Set local variable scope.
+setlocal
+
 :: Check legacy state.
 for %%a in (%*) do (
     if "%%~a"=="--legacy" set HCSCR_LEGACY=true
@@ -29,3 +32,6 @@ if "%HCSCR_LEGACY%"=="true" (
     :: Build without legacy.
     gradlew.bat assemble
 )
+
+:: End local variable scope.
+endlocal

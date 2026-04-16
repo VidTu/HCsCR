@@ -20,8 +20,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Fail on error, fail on unbound variable, verbose mode, xtrace mode.
-set -euvx
+# Fail on error, fail on unbound variable, verbose mode, xtrace mode, pipefail mode.
+set -euvxo pipefail
 
 # Launch.
 ./gradlew "-Dru.vidtu.hcscr.only=${1}" "${1}:runClient"

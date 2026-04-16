@@ -20,8 +20,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Fail on error, fail on unbound variable, verbose mode, xtrace mode.
-set -euvx
+# Fail on error, fail on unbound variable, verbose mode, xtrace mode, pipefail mode.
+set -euvxo pipefail
 
 # Reset.
 ./gradlew "Reset active project"

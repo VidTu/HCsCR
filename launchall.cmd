@@ -18,8 +18,11 @@
 ::
 :: SPDX-License-Identifier: Apache-2.0
 
+:: Iterate.
 for /D %%f in (versions\*) do (
+    :: Skip, if ".ignored" exists.
     if not exist %%f\.ignored (
-        gradlew.bat "%%~nxf:runClient"
+        :: Launch.
+        gradlew.bat "-Dru.vidtu.hcscr.only=%%~nxf" "%%~nxf:runClient"
     )
 )

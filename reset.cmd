@@ -18,4 +18,5 @@
 ::
 :: SPDX-License-Identifier: Apache-2.0
 
+:: Reset.
 gradlew.bat "Reset active project"

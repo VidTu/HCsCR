@@ -18,4 +18,5 @@
 ::
 :: SPDX-License-Identifier: Apache-2.0
 
+:: Switch.
 gradlew.bat "Set active project to %1"
