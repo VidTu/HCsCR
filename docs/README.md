@@ -15,7 +15,7 @@ Remove your end crystals before the server even knows you hit 'em!
 
 ## Dependencies
 
-- Fabric Loader, Quilt Loader, Forge, or NeoForge
+- Fabric, Forge, NeoForge, or Quilt
 - Minecraft ([Supported Versions](#supported-versions))
 - **Fabric/Quilt only**: [Fabric API](https://modrinth.com/mod/fabric-api)
   or [QFAPI/QSL](https://modrinth.com/mod/qsl) (*Required*)
@@ -150,24 +150,21 @@ Because writing READMEs is easier than writing actual code.
 **A**: [Perhaps](https://github.com/VidTu/HCsCR/commit/1fd405d66e447c2dbdb775a39e3ca066b20e2fc4),
 but with [consequences](https://github.com/VidTu/HCsCR/commit/1898f1dc49a3b9e154cc89b40652a5cb30ef8459).
 Mostly, no, the code is 99.67% human-written, because AI is generating dumb
-stuff, especially for Minecraft. If you (or some contributors) will use AI and
+stuff, especially for Minecraft. If you (or some contributors) will use AI, and
 it will magically® work™, good for you. I don't promote AI nor am I against it.
 
 **Q**: Does HCsCR have a public API?  
 **A**: Nope. Except for the plugin channel mentioned above, there's no
 public-facing API in this mod. All classes/packages are marked as
-[@ApiStatus.Internal](https://javadoc.io/static/org.jetbrains/annotations/26.0.2/org/jetbrains/annotations/ApiStatus.Internal.html)
+[@ApiStatus.Internal](https://javadoc.io/static/org.jetbrains/annotations/26.1.0/org/jetbrains/annotations/ApiStatus.Internal.html)
 for that reason.
 
-**Q**: Can I still *link*/compile against to the mod? What about the
-[SemVer](https://semver.org/) versioning used by the mod?  
-**A**: You can, at your own risk. SemVer-compatible versioning is used by HCsCR
-for ease of use (and also Fabric uses it internally to compare versions),
-but it is used arbitrarily, that is: major version usually bumps after a huge
-code refactoring or a major change, minor version usually bumps after a minor
-code addition, patch version usually bumps after bug fixes/optimizations/ports
-to newer versions. This mod does not declare a public API, therefore, breaking
-source/binary changes may and will occur even between minor and patch versions.
+**Q**: Can I still *link*/compile against to the mod? What about
+the [SemVer](https://semver.org/) versioning used by the mod?  
+**A**: You can, at your own risk. SemVer-compatible versioning is
+used by HCsCR for ease of use, but it is used arbitrarily. This mod
+does not declare a public API, therefore, breaking source/binary
+changes may and will occur even between minor and patch versions.
 
 ## License
 
