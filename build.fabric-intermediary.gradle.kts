@@ -37,7 +37,7 @@ import com.google.gson.JsonElement
 import net.fabricmc.loom.task.RemapJarTask
 import net.fabricmc.loom.task.RunGameTask
 
-// Configure plugins.
+// Plugins.
 plugins {
     alias(libs.plugins.fabric.loom.remap)
 }

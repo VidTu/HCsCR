@@ -35,7 +35,7 @@
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 
-// Configure plugins.
+// Plugins.
 plugins {
     alias(libs.plugins.neogradle)
 }

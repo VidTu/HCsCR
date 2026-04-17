@@ -36,7 +36,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonElement
 import net.minecraftforge.renamer.gradle.RenameJar
 
-// Configure plugins.
+// Plugins.
 plugins {
     alias(libs.plugins.forgegradle)
     alias(libs.plugins.forgerenamer)
