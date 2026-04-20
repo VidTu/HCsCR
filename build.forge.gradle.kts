@@ -176,7 +176,7 @@ tasks.withType<ProcessResources> {
     filteringCharset = "UTF-8"
 
     // Exclude not needed loader entrypoint files.
-    exclude("fabric.mod.json", "quilt.mod.json", "META-INF/neoforge.mods.toml")
+    exclude("fabric.mod.json", "META-INF/neoforge.mods.toml")
 
     // Determine and replace the platform version range requirement.
     val platformRequirement = "${project.property("sc.platform-requirement")}"
@@ -214,8 +214,8 @@ tasks.withType<ProcessResources> {
                 it.writeText(Gson().fromJson(it.readText(), JsonElement::class.java).toString())
             } else if (it.name.endsWith(".toml", ignoreCase = true)) {
                 it.writeText(it.readLines()
-                    .filter { s -> !s.startsWith('#') }
-                    .filter { s -> s.isNotBlank() }
+                    .filter { !it.startsWith('#') }
+                    .filter { it.isNotBlank() }
                     .joinToString("\n")
                     .replace(" = ", "="))
             }

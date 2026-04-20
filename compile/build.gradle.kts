@@ -69,7 +69,7 @@ tasks.withType<JavaCompile> {
     // options.release = 8
 }
 
-// Expand the debug.
+// Expand compile-time variables.
 sourceSets.main {
     blossom.javaSources {
         val fallbackProvider = providers.gradleProperty("ru.vidtu.hcscr.debug")

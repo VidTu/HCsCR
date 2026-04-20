@@ -126,9 +126,9 @@ tasks.withType<ProcessResources> {
 
     // Exclude not needed loader entrypoint files.
     if (mcp >= "1.20.6") {
-        exclude("fabric.mod.json", "quilt.mod.json", "META-INF/mods.toml")
+        exclude("fabric.mod.json", "META-INF/mods.toml")
     } else {
-        exclude("fabric.mod.json", "quilt.mod.json", "META-INF/neoforge.mods.toml")
+        exclude("fabric.mod.json", "META-INF/neoforge.mods.toml")
     }
 
     // Determine and replace the platform version range requirement.
@@ -164,8 +164,8 @@ tasks.withType<ProcessResources> {
                 it.writeText(Gson().fromJson(it.readText(), JsonElement::class.java).toString())
             } else if (it.name.endsWith(".toml", ignoreCase = true)) {
                 it.writeText(it.readLines()
-                    .filter { s -> !s.startsWith('#') }
-                    .filter { s -> s.isNotBlank() }
+                    .filter { !it.startsWith('#') }
+                    .filter { it.isNotBlank() }
                     .joinToString("\n")
                     .replace(" = ", "="))
             }

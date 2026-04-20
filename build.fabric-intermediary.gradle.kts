@@ -235,7 +235,7 @@ tasks.withType<ProcessResources> {
 
     // Expand version and dependencies.
     inputs.property("version", version)
-    filesMatching(listOf("fabric.mod.json", "quilt.mod.json", "hcscr.mixins.json")) {
+    filesMatching(listOf("fabric.mod.json", "hcscr.mixins.json")) {
         expand(inputs.properties)
     }
 
