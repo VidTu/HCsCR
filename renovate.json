@@ -5,7 +5,7 @@
   ],
   "labels": [
     "type:bot"
-  ]
+  ],
   "packageRules": [
     {
       "matchPackageNames": [
