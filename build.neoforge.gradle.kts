@@ -37,6 +37,8 @@ import com.google.gson.JsonElement
 
 // Plugins.
 plugins {
+    id("java")
+    alias(libs.plugins.blossom)
     alias(libs.plugins.neogradle)
 }
 
@@ -94,9 +96,6 @@ dependencies {
     compileOnly(libs.jetbrains.annotations)
     compileOnly(libs.error.prone.annotations)
 
-    // Compile-time constants. (Blossom)
-    compileOnly(project(":compile"))
-
     // Force non-vulnerable Log4J, so that vulnerability scanners don't scream loud.
     // It's also cool for our logging config. (see the "dev/log4j2.xml" file)
     implementation(libs.log4j) {
@@ -118,6 +117,21 @@ tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
     options.compilerArgs.addAll(listOf("-g", "-parameters"))
     options.release = javaTarget
+}
+
+sourceSets.main {
+    blossom.javaSources {
+        // Point to root directory.
+        templates(rootDir.resolve("src/main/java-templates"))
+
+        // Expand compile-time variables.
+        val fallbackProvider = providers.gradleProperty("ru.vidtu.hcscr.debug")
+            .orElse(provider { "${gradle.taskGraph.allTasks.any { it.name == "runClient" }}" })
+        property("debugAsserts", providers.gradleProperty("ru.vidtu.hcscr.debug.asserts").orElse(fallbackProvider))
+        property("debugLogs", providers.gradleProperty("ru.vidtu.hcscr.debug.logs").orElse(fallbackProvider))
+        property("debugProfiler", providers.gradleProperty("ru.vidtu.hcscr.debug.profiler").orElse(fallbackProvider))
+        property("version", "${version}")
+    }
 }
 
 tasks.withType<ProcessResources> {

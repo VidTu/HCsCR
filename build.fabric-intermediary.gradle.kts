@@ -39,6 +39,8 @@ import net.fabricmc.loom.task.RunGameTask
 
 // Plugins.
 plugins {
+    id("java")
+    alias(libs.plugins.blossom)
     alias(libs.plugins.fabric.loom.remap)
 }
 
@@ -139,9 +141,6 @@ dependencies {
     compileOnly(libs.jetbrains.annotations)
     compileOnly(libs.error.prone.annotations)
 
-    // Compile-time constants. (Blossom)
-    compileOnly(project(":compile"))
-
     // Minecraft. The dependency may be manually specified for example for snapshots.
     val minecraftDependencyProperty = findProperty("sc.minecraft-dependency")
     require(minecraftDependencyProperty != mcv) { "Unneeded 'sc.minecraft-dependency' property set to ${minecraftDependencyProperty} in ${project}, it already uses this version." }
@@ -198,6 +197,21 @@ tasks.withType<JavaCompile> {
     // JDK 9+ does listen to this option.
     if (javaVersion.isJava9Compatible) {
         options.release = javaTarget
+    }
+}
+
+sourceSets.main {
+    blossom.javaSources {
+        // Point to root directory.
+        templates(rootDir.resolve("src/main/java-templates"))
+
+        // Expand compile-time variables.
+        val fallbackProvider = providers.gradleProperty("ru.vidtu.hcscr.debug")
+            .orElse(provider { "${gradle.taskGraph.allTasks.any { it.name == "runClient" }}" })
+        property("debugAsserts", providers.gradleProperty("ru.vidtu.hcscr.debug.asserts").orElse(fallbackProvider))
+        property("debugLogs", providers.gradleProperty("ru.vidtu.hcscr.debug.logs").orElse(fallbackProvider))
+        property("debugProfiler", providers.gradleProperty("ru.vidtu.hcscr.debug.profiler").orElse(fallbackProvider))
+        property("version", "${version}")
     }
 }
 

@@ -42,6 +42,8 @@ import com.google.gson.JsonElement
 
 // Plugins.
 plugins {
+    id("java")
+    alias(libs.plugins.blossom)
     alias(libs.plugins.moddevgradle.legacy)
 }
 
@@ -68,7 +70,7 @@ sc {
 }
 
 legacyForge {
-    // Minecraft and Forge.
+    // Minecraft and NeoForge.
     val neoforge = "${property("sc.neoforge")}"
     require(neoforge.isNotBlank() && neoforge != "[SC]") { "NeoForge (Hacky) version is not provided via 'sc.neoforge' in ${project}." }
     val extractedMinecraft = neoforge.substringBefore('-')
@@ -128,9 +130,6 @@ dependencies {
     compileOnly(libs.jetbrains.annotations)
     compileOnly(libs.error.prone.annotations)
 
-    // Compile-time constants. (Blossom)
-    compileOnly(project(":compile"))
-
     // Mixin.
     annotationProcessor("${libs.mixin.get()}:processor")
 
@@ -152,6 +151,21 @@ tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
     options.compilerArgs.addAll(listOf("-g", "-parameters"))
     options.release = 17
+}
+
+sourceSets.main {
+    blossom.javaSources {
+        // Point to root directory.
+        templates(rootDir.resolve("src/main/java-templates"))
+
+        // Expand compile-time variables.
+        val fallbackProvider = providers.gradleProperty("ru.vidtu.hcscr.debug")
+            .orElse(provider { "${gradle.taskGraph.allTasks.any { it.name == "runClient" }}" })
+        property("debugAsserts", providers.gradleProperty("ru.vidtu.hcscr.debug.asserts").orElse(fallbackProvider))
+        property("debugLogs", providers.gradleProperty("ru.vidtu.hcscr.debug.logs").orElse(fallbackProvider))
+        property("debugProfiler", providers.gradleProperty("ru.vidtu.hcscr.debug.profiler").orElse(fallbackProvider))
+        property("version", "${version}")
+    }
 }
 
 tasks.withType<ProcessResources> {

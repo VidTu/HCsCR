@@ -41,7 +41,7 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public final class HCompile {
     /**
-     * Mod version. This version is provided <b>WITHOUT</b> the loader type.
+     * Mod version. The version is provided with the loader type and Minecraft version. (i.e. with build metadata)
      */
     @CompileTimeConstant
     public static final String VERSION = "{{ version }}";

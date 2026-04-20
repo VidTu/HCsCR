@@ -50,9 +50,6 @@ plugins {
 // Project.
 rootProject.name = "HCsCR"
 
-// Compile-time constants. (Blossom)
-include(":compile")
-
 // Prepare the list of versions and types.
 val types = listOf("fabric", "forge", "neoforge")
 val versions = listOf("26.2", "26.1.2", "1.21.11", "1.21.10", "1.21.8", "1.21.5", "1.21.4", "1.21.3", "1.21.1", "1.20.6", "1.20.4", "1.20.2", "1.20.1", "1.19.4", "1.19.2", "1.18.2", "1.17.1", "1.16.5")
