@@ -3,6 +3,9 @@
   "extends": [
     "config:recommended"
   ],
+  "labels": [
+    "type:bot"
+  ]
   "packageRules": [
     {
       "matchPackageNames": [
