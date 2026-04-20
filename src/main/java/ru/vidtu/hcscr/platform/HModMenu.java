@@ -142,10 +142,7 @@ public final class HModMenu implements ModMenuApi {
          * @see HttpHeaders#USER_AGENT
          */
         @CompileTimeConstant
-        private static final String USER_AGENT = "VidTu/HCsCR/" + HCompile.VERSION + " (update checker; https://github.com/VidTu/HCsCR; pig@vidtu.ru) MinecraftJava/" +
-            //$ minecraft_version
-            "26.2"
-            + " Fabric";
+        private static final String USER_AGENT = "VidTu/HCsCR/" + HCompile.VERSION + " (updater; https://github.com/VidTu/HCsCR; pig@vidtu.ru)";
 
         /**
          * Maximum length for the updater response to prevent abuse.

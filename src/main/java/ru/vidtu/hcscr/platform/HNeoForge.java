@@ -108,10 +108,7 @@ public final class HNeoForge {
 
         // Log.
         final long start = System.nanoTime();
-        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Loading... (platform: neoforge, version: " + HCompile.VERSION + ", mc: " +
-                //$ minecraft_version
-                "26.1.2"
-                + ')');
+        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Loading... (platform: neoforge, version: " + HCompile.VERSION + ')');
         LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: This build of the mod has " +
                 "asserts " + (HCompile.DEBUG_ASSERTS ? "ON" : "OFF") +
                 ", logs " + (HCompile.DEBUG_LOGS ? "ON" : "OFF") +

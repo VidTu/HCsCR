@@ -66,7 +66,6 @@ sc {
     constants["forge"] = true // Yes, that's correct for NeoForge 1.20.1.
     constants["hacky_neoforge"] = true // And that's extremely correct.
     constants["neoforge"] = false // Yes, that's also correct.
-    swaps["minecraft_version"] = "\"1.20.1\""
 }
 
 legacyForge {
@@ -221,6 +220,9 @@ tasks.withType<Jar> {
     // Add LICENSE and NOTICE.
     from(rootDir.resolve("LICENSE"))
     from(rootDir.resolve("NOTICE"))
+
+    // Exclude compile-only code.
+    exclude("ru/vidtu/hcscr/platform/HCompile.class")
 
     // Remove package-info.class, unless package debug is on. (to save space)
     if (!"${findProperty("ru.vidtu.hcscr.debug.package")}".toBoolean()) {

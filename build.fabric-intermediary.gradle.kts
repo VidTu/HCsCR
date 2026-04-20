@@ -73,7 +73,6 @@ sc {
     constants["forge"] = false
     constants["hacky_neoforge"] = false
     constants["neoforge"] = false
-    swaps["minecraft_version"] = "\"${mcv}\""
 }
 
 loom {
@@ -268,6 +267,9 @@ tasks.withType<Jar> {
     // Add LICENSE and NOTICE.
     from(rootDir.resolve("LICENSE"))
     from(rootDir.resolve("NOTICE"))
+
+    // Exclude compile-only code.
+    exclude("ru/vidtu/hcscr/platform/HCompile.class")
 
     // Remove package-info.class, unless package debug is on. (to save space)
     if (!"${findProperty("ru.vidtu.hcscr.debug.package")}".toBoolean()) {
