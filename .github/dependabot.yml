@@ -39,9 +39,3 @@ updates:
       - dependency-name: "net.minecraftforge:forge"
       - dependency-name: "net.neoforged:forge"
       - dependency-name: "net.neoforged:neoforge"
-  - package-ecosystem: gradle
-    directory: '/compile'
-    schedule:
-      interval: daily
-    labels:
-      - 'type:bot'
