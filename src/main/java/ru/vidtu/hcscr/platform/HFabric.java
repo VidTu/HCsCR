@@ -98,11 +98,6 @@ public final class HFabric implements ClientModInitializer {
         // Log.
         final long start = System.nanoTime();
         LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Loading... (platform: fabric, version: " + HCompile.VERSION + ')');
-        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: This build of the mod has " +
-                "asserts " + (HCompile.DEBUG_ASSERTS ? "ON" : "OFF") +
-                ", logs " + (HCompile.DEBUG_LOGS ? "ON" : "OFF") +
-                ", profiler " + (HCompile.DEBUG_PROFILER ? "ON" : "OFF") +
-                '.');
 
         // Load the config.
         HConfig.load();
