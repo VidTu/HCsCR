@@ -35,10 +35,9 @@
 pluginManagement {
     repositories {
         gradlePluginPortal()
-        maven("https://maven.fabricmc.net/") // Architectury Loom. (Fabric dependencies)
-        maven("https://maven.architectury.dev/") // Architectury Loom.
-        maven("https://maven.minecraftforge.net/") // Architectury Loom. (Forge dependencies)
-        maven("https://maven.neoforged.net/releases/") // Architectury Loom. (NeoForge dependencies)
+        maven("https://maven.fabricmc.net/") // Fabric.
+        maven("https://maven.minecraftforge.net/") // Forge.
+        maven("https://maven.neoforged.net/releases/") // NeoForge.
     }
 }
 
@@ -65,10 +64,10 @@ val includeLegacyVersions = System.getProperty("ru.vidtu.hcscr.legacy").toBoolea
 
 // Process the "only" version feature.
 // Pass the "ru.vidtu.hcscr.only" system property with "<version>-<type>"
-// to the Gradle daemon and it will compile only* the required version,
+// to the Gradle daemon, and it will compile only* the required version,
 // which may reduce the build time if you don't need other versions.
 // (* Sometimes, the latest version will also be compiled due to how this works)
-val onlyId = System.getProperty("ru.vidtu.hcscr.only")
+val onlyId: String? = System.getProperty("ru.vidtu.hcscr.only")
 val latestId = "${versions[0]}-${types[0]}"
 
 // Check the "only" version validity.
@@ -76,10 +75,10 @@ if (onlyId != null) {
     logger.warn("Processing only version '${onlyId}' via 'ru.vidtu.hcscr.only'.")
     val idx = onlyId.indexOf('-')
     require(idx != -1) { "Invalid only version '${onlyId}', no '-' delimiter extracted from 'ru.vidtu.hcscr.only'." }
-    val onlyVersion = onlyId.substring(0, idx)
+    val onlyVersion = onlyId.take(idx)
     val onlyType = onlyId.substring(idx + 1)
-    require(versions.contains(onlyVersion)) { "Invalid only version '${onlyId}', version number '${onlyVersion}' extracted from 'ru.vidtu.hcscr.only' not found in ${versions.joinToString()}." }
-    require(types.contains(onlyType)) { "Invalid only version '${onlyId}', type '${onlyType}' extracted from 'ru.vidtu.hcscr.only' not found in ${types.joinToString()}." }
+    require(onlyVersion in versions) { "Invalid only version '${onlyId}', version number '${onlyVersion}' extracted from 'ru.vidtu.hcscr.only' not found in ${versions.joinToString()}." }
+    require(onlyType in types) { "Invalid only version '${onlyId}', type '${onlyType}' extracted from 'ru.vidtu.hcscr.only' not found in ${types.joinToString()}." }
 }
 
 // Create the "excluded" version list. It serves no real purpose, just to log.
@@ -96,7 +95,7 @@ stonecutter {
         for (version in versions) {
             // Process the "supported" versions.
             // Note: There's no concept of "supported" loaders.
-            if ((onlyId == null) && !includeLegacyVersions && !supportedVersions.contains(version)) {
+            if ((onlyId == null) && !includeLegacyVersions && version !in supportedVersions) {
                 excluded.add(version)
                 continue
             }
@@ -116,7 +115,7 @@ stonecutter {
                     continue
                 }
 
-                // Setup the project.
+                // Set up the project.
                 val project = version(id, version)
                 if (type == "fabric") {
                     // Fabric builds require "special care",

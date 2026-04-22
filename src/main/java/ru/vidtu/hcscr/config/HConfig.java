@@ -29,6 +29,7 @@ import com.google.gson.annotations.SerializedName;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
+import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
@@ -155,7 +156,7 @@ public final class HConfig {
             // Read the config.
             try (final BufferedReader reader = Files.newBufferedReader(file)) {
                 // Load the config.
-                GSON.fromJson(reader, HConfig.class);
+                final HConfig ignoredInstance = GSON.fromJson(reader, HConfig.class);
             }
 
             // Log. (**DEBUG**)
@@ -244,7 +245,7 @@ public final class HConfig {
      *
      * @return Crystals removal mode, {@link CrystalMode#DIRECT} by default.
      * @see #cycleCrystals(boolean)
-     * @see #shouldProcess(Entity)
+     * @see #shouldProcess(Player, Entity)
      * @see #crystalsDelay()
      * @see #crystalsResync()
      */
@@ -349,30 +350,34 @@ public final class HConfig {
     /**
      * Checks whether the entity should be processed. This doesn't check the {@link #enable()} state.
      *
-     * @param entity Entity to check
+     * @param player Attacking player
+     * @param entity Attacked entity to check
      * @return Whether the entity should be processed
      * @see #crystals()
      */
     @Contract(pure = true)
-    public static boolean shouldProcess(final Entity entity) {
+    public static boolean shouldProcess(final Player player, final Entity entity) {
         // Validate.
         if (HCompile.DEBUG_ASSERTS) {
-            assert (entity != null) : "HCsCR: Parameter 'entity' is null.";
+            assert (player != null) : "HCsCR: Parameter 'player' is null. (entity: " + entity + ')';
+            assert (entity != null) : "HCsCR: Parameter 'entity' is null. (player: " + player + ')';
         }
 
         // Check depending on the mode.
+        //noinspection RedundantSuppression // <- Preprocessor Statement.
         switch (crystals) {
             case DIRECT:
                 return (entity instanceof EndCrystal);
             case ENVELOPING:
                 //? if >=1.19.4 {
-                //noinspection SimplifiableIfStatement // <- Preprocessor Statement.
                 if (entity instanceof Interaction) return true;
                 //?}
                 //? if >=26.2 {
-                if ((entity instanceof AbstractCubeMob) && entity.isInvisible()) return true;
+                //noinspection SimplifiableIfStatement // <- Preprocessor Statement.
+                if ((entity instanceof AbstractCubeMob) && entity.isInvisibleTo(player)) return true;
                 //?} else {
-                /*if ((entity instanceof Slime) && entity.isInvisible()) return true;
+                /*//noinspection SimplifiableIfStatement // <- Preprocessor Statement.
+                if ((entity instanceof Slime) && entity.isInvisibleTo(player)) return true;
                 *///?}
                 return (entity instanceof EndCrystal);
             default:

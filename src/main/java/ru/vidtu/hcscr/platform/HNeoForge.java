@@ -348,7 +348,7 @@ public final class HNeoForge {
         ^///?}
 
         // Done.
-        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / HCsCR.NANOS_IN_MS);
+        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / 1_000_000L);
     }
 
     @Contract(pure = true)

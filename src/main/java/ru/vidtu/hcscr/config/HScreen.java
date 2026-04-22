@@ -154,7 +154,8 @@ public final class HScreen extends Screen {
         // Add done button.
         this.addVersionedWidget(HStonecutter.createButton(font, buttonX, this.height - 24, 200, 20,
                 CommonComponents.GUI_DONE, HStonecutter.translate("hcscr.close"),
-                (final Button button, final Consumer<Component> tipSetter) -> this.onClose(), this::tooltip));
+                (final Button ignoredButton, final Consumer<Component> ignoredTipSetter) -> this.onClose(),
+                this::tooltip));
     }
 
     /**

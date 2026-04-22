@@ -760,7 +760,6 @@ public final class HStonecutter {
      * @param tooltipRenderer Last pass tooltip renderer, typically {@link HScreen}
      * @return A new checkbox instance
      */
-    @SuppressWarnings("BooleanParameter") // <- Boolean method used as a state, not as control flow. (checkbox "checked" state)
     @Contract(value = "_, _, _, _, _, _, _, _ -> new", pure = true)
     public static Checkbox createCheckbox(final Font font, final int x, final int y, final Component message,
                                           final Component tooltip, final boolean check, final BooleanConsumer handler,
@@ -782,7 +781,7 @@ public final class HStonecutter {
         final Checkbox box = Checkbox.builder(message, font) // Implicit NPE for 'message', 'font'
                 .pos(x - ((font.width(message) + 24) / 2), y)
                 .selected(check)
-                .onValueChange((final Checkbox checkbox, final boolean value) -> handler.accept(value)) // Implicit NPE for 'handler'
+                .onValueChange((final Checkbox ignoredCheckbox, final boolean value) -> handler.accept(value)) // Implicit NPE for 'handler'
                 .build();
         //?} else {
         /*final int width = font.width(message) + 24; // Implicit NPE for 'font', 'message'

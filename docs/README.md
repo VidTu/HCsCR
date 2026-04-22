@@ -41,7 +41,7 @@ on your server. Ask the admins to install one if the command doesn't exist.
 ## Supported Versions
 
 | Support              | Versions                                                                                                | Note                                                                                                                                        |
-| -------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+|----------------------|---------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
 | Beta&nbsp;&#x1F195;  | 26.2                                                                                                    | Newly supported versions. May be unstable, but *active* feature development happens here, bugs are *actively* fixed.                        |
 | Active&nbsp;&#x2705; | 26.1.2, 1.21.11, 1.21.1, 1.20.1                                                                         | Actively supported versions. Well tested, features are *often* backported and bugs are *actively* fixed.                                    |
 | Legacy&nbsp;&#x2753; | 1.21.10, 1.21.8, 1.21.5, 1.21.4, 1.21.3, 1.20.6, 1.20.4, 1.20.2, 1.19.4, 1.19.2, 1.18.2, 1.17.1, 1.16.5 | Versions supported on a best-effort basis. Features are backported *sometimes*. Bugs are fixed *often*. Critical bugs are *actively* fixed. |
@@ -219,7 +219,7 @@ It also uses [Gradle](https://gradle.org/) and [Java](https://java.com/).
 > On slow devices (e.g., GitHub CI),
 > it might take **about 2 hours**.
 
-To compile all [Beta, Active, and Legacy](#supported-versions)
+To compile all [Beta, Active and Legacy](#supported-versions)
 supported versions of the mod from the source code:
 
 1. Have 8 GB of free RAM, 30 GB of free disk space,

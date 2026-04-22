@@ -33,6 +33,7 @@
 // Plugins.
 plugins {
     id("dev.kikugie.stonecutter")
+    alias(libs.plugins.idea.ext)
 }
 
 // Active Stonecutter version. See:

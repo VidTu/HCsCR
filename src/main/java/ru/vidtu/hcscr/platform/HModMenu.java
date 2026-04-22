@@ -50,6 +50,7 @@ import org.jetbrains.annotations.Blocking;
 import org.jetbrains.annotations.CheckReturnValue;
 import org.jspecify.annotations.Nullable;
 import ru.vidtu.hcscr.HCsCR;
+
 import java.io.StringReader;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -123,7 +124,7 @@ public final class HModMenu implements ModMenuApi {
      */
     @ApiStatus.Internal
     @NullMarked
-    static final class Updater implements UpdateChecker {
+    /*package-private*/ static final class Updater implements UpdateChecker {
         /**
          * URL for fetching the update info.
          */
@@ -188,18 +189,18 @@ public final class HModMenu implements ModMenuApi {
                 builder.addEscape(c, "\\u%04X".formatted((int) c));
             }
             SANITIZER = builder
-                .addEscape('\0', "\\0")
-                .addEscape('\b', "\\b")
-                .addEscape('\t', "\\t")
-                .addEscape('\n', "\\n")
-                .addEscape('\f', "\\f")
-                .addEscape('\r', "\\r")
-                // .addEscape('\s', "\\s") // Don't escape spaces.
-                .addEscape('\"', "\\\"")
-                .addEscape('\'', "\\'")
-                .addEscape('\\', "\\\\")
-                .addEscape((char) 127, "\\u007F")
-                .build();
+                    .addEscape('\0', "\\0")
+                    .addEscape('\b', "\\b")
+                    .addEscape('\t', "\\t")
+                    .addEscape('\n', "\\n")
+                    .addEscape('\f', "\\f")
+                    .addEscape('\r', "\\r")
+                    // .addEscape('\s', "\\s") // Don't escape spaces.
+                    .addEscape('\"', "\\\"")
+                    .addEscape('\'', "\\'")
+                    .addEscape('\\', "\\\\")
+                    .addEscape((char) 127, "\\u007F")
+                    .build();
         }
 
         /**
@@ -309,10 +310,11 @@ public final class HModMenu implements ModMenuApi {
                     if ((rawVersion == null) || rawVersion.isBlank()) {
                         // Log. (**DEBUG**)
                         if (HCompile.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.HCSCR_MARKER)) {
+                            @SuppressWarnings("StreamToLoop") // <- Debug-only.
                             final String sanitizedKeys = '[' + properties.keySet().stream()
-                                .map((final Object key) -> '"' + SANITIZER.escape(key.toString()) + '"')
-                                .reduce((final String f, final String s) -> f + ", " + s)
-                                .orElse("") + ']';
+                                    .map((final Object key) -> '"' + SANITIZER.escape(key.toString()) + '"')
+                                    .reduce((final String first, final String second) -> first + ", " + second)
+                                    .orElse("") + ']';
                             LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: No update property found for key '{}'. (sanitizedKeys: {})", versionKey, sanitizedKeys);
                         }
 
@@ -335,7 +337,7 @@ public final class HModMenu implements ModMenuApi {
                     final Version currentVersionConstant = Version.parse(HCompile.VERSION);
                     final Version remoteVersion = Version.parse(rawVersion);
                     if ((currentVersionMeta.compareTo(remoteVersion) >= 0) &&
-                        (currentVersionConstant.compareTo(remoteVersion) >= 0)) {
+                            (currentVersionConstant.compareTo(remoteVersion) >= 0)) {
                         // Log. (**DEBUG**)
                         if (HCompile.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.HCSCR_MARKER)) {
                             final String sanitizedRemoteVersion = SANITIZER.escape(remoteVersion.toString());
@@ -365,8 +367,8 @@ public final class HModMenu implements ModMenuApi {
                     }
                     final String asciiLink = link.toASCIIString();
                     if (!"https".equals(link.getScheme()) || !"github.com".equals(link.getHost()) ||
-                        (link.getPort() != -1) || (link.getRawQuery() != null) ||
-                        (link.getRawFragment() != null) || (link.getRawUserInfo() != null)) {
+                            (link.getPort() != -1) || (link.getRawQuery() != null) ||
+                            (link.getRawFragment() != null) || (link.getRawUserInfo() != null)) {
                         throw new IllegalStateException("HCsCR: Invalid link data for update checking. (link: '" + asciiLink + "')");
                     }
 
@@ -377,7 +379,11 @@ public final class HModMenu implements ModMenuApi {
                     return new Update(channel, asciiLink, remoteVersion.getFriendlyString());
                 } finally {
                     // Close the client if it's closable. (Java 21+)
-                    if (client instanceof final AutoCloseable closeable) closeable.close();
+                    //? if >=1.20.6 {
+                    client.close();
+                    //?} else {
+                    /*if (client instanceof final AutoCloseable closeable) closeable.close();
+                    *///?}
                 }
             } catch (final Throwable t) {
                 // Log.

@@ -1,10 +1,8 @@
 <component name="ProjectDictionaryState">
   <dictionary name="project">
     <words>
-      <w>Architectury</w>
-      <w>Dminecraft</w>
       <w>Dorg</w>
-      <w>Lnet</w>
+      <w>Kyori</w>
       <w>Modrinth</w>
       <w>Mojang</w>
       <w>Mojmap</w>
@@ -14,40 +12,49 @@
       <w>appname</w>
       <w>axform</w>
       <w>cdpath</w>
-      <w>configdir</w>
-      <w>configguifactory</w>
       <w>configureondemand</w>
-      <w>displaytest</w>
-      <w>distmarker</w>
+      <w>cpvp</w>
       <w>distxform</w>
       <w>endlocal</w>
       <w>entrypoints</w>
       <w>errorlevel</w>
+      <w>fastutil</w>
       <w>fatjar</w>
-      <w>fmlclient</w>
-      <w>fmllegacy</w>
-      <w>foojay</w>
+      <w>fmljavamodloadingcontext</w>
+      <w>hackery</w>
       <w>hcscr</w>
-      <w>ignoreserveronly</w>
       <w>imhere</w>
       <w>javacmd</w>
-      <w>javafmlmod</w>
       <w>jvmargs</w>
       <w>kikugie</w>
+      <w>libffi</w>
       <w>minecraft</w>
       <w>modlauncher</w>
       <w>modmenu</w>
+      <w>mojmap</w>
       <w>neoforge</w>
+      <w>neogradle</w>
       <w>nolookups</w>
       <w>nsfe</w>
+      <w>pipefail</w>
       <w>readarray</w>
+      <w>readmes</w>
       <w>refmap</w>
+      <w>refmaps</w>
       <w>registrydump</w>
       <w>setlocal</w>
       <w>shellness</w>
+      <w>skybox</w>
       <w>ulimit</w>
       <w>vidtu</w>
       <w>xtrace</w>
+      <w>Дебаггинг</w>
+      <w>боёвки</w>
+      <w>кпвп</w>
+      <w>модов</w>
+      <w>оптимайзеров</w>
+      <w>пинга</w>
+      <w>якори</w>
     </words>
   </dictionary>
 </component>

@@ -54,7 +54,7 @@ val javaTarget = if (mcp >= "1.20.6") 21
 else if (mcp >= "1.18.2") 17
 else if (mcp >= "1.17.1") 16
 else 8
-val javaVersion = JavaVersion.toVersion(javaTarget)!!
+val javaVersion = JavaVersion.toVersion(javaTarget)
 java {
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
@@ -111,16 +111,9 @@ loom {
         // Remove server run, the mod is client-only.
         remove(findByName("server"))
     }
-
-    // Configure Mixin.
-    @Suppress("UnstableApiUsage") // <- Required to configure Mixin.
-    mixin {
-        // Use direct remapping instead of annotation processor and refmaps.
-        useLegacyMixinAp = false
-    }
 }
 
-// Make the game run with the compatible Java. (e.g,. Java 17 for 1.20.1)
+// Make the game run with the compatible Java. (e.g. Java 17 for 1.20.1)
 tasks.withType<RunGameTask> {
     javaLauncher = javaToolchains.launcherFor(java.toolchain)
 }

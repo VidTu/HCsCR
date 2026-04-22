@@ -55,7 +55,7 @@ else if (mcp >= "1.20.6") 21
 else if (mcp >= "1.18.2") 17
 else if (mcp >= "1.17.1") 16
 else 8
-val javaVersion = JavaVersion.toVersion(javaTarget)!!
+val javaVersion = JavaVersion.toVersion(javaTarget)
 java {
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion

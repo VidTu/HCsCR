@@ -79,7 +79,7 @@ legacyForge {
         neoForgeVersion = neoforge
 
         // Enable recompilation for CI.
-        // NOTE: Binpatching produces uncompilable artifacts for
+        // NOTE: Bin-patching produces uncompilable artifacts for
         // NeoForge 1.20.1, at least for HCsCR. Specifically, it
         // has issues with anonymous classes in HStonecutter.java.
         setDisableRecompilation(false)
@@ -104,7 +104,7 @@ legacyForge {
         }
     }
 
-    // Register sourcesets for debugging.
+    // Register source sets for debugging.
     mods {
         register("hcscr") {
             sourceSet(sourceSets["main"])
