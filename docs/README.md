@@ -16,7 +16,7 @@ Remove your end crystals before the server even knows you hit 'em!
 ## Dependencies
 
 - Fabric, Forge, NeoForge, or Quilt
-- Minecraft ([Supported Versions](#supported-versions))
+- Minecraft ([Supported versions](#versions))
 - **Fabric/Quilt only**: [Fabric API](https://modrinth.com/mod/fabric-api)
   or [QFAPI/QSL](https://modrinth.com/mod/qsl) (*Required*)
 - **Fabric/Quilt only**: [Mod Menu](https://modrinth.com/mod/modmenu)
@@ -38,7 +38,7 @@ optimizer mod available, but it's the most configurable out there.
 effective. Consider checking the `/fastcrystals` command or similar commands
 on your server. Ask the admins to install one if the command doesn't exist.
 
-## Supported Versions
+## Versions
 
 | Support              | Versions                                                                                                | Note                                                                                                                                        |
 |----------------------|---------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
@@ -64,7 +64,7 @@ You'll need a GitHub account to download these.
 **A**: Fabric, Forge, and NeoForge are supported. Quilt should work too.
 
 **Q**: Which Minecraft versions are/were supported?  
-**A**: See the "[Supported Versions](#supported-versions)" section.
+**A**: See the "[Versions](#versions)" section.
 
 **Q**: Why support so many Minecraft versions?  
 **A**: Because I can.

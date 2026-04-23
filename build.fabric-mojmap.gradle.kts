@@ -28,7 +28,6 @@
 // See "build.forge.gradle.kts" for Forge.
 // See "build.neoforge.gradle.kts" for NeoForge.
 // See "build.neoforge-hacky.gradle.kts" for NeoForge ugly hack for 1.20.1.
-// See "compile" for the compile-time constants and Blossom configuration.
 // See "stonecutter.gradle.kts" for the Stonecutter configuration.
 // See "settings.gradle.kts" for the Gradle configuration.
 
@@ -91,7 +90,7 @@ loom {
     }
 }
 
-// Make the game run with the compatible Java. (e.g. Java 17 for 1.20.1)
+// Make the game run with the compatible Java. (e.g., Java 17 for 1.20.1)
 tasks.withType<RunGameTask> {
     javaLauncher = javaToolchains.launcherFor(java.toolchain)
 }

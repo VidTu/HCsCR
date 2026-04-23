@@ -28,7 +28,6 @@
 // See "build.forge.gradle.kts" for Forge.
 // See "build.neoforge.gradle.kts" for NeoForge.
 // See "build.neoforge-hacky.gradle.kts" for NeoForge ugly hack for 1.20.1.
-// See "compile" for the compile-time constants and Blossom configuration.
 // See "stonecutter.gradle.kts" for the Stonecutter configuration.
 
 // Plugins.
@@ -95,7 +94,7 @@ stonecutter {
         for (version in versions) {
             // Process the "supported" versions.
             // Note: There's no concept of "supported" loaders.
-            if ((onlyId == null) && !includeLegacyVersions && version !in supportedVersions) {
+            if ((onlyId == null) && !includeLegacyVersions && (version !in supportedVersions)) {
                 excluded.add(version)
                 continue
             }

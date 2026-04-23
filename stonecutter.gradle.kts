@@ -27,7 +27,6 @@
 // See "build.forge.gradle.kts" for Forge.
 // See "build.neoforge.gradle.kts" for NeoForge.
 // See "build.neoforge-hacky.gradle.kts" for NeoForge ugly hack for 1.20.1.
-// See "compile" for the compile-time constants and Blossom configuration.
 // See "settings.gradle.kts" for the Gradle configuration.
 
 // Plugins.

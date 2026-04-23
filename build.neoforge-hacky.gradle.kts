@@ -28,7 +28,6 @@
 // See "build.fabric-mojmap.gradle.kts" for modern Mojmap Fabric.
 // See "build.forge.gradle.kts" for Forge.
 // See "build.neoforge.gradle.kts" for NeoForge.
-// See "compile" for the compile-time constants and Blossom configuration.
 // See "stonecutter.gradle.kts" for the Stonecutter configuration.
 // See "settings.gradle.kts" for the Gradle configuration.
 
