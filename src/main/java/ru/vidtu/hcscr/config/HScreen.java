@@ -152,7 +152,7 @@ public final class HScreen extends Screen {
         }, this::tooltip));
 
         // Add done button.
-        this.addVersionedWidget(HStonecutter.createButton(font, buttonX, this.height - 24, 200, 20,
+        this.addVersionedWidget(HStonecutter.createButton(font, buttonX, this.height - 28, 200, 20,
                 CommonComponents.GUI_DONE, HStonecutter.translate("hcscr.close"),
                 (final Button ignoredButton, final Consumer<Component> ignoredTipSetter) -> this.onClose(),
                 this::tooltip));
@@ -221,11 +221,11 @@ public final class HScreen extends Screen {
 
         // Render title.
         //? if >=26.1.2 {
-        graphics.centeredText(font, this.title, this.width / 2, 5, 0xFF_FF_FF_FF);
+        graphics.centeredText(font, this.title, this.width / 2, 12, 0xFF_FF_FF_FF);
         //?} elif >=1.20.1 {
-        /*graphics.drawCenteredString(font, this.title, this.width / 2, 5, 0xFF_FF_FF_FF);
+        /*graphics.drawCenteredString(font, this.title, this.width / 2, 12, 0xFF_FF_FF_FF);
         *///?} else {
-        /*drawCenteredString(graphics, font, this.title, this.width / 2, 5, 0xFF_FF_FF_FF);
+        /*drawCenteredString(graphics, font, this.title, this.width / 2, 12, 0xFF_FF_FF_FF);
         *///?}
 
         // Render the last pass tooltip.
@@ -298,6 +298,6 @@ public final class HScreen extends Screen {
         }
 
         // Calculate.
-        return (20 + (index * 24));
+        return (36 + (index * 24));
     }
 }
