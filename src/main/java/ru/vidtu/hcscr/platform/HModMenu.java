@@ -366,8 +366,7 @@ public final class HModMenu implements ModMenuApi {
                         throw new IllegalStateException("HCsCR: Invalid link URI for update checking. (sanitizedRawLink: '" + sanitizedRawLink + "')", t);
                     }
                     final String asciiLink = link.toASCIIString();
-                    if (!"https".equals(link.getScheme()) || !"github.com".equals(link.getHost()) ||
-                            (link.getPort() != -1) || (link.getRawQuery() != null) ||
+                    if (!"https".equals(link.getScheme()) || (link.getPort() != -1) || (link.getRawQuery() != null) ||
                             (link.getRawFragment() != null) || (link.getRawUserInfo() != null)) {
                         throw new IllegalStateException("HCsCR: Invalid link data for update checking. (link: '" + asciiLink + "')");
                     }
