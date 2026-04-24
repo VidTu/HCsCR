@@ -18,5 +18,17 @@
 ::
 :: SPDX-License-Identifier: Apache-2.0
 
+:: Disable echo.
+@echo off
+
+:: Check args.
+if "%~1"=="" (
+    echo SCRIPT: You must specify the version to build.
+    echo Example: compileone.cmd 1.16.5-fabric
+    exit /b 1
+)
+
 :: Build.
-gradlew.bat "-Dru.vidtu.hcscr.only=%1" "%1:assemble"
+echo SCRIPT: Building '%1'...
+cmd.exe /c gradlew.bat "-Dru.vidtu.hcscr.only=%1" "%1:assemble"
+echo SCRIPT: Build for '%1' exited with code %ERRORLEVEL%.

@@ -18,5 +18,10 @@
 ::
 :: SPDX-License-Identifier: Apache-2.0
 
+:: Disable echo.
+@echo off
+
 :: Reset.
+echo SCRIPT: Resetting active project...
 gradlew.bat "Reset active project"
+echo SCRIPT: Resetting active project exited with code %ERRORLEVEL%.

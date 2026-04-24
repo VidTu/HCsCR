@@ -18,20 +18,31 @@
 ::
 :: SPDX-License-Identifier: Apache-2.0
 
+:: Disable echo.
+@echo off
+
 :: Set local variable scope.
 setlocal
 
-:: Check legacy state.
-for %%a in (%*) do (
-    if "%%~a"=="--legacy" set HCSCR_LEGACY=true
+:: Check args.
+if /i "%~1"=="legacy" (
+    :: Build in legacy.
+    echo SCRIPT: Building in legacy mode...
+    cmd.exe /c gradlew.bat -Dru.vidtu.hcscr.legacy=true assemble
+    echo SCRIPT: Building in legacy mode exited with code %ERRORLEVEL%.
+    goto :end
 )
-if "%HCSCR_LEGACY%"=="true" (
-    :: Build with legacy.
-    gradlew.bat -Dru.vidtu.hcscr.legacy=true assemble
-) else (
-    :: Build without legacy.
-    gradlew.bat assemble
+if /i "%~1"=="normal" (
+    :: Build in normal.
+    echo SCRIPT: Building in normal mode...
+    cmd.exe /c gradlew.bat assemble
+    echo SCRIPT: Building in normal mode exited with code %ERRORLEVEL%.
+    goto :end
 )
+echo ERROR: You must specify the mode of execution.
+echo Normal (Beta/Active): compileall.cmd normal
+echo Legacy (Beta/Active/Legacy): compileall.cmd legacy
 
+:end
 :: End local variable scope.
 endlocal

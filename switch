@@ -20,8 +20,17 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Fail on error, fail on unbound variable, verbose mode, xtrace mode, pipefail mode.
-set -euvxo pipefail
+# Fail on error, fail on unbound variable, pipefail mode.
+set -euo pipefail
+
+# Check args.
+if [ "${#}" -eq 0 ]; then
+    echo 'SCRIPT: You must specify the version to switch.'
+    echo 'Example: ./switch 1.16.5-fabric'
+    exit 1
+fi
 
 # Switch.
+echo "SCRIPT: Switching to '${1}'..."
 ./gradlew "Set active project to ${1}"
+echo "SCRIPT: Switching to '${1}' exited with code ${?}."

@@ -18,5 +18,17 @@
 ::
 :: SPDX-License-Identifier: Apache-2.0
 
+:: Disable echo.
+@echo off
+
+:: Check args.
+if "%~1"=="" (
+    echo SCRIPT: You must specify the version to switch.
+    echo Example: switch.cmd 1.16.5-fabric
+    exit /b 1
+)
+
 :: Switch.
+echo SCRIPT: Switching to '%1'...
 gradlew.bat "Set active project to %1"
+echo SCRIPT: Switch to '%1' exited with code %ERRORLEVEL%.

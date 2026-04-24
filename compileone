@@ -20,8 +20,17 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Fail on error, fail on unbound variable, verbose mode, xtrace mode, pipefail mode.
-set -euvxo pipefail
+# Fail on error, fail on unbound variable, pipefail mode.
+set -euo pipefail
+
+# Check args.
+if [ "${#}" -eq 0 ]; then
+    echo 'SCRIPT: You must specify the version to build.'
+    echo 'Example: ./compileone 1.16.5-fabric'
+    exit 1
+fi
 
 # Build.
-./gradlew "-Dru.vidtu.hcscr.only=${1}" "${1}:assemble"
+echo "SCRIPT: Building '${1}'..."
+./gradlew "-Dru.vidtu.hcscr.only=${1}" "${1}:assemble" && true
+echo "SCRIPT: Build for '${1}' exited with code ${?}."
