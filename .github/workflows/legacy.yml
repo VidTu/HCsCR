@@ -45,8 +45,8 @@ jobs:
         timeout-minutes: 10
         uses: 'gradle/actions/setup-gradle@50e97c2cd7a37755bbfafc9c5b7cafaece252f6e' # v6.1.0
         with:
-          dependency-graph: 'generate'
           cache-read-only: true
+          dependency-graph: 'generate'
       - name: 'Build (Legacy)'
         timeout-minutes: 90
         run: './gradlew -Dru.vidtu.hcscr.legacy=true assemble'

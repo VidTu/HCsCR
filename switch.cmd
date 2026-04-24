@@ -25,7 +25,7 @@
 if "%~1"=="" (
     echo SCRIPT: You must specify the version to switch.
     echo Example: switch.cmd 1.16.5-fabric
-    exit /b 1
+    exit /b 2
 )
 
 :: Switch.

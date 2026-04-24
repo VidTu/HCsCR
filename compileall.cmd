@@ -42,6 +42,7 @@ if /i "%~1"=="normal" (
 echo ERROR: You must specify the mode of execution.
 echo Normal (Beta/Active): compileall.cmd normal
 echo Legacy (Beta/Active/Legacy): compileall.cmd legacy
+exit /b 2
 
 :end
 :: End local variable scope.
