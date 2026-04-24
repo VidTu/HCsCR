@@ -25,16 +25,11 @@ on:
     branches: [ '!main' ]
   pull_request:
   workflow_dispatch:
-    inputs:
-      legacy:
-        description: 'Include Legacy versions'
-        required: false
-        type: boolean
 jobs:
   build:
     name: 'Build'
     runs-on: 'ubuntu-24.04'
-    timeout-minutes: 90
+    timeout-minutes: 60
     permissions:
       contents: 'read'
     steps:
@@ -54,8 +49,9 @@ jobs:
         uses: 'gradle/actions/setup-gradle@50e97c2cd7a37755bbfafc9c5b7cafaece252f6e' # v6.1.0
         with:
           dependency-graph: 'generate'
+          cache-read-only: true
       - name: 'Build'
-        timeout-minutes: 90
+        timeout-minutes: 60
         run: './gradlew assemble'
         env:
           HCSCR_LEGACY: ${{ inputs.legacy }}
