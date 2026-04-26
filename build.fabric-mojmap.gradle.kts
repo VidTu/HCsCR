@@ -68,6 +68,7 @@ sc {
     constants["forge"] = false
     constants["hacky_neoforge"] = false
     constants["neoforge"] = false
+    properties.tags(mcv, "fabric")
 }
 
 loom {
@@ -108,10 +109,10 @@ dependencies {
     compileOnly(libs.error.prone.annotations)
 
     // Minecraft. The dependency may be manually specified for example for snapshots.
-    val minecraftDependencyProperty = findProperty("sc.minecraft-dependency")
-    require(minecraftDependencyProperty != mcv) { "Unneeded 'sc.minecraft-dependency' property set to ${minecraftDependencyProperty} in ${project}, it already uses this version." }
-    val minecraftDependency = minecraftDependencyProperty ?: mcv
-    minecraft("com.mojang:minecraft:${minecraftDependency}")
+    val minecraftProperty = findProperty("minecraft")
+    require(minecraftProperty != mcv) { "Unneeded 'minecraft' property set to ${minecraftProperty} in ${project}, it already uses this version." }
+    val minecraft = minecraftProperty ?: mcv
+    minecraft("com.mojang:minecraft:${minecraft}")
 
     // Force non-vulnerable Log4J, so that vulnerability scanners don't scream loud.
     // It's also cool for our logging config. (see the "dev/log4j2.xml" file)
@@ -125,20 +126,20 @@ dependencies {
     implementation(libs.fabric.loader)
 
     // Modular Fabric API.
-    val fapi = "${property("sc.fabric-api")}"
-    require(fapi.isNotBlank() && fapi != "[SC]") { "Fabric API version is not provided via 'sc.fabric-api' in ${project}." }
+    val fapi = "${property("api")}"
+    require(fapi.isNotBlank() && fapi != "[SC]") { "Fabric API version is not provided via 'api' in ${project}." }
     implementation(fabricApi.module("fabric-key-mapping-api-v1", fapi)) // Handles the keybinds. (NOTE: <=1.21.11 script uses "binding", not "mapping")
     implementation(fabricApi.module("fabric-lifecycle-events-v1", fapi)) // Handles game ticks.
     implementation(fabricApi.module("fabric-networking-api-v1", fapi)) // Registers the channel, see README.
     implementation(fabricApi.module("fabric-resource-loader-v1", fapi)) // Loads languages.
 
     // ModMenu.
-    val modmenu = "${property("sc.modmenu")}"
-    require(modmenu.isNotBlank() && modmenu != "[SC]") { "ModMenu version is not provided via 'sc.modmenu' in ${project}." }
+    val modmenu = "${property("modmenu")}"
+    require(modmenu.isNotBlank() && modmenu != "[SC]") { "ModMenu version is not provided via 'modmenu' in ${project}." }
     // Sometimes, ModMenu is not yet updated for the version. (it almost never updates to snapshots nowadays)
     // So we should depend on it compile-time (it is really an optional dependency for us) to allow both
     // compilation of an optional ModMenu compatibility class (HModMenu.java) and launching the game.
-    if ("${findProperty("sc.modmenu.compile-only")}".toBoolean()) {
+    if ("${findProperty("sc.modmenu.compile-only")}".toBoolean()) { // FIXME
         compileOnly("com.terraformersmc:modmenu:${modmenu}")
     } else {
         implementation("com.terraformersmc:modmenu:${modmenu}")
@@ -187,20 +188,14 @@ tasks.withType<ProcessResources> {
     // >=26.1.2 has consistent fabric-api, this is used by Intermediary.
     inputs.property("fabricApiName", "fabric-api")
 
-    // Determine and replace the platform version range requirement.
-    val platformRequirement = "${project.property("sc.platform-requirement")}"
-    require(platformRequirement == "[SC]") { "Platform requirement is provided via 'sc.platform-requirement' in ${project}, but Fabric builds ignore it." }
-
-    // Expand Minecraft requirement that can be manually overridden for reasons. (e.g., snapshots)
-    val minecraftRequirementProperty = findProperty("sc.minecraft-requirement")
-    require(minecraftRequirementProperty != mcv) { "Unneeded 'sc.minecraft-requirement' property set to ${minecraftRequirementProperty} in ${project}, it already uses this version." }
-    val minecraftRequirement = minecraftRequirementProperty ?: mcv
-    inputs.property("minecraft", minecraftRequirement)
-
-    // Expand Mixin Java version.
-    inputs.property("mixinJava", javaTarget)
+    // Expand Minecraft constraints that can be manually overridden for reasons. (e.g., snapshots)
+    val constraintsProperty = findProperty("constraints")
+    require(constraintsProperty != mcv) { "Unneeded 'constraints' property set to ${constraintsProperty} in ${project}, it already uses this version." }
+    val constraints = constraintsProperty ?: mcv
+    inputs.property("minecraft", constraints)
 
     // Expand version and dependencies.
+    inputs.property("mixinJava", javaTarget)
     inputs.property("version", version)
     filesMatching(listOf("fabric.mod.json", "hcscr.mixins.json")) {
         expand(inputs.properties)

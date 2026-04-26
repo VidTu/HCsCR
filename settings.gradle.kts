@@ -50,14 +50,30 @@ rootProject.name = "HCsCR"
 
 // Prepare the list of versions and types.
 val types = listOf("fabric", "forge", "neoforge")
-val versions = listOf("26.2", "26.1.2", "1.21.11", "1.21.10", "1.21.8", "1.21.5", "1.21.4", "1.21.3", "1.21.1", "1.20.6", "1.20.4", "1.20.2", "1.20.1", "1.19.4", "1.19.2", "1.18.2", "1.17.1", "1.16.5")
+val versions = (file("dev/versions/versions_beta.txt").readLines()
+        + file("dev/versions/versions_active.txt").readLines()
+        + file("dev/versions/versions_legacy.txt").readLines())
+    .filter { it.isNotBlank() }
+    .filter { !it.startsWith('#') }
+    .toSet()
+
+// Ignored version IDs. See that file for reasoning on such ignorance.
+val ignoredIds = file("dev/versions/ignored.txt")
+    .readLines()
+    .filter { it.isNotBlank() }
+    .filter { !it.startsWith('#') }
+    .toSet()
 
 // Actively supported version system. See README.md for the support policy.
 // Depends on the "ru.vidtu.hcscr.legacy" boolean system property:
 // - "false" (default): Compile only versions listed in "supportedVersions".
 // - "true": Compile all versions listed in "versions".
 // If "only" version feature is used, this is ignored.
-val supportedVersions = setOf("26.2", "26.1.2", "1.21.11", "1.21.1", "1.20.1")
+val supportedVersions = (file("dev/versions/versions_beta.txt").readLines()
+        + file("dev/versions/versions_active.txt").readLines())
+    .filter { it.isNotBlank() }
+    .filter { !it.startsWith('#') }
+    .toSet()
 require(versions.containsAll(supportedVersions)) { "Not all actively supported versions '${supportedVersions}' are listed in all supported versions '${versions}'." }
 val includeLegacyVersions = System.getProperty("ru.vidtu.hcscr.legacy").toBoolean()
 
@@ -67,7 +83,7 @@ val includeLegacyVersions = System.getProperty("ru.vidtu.hcscr.legacy").toBoolea
 // which may reduce the build time if you don't need other versions.
 // (* Sometimes, the latest version will also be compiled due to how this works)
 val onlyId: String? = System.getProperty("ru.vidtu.hcscr.only")
-val latestId = "${versions[0]}-${types[0]}"
+val latestId = "${versions.first()}-${types.first()}"
 
 // Check the "only" version validity.
 if (onlyId != null) {
@@ -107,14 +123,14 @@ stonecutter {
                 // Process the "only" version ID.
                 if ((onlyId != null) && (id != onlyId) && (id != latestId)) continue
 
-                // Check if version is ignored.
-                val subPath = file("versions/${id}")
-                if (subPath.resolve(".ignored").isFile) {
+                // Check if version ID is ignored.
+                if (id in ignoredIds) {
                     excluded.add(id)
                     continue
                 }
 
                 // Set up the project.
+                val subPath = file("versions/${id}")
                 val project = version(id, version)
                 if (type == "fabric") {
                     // Fabric builds require "special care",
@@ -145,8 +161,8 @@ stonecutter {
 // Log about excluded versions.
 if (excluded.isNotEmpty()) {
     if (includeLegacyVersions) {
-        logger.lifecycle("Excluded versions: ${excluded.joinToString()}. Ignored (.ignore) versions are always excluded. Legacy versions were included.")
+        logger.lifecycle("Excluded versions: ${excluded.joinToString()}. Ignored versions are always excluded. Legacy versions were included.")
     } else {
-        logger.lifecycle("Excluded versions: ${excluded.joinToString()}. Ignored (.ignore) versions are always excluded. Legacy versions were excluded, use 'ru.vidtu.hcscr.legacy' property or '--legacy' script flag to include them.")
+        logger.lifecycle("Excluded versions: ${excluded.joinToString()}. Ignored versions are always excluded. Legacy versions were excluded, use 'ru.vidtu.hcscr.legacy' property or '--legacy' script flag to include them.")
     }
 }

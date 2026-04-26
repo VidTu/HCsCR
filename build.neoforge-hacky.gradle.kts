@@ -65,12 +65,13 @@ sc {
     constants["forge"] = true // Yes, that's correct for NeoForge 1.20.1.
     constants["hacky_neoforge"] = true // And that's extremely correct.
     constants["neoforge"] = false // Yes, that's also correct.
+    properties.tags("1.20.1", "neoforge")
 }
 
 legacyForge {
     // Minecraft and NeoForge.
-    val neoforge = "${property("sc.neoforge")}"
-    require(neoforge.isNotBlank() && neoforge != "[SC]") { "NeoForge (Hacky) version is not provided via 'sc.neoforge' in ${project}." }
+    val neoforge = "${property("loader")}"
+    require(neoforge.isNotBlank() && neoforge != "[SC]") { "NeoForge (Hacky) version is not provided via 'loader' in ${project}." }
     val extractedMinecraft = neoforge.substringBefore('-')
     require(extractedMinecraft == "1.20.1") { "NeoForge (Hacky) version '${neoforge}' provides Minecraft ${extractedMinecraft} in ${project}, but we want 1.20.1." }
     enable {
@@ -173,24 +174,17 @@ tasks.withType<ProcessResources> {
     // Exclude not needed loader entrypoint files.
     exclude("fabric.mod.json", "META-INF/neoforge.mods.toml")
 
-    // Determine and replace the platform version range requirement.
-    val platformRequirement = "${project.property("sc.platform-requirement")}"
-    require(platformRequirement.isNotBlank() && platformRequirement != "[SC]") { "Platform requirement is not provided via 'sc.platform-requirement' in ${project}." }
-    inputs.property("platformRequirement", platformRequirement)
+    // Determine and replace the version range constraints.
+    val constraints = "${project.property("constraints")}"
+    require(constraints.isNotBlank() && constraints != "[SC]") { "Platform constraints are not provided via 'sc.neoforge.constraints' in ${project}." }
+    inputs.property("constraints", constraints)
 
     // Expand the updater URL.
     inputs.property("forgeUpdaterUrl", "https://raw.githubusercontent.com/VidTu/HCsCR/main/updater_hcscr_neoforge.json")
 
-    // Expand Minecraft requirement that can be manually overridden for reasons. (e.g., snapshots)
-    val minecraftRequirementProperty = findProperty("sc.minecraft-requirement")
-    require(minecraftRequirementProperty != "1.20.1") { "Unneeded 'sc.minecraft-requirement' property set to ${minecraftRequirementProperty} in ${project}, it already uses this version." }
-    val minecraftRequirement = minecraftRequirementProperty ?: "1.20.1"
-    inputs.property("minecraft", minecraftRequirement)
-
-    // Expand Mixin Java version.
-    inputs.property("mixinJava", 17)
-
     // Expand version and dependencies.
+    inputs.property("minecraft", "1.20.1")
+    inputs.property("mixinJava", 17)
     inputs.property("version", version)
     inputs.property("platform", "forge") // Yes, that's correct for NeoForge 1.20.1.
     filesMatching(listOf("hcscr.mixins.json", "META-INF/mods.toml")) {

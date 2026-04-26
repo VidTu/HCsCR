@@ -50,7 +50,7 @@ val mcp = mc.parsed // Comparable version. (operator overloading)
 val javaTarget = if (mcp >= "26.1.2") 25
 else if (mcp >= "1.20.6") 21
 else 17
-val javaVersion = JavaVersion.toVersion(javaTarget)!!
+val javaVersion = JavaVersion.toVersion(javaTarget)
 java {
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
@@ -69,6 +69,7 @@ sc {
     constants["forge"] = false
     constants["hacky_neoforge"] = false
     constants["neoforge"] = true
+    properties.tags(mcv, "neoforge")
 }
 
 // Set up runs.
@@ -103,8 +104,8 @@ dependencies {
     }
 
     // Minecraft and NeoForge.
-    val neoforge = "${property("sc.neoforge")}"
-    require(neoforge.isNotBlank() && neoforge != "[SC]") { "NeoForge version is not provided via 'sc.neoforge' in ${project}." }
+    val neoforge = "${property("loader")}"
+    require(neoforge.isNotBlank() && neoforge != "[SC]") { "NeoForge version is not provided via 'loader' in ${project}." }
     val extractedMinecraft = if (mcp >= "26.1.2") neoforge.substringBeforeLast('.') else "1.${neoforge.substringBeforeLast('.')}"
     require(mcp eq extractedMinecraft) { "NeoForge version '${neoforge}' provides Minecraft ${extractedMinecraft} in ${project}, but we want ${mcv}." }
     implementation("net.neoforged:neoforge:${neoforge}")
@@ -143,24 +144,17 @@ tasks.withType<ProcessResources> {
         exclude("fabric.mod.json", "META-INF/neoforge.mods.toml")
     }
 
-    // Determine and replace the platform version range requirement.
-    val platformRequirement = "${project.property("sc.platform-requirement")}"
-    require(platformRequirement.isNotBlank() && platformRequirement != "[SC]") { "Platform requirement is not provided via 'sc.platform-requirement' in ${project}." }
-    inputs.property("platformRequirement", platformRequirement)
+    // Determine and replace the version range constraints.
+    val constraints = "${project.property("constraints")}"
+    require(constraints.isNotBlank() && constraints != "[SC]") { "Constraints are not provided via 'sc.neoforge.constraints' in ${project}." }
+    inputs.property("constraints", constraints)
 
     // Expand the updater URL.
     inputs.property("forgeUpdaterUrl", "https://raw.githubusercontent.com/VidTu/HCsCR/main/updater_hcscr_neoforge.json")
 
-    // Expand Minecraft requirement that can be manually overridden for reasons. (e.g., snapshots)
-    val minecraftRequirementProperty = findProperty("sc.minecraft-requirement")
-    require(minecraftRequirementProperty != mcv) { "Unneeded 'sc.minecraft-requirement' property set to ${minecraftRequirementProperty} in ${project}, it already uses this version." }
-    val minecraftRequirement = minecraftRequirementProperty ?: mcv
-    inputs.property("minecraft", minecraftRequirement)
-
-    // Expand Mixin Java version.
-    inputs.property("mixinJava", javaTarget)
-
     // Expand version and dependencies.
+    inputs.property("mixinJava", javaTarget)
+    inputs.property("minecraft", mcv)
     inputs.property("version", version)
     inputs.property("platform", "neoforge")
     filesMatching(listOf("hcscr.mixins.json", "META-INF/mods.toml", "META-INF/neoforge.mods.toml")) {

@@ -80,6 +80,7 @@ sc {
     constants["forge"] = true
     constants["hacky_neoforge"] = false
     constants["neoforge"] = false
+    properties.tags(mcv, "forge")
 }
 
 minecraft {
@@ -148,8 +149,8 @@ dependencies {
     }
 
     // Minecraft and Forge.
-    val forge = "${property("sc.forge")}"
-    require(forge.isNotBlank() && forge != "[SC]") { "Forge version is not provided via 'sc.forge' in ${project}." }
+    val forge = "${property("loader")}"
+    require(forge.isNotBlank() && forge != "[SC]") { "Forge version is not provided via 'loader' in ${project}." }
     val extractedMinecraft = forge.substringBefore('-')
     require(mcp eq extractedMinecraft) { "Forge version '${forge}' provides Minecraft ${extractedMinecraft} in ${project}, but we want ${mcv}." }
     implementation(minecraft.dependency("net.minecraftforge:forge:${forge}"))
@@ -190,19 +191,13 @@ tasks.withType<ProcessResources> {
     // Exclude not needed loader entrypoint files.
     exclude("fabric.mod.json", "META-INF/neoforge.mods.toml")
 
-    // Determine and replace the platform version range requirement.
-    val platformRequirement = "${project.property("sc.platform-requirement")}"
-    require(platformRequirement.isNotBlank() && platformRequirement != "[SC]") { "Platform requirement is not provided via 'sc.platform-requirement' in ${project}." }
-    inputs.property("platformRequirement", platformRequirement)
+    // Determine and replace the version range constraints.
+    val constraints = "${project.property("constraints")}"
+    require(constraints.isNotBlank() && constraints != "[SC]") { "Constraints are not provided via 'constraints' in ${project}." }
+    inputs.property("constraints", constraints)
 
     // Expand the updater URL.
     inputs.property("forgeUpdaterUrl", "https://raw.githubusercontent.com/VidTu/HCsCR/main/updater_hcscr_forge.json")
-
-    // Expand Minecraft requirement that can be manually overridden for reasons. (e.g., snapshots)
-    val minecraftRequirementProperty = findProperty("sc.minecraft-requirement")
-    require(minecraftRequirementProperty != mcv) { "Unneeded 'sc.minecraft-requirement' property set to ${minecraftRequirementProperty} in ${project}, it already uses this version." }
-    val minecraftRequirement = minecraftRequirementProperty ?: mcv
-    inputs.property("minecraft", minecraftRequirement)
 
     // Expand Mixin Java version. Forge is full of edge-cases covered here.
     val mixinJava = if (mcp >= "26.1.2") 21
@@ -211,6 +206,7 @@ tasks.withType<ProcessResources> {
     inputs.property("mixinJava", mixinJava)
 
     // Expand version and dependencies.
+    inputs.property("minecraft", mcv)
     inputs.property("version", version)
     inputs.property("platform", "forge")
     filesMatching(listOf("hcscr.mixins.json", "META-INF/mods.toml")) {
