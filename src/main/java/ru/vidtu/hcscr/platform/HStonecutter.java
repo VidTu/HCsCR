@@ -431,14 +431,15 @@ public final class HStonecutter {
         *///?}
     }
 
-    /**
+    //? if forge || hacky_neoforge {
+    /*/^*
      * Hurts (damages) the entity the specified amount.
      *
      * @param entity Target entity to hurt
      * @param source Attack source (inaccurate if invoked on the client)
      * @param amount Total amount of damage done to the entity (inaccurate if invoked on the client)
      * @return The result of the hurting
-     */
+     ^/
     @SuppressWarnings({"deprecation", "RedundantSuppression"}) // <- Used in vanilla code. (1.21.3+)
     @CheckReturnValue
     public static boolean hurtEntity(final Entity entity, final DamageSource source, final float amount) {
@@ -454,9 +455,10 @@ public final class HStonecutter {
         //? if >=1.21.3 {
         return entity.hurtOrSimulate(source, amount); // Implicit NPE for 'entity', 'source'
         //?} else {
-        /*return entity.hurt(source, amount); // Implicit NPE for 'entity', 'source'
-        *///?}
+        /^return entity.hurt(source, amount); // Implicit NPE for 'entity', 'source'
+        ^///?}
     }
+    *///?}
 
     /**
      * Adds the effect attributes onto the player.

@@ -34,16 +34,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.platform.HCompile;
-import ru.vidtu.hcscr.platform.HPlugin;
 
 /**
  * Mixin that speeds up entity removing via {@link HCsCR#handlePlayerHittingEntity(Player, Entity, DamageSource, float)}
- * via MixinExtras via {@link WrapOperation} hook. See {@link PlayerMixin_M} for an alternative.
+ * via MixinExtras via {@link WrapOperation} hook. See {@code PlayerMixin_M} for a fallback.
  *
  * @author VidTu
  * @apiNote Internal use only
- * @see HPlugin
- * @see PlayerMixin_M
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(Player.class)

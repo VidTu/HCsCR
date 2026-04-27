@@ -292,7 +292,6 @@ public final class HCsCR {
      * @param source Attack source (inaccurate if invoked on the client)
      * @param amount Total amount of damage done to the entity (inaccurate if invoked on the client)
      * @return Whether the entity has been removed
-     * @see HStonecutter#hurtEntity(Entity, DamageSource, float)
      * @see HConfig#enable()
      * @see HConfig#shouldProcess(Player, Entity)
      * @see HConfig#crystals()

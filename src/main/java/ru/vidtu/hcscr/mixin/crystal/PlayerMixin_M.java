@@ -20,7 +20,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.vidtu.hcscr.mixin.crystal;
+//? if forge || hacky_neoforge {
+/*package ru.vidtu.hcscr.mixin.crystal;
 
 import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.world.damagesource.DamageSource;
@@ -36,25 +37,25 @@ import ru.vidtu.hcscr.platform.HCompile;
 import ru.vidtu.hcscr.platform.HPlugin;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
-/**
+/^*
  * Mixin that speeds up entity removing via {@link HCsCR#handlePlayerHittingEntity(Player, Entity, DamageSource, float)}
- * in absence of MixinExtras via {@link Redirect} hook. See {@link PlayerMixin_M} for an alternative.
+ * in absence of MixinExtras via {@link Redirect} hook. See {@link PlayerMixin_E} for the default (non-fallback) Mixin.
  *
  * @author VidTu
  * @apiNote Internal use only
  * @see HPlugin
- * @see PlayerMixin_M
- */
+ * @see PlayerMixin_E
+ ^/
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(Player.class)
 @NullMarked
 public final class PlayerMixin_M {
-    /**
+    /^*
      * An instance of this class cannot be created.
      *
      * @throws AssertionError Always
      * @deprecated Always throws
-     */
+     ^/
     // @ApiStatus.ScheduledForRemoval // Can't annotate this without logging in the console.
     @Deprecated
     @Contract(value = "-> fail", pure = true)
@@ -64,7 +65,7 @@ public final class PlayerMixin_M {
         }
     }
 
-    /**
+    /^*
      * Processes the entity attacking. Calls original attack method as well as
      * {@link HCsCR#handlePlayerHittingEntity(Player, Entity, DamageSource, float)},
      * returns {@code true} if any succeeded.
@@ -76,13 +77,13 @@ public final class PlayerMixin_M {
      * @apiNote Do not call, called by Mixin
      * @see HStonecutter#hurtEntity(Entity, DamageSource, float)
      * @see HCsCR#handlePlayerHittingEntity(Player, Entity, DamageSource, float)
-     */
+     ^/
     @DoNotCall("Called by Mixin")
     //? if >=1.21.3 {
     @Redirect(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurtOrSimulate(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
     //?} else {
-    /*@Redirect(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
-    *///?}
+    /^@Redirect(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
+    ^///?}
     private boolean hcscr_attack_hurtOrSimulate(final Entity target, final DamageSource damageSource,
                                                 final float totalDamage) {
         // Validate.
@@ -97,3 +98,4 @@ public final class PlayerMixin_M {
         return (HStonecutter.hurtEntity(target, damageSource, totalDamage) | HCsCR.handlePlayerHittingEntity((Player) (Object) this, target, damageSource, totalDamage));
     }
 }
+*///?}

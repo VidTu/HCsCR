@@ -282,17 +282,13 @@ public final class RespawnAnchorBlockMixin {
     @Contract(pure = true)
     @Shadow
     private static boolean isRespawnFuel(final ItemStack itemInHand) {
-        if (HCompile.DEBUG_ASSERTS) {
-            throw new AssertionError("HCsCR: Unreachable code statement.");
-        }
+        throw (HCompile.DEBUG_ASSERTS ? new AssertionError("HCsCR: Unreachable code statement.") : null);
     }
 
     @Contract(pure = true)
     @Shadow
     private static boolean canBeCharged(final BlockState state) {
-        if (HCompile.DEBUG_ASSERTS) {
-            throw new AssertionError("HCsCR: Unreachable code statement.");
-        }
+        throw (HCompile.DEBUG_ASSERTS ? new AssertionError("HCsCR: Unreachable code statement.") : null);
     }
     *///?}
 }
