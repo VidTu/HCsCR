@@ -120,6 +120,7 @@ while read UPLOAD_MC; do
 done < "${UPLOAD_VERSIONS_TEMP}"
 rm -- "${UPLOAD_VERSIONS_TEMP}"
 UPLOAD_FILES="${UPLOAD_FILES%?}"
+UPLOAD_FILES=$(echo "${UPLOAD_FILES}" | sort -V)
 echo 'Found all needed JAR files.'
 
 # Source the '.env' file.
