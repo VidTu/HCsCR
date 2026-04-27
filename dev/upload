@@ -177,7 +177,6 @@ echo '===== CHANGELOG END ====='
 echo 'Ready to upload. Press Enter to confirm, terminate (CTRL+C) to cancel.'
 read -r _
 
-if false; then
 # Create a GitHub release draft.
 echo 'Creating a GitHub release draft...'
 UPLOAD_GITHUB_DRAFT=$(curl --fail-with-body --max-time 30 --retry 3 --request POST --header 'Content-Type: application/json' --header "Authorization: Bearer ${UPLOAD_GITHUB_TOKEN}" --data-raw "{\"tag_name\":${UPLOAD_VERSION_JSON},\"name\":${UPLOAD_NAME_JSON},\"body\":${UPLOAD_CHANGELOG_JSON},\"draft\":true,\"prerelease\":${UPLOAD_VERSION_PRE}}" 'https://api.github.com/repos/VidTu/HCsCR/releases')
@@ -192,8 +191,9 @@ echo "Extracted the GitHub release draft ID: ${UPLOAD_GITHUB_ID}"
 echo 'Uploading files to the GitHub release draft...'
 echo "${UPLOAD_FILES}" | while read -r UPLOAD_FILE; do
     UPLOAD_FILENAME=$(basename -- "${UPLOAD_FILE}")
+    UPLOAD_FILENAME_URI=$(echo "${UPLOAD_FILENAME}" | jq --raw-input --raw-output '@uri')
     echo "Uploading file '${UPLOAD_FILENAME}'..."
-    curl --fail-with-body --max-time 30 --retry 3 --request POST --header 'Content-Type: application/java-archive' --header "Authorization: Bearer ${UPLOAD_GITHUB_TOKEN}" --data-binary "@${UPLOAD_FILE}" "https://uploads.github.com/repos/VidTu/HCsCR/releases/${UPLOAD_GITHUB_ID}/assets?name=${UPLOAD_FILENAME}"
+    curl --fail-with-body --max-time 30 --retry 3 --request POST --header 'Content-Type: application/java-archive' --header "Authorization: Bearer ${UPLOAD_GITHUB_TOKEN}" --data-binary "@${UPLOAD_FILE}" "https://uploads.github.com/repos/VidTu/HCsCR/releases/${UPLOAD_GITHUB_ID}/assets?name=${UPLOAD_FILENAME_URI}"
     echo 'Uploaded.'
 done
 echo 'Uploaded files to the GitHub release draft.'
@@ -202,7 +202,6 @@ echo 'Uploaded files to the GitHub release draft.'
 echo 'Publishing a GitHub release from the draft...'
 curl --fail-with-body --max-time 30 --retry 3 --request PATCH --header 'Content-Type: application/json' --header "Authorization: Bearer ${UPLOAD_GITHUB_TOKEN}" --data-raw '{"draft":false}' "https://api.github.com/repos/VidTu/HCsCR/releases/${UPLOAD_GITHUB_ID}"
 echo 'Published a GitHub release from the draft.'
-fi
 
 # Notify via a Discord webhook notification.
 echo 'Publishing a Discord webhook notification...'
