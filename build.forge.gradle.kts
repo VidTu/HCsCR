@@ -150,7 +150,7 @@ dependencies {
 
     // Minecraft and Forge.
     val forge = "${property("loader")}"
-    require(forge.isNotBlank() && forge != "[SC]") { "Forge version is not provided via 'loader' in ${project}." }
+    require(forge.isNotBlank() && forge != "null") { "Forge version is not provided via 'loader' in ${project}." }
     val extractedMinecraft = forge.substringBefore('-')
     require(mcp eq extractedMinecraft) { "Forge version '${forge}' provides Minecraft ${extractedMinecraft} in ${project}, but we want ${mcv}." }
     implementation(minecraft.dependency("net.minecraftforge:forge:${forge}"))
@@ -193,7 +193,7 @@ tasks.withType<ProcessResources> {
 
     // Determine and replace the version range constraints.
     val constraints = "${project.property("constraints")}"
-    require(constraints.isNotBlank() && constraints != "[SC]") { "Constraints are not provided via 'constraints' in ${project}." }
+    require(constraints.isNotBlank() && constraints != "null") { "Constraints are not provided via 'constraints' in ${project}." }
     inputs.property("constraints", constraints)
 
     // Expand the updater URL.

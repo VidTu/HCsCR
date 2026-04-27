@@ -20,7 +20,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// This is the main (multi-version loader) buildscript. It is processed by the
+// This is the NeoForge loader buildscript. It is processed by the
 // Stonecutter multiple times, for each version and each loader. (compiled once)
 // Based on ModDevGradle and processes the preparation/complation/building
 // of the most of the mod that is not covered by the Stonecutter or Blossom.
@@ -71,7 +71,7 @@ sc {
 legacyForge {
     // Minecraft and NeoForge.
     val neoforge = "${property("loader")}"
-    require(neoforge.isNotBlank() && neoforge != "[SC]") { "NeoForge (Hacky) version is not provided via 'loader' in ${project}." }
+    require(neoforge.isNotBlank() && neoforge != "null") { "NeoForge (Hacky) version is not provided via 'loader' in ${project}." }
     val extractedMinecraft = neoforge.substringBefore('-')
     require(extractedMinecraft == "1.20.1") { "NeoForge (Hacky) version '${neoforge}' provides Minecraft ${extractedMinecraft} in ${project}, but we want 1.20.1." }
     enable {
@@ -176,7 +176,7 @@ tasks.withType<ProcessResources> {
 
     // Determine and replace the version range constraints.
     val constraints = "${project.property("constraints")}"
-    require(constraints.isNotBlank() && constraints != "[SC]") { "Platform constraints are not provided via 'sc.neoforge.constraints' in ${project}." }
+    require(constraints.isNotBlank() && constraints != "null") { "Constraints are not provided via 'constraints' in ${project}." }
     inputs.property("constraints", constraints)
 
     // Expand the updater URL.

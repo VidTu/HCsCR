@@ -127,7 +127,7 @@ dependencies {
 
     // Modular Fabric API.
     val fapi = "${property("api")}"
-    require(fapi.isNotBlank() && fapi != "[SC]") { "Fabric API version is not provided via 'api' in ${project}." }
+    require(fapi.isNotBlank() && fapi != "null") { "Fabric API version is not provided via 'api' in ${project}." }
     implementation(fabricApi.module("fabric-key-mapping-api-v1", fapi)) // Handles the keybinds. (NOTE: <=1.21.11 script uses "binding", not "mapping")
     implementation(fabricApi.module("fabric-lifecycle-events-v1", fapi)) // Handles game ticks.
     implementation(fabricApi.module("fabric-networking-api-v1", fapi)) // Registers the channel, see README.
@@ -135,10 +135,11 @@ dependencies {
 
     // ModMenu.
     val modmenu = "${property("modmenu")}"
-    require(modmenu.isNotBlank() && modmenu != "[SC]") { "ModMenu version is not provided via 'modmenu' in ${project}." }
+    require(modmenu.isNotBlank() && modmenu != "null") { "ModMenu version is not provided via 'modmenu' in ${project}." }
     // Sometimes, ModMenu is not yet updated for the version. (it almost never updates to snapshots nowadays)
     // So we should depend on it compile-time (it is really an optional dependency for us) to allow both
     // compilation of an optional ModMenu compatibility class (HModMenu.java) and launching the game.
+    // Just prefix the ModMenu version with '$' to make it compile-only.
     if (modmenu.startsWith('$')) {
         compileOnly("com.terraformersmc:modmenu:${modmenu.substring(1)}")
     } else {

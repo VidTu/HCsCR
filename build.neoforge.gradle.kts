@@ -20,7 +20,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// This is the main (multi-version loader) buildscript. It is processed by the
+// This is the NeoForge loader buildscript. It is processed by the
 // Stonecutter multiple times, for each version and each loader. (compiled once)
 // Based on NeoGradle and processes the preparation/complation/building
 // of the most of the mod that is not covered by the Stonecutter or Blossom.
@@ -105,7 +105,7 @@ dependencies {
 
     // Minecraft and NeoForge.
     val neoforge = "${property("loader")}"
-    require(neoforge.isNotBlank() && neoforge != "[SC]") { "NeoForge version is not provided via 'loader' in ${project}." }
+    require(neoforge.isNotBlank() && neoforge != "null") { "NeoForge version is not provided via 'loader' in ${project}." }
     val extractedMinecraft = if (mcp >= "26.1.2") neoforge.substringBeforeLast('.') else "1.${neoforge.substringBeforeLast('.')}"
     require(mcp eq extractedMinecraft) { "NeoForge version '${neoforge}' provides Minecraft ${extractedMinecraft} in ${project}, but we want ${mcv}." }
     implementation("net.neoforged:neoforge:${neoforge}")
@@ -146,7 +146,7 @@ tasks.withType<ProcessResources> {
 
     // Determine and replace the version range constraints.
     val constraints = "${project.property("constraints")}"
-    require(constraints.isNotBlank() && constraints != "[SC]") { "Constraints are not provided via 'sc.neoforge.constraints' in ${project}." }
+    require(constraints.isNotBlank() && constraints != "null") { "Constraints are not provided via 'constraints' in ${project}." }
     inputs.property("constraints", constraints)
 
     // Expand the updater URL.

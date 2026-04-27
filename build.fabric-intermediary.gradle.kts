@@ -152,7 +152,7 @@ dependencies {
 
     // Modular Fabric API.
     val fapi = "${property("api")}"
-    require(fapi.isNotBlank() && fapi != "[SC]") { "Fabric API version is not provided via 'api' in ${project}." }
+    require(fapi.isNotBlank() && fapi != "null") { "Fabric API version is not provided via 'api' in ${project}." }
     val fabricResourceLoaderRevision = if (mcp >= "1.21.10") "v1" else "v0"
     modImplementation(fabricApi.module("fabric-key-binding-api-v1", fapi)) // Handles the keybinds. (NOTE: >=26.1.2 script uses "mapping", not "binding")
     modImplementation(fabricApi.module("fabric-lifecycle-events-v1", fapi)) // Handles game ticks.
@@ -161,7 +161,7 @@ dependencies {
 
     // ModMenu.
     val modmenu = "${property("modmenu")}"
-    require(modmenu.isNotBlank() && modmenu != "[SC]") { "ModMenu version is not provided via 'modmenu' in ${project}." }
+    require(modmenu.isNotBlank() && modmenu != "null") { "ModMenu version is not provided via 'modmenu' in ${project}." }
     modImplementation("com.terraformersmc:modmenu:${modmenu}")
     if (mcp eq "1.21.10") {
         modImplementation(fabricApi.module("fabric-resource-loader-v0", fapi)) // ModMenu dependency.
