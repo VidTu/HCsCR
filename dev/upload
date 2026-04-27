@@ -95,7 +95,7 @@ echo "NOTE: Version Type (Modrinth/CurseForge): ${UPLOAD_VERSION_TYPE}"
 # Extract the versions into a temporary file.
 echo 'Extracting the versions into a temporary file...'
 UPLOAD_VERSIONS_TEMP=$(mktemp -t 'hcscr.upload-versions.XXXXXXX.txt')
-grep -Evh '^#|^$' 'versions/versions_beta.txt' 'versions/versions_active.txt' 'versions/versions_legacy.txt' > "${UPLOAD_VERSIONS_TEMP}"
+grep -Evh '^#|^$' 'versions/versions_active.txt' 'versions/versions_legacy.txt' > "${UPLOAD_VERSIONS_TEMP}"
 echo "Extracted the versions into: ${UPLOAD_VERSIONS_TEMP}"
 
 # Find the JARs.
