@@ -3,6 +3,7 @@
 build/
 out/
 run/
+versions/
 !/.idea/codeStyles
 !/.idea/codeStyles/**
 !/.idea/copyright

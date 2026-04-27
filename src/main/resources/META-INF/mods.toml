@@ -58,7 +58,7 @@ modId = "${platform}"
 type = "required"
 reason = "HCsCR requires an up-to-date '${platform}' to properly implement its functionality."
 mandatory = true
-versionRange = "${platformRequirement}"
+versionRange = "${constraints}"
 ordering = "NONE"
 side = "CLIENT"
 
