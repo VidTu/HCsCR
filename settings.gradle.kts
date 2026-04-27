@@ -53,14 +53,14 @@ val types = listOf("fabric", "forge", "neoforge")
 val versions = (file("dev/versions/versions_beta.txt").readLines()
         + file("dev/versions/versions_active.txt").readLines()
         + file("dev/versions/versions_legacy.txt").readLines())
-    .filter { it.isNotBlank() }
+    .filter { it.isNotEmpty() }
     .filter { !it.startsWith('#') }
     .toSet()
 
 // Ignored version IDs. See that file for reasoning on such ignorance.
 val ignoredIds = file("dev/versions/ignored.txt")
     .readLines()
-    .filter { it.isNotBlank() }
+    .filter { it.isNotEmpty() }
     .filter { !it.startsWith('#') }
     .toSet()
 
@@ -71,7 +71,7 @@ val ignoredIds = file("dev/versions/ignored.txt")
 // If "only" version feature is used, this is ignored.
 val supportedVersions = (file("dev/versions/versions_beta.txt").readLines()
         + file("dev/versions/versions_active.txt").readLines())
-    .filter { it.isNotBlank() }
+    .filter { it.isNotEmpty() }
     .filter { !it.startsWith('#') }
     .toSet()
 require(versions.containsAll(supportedVersions)) { "Not all actively supported versions '${supportedVersions}' are listed in all supported versions '${versions}'." }

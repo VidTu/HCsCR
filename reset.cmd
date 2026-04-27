@@ -23,5 +23,5 @@
 
 :: Reset.
 echo SCRIPT: Resetting active project...
-gradlew.bat "Reset active project"
+cmd.exe /C gradlew.bat "Reset active project"
 echo SCRIPT: Resetting active project exited with code %ERRORLEVEL%.

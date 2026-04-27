@@ -24,19 +24,16 @@
 set -euo pipefail
 
 # Iterate.
-echo "SCRIPT: Launching all versions..."
-for folder in versions/*; do
+echo 'SCRIPT: Launching all versions...'
+for LAUNCH_FOLDER in versions/*; do
     # Extract the version (only the folder name) from the full relative path.
-    version=$(basename -- "${folder}")
-
-    # Skip if ".ignored" exists.
-    [ -f "${folder}/.ignored" ] && echo "SCRIPT: Skipping '${version}' because of the '.ignored' file." && continue
+    LAUNCH_VERSION=$(basename -- "${LAUNCH_FOLDER}")
 
     # Launch.
-    echo "SCRIPT: Launching '${version}'..."
-    ./gradlew "-Dru.vidtu.hcscr.only=${version}" "${version}:runClient" && true
-    exit="${?}"
-    echo "SCRIPT: Launch for '${version}' exited with code ${exit}."
-    [ "${exit}" -ne 0 ] && read -srn1 -p "SCRIPT: Non-zero exit code. Press any key to continue." exit && echo
+    echo "SCRIPT: Launching '${LAUNCH_VERSION}'..."
+    ./gradlew "-Dru.vidtu.hcscr.only=${LAUNCH_VERSION}" "${LAUNCH_VERSION}:runClient" && true
+    LAUNCH_EXIT="${?}"
+    echo "SCRIPT: Launch for '${LAUNCH_VERSION}' exited with code ${LAUNCH_EXIT}."
+    [ "${LAUNCH_EXIT}" -ne 0 ] && echo 'SCRIPT: Non-zero exit code. Press Enter to continue, terminate (CTRL+C) to cancel.' && read -r _
 done
-echo "SCRIPT: Done launching all versions."
+echo 'SCRIPT: Done launching all versions.'

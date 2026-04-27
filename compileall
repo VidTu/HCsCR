@@ -24,14 +24,14 @@
 set -euo pipefail
 
 # Check args.
-if [ "${1:-}" = "legacy" ]; then
+if [ "${1:-}" = 'legacy' ]; then
     # Build with legacy.
-    echo "SCRIPT: Building in legacy mode..."
+    echo 'SCRIPT: Building in legacy mode...'
     ./gradlew -Dru.vidtu.hcscr.legacy=true assemble && true
     echo "SCRIPT: Build in legacy mode exited with code ${?}."
-elif [ "${1:-}" = "normal" ]; then
+elif [ "${1:-}" = 'normal' ]; then
     # Build without legacy.
-    echo "SCRIPT: Building in normal mode..."
+    echo 'SCRIPT: Building in normal mode...'
     ./gradlew assemble && true
     echo "SCRIPT: Build in normal mode exited with code ${?}."
 else

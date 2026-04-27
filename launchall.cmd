@@ -21,24 +21,16 @@
 :: Disable echo.
 @echo off
 
-:: Set local variable scope. (enable delayed expansions)
-setlocal enabledelayedexpansion
-
 :: Iterate.
 echo SCRIPT: Launching all versions...
-for /D %%f in (versions\*) do (
-    :: Skip, if ".ignored" exists.
-    if exist %%f\.ignored (
-        echo SCRIPT: Skipping '%%~nxf' because of the '.ignored' file.
-    ) else (
-        :: Launch.
-        echo SCRIPT: Launching '%%~nxf'...
-        cmd.exe /c gradlew.bat "-Dru.vidtu.hcscr.only=%%~nxf" "%%~nxf:runClient"
-        echo SCRIPT: Launch for '%%~nxf' exited with code !ERRORLEVEL!.
-        if not !ERRORLEVEL!==0 (
-            echo SCRIPT: Non-zero exit code.
-            pause
-        )
+for /D %%F in (versions\*) do (
+    :: Launch.
+    echo SCRIPT: Launching '%%~nxF'...
+    cmd.exe /c gradlew.bat "-Dru.vidtu.hcscr.only=%%~nxF" "%%~nxF:runClient"
+    echo SCRIPT: Launch for '%%~nxF' exited with code !ERRORLEVEL!.
+    if not !ERRORLEVEL!==0 (
+        echo SCRIPT: Non-zero exit code. Press any key to continue, terminate ^(CTRL+C^) to cancel.
+        pause >nul
     )
 )
 echo SCRIPT: Done launching all versions.

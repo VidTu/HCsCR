@@ -24,6 +24,6 @@
 set -euo pipefail
 
 # Reset.
-echo "SCRIPT: Resetting active project..."
+echo 'SCRIPT: Resetting active project...'
 ./gradlew "Reset active project" && true
 echo "SCRIPT: Resetting active project exited with code ${?}."

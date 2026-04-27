@@ -30,5 +30,5 @@ if "%~1"=="" (
 
 :: Switch.
 echo SCRIPT: Switching to '%1'...
-gradlew.bat "Set active project to %1"
+cmd.exe /C gradlew.bat "Set active project to %1"
 echo SCRIPT: Switch to '%1' exited with code %ERRORLEVEL%.
