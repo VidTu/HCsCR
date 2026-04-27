@@ -21,6 +21,9 @@
 :: Disable echo.
 @echo off
 
+:: Set local variable scope. (enable delayed expansions)
+setlocal enabledelayedexpansion
+
 :: Iterate.
 echo SCRIPT: Launching all versions...
 for /D %%F in (versions\*) do (
