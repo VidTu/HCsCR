@@ -22,8 +22,12 @@
     //? if >=1.19.4 {
     "crystal.InteractionMixin",
     //?}
-    "crystal.PlayerMixin_E",
+    //? if forge || hacky_neoforge {
+    /*"crystal.PlayerMixin_E",
     "crystal.PlayerMixin_M"
+    *///?} else {
+    "crystal.PlayerMixin_E"
+    //?}
   ],
   "injectors": {
     "defaultRequire": 1
