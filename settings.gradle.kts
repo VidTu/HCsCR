@@ -119,7 +119,6 @@ stonecutter {
             for (type in types) {
                 // Extract the ID.
                 val id = "${version}-${type}"
-                if (type == "neoforge") continue
 
                 // Process the "only" version ID.
                 if ((onlyId != null) && (id != onlyId) && (id != latestId)) continue
