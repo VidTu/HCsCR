@@ -139,8 +139,8 @@ dependencies {
     // Sometimes, ModMenu is not yet updated for the version. (it almost never updates to snapshots nowadays)
     // So we should depend on it compile-time (it is really an optional dependency for us) to allow both
     // compilation of an optional ModMenu compatibility class (HModMenu.java) and launching the game.
-    if ("${findProperty("sc.modmenu.compile-only")}".toBoolean()) { // FIXME
-        compileOnly("com.terraformersmc:modmenu:${modmenu}")
+    if (modmenu.startsWith('$')) {
+        compileOnly("com.terraformersmc:modmenu:${modmenu.substring(1)}")
     } else {
         implementation("com.terraformersmc:modmenu:${modmenu}")
         implementation(fabricApi.module("fabric-screen-api-v1", fapi)) // ModMenu dependency.
