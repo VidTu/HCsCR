@@ -59,7 +59,9 @@ public final class PlayerMixin_M {
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private PlayerMixin_M() {
-        throw new AssertionError("HCsCR: No instances.");
+        if (HCompile.DEBUG_ASSERTS) {
+            throw new AssertionError("HCsCR: No instances.");
+        }
     }
 
     /**

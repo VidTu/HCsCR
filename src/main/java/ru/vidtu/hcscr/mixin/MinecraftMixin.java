@@ -30,6 +30,7 @@ import net.minecraft.util.thread.ReentrantBlockableEventLoop;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.UnknownNullability;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -56,7 +57,8 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
      * Logger for this class.
      */
     @Unique
-    private static final Logger HCSCR_LOGGER = LogManager.getLogger("HCsCR/MinecraftMixin");
+    @UnknownNullability
+    private static final Logger HCSCR_LOGGER = (HCompile.DEBUG_LOGS ? LogManager.getLogger("HCsCR/MinecraftMixin") : null);
 
     /**
      * An instance of this class cannot be created.
@@ -74,7 +76,9 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
         //?} else {
         /*super(null);
         *///?}
-        throw new AssertionError("HCsCR: No instances.");
+        if (HCompile.DEBUG_ASSERTS) {
+            throw new AssertionError("HCsCR: No instances.");
+        }
     }
 
     /**

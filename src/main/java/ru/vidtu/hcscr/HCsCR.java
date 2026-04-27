@@ -158,7 +158,9 @@ public final class HCsCR {
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private HCsCR() {
-        throw new AssertionError("HCsCR: No instances.");
+        if (HCompile.DEBUG_ASSERTS) {
+            throw new AssertionError("HCsCR: No instances.");
+        }
     }
 
     /**

@@ -68,7 +68,9 @@ public final class EntityMixin {
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private EntityMixin() {
-        throw new AssertionError("HCsCR: No instances.");
+        if (HCompile.DEBUG_ASSERTS) {
+            throw new AssertionError("HCsCR: No instances.");
+        }
     }
 
     /**

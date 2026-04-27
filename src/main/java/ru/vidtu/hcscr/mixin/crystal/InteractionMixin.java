@@ -30,6 +30,7 @@ import net.minecraft.world.level.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.UnknownNullability;
 import org.jspecify.annotations.NullMarked;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -58,7 +59,8 @@ public abstract class InteractionMixin extends Entity {
      * Logger for this class.
      */
     @Unique
-    private static final Logger HCSCR_LOGGER = LogManager.getLogger("HCsCR/InteractionMixin");
+    @UnknownNullability
+    private static final Logger HCSCR_LOGGER = (HCompile.DEBUG_LOGS ? LogManager.getLogger("HCsCR/InteractionMixin") : null);
 
     /**
      * An instance of this class cannot be created.
@@ -72,7 +74,9 @@ public abstract class InteractionMixin extends Entity {
     private InteractionMixin() {
         //noinspection DataFlowIssue // <- Never called. (Mixin)
         super(null, null);
-        throw new AssertionError("HCsCR: No instances.");
+        if (HCompile.DEBUG_ASSERTS) {
+            throw new AssertionError("HCsCR: No instances.");
+        }
     }
 
     /**
