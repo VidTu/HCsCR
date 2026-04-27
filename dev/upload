@@ -31,7 +31,7 @@
 #     - Other versions will become Release on GitHub.
 # 4.  Locates and checks the JAR files in the 'build/libs' folder.
 # 5.  Sources the authentication tokens from the environment.
-#     - GitHub token is sourced from UPLOAD_CURSEFORGE_TOKEN.
+#     - GitHub token is sourced from UPLOAD_GITHUB_TOKEN.
 #     - Discord webhook URL is sourced from UPLOAD_DISCORD_WEBHOOK.
 #     - Additional sourcing is done by executing 'dev/.env' file. It is
 #       an optional Git-ignored shell script, you can paste tokens
@@ -102,7 +102,7 @@ echo "Extracted the versions into: ${UPLOAD_VERSIONS_TEMP}"
 echo 'Checking all JAR files...'
 UPLOAD_VERSIONS_IGNORED=$(grep -Evh '^#|^$' 'versions/ignored.txt')
 UPLOAD_FILES=""
-while read UPLOAD_MC; do
+while read -r UPLOAD_MC; do
     for UPLOAD_TYPE in fabric forge neoforge; do
         UPLOAD_ID="${UPLOAD_MC}-${UPLOAD_TYPE}"
         # Check if ignored.
@@ -165,9 +165,7 @@ grep -Eq '\S' -- "${UPLOAD_CHANGELOG_FILE}" || { echo 'ERROR: Empty changelog.'&
 UPLOAD_CHANGELOG=$(cat -- "${UPLOAD_CHANGELOG_FILE}")
 rm -- "${UPLOAD_CHANGELOG_FILE}"
 UPLOAD_CHANGELOG_JSON=$(echo "${UPLOAD_CHANGELOG}" | jq --raw-input --slurp --compact-output)
-UPLOAD_CHANGELOG_MODIFIED=$(echo "${UPLOAD_CHANGELOG}" | sed -Ee 's/^\*\*Full Changelog\*\*: (https:\/\/github.com\/VidTu\/HCsCR\/compare\/(.*))$/**Full Changelog**: [\2](\1)/g' -e 's/(issue|PR): #([0-9]+)/\1: [#\2](https:\/\/github.com\/VidTu\/HCsCR\/issues\/\2)/g')
-UPLOAD_CHANGELOG_MODIFIED_JSON=$(echo "${UPLOAD_CHANGELOG_MODIFIED}" | jq --raw-input --slurp --compact-output)
-UPLOAD_CHANGELOG_DISCORD=$(echo "${UPLOAD_CHANGELOG_MODIFIED}" | tr '\n' '\r' | sed 's/\r\r/\r/g' | tr '\r' '\n')
+UPLOAD_CHANGELOG_DISCORD=$(echo "${UPLOAD_CHANGELOG}" | sed -Ee 's/^\*\*Full Changelog\*\*: (https:\/\/github.com\/VidTu\/HCsCR\/compare\/(.*))$/**Full Changelog**: [\2](\1)/g' -e 's/(issue|PR): #([0-9]+)/\1: [#\2](https:\/\/github.com\/VidTu\/HCsCR\/issues\/\2)/g' | tr '\n' '\r' | sed 's/\r\r/\r/g' | tr '\r' '\n')
 UPLOAD_CHANGELOG_DISCORD_JSON=$(echo "${UPLOAD_CHANGELOG_DISCORD}" | jq --raw-input --slurp --compact-output)
 
 # Print the changelog.
@@ -192,7 +190,7 @@ echo "Extracted the GitHub release draft ID: ${UPLOAD_GITHUB_ID}"
 
 # Upload the files to the GitHub release draft.
 echo 'Uploading files to the GitHub release draft...'
-echo "${UPLOAD_FILES}" | while read UPLOAD_FILE; do
+echo "${UPLOAD_FILES}" | while read -r UPLOAD_FILE; do
     UPLOAD_FILENAME=$(basename -- "${UPLOAD_FILE}")
     echo "Uploading file '${UPLOAD_FILENAME}'..."
     curl --fail-with-body --max-time 30 --retry 3 --request POST --header 'Content-Type: application/java-archive' --header "Authorization: Bearer ${UPLOAD_GITHUB_TOKEN}" --data-binary "@${UPLOAD_FILE}" "https://uploads.github.com/repos/VidTu/HCsCR/releases/${UPLOAD_GITHUB_ID}/assets?name=${UPLOAD_FILENAME}"

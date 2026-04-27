@@ -2,6 +2,7 @@
   <dictionary name="project">
     <words>
       <w>Dorg</w>
+      <w>Ksyxis</w>
       <w>Kyori</w>
       <w>Modrinth</w>
       <w>Mojang</w>
@@ -12,9 +13,12 @@
       <w>appname</w>
       <w>axform</w>
       <w>cdpath</w>
+      <w>compileall</w>
+      <w>compileone</w>
       <w>configureondemand</w>
       <w>cpvp</w>
       <w>distxform</w>
+      <w>enabledelayedexpansion</w>
       <w>endlocal</w>
       <w>entrypoints</w>
       <w>errorlevel</w>
@@ -29,6 +33,7 @@
       <w>kikugie</w>
       <w>libffi</w>
       <w>minecraft</w>
+      <w>mktemp</w>
       <w>modlauncher</w>
       <w>modmenu</w>
       <w>mojmap</w>
@@ -48,6 +53,7 @@
       <w>ulimit</w>
       <w>vidtu</w>
       <w>xtrace</w>
+      <w>xxxxxxx</w>
       <w>Дебаггинг</w>
       <w>боёвки</w>
       <w>кпвп</w>
