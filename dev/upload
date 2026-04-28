@@ -135,7 +135,7 @@ fi
 # Verify the tokens.
 echo 'Checking the tokens...'
 [ -z "${UPLOAD_GITHUB_SKIP:-}" ] && [ -z "${UPLOAD_GITHUB_TOKEN:-}" ] && echo "ERROR: Missing UPLOAD_GITHUB_TOKEN. Use '.env' file in 'dev' or your shell's environment variables." && exit 1
-[ -z "${UPLOAD_DISCORD_WEBHOOK:-}" ] && echo "ERROR: Missing UPLOAD_DISCORD_WEBHOOK. Use '.env' file in 'dev' or your shell's environment variables." && exit 1
+[ -z "${UPLOAD_DISCORD_SKIP:-}" ] && [ -z "${UPLOAD_DISCORD_WEBHOOK:-}" ] && echo "ERROR: Missing UPLOAD_DISCORD_WEBHOOK. Use '.env' file in 'dev' or your shell's environment variables." && exit 1
 echo 'All tokens found.'
 
 # Create a temporary file for the changelog.
