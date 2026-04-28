@@ -134,7 +134,7 @@ fi
 
 # Verify the tokens.
 echo 'Checking the tokens...'
-[ -z "${UPLOAD_GITHUB_TOKEN:-}" ] && echo "ERROR: Missing UPLOAD_GITHUB_TOKEN. Use '.env' file in 'dev' or your shell's environment variables." && exit 1
+[ -z "${UPLOAD_GITHUB_SKIP:-}" ] && [ -z "${UPLOAD_GITHUB_TOKEN:-}" ] && echo "ERROR: Missing UPLOAD_GITHUB_TOKEN. Use '.env' file in 'dev' or your shell's environment variables." && exit 1
 [ -z "${UPLOAD_DISCORD_WEBHOOK:-}" ] && echo "ERROR: Missing UPLOAD_DISCORD_WEBHOOK. Use '.env' file in 'dev' or your shell's environment variables." && exit 1
 echo 'All tokens found.'
 
@@ -177,34 +177,40 @@ echo '===== CHANGELOG END ====='
 echo 'Ready to upload. Press Enter to confirm, terminate (CTRL+C) to cancel.'
 read -r _
 
-# Create a GitHub release draft.
-echo 'Creating a GitHub release draft...'
-UPLOAD_GITHUB_DRAFT=$(curl --fail-with-body --max-time 30 --retry 3 --request POST --header 'Content-Type: application/json' --header "Authorization: Bearer ${UPLOAD_GITHUB_TOKEN}" --data-raw "{\"tag_name\":${UPLOAD_VERSION_JSON},\"name\":${UPLOAD_NAME_JSON},\"body\":${UPLOAD_CHANGELOG_JSON},\"draft\":true,\"prerelease\":${UPLOAD_VERSION_PRE}}" 'https://api.github.com/repos/VidTu/HCsCR/releases')
-echo 'Created a GitHub release draft.'
+# Skip GitHub, if desired.
+if [ -z "${UPLOAD_GITHUB_SKIP:-}" ]; then
+    # Create a GitHub release draft.
+    echo 'Creating a GitHub release draft...'
+    UPLOAD_GITHUB_DRAFT=$(curl --fail-with-body --max-time 30 --retry 3 --request POST --header 'Content-Type: application/json' --header "Authorization: Bearer ${UPLOAD_GITHUB_TOKEN}" --data-raw "{\"tag_name\":${UPLOAD_VERSION_JSON},\"name\":${UPLOAD_NAME_JSON},\"body\":${UPLOAD_CHANGELOG_JSON},\"draft\":true,\"prerelease\":${UPLOAD_VERSION_PRE}}" 'https://api.github.com/repos/VidTu/HCsCR/releases')
+    echo 'Created a GitHub release draft.'
 
-# Extract the GitHub release ID.
-echo 'Extracting the GitHub release draft ID...'
-UPLOAD_GITHUB_ID=$(echo "${UPLOAD_GITHUB_DRAFT}" | jq --raw-output '.id')
-echo "Extracted the GitHub release draft ID: ${UPLOAD_GITHUB_ID}"
+    # Extract the GitHub release ID.
+    echo 'Extracting the GitHub release draft ID...'
+    UPLOAD_GITHUB_ID=$(echo "${UPLOAD_GITHUB_DRAFT}" | jq --raw-output '.id')
+    echo "Extracted the GitHub release draft ID: ${UPLOAD_GITHUB_ID}"
 
-# Upload the files to the GitHub release draft.
-echo 'Uploading files to the GitHub release draft...'
-echo "${UPLOAD_FILES}" | while read -r UPLOAD_FILE; do
-    UPLOAD_FILENAME=$(basename -- "${UPLOAD_FILE}")
-    UPLOAD_FILENAME_URI=$(echo "${UPLOAD_FILENAME}" | jq --raw-input --raw-output '@uri')
-    echo "Uploading file '${UPLOAD_FILENAME}'..."
-    curl --fail-with-body --max-time 30 --retry 3 --request POST --header 'Content-Type: application/java-archive' --header "Authorization: Bearer ${UPLOAD_GITHUB_TOKEN}" --data-binary "@${UPLOAD_FILE}" "https://uploads.github.com/repos/VidTu/HCsCR/releases/${UPLOAD_GITHUB_ID}/assets?name=${UPLOAD_FILENAME_URI}"
-    echo 'Uploaded.'
-done
-echo 'Uploaded files to the GitHub release draft.'
+    # Upload the files to the GitHub release draft.
+    echo 'Uploading files to the GitHub release draft...'
+    echo "${UPLOAD_FILES}" | while read -r UPLOAD_FILE; do
+        UPLOAD_FILENAME=$(basename -- "${UPLOAD_FILE}")
+        UPLOAD_FILENAME_URI=$(echo "${UPLOAD_FILENAME}" | jq --raw-input --raw-output '@uri')
+        echo "Uploading file '${UPLOAD_FILENAME}'..."
+        curl --fail-with-body --max-time 30 --retry 3 --request POST --header 'Content-Type: application/java-archive' --header "Authorization: Bearer ${UPLOAD_GITHUB_TOKEN}" --data-binary "@${UPLOAD_FILE}" "https://uploads.github.com/repos/VidTu/HCsCR/releases/${UPLOAD_GITHUB_ID}/assets?name=${UPLOAD_FILENAME_URI}"
+        echo 'Uploaded.'
+    done
+    echo 'Uploaded files to the GitHub release draft.'
 
-# Publish a GitHub release from the draft.
-echo 'Publishing a GitHub release from the draft...'
-curl --fail-with-body --max-time 30 --retry 3 --request PATCH --header 'Content-Type: application/json' --header "Authorization: Bearer ${UPLOAD_GITHUB_TOKEN}" --data-raw '{"draft":false}' "https://api.github.com/repos/VidTu/HCsCR/releases/${UPLOAD_GITHUB_ID}"
-echo 'Published a GitHub release from the draft.'
+    # Publish a GitHub release from the draft.
+    echo 'Publishing a GitHub release from the draft...'
+    curl --fail-with-body --max-time 30 --retry 3 --request PATCH --header 'Content-Type: application/json' --header "Authorization: Bearer ${UPLOAD_GITHUB_TOKEN}" --data-raw '{"draft":false}' "https://api.github.com/repos/VidTu/HCsCR/releases/${UPLOAD_GITHUB_ID}"
+    echo 'Published a GitHub release from the draft.'
+fi
 
-# Notify via a Discord webhook notification.
-echo 'Publishing a Discord webhook notification...'
-UPLOAD_DISCORD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:00.000Z")
-curl --fail-with-body --max-time 30 --retry 3 --request POST --header 'Content-Type: application/json' --data-raw "{\"embeds\":[{\"title\":${UPLOAD_NAME_JSON},\"description\":${UPLOAD_CHANGELOG_DISCORD_JSON},\"color\":16746496,\"fields\":[{\"name\":\"Download\",\"value\":\"<:github:1495153741412696216> GitHub: https://github.com/VidTu/HCsCR/releases\"}],\"author\":{\"name\":\"VidTu\",\"url\":\"https://github.com/VidTu\",\"icon_url\":\"https://cdn.discordapp.com/avatars/339357082602176513/f82f8e810b31903775ed304d07319b1f.png?size=2048\"},\"footer\":{\"text\":\"HCsCR: Remove your end crystals faster!\",\"icon_url\":\"https://cdn.discordapp.com/avatars/1496705557711683676/a0d3030419ce81c201ef4b74d6da5622.png?size=2048\"},\"timestamp\":\"${UPLOAD_DISCORD_TIMESTAMP}\"}],\"components\":[{\"type\":1,\"components\":[{\"type\":2,\"style\":5,\"url\":\"https://github.com/VidTu/HCsCR/releases\",\"label\":\"GitHub\",\"emoji\":{\"name\":\"github\",\"id\":1495153741412696216}}]}]}" "${UPLOAD_DISCORD_WEBHOOK}?with_components=true"
-echo "Published a Discord webhook notification. !!! DON'T FORGET TO CLICK 'PUBLISH' ON IT. !!!"
+# Skip Discord, if desired.
+if [ -z "${UPLOAD_DISCORD_SKIP:-}" ]; then
+    # Notify via a Discord webhook notification.
+    echo 'Publishing a Discord webhook notification...'
+    UPLOAD_DISCORD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:00.000Z")
+    curl --fail-with-body --max-time 30 --retry 3 --request POST --header 'Content-Type: application/json' --data-raw "{\"embeds\":[{\"title\":${UPLOAD_NAME_JSON},\"description\":${UPLOAD_CHANGELOG_DISCORD_JSON},\"color\":16746496,\"fields\":[{\"name\":\"Download\",\"value\":\"<:github:1495153741412696216> GitHub: https://github.com/VidTu/HCsCR/releases\"}],\"author\":{\"name\":\"VidTu\",\"url\":\"https://github.com/VidTu\",\"icon_url\":\"https://cdn.discordapp.com/avatars/339357082602176513/f82f8e810b31903775ed304d07319b1f.png?size=2048\"},\"footer\":{\"text\":\"HCsCR: Remove your end crystals faster!\",\"icon_url\":\"https://cdn.discordapp.com/avatars/1496705557711683676/a0d3030419ce81c201ef4b74d6da5622.png?size=2048\"},\"timestamp\":\"${UPLOAD_DISCORD_TIMESTAMP}\"}],\"components\":[{\"type\":1,\"components\":[{\"type\":2,\"style\":5,\"url\":\"https://github.com/VidTu/HCsCR/releases\",\"label\":\"GitHub\",\"emoji\":{\"name\":\"github\",\"id\":1495153741412696216}}]}]}" "${UPLOAD_DISCORD_WEBHOOK}?with_components=true"
+    echo "Published a Discord webhook notification. !!! DON'T FORGET TO CLICK 'PUBLISH' ON IT. !!!"
+fi
