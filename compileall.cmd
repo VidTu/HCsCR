@@ -26,14 +26,14 @@ setlocal
 
 :: Check args.
 if /I "%~1"=="legacy" (
-    :: Build in legacy.
+    :: Build in legacy mode.
     echo SCRIPT: Building in legacy mode...
     cmd.exe /C gradlew.bat -Dru.vidtu.hcscr.legacy=true assemble
     echo SCRIPT: Building in legacy mode exited with code %ERRORLEVEL%.
     goto :end
 )
 if /I "%~1"=="normal" (
-    :: Build in normal.
+    :: Build in normal mode.
     echo SCRIPT: Building in normal mode...
     cmd.exe /C gradlew.bat assemble
     echo SCRIPT: Building in normal mode exited with code %ERRORLEVEL%.
