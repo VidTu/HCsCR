@@ -96,9 +96,6 @@ if (onlyId != null) {
     require(onlyType in types) { "Invalid only version '${onlyId}', type '${onlyType}' extracted from 'ru.vidtu.hcscr.only' not found in ${types.joinToString()}." }
 }
 
-// Create the "excluded" version list. It serves no real purpose, just to log.
-val excluded = mutableListOf<String>()
-
 // Setup stonecutter.
 stonecutter {
     // Enable kts support.
@@ -110,10 +107,7 @@ stonecutter {
         for (version in versions) {
             // Process the "supported" versions.
             // Note: There's no concept of "supported" loaders.
-            if ((onlyId == null) && !includeLegacyVersions && (version !in supportedVersions)) {
-                excluded.add(version)
-                continue
-            }
+            if ((onlyId == null) && !includeLegacyVersions && (version !in supportedVersions)) continue
 
             // Iterate types.
             for (type in types) {
@@ -124,10 +118,7 @@ stonecutter {
                 if ((onlyId != null) && (id != onlyId) && (id != latestId)) continue
 
                 // Check if version ID is ignored.
-                if (id in ignoredIds) {
-                    excluded.add(id)
-                    continue
-                }
+                if (id in ignoredIds) continue
 
                 // Set up the project.
                 val project = version(id, version)
@@ -157,11 +148,8 @@ stonecutter {
     }
 }
 
-// Log about excluded versions.
-if (excluded.isNotEmpty()) {
-    if (includeLegacyVersions) {
-        logger.lifecycle("Excluded versions: ${excluded.joinToString()}. Ignored versions are always excluded. Legacy versions were included.")
-    } else {
-        logger.lifecycle("Excluded versions: ${excluded.joinToString()}. Ignored versions are always excluded. Legacy versions were excluded, use 'ru.vidtu.hcscr.legacy' property or '--legacy' script flag to include them.")
-    }
-}
+// Log about mode.
+val mode = if (onlyId != null) "Only:${onlyId}"
+else if (includeLegacyVersions) "Legacy"
+else "Normal"
+logger.lifecycle("Mode: '${mode}'.")
