@@ -51,7 +51,7 @@
 # This script is adapted from the GitHub:VidTu/Ksyxis repository.
 #
 # Required CLI tools:
-#  sh cat curl grep jq mktemp sed tr
+#  cat curl grep jq mktemp sed sh tr
 #
 # Any POSIX shell should work, no bash-isms used (intentionally). The script
 # should be system-agnostic, but was tested with MinGW (Windows) and Debian.
@@ -193,9 +193,8 @@ if [ -z "${UPLOAD_GITHUB_SKIP:-}" ]; then
     echo 'Uploading files to the GitHub release draft...'
     echo "${UPLOAD_FILES}" | while read -r UPLOAD_FILE; do
         UPLOAD_FILENAME=$(basename -- "${UPLOAD_FILE}")
-        UPLOAD_FILENAME_URI=$(echo "${UPLOAD_FILENAME}" | jq --raw-input --raw-output '@uri')
         echo "Uploading file '${UPLOAD_FILENAME}'..."
-        curl --fail-with-body --max-time 30 --retry 3 --request POST --header 'Content-Type: application/java-archive' --header "Authorization: Bearer ${UPLOAD_GITHUB_TOKEN}" --data-binary "@${UPLOAD_FILE}" "https://uploads.github.com/repos/VidTu/HCsCR/releases/${UPLOAD_GITHUB_ID}/assets?name=${UPLOAD_FILENAME_URI}"
+        curl --fail-with-body --max-time 30 --retry 3 --request POST --header 'Content-Type: application/java-archive' --header "Authorization: Bearer ${UPLOAD_GITHUB_TOKEN}" --url-query "name=${UPLOAD_FILENAME}" --data-binary "@${UPLOAD_FILE}" "https://uploads.github.com/repos/VidTu/HCsCR/releases/${UPLOAD_GITHUB_ID}/assets"
         echo 'Uploaded.'
     done
     echo 'Uploaded files to the GitHub release draft.'
