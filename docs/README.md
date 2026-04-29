@@ -202,6 +202,8 @@ but it wouldn't be possible without:
   [LlamaLad7](https://github.com/LlamaLad7). (and contributors)
 - [Minecraft](https://minecraft.net/) by
   [Mojang](https://mojang.com/).
+- Various CLI tools (`cat, curl, grep, jq, mktemp, sed, sh, tr`)
+  used by the [upload](../dev/upload) script.
 
 It also uses [Gradle](https://gradle.org/) and [Java](https://java.com/).
 
