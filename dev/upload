@@ -159,7 +159,7 @@ echo 'Finished editing the changelog file.'
 
 # Check if the changelog is not empty.
 echo 'Checking the changelog...'
-grep -Eq '\S' -- "${UPLOAD_CHANGELOG_FILE}" || { echo 'ERROR: Empty changelog.'&& rm -- "${UPLOAD_CHANGELOG_FILE}" && exit 1; }
+grep -Eq '\S' -- "${UPLOAD_CHANGELOG_FILE}" || { echo 'ERROR: Empty changelog.' && rm -- "${UPLOAD_CHANGELOG_FILE}" && exit 1; }
 
 # Read and format the changelog.
 UPLOAD_CHANGELOG=$(cat -- "${UPLOAD_CHANGELOG_FILE}")
