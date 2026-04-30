@@ -6,8 +6,8 @@ Remove your end crystals before the server even knows you hit 'em!
 
 ## Language
 
-- **English** 🇬🇧 🇺🇸
-- [Русский 🇷🇺](README_ru.md)
+- **English**
+- [Русский](README_ru.md)
 
 ## Downloads
 
