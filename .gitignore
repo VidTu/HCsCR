@@ -15,6 +15,3 @@ versions/
 !/.idea/icon.png
 !/.idea/inspectionProfiles
 !/.idea/inspectionProfiles/**
-!/.idea/modules
-!/.idea/modules.xml
-!/.idea/modules/**
