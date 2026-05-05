@@ -166,7 +166,7 @@ UPLOAD_CHANGELOG=$(cat -- "${UPLOAD_CHANGELOG_FILE}")
 rm -- "${UPLOAD_CHANGELOG_FILE}"
 UPLOAD_CHANGELOG_GITHUB=$(echo "${UPLOAD_CHANGELOG}" && echo && echo "### Click [here](https://github.com/VidTu/HCsCR/releases/tag/${UPLOAD_VERSION}) to see all Minecraft versions.")
 UPLOAD_CHANGELOG_GITHUB_JSON=$(echo "${UPLOAD_CHANGELOG_GITHUB}" | jq --raw-input --slurp --compact-output)
-UPLOAD_CHANGELOG_DISCORD=$(echo "${UPLOAD_CHANGELOG}" | sed -Ee 's/^\*\*Full Changelog\*\*: (https:\/\/github.com\/VidTu\/HCsCR\/compare\/(.*))$/**Full Changelog**: [\2](\1)/g' -e 's/(issue|PR): #([0-9]+)/\1: [#\2](https:\/\/github.com\/VidTu\/HCsCR\/issues\/\2)/g' -e 's/thanks to: @([a-zA-Z0-9\-]+)/thanks to: [@\1](https:\/\/github.com\/\1)/g' | tr '\n' '\r' | sed 's/\r\r/\r/g' | tr '\r' '\n')
+UPLOAD_CHANGELOG_DISCORD=$(echo "${UPLOAD_CHANGELOG}" | sed -Ee 's/^\*\*Full Changelog\*\*: (https:\/\/github.com\/VidTu\/HCsCR\/compare\/(.*))$/**Full Changelog**: [\2](\1)/g' -e 's/(issue|PR): #([0-9]+)/\1: [#\2](https:\/\/github.com\/VidTu\/HCsCR\/issues\/\2)/g' -e 's/thanks to: @([a-zA-Z0-9\-]+)/thanks to: [@\1](https:\/\/github.com\/\1)/g' | tr '\n' '\r' | sed 's/\r\r/\r/g' | tr '\r' '\n' | sed -Ee 's/^###### /-# /g' -e 's/^#####? //g')
 UPLOAD_CHANGELOG_DISCORD_JSON=$(echo "${UPLOAD_CHANGELOG_DISCORD}" | jq --raw-input --slurp --compact-output)
 
 # Print the changelogs.
