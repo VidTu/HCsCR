@@ -229,14 +229,14 @@ public final class HModMenu implements ModMenuApi {
             try {
                 // Log. (**TRACE**)
                 if (HVariables.DEBUG_LOGS) {
-                    LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Checking for updates via ModMenu...");
+                    LOGGER.trace(HCsCR.MARKER, "HCsCR: Checking for updates via ModMenu...");
                 }
 
                 // Allow forcefully disabling the updater.
                 if (Boolean.getBoolean("ru.vidtu.hcscr.nomodmenuupdater")) {
                     // Log. (**DEBUG**)
                     if (HVariables.DEBUG_LOGS) {
-                        LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: ModMenu updater is disabled via the 'ru.vidtu.hcscr.nomodmenuupdater' property.");
+                        LOGGER.debug(HCsCR.MARKER, "HCsCR: ModMenu updater is disabled via the 'ru.vidtu.hcscr.nomodmenuupdater' property.");
                     }
 
                     // Stop.
@@ -263,7 +263,7 @@ public final class HModMenu implements ModMenuApi {
 
                     // Log. (**TRACE**)
                     if (HVariables.DEBUG_LOGS) {
-                        LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Will check updates for '{}' game version and '{}' channel... (ua: " + USER_AGENT + ')', gameVersion, channel);
+                        LOGGER.trace(HCsCR.MARKER, "HCsCR: Will check updates for '{}' game version and '{}' channel... (ua: " + USER_AGENT + ')', gameVersion, channel);
                     }
 
                     // Send the request.
@@ -289,9 +289,9 @@ public final class HModMenu implements ModMenuApi {
                     }
 
                     // Log. (**DEBUG**)
-                    if (HVariables.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.HCSCR_MARKER)) {
+                    if (HVariables.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.MARKER)) {
                         final String sanitizedBody = SANITIZER.escape(body);
-                        LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Got a response from the update API. (code: {}, response: {}, sanitizedBody: '{}')", code, response, sanitizedBody);
+                        LOGGER.debug(HCsCR.MARKER, "HCsCR: Got a response from the update API. (code: {}, response: {}, sanitizedBody: '{}')", code, response, sanitizedBody);
                     }
 
                     // Check the code.
@@ -311,13 +311,13 @@ public final class HModMenu implements ModMenuApi {
                     final String rawVersion = properties.getProperty(versionKey);
                     if ((rawVersion == null) || rawVersion.isBlank()) {
                         // Log. (**DEBUG**)
-                        if (HVariables.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.HCSCR_MARKER)) {
+                        if (HVariables.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.MARKER)) {
                             @SuppressWarnings("StreamToLoop") // <- Debug-only.
                             final String sanitizedKeys = '[' + properties.keySet().stream()
                                     .map((final Object key) -> '"' + SANITIZER.escape(key.toString()) + '"')
                                     .reduce((final String first, final String second) -> first + ", " + second)
                                     .orElse("") + ']';
-                            LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: No update property found for key '{}'. (sanitizedKeys: {})", versionKey, sanitizedKeys);
+                            LOGGER.debug(HCsCR.MARKER, "HCsCR: No update property found for key '{}'. (sanitizedKeys: {})", versionKey, sanitizedKeys);
                         }
 
                         // Stop.
@@ -341,9 +341,9 @@ public final class HModMenu implements ModMenuApi {
                     if ((currentVersionMeta.compareTo(remoteVersion) >= 0) &&
                             (currentVersionConstant.compareTo(remoteVersion) >= 0)) {
                         // Log. (**DEBUG**)
-                        if (HVariables.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.HCSCR_MARKER)) {
+                        if (HVariables.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.MARKER)) {
                             final String sanitizedRemoteVersion = SANITIZER.escape(remoteVersion.toString());
-                            LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Both current version from meta '{}' and from compilation '{}' are at least as up-to-date as the remote version '{}'.", currentVersionMeta, currentVersionConstant, sanitizedRemoteVersion);
+                            LOGGER.debug(HCsCR.MARKER, "HCsCR: Both current version from meta '{}' and from compilation '{}' are at least as up-to-date as the remote version '{}'.", currentVersionMeta, currentVersionConstant, sanitizedRemoteVersion);
                         }
 
                         // Stop.
@@ -374,7 +374,11 @@ public final class HModMenu implements ModMenuApi {
                     }
 
                     // Log.
-                    LOGGER.warn(HCsCR.HCSCR_MARKER, "HCsCR: Found an update from '{}' or '{}' to '{}' (for Minecraft '{}' and channel '{}'). Download at: {}", currentVersionMeta, currentVersionConstant, remoteVersion, rawVersion, channel, asciiLink);
+                    if (HVariables.DEBUG_LOGS) {
+                        LOGGER.warn(HCsCR.MARKER, "HCsCR: Found an update from '{}' or '{}' to '{}' (for Minecraft '{}' and channel '{}'). Download at: {}", currentVersionMeta, currentVersionConstant, remoteVersion, rawVersion, channel, asciiLink);
+                    } else {
+                        LOGGER.warn("HCsCR: Found an update from '{}' or '{}' to '{}' (for Minecraft '{}' and channel '{}'). Download at: {}", currentVersionMeta, currentVersionConstant, remoteVersion, rawVersion, channel, asciiLink);
+                    }
 
                     // Create an update.
                     return new Update(channel, asciiLink, remoteVersion.getFriendlyString());
@@ -389,9 +393,9 @@ public final class HModMenu implements ModMenuApi {
             } catch (final Throwable t) {
                 // Log.
                 if (HVariables.DEBUG_LOGS) {
-                    LOGGER.warn(HCsCR.HCSCR_MARKER, "HCsCR: Unable to check for updates.", t);
+                    LOGGER.warn(HCsCR.MARKER, "HCsCR: Unable to check for updates.", t);
                 } else {
-                    LOGGER.warn(HCsCR.HCSCR_MARKER, "HCsCR: Unable to check for updates.");
+                    LOGGER.warn("HCsCR: Unable to check for updates.");
                 }
 
                 // Return null. (no update)

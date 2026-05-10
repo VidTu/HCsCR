@@ -101,7 +101,7 @@ public abstract class InteractionMixin extends Entity {
 
         // Log. (**TRACE**)
         if (HVariables.DEBUG_LOGS) {
-            HCSCR_LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Received attack in Interaction entity. (source: {}, cir: {}, interaction: {})", source, cir, this);
+            HCSCR_LOGGER.trace(HCsCR.MARKER, "HCsCR: Received attack in Interaction entity. (source: {}, cir: {}, interaction: {})", source, cir, this);
         }
 
         // Validate.
@@ -117,7 +117,7 @@ public abstract class InteractionMixin extends Entity {
         if (!level.isClientSide() || !HConfig.enable() || (HConfig.crystals() != CrystalMode.ENVELOPING)) { // Implicit NPE for 'level'
             // Log. (**DEBUG**)
             if (HVariables.DEBUG_LOGS) {
-                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Ignored Interaction entity attack overriding. (source: {}, cir: {}, interaction: {})", source, cir, this);
+                HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Ignored Interaction entity attack overriding. (source: {}, cir: {}, interaction: {})", source, cir, this);
             }
 
             // Stop.
@@ -129,7 +129,7 @@ public abstract class InteractionMixin extends Entity {
 
         // Log. (**DEBUG**)
         if (HVariables.DEBUG_LOGS) {
-            HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Forcefully allowed Interaction to be attacked. (source: {}, cir: {}, interaction: {})", source, cir, this);
+            HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Forcefully allowed Interaction to be attacked. (source: {}, cir: {}, interaction: {})", source, cir, this);
         }
     }
 }

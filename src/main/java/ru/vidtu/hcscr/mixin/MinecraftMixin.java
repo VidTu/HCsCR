@@ -118,7 +118,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 
         // Log. (**TRACE**)
         if (HVariables.DEBUG_LOGS) {
-            HCSCR_LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Clearing data... (level: {}, client: {})", level, this);
+            HCSCR_LOGGER.trace(HCsCR.MARKER, "HCsCR: Clearing data... (level: {}, client: {})", level, this);
         }
 
         // Clear the maps.
@@ -128,7 +128,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 
         // Log. (**DEBUG**)
         if (HVariables.DEBUG_LOGS) {
-            HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Cleared data. (level: {}, client: {})", level, this);
+            HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Cleared data. (level: {}, client: {})", level, this);
         }
 
         // Pop the profiler.

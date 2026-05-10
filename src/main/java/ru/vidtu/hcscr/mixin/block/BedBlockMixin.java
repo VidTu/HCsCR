@@ -119,7 +119,7 @@ public final class BedBlockMixin {
 
         // Log. (**TRACE**)
         if (HVariables.DEBUG_LOGS) {
-            HCSCR_LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Detected bed right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
+            HCSCR_LOGGER.trace(HCsCR.MARKER, "HCsCR: Detected bed right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
         }
 
         // Do NOT process beds if any of the following conditions is met:
@@ -130,7 +130,7 @@ public final class BedBlockMixin {
         if (!level.isClientSide() || !HConfig.enable() || !HStonecutter.willBedExplode(level)) { // Implicit NPE for 'level'
             // Log. (**DEBUG**)
             if (HVariables.DEBUG_LOGS) {
-                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped bed right click removing. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
+                HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Skipped bed right click removing. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
             }
 
             // Stop.
@@ -157,7 +157,7 @@ public final class BedBlockMixin {
 
                 // Log. (**DEBUG**)
                 if (HVariables.DEBUG_LOGS) {
-                    HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Clipping bed via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
+                    HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Clipping bed via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
                 }
 
                 // Break.
@@ -175,7 +175,7 @@ public final class BedBlockMixin {
 
                 // Log. (**DEBUG**)
                 if (HVariables.DEBUG_LOGS) {
-                    HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Removed bed via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
+                    HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Removed bed via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
                 }
 
                 // Break.
@@ -183,7 +183,7 @@ public final class BedBlockMixin {
             default:
                 // Log. (**DEBUG**)
                 if (HVariables.DEBUG_LOGS) {
-                    HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Ignored bed right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
+                    HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Ignored bed right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
                 }
         }
     }
@@ -229,7 +229,7 @@ public final class BedBlockMixin {
         if (!level.isClientSide() || BedBlock.canSetSpawn(level) || !HConfig.enable()) { // Implicit NPE for 'level'
             // Log. (**DEBUG**)
             if (HVariables.DEBUG_LOGS) {
-                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped bed right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, hitResult: {}, bed: {})", state, level, pos, player, hand, hitResult, this);
+                HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Skipped bed right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, hitResult: {}, bed: {})", state, level, pos, player, hand, hitResult, this);
             }
 
             // Stop.
@@ -256,7 +256,7 @@ public final class BedBlockMixin {
 
                 // Log. (**DEBUG**)
                 if (HVariables.DEBUG_LOGS) {
-                    HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Clipping bed via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
+                    HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Clipping bed via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
                 }
 
                 // Break.
@@ -274,7 +274,7 @@ public final class BedBlockMixin {
 
                 // Log. (**DEBUG**)
                 if (HVariables.DEBUG_LOGS) {
-                    HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Removed bed via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
+                    HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Removed bed via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
                 }
 
                 // Break.
@@ -282,7 +282,7 @@ public final class BedBlockMixin {
             default:
                 // Log. (**DEBUG**)
                 if (HVariables.DEBUG_LOGS) {
-                    HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Ignored bed right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
+                    HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Ignored bed right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
                 }
         }
     }

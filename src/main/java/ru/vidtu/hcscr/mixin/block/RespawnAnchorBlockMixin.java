@@ -120,7 +120,7 @@ public final class RespawnAnchorBlockMixin {
 
         // Log. (**TRACE**)
         if (HVariables.DEBUG_LOGS) {
-            HCSCR_LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Detected anchor right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, anchor: {})", state, level, pos, player, hitResult, this);
+            HCSCR_LOGGER.trace(HCsCR.MARKER, "HCsCR: Detected anchor right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, anchor: {})", state, level, pos, player, hitResult, this);
         }
 
         // Do NOT process anchors if any of the following conditions is met:
@@ -133,7 +133,7 @@ public final class RespawnAnchorBlockMixin {
                 !HConfig.enable() || !HStonecutter.willAnchorExplode(level)) {
             // Log. (**DEBUG**)
             if (HVariables.DEBUG_LOGS) {
-                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, anchor: {})", state, level, pos, player, hitResult, this);
+                HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, anchor: {})", state, level, pos, player, hitResult, this);
             }
 
             // Stop.
@@ -153,7 +153,7 @@ public final class RespawnAnchorBlockMixin {
 
                 // Log. (**DEBUG**)
                 if (HVariables.DEBUG_LOGS) {
-                    HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Clipping anchor via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, anchor: {})", state, level, pos, player, hitResult, this);
+                    HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Clipping anchor via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, anchor: {})", state, level, pos, player, hitResult, this);
                 }
 
                 // Break.
@@ -164,7 +164,7 @@ public final class RespawnAnchorBlockMixin {
 
                 // Log. (**DEBUG**)
                 if (HVariables.DEBUG_LOGS) {
-                    HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Removed anchor via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, anchor: {})", state, level, pos, player, hitResult, this);
+                    HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Removed anchor via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, anchor: {})", state, level, pos, player, hitResult, this);
                 }
 
                 // Break.
@@ -172,7 +172,7 @@ public final class RespawnAnchorBlockMixin {
             default:
                 // Log. (**DEBUG**)
                 if (HVariables.DEBUG_LOGS) {
-                    HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Ignored anchor right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, anchor: {})", state, level, pos, player, hitResult, this);
+                    HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Ignored anchor right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, anchor: {})", state, level, pos, player, hitResult, this);
                 }
         }
     }
@@ -221,7 +221,7 @@ public final class RespawnAnchorBlockMixin {
                 RespawnAnchorBlock.canSetSpawn(level) || !HConfig.enable()) {
             // Log. (**DEBUG**)
             if (HVariables.DEBUG_LOGS) {
-                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, hitResult: {}, anchor: {})", state, level, pos, player, hand, hitResult, this);
+                HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, hitResult: {}, anchor: {})", state, level, pos, player, hand, hitResult, this);
             }
 
             // Stop.
@@ -240,7 +240,7 @@ public final class RespawnAnchorBlockMixin {
                 (isRespawnFuel(itemInHand) && canBeCharged(state))) {
             // Log. (**DEBUG**)
             if (HVariables.DEBUG_LOGS) {
-                HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, hitResult: {}, itemInHand: {}, anchor: {})", state, level, pos, player, hand, hitResult, itemInHand, this);
+                HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, hitResult: {}, itemInHand: {}, anchor: {})", state, level, pos, player, hand, hitResult, itemInHand, this);
             }
 
             // Stop.
@@ -255,7 +255,7 @@ public final class RespawnAnchorBlockMixin {
 
                 // Log. (**DEBUG**)
                 if (HVariables.DEBUG_LOGS) {
-                    HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Clipping anchor via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, itemInHand: {}, anchor: {})", state, level, pos, player, hitResult, itemInHand, this);
+                    HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Clipping anchor via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, itemInHand: {}, anchor: {})", state, level, pos, player, hitResult, itemInHand, this);
                 }
 
                 // Break.
@@ -266,7 +266,7 @@ public final class RespawnAnchorBlockMixin {
 
                 // Log. (**DEBUG**)
                 if (HVariables.DEBUG_LOGS) {
-                    HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Removed anchor via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, itemInHand: {}, anchor: {})", state, level, pos, player, hitResult, itemInHand, this);
+                    HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Removed anchor via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, itemInHand: {}, anchor: {})", state, level, pos, player, hitResult, itemInHand, this);
                 }
 
                 // Break.
@@ -274,7 +274,7 @@ public final class RespawnAnchorBlockMixin {
             default:
                 // Log. (**DEBUG**)
                 if (HVariables.DEBUG_LOGS) {
-                    HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Ignored anchor right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, itemInHand: {}, anchor: {})", state, level, pos, player, hitResult, itemInHand, this);
+                    HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Ignored anchor right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, itemInHand: {}, anchor: {})", state, level, pos, player, hitResult, itemInHand, this);
                 }
         }
     }

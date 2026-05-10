@@ -147,7 +147,7 @@ public final class HConfig {
         try {
             // Log. (**TRACE**)
             if (HVariables.DEBUG_LOGS) {
-                LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Loading the config... (directory: {})", HStonecutter.CONFIG_DIRECTORY);
+                LOGGER.trace(HCsCR.MARKER, "HCsCR: Loading the config... (directory: {})", HStonecutter.CONFIG_DIRECTORY);
             }
 
             // Resolve the file.
@@ -161,16 +161,20 @@ public final class HConfig {
 
             // Log. (**DEBUG**)
             if (HVariables.DEBUG_LOGS) {
-                LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Config has been loaded. (directory: {}, file: {})", HStonecutter.CONFIG_DIRECTORY, file);
+                LOGGER.debug(HCsCR.MARKER, "HCsCR: Config has been loaded. (directory: {}, file: {})", HStonecutter.CONFIG_DIRECTORY, file);
             }
         } catch (final NoSuchFileException nsfe) {
             // Log. (**DEBUG**)
             if (HVariables.DEBUG_LOGS) {
-                LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Ignoring missing HCsCR config.", nsfe);
+                LOGGER.debug(HCsCR.MARKER, "HCsCR: Ignored missing HCsCR config.", nsfe);
             }
         } catch (final Throwable t) {
             // Log.
-            LOGGER.error(HCsCR.HCSCR_MARKER, "HCsCR: Unable to load the HCsCR config.", t);
+            if (HVariables.DEBUG_LOGS) {
+                LOGGER.error(HCsCR.MARKER, "HCsCR: Unable to load the HCsCR config.", t);
+            } else {
+                LOGGER.error("HCsCR: Unable to load the HCsCR config.", t);
+            }
         } finally {
             // Clamp.
             crystals = MoreObjects.firstNonNull(crystals, CrystalMode.DIRECT);
@@ -189,7 +193,7 @@ public final class HConfig {
         try {
             // Log. (**TRACE**)
             if (HVariables.DEBUG_LOGS) {
-                LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Saving the config... (directory: {})", HStonecutter.CONFIG_DIRECTORY);
+                LOGGER.trace(HCsCR.MARKER, "HCsCR: Saving the config... (directory: {})", HStonecutter.CONFIG_DIRECTORY);
             }
 
             // Resolve the file.
@@ -203,11 +207,15 @@ public final class HConfig {
 
             // Log. (**DEBUG**)
             if (HVariables.DEBUG_LOGS) {
-                LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Config has been saved. (directory: {}, file: {})", HStonecutter.CONFIG_DIRECTORY, file);
+                LOGGER.debug(HCsCR.MARKER, "HCsCR: Config has been saved. (directory: {}, file: {})", HStonecutter.CONFIG_DIRECTORY, file);
             }
         } catch (final Throwable t) {
             // Log.
-            LOGGER.error(HCsCR.HCSCR_MARKER, "HCsCR: Unable to save the HCsCR config.", t);
+            if (HVariables.DEBUG_LOGS) {
+                LOGGER.error(HCsCR.MARKER, "HCsCR: Unable to save the HCsCR config.", t);
+            } else {
+                LOGGER.error("HCsCR: Unable to save the HCsCR config.", t);
+            }
         }
     }
 

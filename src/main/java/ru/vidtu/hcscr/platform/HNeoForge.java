@@ -109,7 +109,11 @@ public final class HNeoForge {
 
         // Log.
         final long start = System.nanoTime();
-        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Loading... (platform: neoforge, version: " + HVariables.VERSION + ')');
+        if (HVariables.DEBUG_LOGS) {
+            LOGGER.info(HCsCR.MARKER, "HCsCR: Loading... (platform: neoforge, target: " + HVariables.MINECRAFT + ", version: " + HVariables.VERSION + ')');
+        } else {
+            LOGGER.info("HCsCR: Loading... (platform: neoforge, target: " + HVariables.MINECRAFT + ", version: " + HVariables.VERSION + ')');
+        }
 
         // Not sure how long the Forge does have the "clientSideOnly" field in the TOML,
         // so I'll do an additional exception check here.
@@ -349,7 +353,11 @@ public final class HNeoForge {
         ^///?}
 
         // Done.
-        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / 1_000_000L);
+        if (HVariables.DEBUG_LOGS) {
+            LOGGER.info(HCsCR.MARKER, "HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / 1_000_000L);
+        } else {
+            LOGGER.info("HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / 1_000_000L);
+        }
     }
 
     @Contract(pure = true)

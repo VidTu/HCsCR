@@ -98,7 +98,11 @@ public final class HFabric implements ClientModInitializer {
     public void onInitializeClient() {
         // Log.
         final long start = System.nanoTime();
-        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Loading... (platform: fabric, version: " + HVariables.VERSION + ')');
+        if (HVariables.DEBUG_LOGS) {
+            LOGGER.info(HCsCR.MARKER, "HCsCR: Loading... (platform: fabric, target: " + HVariables.MINECRAFT + ", version: " + HVariables.VERSION + ')');
+        } else {
+            LOGGER.info("HCsCR: Loading... (platform: fabric, target: " + HVariables.MINECRAFT + ", version: " + HVariables.VERSION + ')');
+        }
 
         // Load the config.
         HConfig.load();
@@ -225,7 +229,11 @@ public final class HFabric implements ClientModInitializer {
         // Config screen handling (ModMenu entrypoint) is in the HModMenu class.
 
         // Done.
-        LOGGER.info(HCsCR.HCSCR_MARKER, "HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / 1_000_000L);
+        if (HVariables.DEBUG_LOGS) {
+            LOGGER.info(HCsCR.MARKER, "HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / 1_000_000L);
+        } else {
+            LOGGER.info("HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / 1_000_000L);
+        }
     }
 
     @Contract(pure = true)
