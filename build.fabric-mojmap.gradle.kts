@@ -226,7 +226,7 @@ tasks.withType<Jar> {
     exclude("ru/vidtu/hcscr/compile/**")
 
     // Remove package-info.class, unless package debug is on. (to save space)
-    if (!"${findProperty("ru.vidtu.hcscr.debug.package")}".toBoolean()) {
+    if (!"${findProperty("ru.vidtu.hcscr.debug.package") ?: findProperty("ru.vidtu.hcscr.debug")}".toBoolean()) {
         exclude("**/package-info.class")
     }
 }
