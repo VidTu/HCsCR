@@ -20,7 +20,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ru.vidtu.hcscr.platform;
+package ru.vidtu.hcscr.compile;
 
 import com.google.errorprone.annotations.CompileTimeConstant;
 import org.jetbrains.annotations.ApiStatus;
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 
 /**
- * A class that contains compile-time variables.
+ * A class that contains compile-time constants.
  * <p>
  * <b>Note:</b> This class is NEVER found in the final JAR. It <b>MUST NOT</b>
  * contain any references that are not inlined by the Java compiler.
@@ -36,34 +36,11 @@ import org.jspecify.annotations.NullMarked;
  * @author VidTu
  * @apiNote Internal use only
  * @see <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-15.html#jls-15.28">Compile-time References</a>
+ * @see HVariables
  */
 @ApiStatus.Internal
 @NullMarked
-public final class HCompile {
-    /**
-     * Mod version. The version is provided with the loader type and Minecraft version. (i.e. with build metadata)
-     */
-    @CompileTimeConstant
-    public static final String VERSION = "{{ version }}";
-
-    /**
-     * Whether the additional Java assertions are enabled.
-     */
-    @CompileTimeConstant
-    public static final boolean DEBUG_ASSERTS = {{ debugAsserts }};
-
-    /**
-     * Whether the {@code DEBUG} and {@code TRACE} logs are generated.
-     */
-    @CompileTimeConstant
-    public static final boolean DEBUG_LOGS = {{ debugLogs }};
-
-    /**
-     * Whether the Minecraft's {@code ProfilerFiller} class is used.
-     */
-    @CompileTimeConstant
-    public static final boolean DEBUG_PROFILER = {{ debugProfiler }};
-
+public final class HConstants {
     /**
      * An instance of this class cannot be created.
      *
@@ -73,7 +50,7 @@ public final class HCompile {
     @ApiStatus.ScheduledForRemoval
     @Deprecated
     @Contract(value = "-> fail", pure = true)
-    private HCompile() {
-        throw new AssertionError("HCsCR: No instances.");
+    private HConstants() {
+        throw new AssertionError("HCsCR: Compile-time code.");
     }
 }

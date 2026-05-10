@@ -41,7 +41,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import ru.vidtu.hcscr.HCsCR;
-import ru.vidtu.hcscr.platform.HCompile;
+import ru.vidtu.hcscr.compile.HVariables;
 
 /**
  * Mixin that nukes blocks from {@link HCsCR#CLIPPING_BLOCKS} on block update.
@@ -71,7 +71,7 @@ public final class ClientPacketListenerMixin {
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private ClientPacketListenerMixin() {
-        if (HCompile.DEBUG_ASSERTS) {
+        if (HVariables.DEBUG_ASSERTS) {
             throw new AssertionError("HCsCR: No instances.");
         }
     }
@@ -89,7 +89,7 @@ public final class ClientPacketListenerMixin {
     @Inject(method = "handleBlockUpdate", at = @At("RETURN"))
     private void hcscr_handleBlockUpdate_return(final ClientboundBlockUpdatePacket packet, final CallbackInfo ci) {
         // Validate.
-        if (HCompile.DEBUG_ASSERTS) {
+        if (HVariables.DEBUG_ASSERTS) {
             assert (packet != null) : "HCsCR: Parameter 'packet' is null. (handler: " + this + ')';
             assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Receiving block update packet NOT from the main thread. (thread: " + Thread.currentThread() + ", packet: " + packet + ", handler: " + this + ')';
         }

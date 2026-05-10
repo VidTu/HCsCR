@@ -38,8 +38,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.vidtu.hcscr.HCsCR;
+import ru.vidtu.hcscr.compile.HVariables;
 import ru.vidtu.hcscr.config.BlockMode;
-import ru.vidtu.hcscr.platform.HCompile;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
@@ -64,7 +64,7 @@ public final class BlockBehaviour_BlockStateBaseMixin {
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private BlockBehaviour_BlockStateBaseMixin() {
-        if (HCompile.DEBUG_ASSERTS) {
+        if (HVariables.DEBUG_ASSERTS) {
             throw new AssertionError("HCsCR: No instances.");
         }
     }
@@ -86,7 +86,7 @@ public final class BlockBehaviour_BlockStateBaseMixin {
     private void hcscr_getCollisionShape_head(final BlockGetter level, final BlockPos pos, final CollisionContext context,
                                               final CallbackInfoReturnable<VoxelShape> cir) {
         // Validate.
-        if (HCompile.DEBUG_ASSERTS) {
+        if (HVariables.DEBUG_ASSERTS) {
             assert (level != null) : "HCsCR: Parameter 'level' is null. (pos: " + pos + ", context: " + context + ", cir: " + cir + ", state: " + this + ')';
             assert (pos != null) : "HCsCR: Parameter 'pos' is null. (level: " + level + ", context: " + context + ", cir: " + cir + ", state: " + this + ')';
             assert (context != null) : "HCsCR: Parameter 'context' is null. (level: " + level + ", pos: " + pos + ", cir: " + cir + ", state: " + this + ')';

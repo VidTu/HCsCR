@@ -50,6 +50,7 @@ import org.jetbrains.annotations.Blocking;
 import org.jetbrains.annotations.CheckReturnValue;
 import org.jspecify.annotations.Nullable;
 import ru.vidtu.hcscr.HCsCR;
+import ru.vidtu.hcscr.compile.HVariables;
 
 import java.io.StringReader;
 import java.net.URI;
@@ -144,7 +145,7 @@ public final class HModMenu implements ModMenuApi {
          * @see HttpHeaders#USER_AGENT
          */
         @CompileTimeConstant
-        private static final String USER_AGENT = "VidTu/HCsCR/" + HCompile.VERSION + " (updater; https://github.com/VidTu/HCsCR; pig@vidtu.ru)";
+        private static final String USER_AGENT = "VidTu/HCsCR/" + HVariables.VERSION + " (updater; https://github.com/VidTu/HCsCR; pig@vidtu.ru)";
 
         /**
          * Maximum length for the updater response to prevent abuse.
@@ -227,14 +228,14 @@ public final class HModMenu implements ModMenuApi {
             // Wrap.
             try {
                 // Log. (**TRACE**)
-                if (HCompile.DEBUG_LOGS) {
+                if (HVariables.DEBUG_LOGS) {
                     LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Checking for updates via ModMenu...");
                 }
 
                 // Allow forcefully disabling the updater.
                 if (Boolean.getBoolean("ru.vidtu.hcscr.nomodmenuupdater")) {
                     // Log. (**DEBUG**)
-                    if (HCompile.DEBUG_LOGS) {
+                    if (HVariables.DEBUG_LOGS) {
                         LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: ModMenu updater is disabled via the 'ru.vidtu.hcscr.nomodmenuupdater' property.");
                     }
 
@@ -261,7 +262,7 @@ public final class HModMenu implements ModMenuApi {
                     final UpdateChannel channel = UpdateChannel.getUserPreference();
 
                     // Log. (**TRACE**)
-                    if (HCompile.DEBUG_LOGS) {
+                    if (HVariables.DEBUG_LOGS) {
                         LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Will check updates for '{}' game version and '{}' channel... (ua: " + USER_AGENT + ')', gameVersion, channel);
                     }
 
@@ -288,7 +289,7 @@ public final class HModMenu implements ModMenuApi {
                     }
 
                     // Log. (**DEBUG**)
-                    if (HCompile.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.HCSCR_MARKER)) {
+                    if (HVariables.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.HCSCR_MARKER)) {
                         final String sanitizedBody = SANITIZER.escape(body);
                         LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Got a response from the update API. (code: {}, response: {}, sanitizedBody: '{}')", code, response, sanitizedBody);
                     }
@@ -310,7 +311,7 @@ public final class HModMenu implements ModMenuApi {
                     final String rawVersion = properties.getProperty(versionKey);
                     if ((rawVersion == null) || rawVersion.isBlank()) {
                         // Log. (**DEBUG**)
-                        if (HCompile.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.HCSCR_MARKER)) {
+                        if (HVariables.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.HCSCR_MARKER)) {
                             @SuppressWarnings("StreamToLoop") // <- Debug-only.
                             final String sanitizedKeys = '[' + properties.keySet().stream()
                                     .map((final Object key) -> '"' + SANITIZER.escape(key.toString()) + '"')
@@ -335,12 +336,12 @@ public final class HModMenu implements ModMenuApi {
                             .orElseThrow()
                             .getMetadata()
                             .getVersion();
-                    final Version currentVersionConstant = Version.parse(HCompile.VERSION);
+                    final Version currentVersionConstant = Version.parse(HVariables.VERSION);
                     final Version remoteVersion = Version.parse(rawVersion);
                     if ((currentVersionMeta.compareTo(remoteVersion) >= 0) &&
                             (currentVersionConstant.compareTo(remoteVersion) >= 0)) {
                         // Log. (**DEBUG**)
-                        if (HCompile.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.HCSCR_MARKER)) {
+                        if (HVariables.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.HCSCR_MARKER)) {
                             final String sanitizedRemoteVersion = SANITIZER.escape(remoteVersion.toString());
                             LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Both current version from meta '{}' and from compilation '{}' are at least as up-to-date as the remote version '{}'.", currentVersionMeta, currentVersionConstant, sanitizedRemoteVersion);
                         }
@@ -387,7 +388,7 @@ public final class HModMenu implements ModMenuApi {
                 }
             } catch (final Throwable t) {
                 // Log.
-                if (HCompile.DEBUG_LOGS) {
+                if (HVariables.DEBUG_LOGS) {
                     LOGGER.warn(HCsCR.HCSCR_MARKER, "HCsCR: Unable to check for updates.", t);
                 } else {
                     LOGGER.warn(HCsCR.HCSCR_MARKER, "HCsCR: Unable to check for updates.");
@@ -439,10 +440,10 @@ public final class HModMenu implements ModMenuApi {
         @Contract(pure = true)
         Update(final UpdateChannel channel, final String link, final String version) {
             // Validate.
-            if (HCompile.DEBUG_ASSERTS) {
-                assert channel != null : "HCsCR: Parameter 'channel' is null. (link: " + link + ", version: " + version + ", update: " + this + ')';
-                assert link != null : "HCsCR: Parameter 'link' is null. (channel: " + channel + ", version: " + version + ", update: " + this + ')';
-                assert version != null : "HCsCR: Parameter 'version' is null. (channel: " + channel + ", link: " + link + ", update: " + this + ')';
+            if (HVariables.DEBUG_ASSERTS) {
+                assert (channel != null) : "HCsCR: Parameter 'channel' is null. (link: " + link + ", version: " + version + ", update: " + this + ')';
+                assert (link != null) : "HCsCR: Parameter 'link' is null. (channel: " + channel + ", version: " + version + ", update: " + this + ')';
+                assert (version != null) : "HCsCR: Parameter 'version' is null. (channel: " + channel + ", link: " + link + ", update: " + this + ')';
             }
 
             // Assign.

@@ -38,9 +38,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.vidtu.hcscr.HCsCR;
+import ru.vidtu.hcscr.compile.HVariables;
 import ru.vidtu.hcscr.config.CrystalMode;
 import ru.vidtu.hcscr.config.HConfig;
-import ru.vidtu.hcscr.platform.HCompile;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
@@ -60,7 +60,7 @@ public abstract class InteractionMixin extends Entity {
      */
     @Unique
     @UnknownNullability
-    private static final Logger HCSCR_LOGGER = (HCompile.DEBUG_LOGS ? LogManager.getLogger("HCsCR/InteractionMixin") : null);
+    private static final Logger HCSCR_LOGGER = (HVariables.DEBUG_LOGS ? LogManager.getLogger("HCsCR/InteractionMixin") : null);
 
     /**
      * An instance of this class cannot be created.
@@ -74,7 +74,7 @@ public abstract class InteractionMixin extends Entity {
     private InteractionMixin() {
         //noinspection DataFlowIssue // <- Never called. (Mixin)
         super(null, null);
-        if (HCompile.DEBUG_ASSERTS) {
+        if (HVariables.DEBUG_ASSERTS) {
             throw new AssertionError("HCsCR: No instances.");
         }
     }
@@ -94,19 +94,19 @@ public abstract class InteractionMixin extends Entity {
     @Inject(method = "skipAttackInteraction", at = @At("HEAD"), cancellable = true)
     private void hcscr_skipAttackInteraction_head(final Entity source, final CallbackInfoReturnable<Boolean> cir) {
         // Validate.
-        if (HCompile.DEBUG_ASSERTS) {
+        if (HVariables.DEBUG_ASSERTS) {
             assert (source != null) : "HCsCR: Parameter 'source' is null. (cir: " + cir + ", interaction: " + this + ')';
             assert (cir != null) : "HCsCR: Parameter 'cir' is null. (source: " + source + ", interaction: " + this + ')';
         }
 
         // Log. (**TRACE**)
-        if (HCompile.DEBUG_LOGS) {
+        if (HVariables.DEBUG_LOGS) {
             HCSCR_LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Received attack in Interaction entity. (source: {}, cir: {}, interaction: {})", source, cir, this);
         }
 
         // Validate.
         final Level level = HStonecutter.levelOfEntity(this);
-        if (HCompile.DEBUG_ASSERTS) {
+        if (HVariables.DEBUG_ASSERTS) {
             assert (level != null) : "HCsCR: Interaction entity has null level. (source: " + source + ", cir: " + cir + ", entity: " + this + ')';
         }
 
@@ -116,7 +116,7 @@ public abstract class InteractionMixin extends Entity {
         // - The current crystal removal mode is not ENVELOPING.
         if (!level.isClientSide() || !HConfig.enable() || (HConfig.crystals() != CrystalMode.ENVELOPING)) { // Implicit NPE for 'level'
             // Log. (**DEBUG**)
-            if (HCompile.DEBUG_LOGS) {
+            if (HVariables.DEBUG_LOGS) {
                 HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Ignored Interaction entity attack overriding. (source: {}, cir: {}, interaction: {})", source, cir, this);
             }
 
@@ -128,7 +128,7 @@ public abstract class InteractionMixin extends Entity {
         cir.setReturnValue(false);
 
         // Log. (**DEBUG**)
-        if (HCompile.DEBUG_LOGS) {
+        if (HVariables.DEBUG_LOGS) {
             HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Forcefully allowed Interaction to be attacked. (source: {}, cir: {}, interaction: {})", source, cir, this);
         }
     }

@@ -39,7 +39,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import ru.vidtu.hcscr.HCsCR;
-import ru.vidtu.hcscr.platform.HCompile;
+import ru.vidtu.hcscr.compile.HVariables;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
@@ -58,7 +58,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
      */
     @Unique
     @UnknownNullability
-    private static final Logger HCSCR_LOGGER = (HCompile.DEBUG_LOGS ? LogManager.getLogger("HCsCR/MinecraftMixin") : null);
+    private static final Logger HCSCR_LOGGER = (HVariables.DEBUG_LOGS ? LogManager.getLogger("HCsCR/MinecraftMixin") : null);
 
     /**
      * An instance of this class cannot be created.
@@ -76,7 +76,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
         //?} else {
         /*super(null);
         *///?}
-        if (HCompile.DEBUG_ASSERTS) {
+        if (HVariables.DEBUG_ASSERTS) {
             throw new AssertionError("HCsCR: No instances.");
         }
     }
@@ -103,13 +103,13 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
     private void hcscr_updateLevelInEngines_return(@Nullable final ClientLevel level, final CallbackInfo ci) {
     *///?}
         // Validate.
-        if (HCompile.DEBUG_ASSERTS) {
+        if (HVariables.DEBUG_ASSERTS) {
             assert (this.isSameThread()) : "HCsCR: Updating level in engines NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ", client: " + this + ')';
         }
 
         // Get and push the profiler.
         final ProfilerFiller profiler;
-        if (HCompile.DEBUG_PROFILER) {
+        if (HVariables.DEBUG_PROFILER) {
             profiler = HStonecutter.profilerOfClient((Minecraft) (Object) this);
             profiler.push("hcscr:clear_data");
         } else {
@@ -117,7 +117,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
         }
 
         // Log. (**TRACE**)
-        if (HCompile.DEBUG_LOGS) {
+        if (HVariables.DEBUG_LOGS) {
             HCSCR_LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Clearing data... (level: {}, client: {})", level, this);
         }
 
@@ -127,12 +127,12 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
         HCsCR.CLIPPING_BLOCKS.clear();
 
         // Log. (**DEBUG**)
-        if (HCompile.DEBUG_LOGS) {
+        if (HVariables.DEBUG_LOGS) {
             HCSCR_LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Cleared data. (level: {}, client: {})", level, this);
         }
 
         // Pop the profiler.
-        if (HCompile.DEBUG_PROFILER) {
+        if (HVariables.DEBUG_PROFILER) {
             profiler.pop();
         }
     }

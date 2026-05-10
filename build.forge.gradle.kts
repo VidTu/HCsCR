@@ -170,6 +170,9 @@ tasks.withType<JavaCompile> {
 }
 
 sourceSets.main {
+    // Add compile-time stub classes.
+    java.srcDir("src/main/java-compile")
+
     blossom.javaSources {
         // Point to root directory.
         templates(rootDir.resolve("src/main/java-templates"))
@@ -181,6 +184,7 @@ sourceSets.main {
         property("debugLogs", providers.gradleProperty("ru.vidtu.hcscr.debug.logs").orElse(fallbackProvider))
         property("debugProfiler", providers.gradleProperty("ru.vidtu.hcscr.debug.profiler").orElse(fallbackProvider))
         property("version", "${version}")
+        property("minecraft", "${mcv}")
     }
 }
 
@@ -237,7 +241,7 @@ tasks.withType<Jar> {
     from(rootDir.resolve("NOTICE"))
 
     // Exclude compile-only code.
-    exclude("ru/vidtu/hcscr/platform/HCompile.class")
+    exclude("ru/vidtu/hcscr/compile/**")
 
     // Remove package-info.class, unless package debug is on. (to save space)
     if (!"${findProperty("ru.vidtu.hcscr.debug.package")}".toBoolean()) {

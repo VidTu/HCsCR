@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import ru.vidtu.hcscr.HEntityCollisionContext;
-import ru.vidtu.hcscr.platform.HCompile;
+import ru.vidtu.hcscr.compile.HVariables;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /^*
@@ -67,7 +67,7 @@ public final class EntityCollisionContextMixin implements HEntityCollisionContex
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private EntityCollisionContextMixin() {
-        if (HCompile.DEBUG_ASSERTS) {
+        if (HVariables.DEBUG_ASSERTS) {
             throw new AssertionError("HCsCR: No instances.");
         }
     }
@@ -83,7 +83,7 @@ public final class EntityCollisionContextMixin implements HEntityCollisionContex
      ^/
     @DoNotCall("Called by Mixin")
     @Inject(method = "<init>(Lnet/minecraft/world/entity/Entity;)V", at = @At("RETURN"))
-    private void hcscr_init_return(@Nullable final Entity entity, final CallbackInfo ci) {
+    private void hcscr_init_return(final @Nullable Entity entity, final CallbackInfo ci) {
         // Store.
         this.hcscr_entity = entity;
     }

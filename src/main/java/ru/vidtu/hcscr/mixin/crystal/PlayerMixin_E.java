@@ -33,7 +33,7 @@ import org.jspecify.annotations.NullMarked;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import ru.vidtu.hcscr.HCsCR;
-import ru.vidtu.hcscr.platform.HCompile;
+import ru.vidtu.hcscr.compile.HVariables;
 
 /**
  * Mixin that speeds up entity removing via {@link HCsCR#handlePlayerHittingEntity(Player, Entity, DamageSource, float)}
@@ -56,7 +56,7 @@ public final class PlayerMixin_E {
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private PlayerMixin_E() {
-        if (HCompile.DEBUG_ASSERTS) {
+        if (HVariables.DEBUG_ASSERTS) {
             throw new AssertionError("HCsCR: No instances.");
         }
     }
@@ -83,7 +83,7 @@ public final class PlayerMixin_E {
     private boolean hcscr_attack_hurtOrSimulate(final Entity target, final DamageSource damageSource,
                                                 final float totalDamage, final Operation<Boolean> original) {
         // Validate.
-        if (HCompile.DEBUG_ASSERTS) {
+        if (HVariables.DEBUG_ASSERTS) {
             assert (target != null) : "HCsCR: Parameter 'target' is null. (damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", original: " + original + ", player: " + this + ')';
             assert (damageSource != null) : "HCsCR: Parameter 'damageSource' is null. (target: " + target + ", totalDamage: " + totalDamage + ", original: " + original + ", player: " + this + ')';
             assert (Float.isFinite(totalDamage)) : "HCsCR: Parameter 'totalDamage' is not finite. (target: " + target + ", damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", original: " + original + ", player: " + this + ')';

@@ -38,7 +38,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Range;
 import org.jspecify.annotations.NullMarked;
 import ru.vidtu.hcscr.HCsCR;
-import ru.vidtu.hcscr.platform.HCompile;
+import ru.vidtu.hcscr.compile.HVariables;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.io.BufferedReader;
@@ -146,7 +146,7 @@ public final class HConfig {
     public static void load() {
         try {
             // Log. (**TRACE**)
-            if (HCompile.DEBUG_LOGS) {
+            if (HVariables.DEBUG_LOGS) {
                 LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Loading the config... (directory: {})", HStonecutter.CONFIG_DIRECTORY);
             }
 
@@ -160,12 +160,12 @@ public final class HConfig {
             }
 
             // Log. (**DEBUG**)
-            if (HCompile.DEBUG_LOGS) {
+            if (HVariables.DEBUG_LOGS) {
                 LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Config has been loaded. (directory: {}, file: {})", HStonecutter.CONFIG_DIRECTORY, file);
             }
         } catch (final NoSuchFileException nsfe) {
             // Log. (**DEBUG**)
-            if (HCompile.DEBUG_LOGS) {
+            if (HVariables.DEBUG_LOGS) {
                 LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Ignoring missing HCsCR config.", nsfe);
             }
         } catch (final Throwable t) {
@@ -188,7 +188,7 @@ public final class HConfig {
     /*package-private*/ static void save() {
         try {
             // Log. (**TRACE**)
-            if (HCompile.DEBUG_LOGS) {
+            if (HVariables.DEBUG_LOGS) {
                 LOGGER.trace(HCsCR.HCSCR_MARKER, "HCsCR: Saving the config... (directory: {})", HStonecutter.CONFIG_DIRECTORY);
             }
 
@@ -202,7 +202,7 @@ public final class HConfig {
             }
 
             // Log. (**DEBUG**)
-            if (HCompile.DEBUG_LOGS) {
+            if (HVariables.DEBUG_LOGS) {
                 LOGGER.debug(HCsCR.HCSCR_MARKER, "HCsCR: Config has been saved. (directory: {}, file: {})", HStonecutter.CONFIG_DIRECTORY, file);
             }
         } catch (final Throwable t) {
@@ -291,7 +291,7 @@ public final class HConfig {
      * @param crystalsDelay Crystals removal delay in nanos, {@code 0} by default
      * @see #crystalsDelay()
      */
-    /*package-private*/ static void crystalsDelay(@Range(from = 0L, to = 200_000_000L) final int crystalsDelay) {
+    /*package-private*/ static void crystalsDelay(final @Range(from = 0L, to = 200_000_000L) int crystalsDelay) {
         HConfig.crystalsDelay = Mth.clamp(((crystalsDelay / 1_000_000) * 1_000_000), 0, 200_000_000);
     }
 
@@ -315,7 +315,7 @@ public final class HConfig {
      * @param crystalsResync Crystals resync delay in ticks, {@code 20} by default
      * @see #crystalsResync()
      */
-    /*package-private*/ static void crystalsResync(@Range(from = 0L, to = 50L) final int crystalsResync) {
+    /*package-private*/ static void crystalsResync(final @Range(from = 0L, to = 50L) int crystalsResync) {
         HConfig.crystalsResync = Mth.clamp(crystalsResync, 0, 50);
     }
 
@@ -358,7 +358,7 @@ public final class HConfig {
     @Contract(pure = true)
     public static boolean shouldProcess(final Player player, final Entity entity) {
         // Validate.
-        if (HCompile.DEBUG_ASSERTS) {
+        if (HVariables.DEBUG_ASSERTS) {
             assert (player != null) : "HCsCR: Parameter 'player' is null. (entity: " + entity + ')';
             assert (entity != null) : "HCsCR: Parameter 'entity' is null. (player: " + player + ')';
         }
