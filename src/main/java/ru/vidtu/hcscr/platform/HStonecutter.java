@@ -329,7 +329,7 @@ public final class HStonecutter {
 
         // Throw unconditionally.
         if (!HVariables.DEBUG_PROFILER) {
-            throw new AssertionError("HCsCR: This mod build hasn't been compiled with profiler support.");
+            throw (HVariables.DEBUG_ASSERTS ? new AssertionError("HCsCR: This mod build hasn't been compiled with profiler support.") : null);
         }
 
         // Delegate.
