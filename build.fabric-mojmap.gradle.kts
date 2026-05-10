@@ -148,10 +148,14 @@ dependencies {
     }
 }
 
-// Compile with UTF-8, compatible Java, and with all debug options.
+// Compile with UTF-8, compatible Java, and with some debug options.
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
-    options.compilerArgs.addAll(listOf("-g", "-parameters"))
+    if ("${findProperty("ru.vidtu.hcscr.debug.javac") ?: findProperty("ru.vidtu.hcscr.debug")}".toBoolean()) {
+        options.compilerArgs.addAll(listOf("-g", "-parameters"))
+    } else {
+        options.compilerArgs.add("-g")
+    }
     options.release = javaTarget
 }
 
