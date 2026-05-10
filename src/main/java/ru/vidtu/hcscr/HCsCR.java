@@ -317,7 +317,7 @@ public final class HCsCR {
         // - The mod is disabled via config or keybind.
         // - This entity type shouldn't be processed at all (e.g. any living entity) or by the current config (e.g. slime).
         // - The damaging entity is not a player.
-        if (!HStonecutter.levelOfEntity(entity).isClientSide() || (amount <= 0.0F) || // Implicit NPE for 'entity'
+        if (!HStonecutter.levelOfEntity(entity).isClientSide() || (amount <= 0.0f) || // Implicit NPE for 'entity'
                 HStonecutter.isEntityRemoved(entity) || !HConfig.enable() ||
                 !HConfig.shouldProcess(player, entity)) return false;
 
@@ -339,7 +339,7 @@ public final class HCsCR {
         for (final MobEffectInstance instance : local.getActiveEffects()) {
             HStonecutter.removeEffectAttributes(instance, local, map);
         }
-        if (attributeAmount <= 0.0D) return false;
+        if (attributeAmount <= 0.0d) return false;
 
         // Fast-remove one crystal entity, if the mode is DIRECT.
         final CrystalMode mode = HConfig.crystals();
