@@ -107,17 +107,17 @@ public final class HNeoForge {
             assert (bus != null) : "HCsCR: Parameter 'bus' is null. (dist: " + dist + ", container: " + container + ", mod: " + this + ')';
         }
 
+        // Not sure how long the Forge does have the "clientSideOnly" field in the TOML,
+        // so I'll do an additional exception check here.
+        if (dist != Dist.CLIENT) { // Implicit null-UOE for 'dist'
+            throw new UnsupportedOperationException("HCsCR: You've tried to load the HCsCR mod on a server. This won't work.");
+        }
+
         // Log.
         if (HVariables.DEBUG_LOGS) {
             LOGGER.info(HCsCR.MARKER, "HCsCR: Loading... (platform: neoforge, target: " + HVariables.MINECRAFT + ", version: " + HVariables.VERSION + ')');
         } else {
             LOGGER.info("HCsCR: Loading... (platform: neoforge, target: " + HVariables.MINECRAFT + ", version: " + HVariables.VERSION + ')');
-        }
-
-        // Not sure how long the Forge does have the "clientSideOnly" field in the TOML,
-        // so I'll do an additional exception check here.
-        if (dist != Dist.CLIENT) { // Implicit null-UOE for 'dist'
-            throw new UnsupportedOperationException("HCsCR: You've tried to load the HCsCR mod on a server. This won't work.");
         }
 
         // Load the config.

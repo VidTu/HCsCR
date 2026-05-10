@@ -202,17 +202,17 @@ public final class HForge {
         // Get the context.
         FMLJavaModLoadingContext ctx = FMLJavaModLoadingContext.get();
     ^///?}
+        // Not sure how long the Forge does have the "clientSideOnly" field in the TOML,
+        // so I'll do an additional exception check here.
+        if (FMLEnvironment.dist != Dist.CLIENT) {
+            throw new UnsupportedOperationException("HCsCR: You've tried to load the HCsCR mod on a server. This won't work.");
+        }
+
         // Log.
         if (HVariables.DEBUG_LOGS) {
             LOGGER.info(HCsCR.MARKER, "HCsCR: Loading... (platform: forge, target: " + HVariables.MINECRAFT + ", version: " + HVariables.VERSION + ')');
         } else {
             LOGGER.info("HCsCR: Loading... (platform: forge, target: " + HVariables.MINECRAFT + ", version: " + HVariables.VERSION + ')');
-        }
-
-        // Not sure how long the Forge does have the "clientSideOnly" field in the TOML,
-        // so I'll do an additional exception check here.
-        if (FMLEnvironment.dist != Dist.CLIENT) {
-            throw new UnsupportedOperationException("HCsCR: You've tried to load the HCsCR mod on a server. This won't work.");
         }
 
         // Load the config.
