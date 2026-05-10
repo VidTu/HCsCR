@@ -496,7 +496,7 @@ public final class HCsCR {
         while (TOGGLE_BIND.consumeClick()) {
             // Log. (**TRACE**)
             if (HCompile.DEBUG_LOGS) {
-                LOGGER.trace(HCSCR_MARKER, "HCsCR: Toggle keybind was consumed, toggling the mode. (client: {}, keybind: {})", client, TOGGLE_BIND);
+                LOGGER.trace(HCSCR_MARKER, "HCsCR: Toggle keybind was consumed, toggling the mod. (client: {}, keybind: {})", client, TOGGLE_BIND);
             }
 
             // Toggle the mod.

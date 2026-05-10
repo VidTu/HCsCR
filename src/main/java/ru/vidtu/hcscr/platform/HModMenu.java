@@ -67,6 +67,7 @@ import java.util.Properties;
  * @apiNote Internal use only
  * @see HFabric
  * @see HConfig
+ * @see HScreen
  */
 @ApiStatus.Internal
 @NullMarked
