@@ -42,6 +42,40 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public final class HConstants {
     /**
+     * URL for fetching the update info.
+     */
+    @CompileTimeConstant
+    public static final String UPDATER_URL = "https://raw.githubusercontent.com/VidTu/HCsCR/main/updater_hcscr_fabric.properties";
+
+    /**
+     * Fallback updater link.
+     */
+    @CompileTimeConstant
+    public static final String UPDATER_FALLBACK_LINK = "https://github.com/VidTu/HCsCR/releases/latest";
+
+    /**
+     * Maximum length for the updater response to prevent abuse.
+     * <p>
+     * Equals to {@code 32767} units.
+     * <p>
+     * Depending on the implementation, this might be counted
+     * in either or both UTF-8 codepoints or UTF-8 bytes.
+     */
+    @CompileTimeConstant
+    public static final int UPDATER_MAX_BODY_LENGTH = 32767;
+
+    /**
+     * Maximum length for the updater single component to prevent abuse.
+     * <p>
+     * Equals to {@code 255} units.
+     * <p>
+     * Depending on the implementation, this might be counted
+     * in either or both UTF-8 codepoints or UTF-8 bytes.
+     */
+    @CompileTimeConstant
+    public static final int UPDATER_MAX_COMPONENT_LENGTH = 255;
+
+    /**
      * An instance of this class cannot be created.
      *
      * @throws AssertionError Always

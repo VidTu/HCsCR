@@ -50,9 +50,11 @@ import org.jetbrains.annotations.Blocking;
 import org.jetbrains.annotations.CheckReturnValue;
 import org.jspecify.annotations.Nullable;
 import ru.vidtu.hcscr.HCsCR;
+import ru.vidtu.hcscr.compile.HConstants;
 import ru.vidtu.hcscr.compile.HVariables;
 
 import java.io.StringReader;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -127,48 +129,6 @@ public final class HModMenu implements ModMenuApi {
     @ApiStatus.Internal
     @NullMarked
     /*package-private*/ static final class Updater implements UpdateChecker {
-        /**
-         * URL for fetching the update info.
-         */
-        @CompileTimeConstant
-        private static final String UPDATER_URL = "https://raw.githubusercontent.com/VidTu/HCsCR/main/updater_hcscr_fabric.properties";
-
-        /**
-         * Fallback updater link.
-         */
-        @CompileTimeConstant
-        private static final String FALLBACK_LINK = "https://github.com/VidTu/HCsCR/releases/latest";
-
-        /**
-         * User agent for update requests.
-         *
-         * @see HttpHeaders#USER_AGENT
-         */
-        @CompileTimeConstant
-        private static final String USER_AGENT = "VidTu/HCsCR/" + HVariables.VERSION + " (updater; https://github.com/VidTu/HCsCR; pig@vidtu.ru)";
-
-        /**
-         * Maximum length for the updater response to prevent abuse.
-         * <p>
-         * Equals to {@code 32767} units.
-         * <p>
-         * Depending on the implementation, this might be counted
-         * in either or both UTF-8 codepoints or UTF-8 bytes.
-         */
-        @CompileTimeConstant
-        private static final int MAX_BODY_LENGTH = 32767;
-
-        /**
-         * Maximum length for the updater single component to prevent abuse.
-         * <p>
-         * Equals to {@code 255} units.
-         * <p>
-         * Depending on the implementation, this might be counted
-         * in either or both UTF-8 codepoints or UTF-8 bytes.
-         */
-        @CompileTimeConstant
-        private static final int MAX_COMPONENT_LENGTH = 255;
-
         /**
          * Timeout for update checking.
          * <p>
@@ -263,17 +223,17 @@ public final class HModMenu implements ModMenuApi {
 
                     // Log. (**TRACE**)
                     if (HVariables.DEBUG_LOGS) {
-                        LOGGER.trace(HCsCR.MARKER, "HCsCR: Will check updates for '{}' game version and '{}' channel... (ua: " + USER_AGENT + ')', gameVersion, channel);
+                        LOGGER.trace(HCsCR.MARKER, "HCsCR: Will check updates for '{}' game version and '{}' channel... (ua: " + HVariables.USER_AGENT + ')', gameVersion, channel);
                     }
 
                     // Send the request.
                     final HttpResponse<String> response = client.send(HttpRequest.newBuilder()
-                            .uri(new URI(UPDATER_URL))
+                            .uri(new URI(HConstants.UPDATER_URL))
                             .timeout(TIMEOUT)
-                            .header(HttpHeaders.USER_AGENT, USER_AGENT)
+                            .header(HttpHeaders.USER_AGENT, HVariables.USER_AGENT)
                             .GET()
                             //? if >=26.1.2 {
-                            .build(), HttpResponse.BodyHandlers.limiting(HttpResponse.BodyHandlers.ofString(), MAX_BODY_LENGTH));
+                            .build(), HttpResponse.BodyHandlers.limiting(HttpResponse.BodyHandlers.ofString(), HConstants.UPDATER_MAX_BODY_LENGTH));
                             //? } else {
                             /*.build(), HttpResponse.BodyHandlers.ofString());
                             *///?}
@@ -284,7 +244,7 @@ public final class HModMenu implements ModMenuApi {
 
                     // Validate the length.
                     final int bodyLength = body.length();
-                    if (bodyLength > MAX_BODY_LENGTH) {
+                    if (bodyLength > HConstants.UPDATER_MAX_BODY_LENGTH) {
                         throw new IllegalStateException("HCsCR: HTTP response body is too long for update checking. (code: " + code + ", response: " + response + ", bodyLength: " + bodyLength + ')');
                     }
 
@@ -295,7 +255,7 @@ public final class HModMenu implements ModMenuApi {
                     }
 
                     // Check the code.
-                    if ((code < 200) || (code >= 300)) {
+                    if ((code < HttpURLConnection.HTTP_OK) || (code >= HttpURLConnection.HTTP_MULT_CHOICE)) {
                         final String sanitizedBody = SANITIZER.escape(body);
                         throw new IllegalStateException("HCsCR: Non-success HTTP code returned for update checking. (code: " + code + ", response: " + response + ", sanitizedBody: '" + sanitizedBody + "')");
                     }
@@ -326,7 +286,7 @@ public final class HModMenu implements ModMenuApi {
 
                     // Validate the version length.
                     final int rawVersionLength = rawVersion.length();
-                    if (rawVersionLength > MAX_COMPONENT_LENGTH) {
+                    if (rawVersionLength > HConstants.UPDATER_MAX_COMPONENT_LENGTH) {
                         final String sanitizedRawVersion = SANITIZER.escape(rawVersion);
                         throw new IllegalStateException("HCsCR: Version is too long for update checking. (sanitizedRawVersion: '" + sanitizedRawVersion + "', rawVersionLength: " + rawVersionLength + ')');
                     }
@@ -352,11 +312,11 @@ public final class HModMenu implements ModMenuApi {
 
                     // Extract the link.
                     final String linkKey = (gameVersion + '@' + channel + "@link");
-                    final String rawLink = properties.getProperty(linkKey, FALLBACK_LINK);
+                    final String rawLink = properties.getProperty(linkKey, HConstants.UPDATER_FALLBACK_LINK);
 
                     // Validate the link.
                     final int rawLinkLength = rawLink.length();
-                    if (rawLinkLength > MAX_COMPONENT_LENGTH) {
+                    if (rawLinkLength > HConstants.UPDATER_MAX_COMPONENT_LENGTH) {
                         final String sanitizedRawLink = SANITIZER.escape(rawLink);
                         throw new IllegalStateException("HCsCR: Link is too long for update checking. (sanitizedRawLink: '" + sanitizedRawLink + "', rawLinkLength: " + rawLinkLength + ')');
                     }

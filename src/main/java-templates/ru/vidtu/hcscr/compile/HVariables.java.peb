@@ -72,6 +72,12 @@ public final class HVariables {
     public static final boolean DEBUG_PROFILER = {{ debugProfiler }};
 
     /**
+     * User agent for update requests from ModMenu.
+     */
+    @CompileTimeConstant
+    public static final String USER_AGENT = "VidTu/HCsCR/" + VERSION + " (updater; https://github.com/VidTu/HCsCR; pig@vidtu.ru)";
+
+    /**
      * An instance of this class cannot be created.
      *
      * @throws AssertionError Always
