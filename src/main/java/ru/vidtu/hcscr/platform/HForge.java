@@ -203,7 +203,6 @@ public final class HForge {
         FMLJavaModLoadingContext ctx = FMLJavaModLoadingContext.get();
     ^///?}
         // Log.
-        final long start = System.nanoTime();
         if (HVariables.DEBUG_LOGS) {
             LOGGER.info(HCsCR.MARKER, "HCsCR: Loading... (platform: forge, target: " + HVariables.MINECRAFT + ", version: " + HVariables.VERSION + ')');
         } else {
@@ -431,9 +430,9 @@ public final class HForge {
 
         // Done.
         if (HVariables.DEBUG_LOGS) {
-            LOGGER.info(HCsCR.MARKER, "HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / 1_000_000L);
+            LOGGER.info(HCsCR.MARKER, "HCsCR: Ready to remove 'em crystals.");
         } else {
-            LOGGER.info("HCsCR: Ready to remove 'em crystals. ({} ms)", (System.nanoTime() - start) / 1_000_000L);
+            LOGGER.info("HCsCR: Ready to remove 'em crystals.");
         }
     }
 
