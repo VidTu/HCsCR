@@ -54,6 +54,14 @@ public final class HConstants {
     public static final String UPDATER_FALLBACK_LINK = "https://github.com/VidTu/HCsCR/releases/latest";
 
     /**
+     * Connection/request timeout for the updater in seconds.
+     * <p>
+     * Equals to {@code 30} seconds.
+     */
+    @CompileTimeConstant
+    public static final long UPDATER_TIMEOUT_SECONDS = 30L;
+
+    /**
      * Maximum length for the updater response to prevent abuse.
      * <p>
      * Equals to {@code 32767} units.
@@ -74,6 +82,30 @@ public final class HConstants {
      */
     @CompileTimeConstant
     public static final int UPDATER_MAX_COMPONENT_LENGTH = 255;
+
+    /**
+     * Magic separator character for property keys.
+     * <p>
+     * Equals to {@code '@'}.
+     */
+    @CompileTimeConstant
+    public static final char UPDATER_KEY_SEPARATOR = '@';
+
+    /**
+     * Magic suffix for property keys indicating the displayed version.
+     * <p>
+     * Equals to {@code "version"}.
+     */
+    @CompileTimeConstant
+    public static final String UPDATER_KEY_VERSION_SUFFIX = "version";
+
+    /**
+     * Magic suffix for property keys indicating the download link.
+     * <p>
+     * Equals to {@code "link"}.
+     */
+    @CompileTimeConstant
+    public static final String UPDATER_KEY_LINK_SUFFIX = "link";
 
     /**
      * An instance of this class cannot be created.
