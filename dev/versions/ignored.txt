@@ -30,12 +30,6 @@
 1.19.2-neoforge
 1.19.4-neoforge
 
-# Forge 1.16.5 is currently not supported due to its active usage
-# of MCP mappings instead of Mojang mappings. This is, strictly
-# speaking a TODO FIXME task (intentional markers), but at
-# the time of writing I don't have enough energy for that.
-1.16.5-forge
-
 # Forge and NeoForge don't get ported for snapshots.
 26.2-forge
 26.2-neoforge

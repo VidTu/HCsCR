@@ -34,6 +34,8 @@
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import net.minecraftforge.renamer.gradle.RenameJar
+import java.io.FileInputStream
+import java.util.Properties
 
 // Plugins.
 plugins {
@@ -74,13 +76,39 @@ buildscript {
     }
 }
 
-// Define Stonecutter preprocessor variables/constants.
 sc {
+    // Define Stonecutter preprocessor variables/constants.
     constants["fabric"] = false
     constants["forge"] = true
     constants["hacky_neoforge"] = false
     constants["neoforge"] = false
     properties.tags(mcv, "forge")
+
+    // Define MCP replacements.
+    replacements.string(mcp <= "1.16.5") {
+        val remaps = Properties()
+        FileInputStream(rootDir.resolve("dev/mcp.properties")).use { remaps.load(it) }
+        remaps.forEach { mojmap, mcp ->
+            replace("import ${"${mojmap}".replace('$', '.')};", "import ${"${mcp}".replace('$', '.')};")
+            replace("L${"${mojmap}".replace('.', '/')};", "L${"${mcp}".replace('.', '/')};")
+            val mojmapLast = "${mojmap}".substringAfterLast('.').replace('$', '.');
+            val mcpLast = "${mcp}".substringAfterLast('.').replace('$', '.');
+            if (mojmapLast == mcpLast) return@forEach
+            replace("${mojmapLast}.", "${mcpLast}.")
+            replace("<${mojmapLast}>", "<${mcpLast}>")
+            replace("(${mojmapLast}) ", "(${mcpLast}) ")
+            replace("extends ${mojmapLast}", "extends ${mcpLast}")
+            replace("final ${mojmapLast}", "final ${mcpLast}")
+            replace("final @UnknownNullability ${mojmapLast}", "final @UnknownNullability ${mcpLast}")
+            replace(" instanceof ${mojmapLast}", " instanceof ${mcpLast}")
+            replace("@Mixin(${mojmapLast}.class)", "@Mixin(${mcpLast}.class)")
+            replace("new ${mojmapLast}", "new ${mcpLast}")
+            replace("/*non-final*/ ${mojmapLast}", "/*non-final*/ ${mcpLast}")
+            replace("/*package-private*/ ${mojmapLast}", "/*package-private*/ ${mcpLast}")
+            replace("/*shadow-final*/ ${mojmapLast}", "/*shadow-final*/ ${mcpLast}")
+            replace("static ${mojmapLast}", "static ${mcpLast}")
+        }
+    }
 }
 
 minecraft {
