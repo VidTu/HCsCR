@@ -148,8 +148,8 @@ dependencies {
     }
 }
 
-// Compile with UTF-8, compatible Java, and with some debug options.
 tasks.withType<JavaCompile> {
+    // Compile with UTF-8, compatible Java, and with some debug options.
     options.encoding = "UTF-8"
     if ("${findProperty("ru.vidtu.hcscr.debug.javac") ?: findProperty("ru.vidtu.hcscr.debug")}".toBoolean()) {
         options.compilerArgs.addAll(listOf("-g", "-parameters"))
@@ -157,6 +157,13 @@ tasks.withType<JavaCompile> {
         options.compilerArgs.add("-g")
     }
     options.release = javaTarget
+
+    // Post-process classes. (strip annotations)
+    doLast {
+        destinationDirectory.asFileTree.forEach {
+            Strip.stripBytecode(it.toPath())
+        }
+    }
 }
 
 sourceSets.main {

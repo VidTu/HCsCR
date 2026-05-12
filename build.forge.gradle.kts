@@ -184,8 +184,8 @@ dependencies {
     implementation(minecraft.dependency("net.minecraftforge:forge:${forge}"))
 }
 
-// Compile with UTF-8, compatible Java, and with some debug options.
 tasks.withType<JavaCompile> {
+    // Compile with UTF-8, compatible Java, and with some debug options.
     options.encoding = "UTF-8"
     if ("${findProperty("ru.vidtu.hcscr.debug.javac") ?: findProperty("ru.vidtu.hcscr.debug")}".toBoolean()) {
         options.compilerArgs.addAll(listOf("-g", "-parameters"))
@@ -198,6 +198,13 @@ tasks.withType<JavaCompile> {
     // JDK 9+ does listen to this option.
     if (javaVersion.isJava9Compatible) {
         options.release = javaTarget
+    }
+
+    // Post-process classes. (strip annotations)
+    doLast {
+        destinationDirectory.asFileTree.forEach {
+            Strip.stripBytecode(it.toPath())
+        }
     }
 }
 
