@@ -121,10 +121,12 @@ tasks.withType<JavaCompile> {
     }
     options.release = javaTarget
 
-    // Post-process classes. (strip annotations)
-    doLast {
-        destinationDirectory.asFileTree.forEach {
-            Strip.stripBytecode(it.toPath())
+    // Post-process classes. (strip metadata)
+    if (!"${findProperty("ru.vidtu.hcscr.debug.metadata") ?: findProperty("ru.vidtu.hcscr.debug")}".toBoolean()) {
+        doLast {
+            destinationDirectory.asFileTree.forEach {
+                Strip.stripBytecode(it.toPath())
+            }
         }
     }
 }
