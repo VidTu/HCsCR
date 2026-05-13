@@ -220,11 +220,13 @@ tasks.withType<ProcessResources> {
     }
 
     // Minify JSON files.
-    val files = fileTree(outputs.files.asPath)
-    doLast {
-        files.forEach {
-            if (it.name.endsWith(".json", ignoreCase = true)) {
-                it.writeText(Gson().fromJson(it.readText(), JsonElement::class.java).toString())
+    if (!"${findProperty("ru.vidtu.hcscr.debug.resources") ?: findProperty("ru.vidtu.hcscr.debug")}".toBoolean()) {
+        val files = fileTree(outputs.files.asPath)
+        doLast {
+            files.filter().forEach {
+                if (it.name.endsWith(".json", ignoreCase = true)) {
+                    it.writeText(Gson().fromJson(it.readText(), JsonElement::class.java).toString())
+                }
             }
         }
     }
