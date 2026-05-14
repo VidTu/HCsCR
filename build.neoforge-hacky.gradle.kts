@@ -158,9 +158,9 @@ tasks.withType<JavaCompile> {
     // Post-process classes. (strip metadata)
     if (!"${findProperty("ru.vidtu.hcscr.debug.metadata") ?: findProperty("ru.vidtu.hcscr.debug")}".toBoolean()) {
         doLast {
-            destinationDirectory.asFileTree.forEach {
-                Strip.stripBytecode(it.toPath())
-            }
+            destinationDirectory.asFileTree
+                .filter { it.name != "package-info.class" }
+                .forEach { Strip.stripBytecode(it.toPath()) }
         }
     }
 }
