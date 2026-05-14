@@ -53,7 +53,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 /// A build-time class that performs metadata stripping
@@ -64,6 +66,7 @@ import java.util.function.Consumer;
 public final class Strip {
     /// An immutable set of annotations VM names to strip.
     ///
+    /// @see #STRIPPED_PACKAGES
     /// @see #shouldStripTyped(String)
     /// @see #shouldStripTypeless(String)
     @Unmodifiable
@@ -73,6 +76,10 @@ public final class Strip {
 
     /// An immutable list of annotation VM prefixes (packages) to strip.
     ///
+    /// Individual VM annotations are cached via [#STRIPPED_CACHE].
+    ///
+    /// @see #STRIPPED_ANNOTATIONS
+    /// @see #STRIPPED_CACHE
     /// @see #shouldStripTyped(String)
     /// @see #shouldStripTypeless(String)
     @Unmodifiable
@@ -83,9 +90,18 @@ public final class Strip {
             "org/jspecify/annotations/"
     );
 
+    /// A mutable cache for individual annotations for [#STRIPPED_PACKAGES].
+    ///
+    /// @see #STRIPPED_PACKAGES
+    /// @see #shouldStripTyped(String)
+    /// @see #shouldStripTypeless(String)
+    private static final Map<String, Boolean> STRIPPED_CACHE = new ConcurrentHashMap<>(96);
+
+    /// A `SourceFile` attribute made up of an empty string. (`""`)
+    ///
     /// When no source is specified, Java doesn't display line numbers in stack-traces. We want line numbers in
     /// stack-traces, but we want to save JAR size at any cost, but free of charge. Empty string will do!
-    private static final SourceFileAttribute NO_SOURCE_BUT_A_BIT_YES_SOURCE = SourceFileAttribute.of("");
+    private static final SourceFileAttribute EMPTY_SOURCE = SourceFileAttribute.of("");
 
     /// A [ClassTransform] that strips all [strippable][#shouldStripTypeless(String)] annotations from all elements
     /// in the class, including the class itself, class [fields][ClassTransform#transformingFields(FieldTransform)],
@@ -115,7 +131,7 @@ public final class Strip {
                 case final InnerClassesAttribute attribute -> stripInnerClasses(builder, attribute);
 
                 // Strip the source file attribute.
-                case final SourceFileAttribute _ -> builder.with(NO_SOURCE_BUT_A_BIT_YES_SOURCE);
+                case final SourceFileAttribute _ -> builder.with(EMPTY_SOURCE);
 
                 // Pass all other elements as-is.
                 default -> builder.with(element);
@@ -452,11 +468,18 @@ public final class Strip {
         // Fast path for exact match: Strip if name directly matches one of desired annotations.
         if (STRIPPED_ANNOTATIONS.contains(name)) return true; // Implicit NPE for 'name'
 
-        // Strip if name starts with package name of desired annotations.
-        for (final String pkg : STRIPPED_PACKAGES) {
-            if (!name.startsWith(pkg)) continue;
-            return true;
-        }
-        return false;
+
+
+        System.out.println(STRIPPED_CACHE.size());
+
+        // Use the cache if available.
+        return STRIPPED_CACHE.computeIfAbsent(name, (final String _) -> {
+            // Strip if name starts with package name of desired annotations.
+            for (final String pkg : STRIPPED_PACKAGES) {
+                if (!name.startsWith(pkg)) continue;
+                return true;
+            }
+            return false;
+        });
     }
 }
