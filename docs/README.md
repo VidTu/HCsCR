@@ -213,28 +213,28 @@ It also uses [Gradle](https://gradle.org/) and [Java](https://java.com/).
 
 ### Building (Compiling)
 
-#### All Versions
+#### One Version
 
-> [!IMPORTANT]
-> This is the slowest compilation method, not recommended for
-> general usage, unless *all* artifacts for all supported
-> versions (including "Legacy" ones) are required.
+> [!TIP]
+> This is the fastest compilation method. It might
+> be useful if you want to compile mod for just
+> one Minecraft version for personal usage.
 >
 > On slow devices (e.g., GitHub CI),
-> it might take **about 2 hours**.
+> it usually takes about 15 to 30 minutes.
 
-To compile all [Beta, Active and Legacy](#supported-versions)
-supported versions of the mod from the source code:
+To compile one specific Minecraft version of the mod from the source code:
 
-1. Have 8 GB of free RAM, 30 GB of free disk space,
+1. Have 4 GB of free RAM, 10 GB of free disk space,
    and an active internet connection.
-2. Install Java 25 (for Gradle; you'll also need 8, 16, 17, and 21 for the
-   compilation, download either of those, the others will be automatically
+2. Install Java 25 (for Gradle; you may also need 8, 16, 17, or 21 for the
+   compilation, download either of those, the other will be automatically
    downloaded via Java toolchains) and dump it into `PATH` and/or `JAVA_HOME`.
 3. Clone or download the repository. (`.git` folder is *not* required)
-4. Run `./compileall --legacy` from the terminal/PowerShell
+4. Run `./compileone <version>-<loader>` from the terminal/PowerShell
    from within the downloaded repository folder.
-5. Grab the JARs from the `./build/libs/` folder.
+   (for example: `./compileone 1.16.5-fabric`)
+5. Grab the JAR from the `./build/libs/` folder.
 
 #### Supported Versions
 
@@ -259,28 +259,28 @@ supported versions of the mod from the source code:
    from within the downloaded repository folder.
 5. Grab the JARs from the `./build/libs/` folder.
 
-#### One Version
+#### All Versions
 
-> [!TIP]
-> This is the fastest compilation method. It might
-> be useful if you want to compile mod for just
-> one Minecraft version for personal usage.
+> [!IMPORTANT]
+> This is the slowest compilation method, not recommended for
+> general usage, unless *all* artifacts for all supported
+> versions (including "Legacy" ones) are required.
 >
 > On slow devices (e.g., GitHub CI),
-> it usually takes about 15 to 30 minutes.
+> it might take **about 2 hours**.
 
-To compile one specific Minecraft version of the mod from the source code:
+To compile all [Beta, Active and Legacy](#supported-versions)
+supported versions of the mod from the source code:
 
-1. Have 4 GB of free RAM, 10 GB of free disk space,
+1. Have 8 GB of free RAM, 30 GB of free disk space,
    and an active internet connection.
-2. Install Java 25 (for Gradle; you may also need 8, 16, 17, or 21 for the
-   compilation, download either of those, the other will be automatically
+2. Install Java 25 (for Gradle; you'll also need 8, 16, 17, and 21 for the
+   compilation, download either of those, the others will be automatically
    downloaded via Java toolchains) and dump it into `PATH` and/or `JAVA_HOME`.
 3. Clone or download the repository. (`.git` folder is *not* required)
-4. Run `./compileone <version>-<loader>` from the terminal/PowerShell
+4. Run `./compileall --legacy` from the terminal/PowerShell
    from within the downloaded repository folder.
-   (for example: `./compileone 1.16.5-fabric`)
-5. Grab the JAR from the `./build/libs/` folder.
+5. Grab the JARs from the `./build/libs/` folder.
 
 ### Developing/Debugging
 
