@@ -231,8 +231,10 @@ supported versions of the mod from the source code:
 2. Install Java 25 (for Gradle; you'll also need 8, 16, 17, and 21 for the
    compilation, download either of those, the others will be automatically
    downloaded via Java toolchains) and dump it into `PATH` and/or `JAVA_HOME`.
-3. Run `./compileall --legacy` from the terminal/PowerShell.
-4. Grab the JARs from the `./build/libs/` folder.
+3. Clone or download the repository. (`.git` folder is *not* required)
+4. Run `./compileall --legacy` from the terminal/PowerShell
+   from within the downloaded repository folder.
+5. Grab the JARs from the `./build/libs/` folder.
 
 #### Supported Versions
 
@@ -252,8 +254,10 @@ supported versions of the mod from the source code:
 2. Install Java 25 (for Gradle; you'll also need 17 and 21 for the compilation,
    download either of those, the others will be automatically downloaded
    via Java toolchains) and dump it into `PATH` and/or `JAVA_HOME`.
-3. Run `./compileall` from the terminal/PowerShell.
-4. Grab the JARs from the `./build/libs/` folder.
+3. Clone or download the repository. (`.git` folder is *not* required)
+4. Run `./compileall` from the terminal/PowerShell
+   from within the downloaded repository folder.
+5. Grab the JARs from the `./build/libs/` folder.
 
 #### One Version
 
@@ -272,9 +276,11 @@ To compile one specific Minecraft version of the mod from the source code:
 2. Install Java 25 (for Gradle; you may also need 8, 16, 17, or 21 for the
    compilation, download either of those, the other will be automatically
    downloaded via Java toolchains) and dump it into `PATH` and/or `JAVA_HOME`.
-3. Run `./compileone <version>-<loader>` from the terminal/PowerShell.
+3. Clone or download the repository. (`.git` folder is *not* required)
+4. Run `./compileone <version>-<loader>` from the terminal/PowerShell
+   from within the downloaded repository folder.
    (for example: `./compileone 1.16.5-fabric`)
-4. Grab the JAR from the `./build/libs/` folder.
+5. Grab the JAR from the `./build/libs/` folder.
 
 ### Developing/Debugging
 
