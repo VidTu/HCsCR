@@ -468,10 +468,6 @@ public final class Strip {
         // Fast path for exact match: Strip if name directly matches one of desired annotations.
         if (STRIPPED_ANNOTATIONS.contains(name)) return true; // Implicit NPE for 'name'
 
-
-
-        System.out.println(STRIPPED_CACHE.size());
-
         // Use the cache if available.
         return STRIPPED_CACHE.computeIfAbsent(name, (final String _) -> {
             // Strip if name starts with package name of desired annotations.
