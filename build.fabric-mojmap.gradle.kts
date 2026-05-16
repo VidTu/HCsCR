@@ -161,10 +161,11 @@ tasks.withType<JavaCompile> {
     // Post-process classes. (strip metadata)
     if (!"${findProperty("ru.vidtu.hcscr.debug.metadata") ?: findProperty("ru.vidtu.hcscr.debug")}".toBoolean()) {
         doLast {
-            val strip = Strip(destinationDirectory.get().asFile.toPath())
-            destinationDirectory.asFileTree
-                .filter { it.name != "package-info.class" }
-                .forEach { strip.stripBytecode(it.toPath()) }
+            Strip(destinationDirectory.get().asFile, classpath).use { strip ->
+                destinationDirectory.asFileTree
+                    .filter { it.name != "package-info.class" }
+                    .forEach { strip.stripBytecode(it) }
+            }
         }
     }
 }
