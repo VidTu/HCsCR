@@ -246,7 +246,7 @@ To compile one specific Minecraft version of the mod from the source code:
 > On slow devices (e.g., GitHub CI),
 > it usually takes about 30 to 60 minutes.
 
-To compile all [Beta and Active](#supported-versions)
+To compile all [Beta and Active](#versions)
 supported versions of the mod from the source code:
 
 1. Have 6 GB of free RAM, 20 GB of free disk space,
@@ -269,7 +269,7 @@ supported versions of the mod from the source code:
 > On slow devices (e.g., GitHub CI),
 > it might take **about 2 hours**.
 
-To compile all [Beta, Active and Legacy](#supported-versions)
+To compile all [Beta, Active and Legacy](#versions)
 supported versions of the mod from the source code:
 
 1. Have 8 GB of free RAM, 30 GB of free disk space,
