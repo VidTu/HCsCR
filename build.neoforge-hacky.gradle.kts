@@ -159,7 +159,7 @@ tasks.withType<JavaCompile> {
     }
 
     // Set the Java 17 target.
-    options.release = javaTarget
+    options.release = 17
 
     // Post-process classes. (strip metadata)
     if (!"${findProperty("ru.vidtu.hcscr.debug.metadata") ?: findProperty("ru.vidtu.hcscr.debug")}".toBoolean()) {
