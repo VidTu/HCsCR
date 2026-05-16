@@ -63,15 +63,15 @@ import net.minecraft.world.entity.monster.Slime;
  *
  * @author VidTu
  * @apiNote Internal use only
- * @see HScreen
+ * @see ConfigScreen
  */
 @ApiStatus.Internal
 @NullMarked
-public final class HConfig {
+public final class Config {
     /**
      * Logger for this class.
      */
-    private static final Logger LOGGER = LogManager.getLogger("HCsCR/HConfig");
+    private static final Logger LOGGER = LogManager.getLogger("HCsCR/Config");
 
     /**
      * GSON instance for configuration loading/saving.
@@ -134,7 +134,7 @@ public final class HConfig {
      * Creates a new config via GSON.
      */
     @Contract(pure = true)
-    private HConfig() {
+    private Config() {
         // Empty.
     }
 
@@ -156,7 +156,7 @@ public final class HConfig {
             // Read the config.
             try (final BufferedReader reader = Files.newBufferedReader(file)) {
                 // Load the config.
-                final HConfig ignoredInstance = GSON.fromJson(reader, HConfig.class);
+                final Config ignoredInstance = GSON.fromJson(reader, Config.class);
             }
 
             // Log. (**DEBUG**)
@@ -202,7 +202,7 @@ public final class HConfig {
             // Write the config.
             Files.createDirectories(file.getParent());
             try (final BufferedWriter writer = Files.newBufferedWriter(file)) {
-                GSON.toJson(new HConfig(), writer);
+                GSON.toJson(new Config(), writer);
             }
 
             // Log. (**DEBUG**)
@@ -222,7 +222,7 @@ public final class HConfig {
     @Contract(pure = true)
     @Override
     public String toString() {
-        return "HCsCR/HConfig{}";
+        return "HCsCR/Config{}";
     }
 
     /**
@@ -245,7 +245,7 @@ public final class HConfig {
      * @see #toggle()
      */
     /*package-private*/ static void enable(final boolean enable) {
-        HConfig.enable = enable;
+        Config.enable = enable;
     }
 
     /**
@@ -300,7 +300,7 @@ public final class HConfig {
      * @see #crystalsDelay()
      */
     /*package-private*/ static void crystalsDelay(final @Range(from = 0L, to = 200_000_000L) int crystalsDelay) {
-        HConfig.crystalsDelay = Mth.clamp(((crystalsDelay / 1_000_000) * 1_000_000), 0, 200_000_000);
+        Config.crystalsDelay = Mth.clamp(((crystalsDelay / 1_000_000) * 1_000_000), 0, 200_000_000);
     }
 
     /**
@@ -324,7 +324,7 @@ public final class HConfig {
      * @see #crystalsResync()
      */
     /*package-private*/ static void crystalsResync(final @Range(from = 0L, to = 50L) int crystalsResync) {
-        HConfig.crystalsResync = Mth.clamp(crystalsResync, 0, 50);
+        Config.crystalsResync = Mth.clamp(crystalsResync, 0, 50);
     }
 
     /**

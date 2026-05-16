@@ -37,7 +37,7 @@ import java.util.Locale;
  * @author VidTu
  * @apiNote Internal use only
  * @see CrystalMode
- * @see HConfig#blocks()
+ * @see Config#blocks()
  */
 @ApiStatus.Internal
 @NullMarked
@@ -92,7 +92,7 @@ public enum BlockMode {
      *
      * @return Mode button label
      * @see #tip()
-     * @see HScreen
+     * @see ConfigScreen
      */
     @Contract(pure = true)
     /*package-private*/ Component label() {
@@ -104,7 +104,7 @@ public enum BlockMode {
      *
      * @return Mode button tip
      * @see #label()
-     * @see HScreen
+     * @see ConfigScreen
      */
     @Contract(pure = true)
     /*package-private*/ Component tip() {

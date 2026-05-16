@@ -39,13 +39,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.HVariables;
+import ru.vidtu.hcscr.config.Config;
 import ru.vidtu.hcscr.config.CrystalMode;
-import ru.vidtu.hcscr.config.HConfig;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
- * Mixin that allows {@link Interaction} entities to be hit if {@link HConfig#enable()} is {@code true}
- * and {@link HConfig#crystals()} is {@link CrystalMode#ENVELOPING}. (1.19.4+)
+ * Mixin that allows {@link Interaction} entities to be hit if {@link Config#enable()} is {@code true}
+ * and {@link Config#crystals()} is {@link CrystalMode#ENVELOPING}. (1.19.4+)
  *
  * @author VidTu
  * @apiNote Internal use only
@@ -87,8 +87,8 @@ public abstract class InteractionMixin extends Entity {
      * @param cir    Callback data containing the resulting interaction skipping decision
      * @apiNote Do not call, called by Mixin
      * @see CrystalMode#ENVELOPING
-     * @see HConfig#enable()
-     * @see HConfig#crystals()
+     * @see Config#enable()
+     * @see Config#crystals()
      */
     @DoNotCall("Called by Mixin")
     @Inject(method = "skipAttackInteraction", at = @At("HEAD"), cancellable = true)
@@ -114,7 +114,7 @@ public abstract class InteractionMixin extends Entity {
         // - The current level (world) is not client-side. (e.g., integrated server world)
         // - The mod is disabled via config/keybind.
         // - The current crystal removal mode is not ENVELOPING.
-        if (!level.isClientSide() || !HConfig.enable() || (HConfig.crystals() != CrystalMode.ENVELOPING)) { // Implicit NPE for 'level'
+        if (!level.isClientSide() || !Config.enable() || (Config.crystals() != CrystalMode.ENVELOPING)) { // Implicit NPE for 'level'
             // Log. (**DEBUG**)
             if (HVariables.DEBUG_LOGS) {
                 HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Ignored Interaction entity attack overriding. (source: {}, cir: {}, interaction: {})", source, cir, this);

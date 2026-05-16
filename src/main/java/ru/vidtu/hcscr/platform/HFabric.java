@@ -36,7 +36,7 @@ import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.HVariables;
-import ru.vidtu.hcscr.config.HConfig;
+import ru.vidtu.hcscr.config.Config;
 
 //? if >=26.1.2 {
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
@@ -104,7 +104,7 @@ public final class HFabric implements ClientModInitializer {
         }
 
         // Load the config.
-        HConfig.load();
+        Config.load();
 
         // Register the networking.
         //? if >=1.20.6 {

@@ -29,8 +29,8 @@ import com.terraformersmc.modmenu.api.ModMenuApi;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
-import ru.vidtu.hcscr.config.HConfig;
-import ru.vidtu.hcscr.config.HScreen;
+import ru.vidtu.hcscr.config.Config;
+import ru.vidtu.hcscr.config.ConfigScreen;
 
 //? if >=1.20.4 {
 import com.google.common.escape.Escaper;
@@ -69,8 +69,8 @@ import java.util.Properties;
  * @author VidTu
  * @apiNote Internal use only
  * @see HFabric
- * @see HConfig
- * @see HScreen
+ * @see Config
+ * @see ConfigScreen
  */
 @ApiStatus.Internal
 @NullMarked
@@ -94,8 +94,8 @@ public final class HModMenu implements ModMenuApi {
     @DoNotCall("Called by ModMenu")
     @Contract(pure = true)
     @Override
-    public ConfigScreenFactory<HScreen> getModConfigScreenFactory() {
-        return HScreen::new; // No need to use singletons, called once.
+    public ConfigScreenFactory<ConfigScreen> getModConfigScreenFactory() {
+        return ConfigScreen::new; // No need to use singletons, called once.
     }
 
     //? if >=1.20.4 {

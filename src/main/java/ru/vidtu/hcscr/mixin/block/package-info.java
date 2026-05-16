@@ -26,7 +26,7 @@
  * @author VidTu
  * @apiNote Internal use only
  * @see ru.vidtu.hcscr.config.BlockMode
- * @see ru.vidtu.hcscr.config.HConfig#blocks()
+ * @see ru.vidtu.hcscr.config.Config#blocks()
  */
 @ApiStatus.Internal
 @NullMarked

@@ -51,7 +51,7 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.HVariables;
-import ru.vidtu.hcscr.config.HScreen;
+import ru.vidtu.hcscr.config.ConfigScreen;
 
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -668,7 +668,7 @@ public final class HStonecutter {
      * @param message         Button label
      * @param tooltip         Button tooltip
      * @param handler         Button click handler (button itself and tooltip setter)
-     * @param tooltipRenderer Last pass tooltip renderer, typically {@link HScreen}
+     * @param tooltipRenderer Last pass tooltip renderer, typically {@link ConfigScreen}
      * @return A new button instance
      */
     @Contract(value = "_, _, _, _, _, _, _, _, _ -> new", pure = true)
@@ -762,7 +762,7 @@ public final class HStonecutter {
      * @param tooltip         Checkbox tooltip
      * @param check           Whether the checkbox is checked
      * @param handler         Checkbox click handler
-     * @param tooltipRenderer Last pass tooltip renderer, typically {@link HScreen}
+     * @param tooltipRenderer Last pass tooltip renderer, typically {@link ConfigScreen}
      * @return A new checkbox instance
      */
     @Contract(value = "_, _, _, _, _, _, _, _ -> new", pure = true)
@@ -853,7 +853,7 @@ public final class HStonecutter {
      * @param min             Slider minimum allowed value
      * @param max             Slider maximum value
      * @param handler         Slider move handler
-     * @param tooltipRenderer Last pass tooltip renderer, typically {@link HScreen}
+     * @param tooltipRenderer Last pass tooltip renderer, typically {@link ConfigScreen}
      * @return A new slider instance
      */
     @Contract(value = "_, _, _, _, _, _, _, _, _, _, _, _ -> new", pure = true)

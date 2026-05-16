@@ -36,7 +36,7 @@ import java.util.Locale;
  * @author VidTu
  * @apiNote Internal use only
  * @see BlockMode
- * @see HConfig#crystals()
+ * @see Config#crystals()
  */
 @ApiStatus.Internal
 @NullMarked
@@ -92,6 +92,7 @@ public enum CrystalMode {
      *
      * @return Mode button label
      * @see #tip()
+     * @see ConfigScreen
      */
     @Contract(pure = true)
     /*package-private*/ Component label() {
@@ -103,6 +104,7 @@ public enum CrystalMode {
      *
      * @return Mode button tip
      * @see #label()
+     * @see ConfigScreen
      */
     @Contract(pure = true)
     /*package-private*/ Component tip() {

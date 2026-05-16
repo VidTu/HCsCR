@@ -25,6 +25,8 @@
  *
  * @author VidTu
  * @apiNote Internal use only
+ * @see ru.vidtu.hcscr.config.Config
+ * @see ru.vidtu.hcscr.config.ConfigScreen
  */
 @ApiStatus.Internal
 @NullMarked

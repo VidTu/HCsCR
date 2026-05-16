@@ -55,11 +55,11 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
  *
  * @author VidTu
  * @apiNote Internal use only
- * @see HConfig
+ * @see Config
  */
 @ApiStatus.Internal
 @NullMarked
-public final class HScreen extends Screen {
+public final class ConfigScreen extends Screen {
     /**
      * Parent screen, {@code null} if none.
      */
@@ -80,7 +80,7 @@ public final class HScreen extends Screen {
      * @param parent Parent screen, {@code null} if none
      */
     @Contract(pure = true)
-    public HScreen(@Nullable final Screen parent) {
+    public ConfigScreen(@Nullable final Screen parent) {
         // Call super.
         super(HStonecutter.translate("hcscr.title"));
 
@@ -109,15 +109,15 @@ public final class HScreen extends Screen {
         /*non-final*/ int index = 0;
         final int centerX = (this.width / 2);
         this.addVersionedWidget(HStonecutter.createCheckbox(font, centerX, calculateWidgetY(index++), HStonecutter.translate("hcscr.enable"), // Implicit NPE for 'font'
-                HStonecutter.translate("hcscr.enable.tip"), HConfig.enable(),
-                HConfig::enable, this::tooltip));
+                HStonecutter.translate("hcscr.enable.tip"), Config.enable(),
+                Config::enable, this::tooltip));
 
         // Crystals.
         final int buttonX = (centerX - 100);
-        final CrystalMode crystals = HConfig.crystals();
+        final CrystalMode crystals = Config.crystals();
         this.addVersionedWidget(HStonecutter.createButton(font, buttonX, calculateWidgetY(index++), 200, 20, crystals.label(), crystals.tip(), (final Button button, final Consumer<Component> tipSetter) -> {
             // Update the crystals.
-            final CrystalMode newCrystals = HConfig.cycleCrystals(/*back=*/HStonecutter.isShiftKeyDown(minecraft));
+            final CrystalMode newCrystals = Config.cycleCrystals(/*back=*/HStonecutter.isShiftKeyDown(minecraft));
 
             // Update the label and tooltip.
             button.setMessage(newCrystals.label());
@@ -129,22 +129,22 @@ public final class HScreen extends Screen {
                 HStonecutter.translate("hcscr.crystalsDelay"), (delay > 0) ? HStonecutter.translate(
                         "hcscr.delay.format", delay / 1_000_000) : HStonecutter.translate("hcscr.delay.off"));
         this.addVersionedWidget(HStonecutter.createSlider(font, buttonX, calculateWidgetY(index++), 200, 20, crystalsDelayMessage,
-                HStonecutter.translate("hcscr.crystalsDelay.tip"), HConfig.crystalsDelay(), 0, 200_000_000,
-                HConfig::crystalsDelay, this::tooltip));
+                HStonecutter.translate("hcscr.crystalsDelay.tip"), Config.crystalsDelay(), 0, 200_000_000,
+                Config::crystalsDelay, this::tooltip));
 
         // Crystals Resync.
         final IntFunction<Component> crystalsResyncMessage = (final int resync) -> HStonecutter.translate("options.generic_value",
                 HStonecutter.translate("hcscr.crystalsResync"), (resync > 0) ? HStonecutter.translate(
                         "hcscr.delay.format", resync * 50) : HStonecutter.translate("hcscr.delay.off"));
         this.addVersionedWidget(HStonecutter.createSlider(font, buttonX, calculateWidgetY(index++), 200, 20, crystalsResyncMessage,
-                HStonecutter.translate("hcscr.crystalsResync.tip"), HConfig.crystalsResync(), 0, 50,
-                HConfig::crystalsResync, this::tooltip));
+                HStonecutter.translate("hcscr.crystalsResync.tip"), Config.crystalsResync(), 0, 50,
+                Config::crystalsResync, this::tooltip));
 
         // Anchors.
-        final BlockMode anchors = HConfig.blocks();
+        final BlockMode anchors = Config.blocks();
         this.addVersionedWidget(HStonecutter.createButton(font, buttonX, calculateWidgetY(index++), 200, 20, anchors.label(), anchors.tip(), (final Button button, final Consumer<Component> tipSetter) -> {
             // Update the anchors.
-            final BlockMode newAnchors = HConfig.cycleBlocks(/*back=*/HStonecutter.isShiftKeyDown(minecraft));
+            final BlockMode newAnchors = Config.cycleBlocks(/*back=*/HStonecutter.isShiftKeyDown(minecraft));
 
             // Update the label and tooltip.
             button.setMessage(newAnchors.label());
@@ -171,7 +171,7 @@ public final class HScreen extends Screen {
         }
 
         // Save.
-        HConfig.save();
+        Config.save();
 
         // Close.
         HStonecutter.setScreen(minecraft, this.parent); // Implicit NPE for 'minecraft'
@@ -276,7 +276,7 @@ public final class HScreen extends Screen {
     @Contract(pure = true)
     @Override
     public String toString() {
-        return "HCsCR/HScreen{" +
+        return "HCsCR/ConfigScreen{" +
                 "parent=" + this.parent +
                 //? if <1.19.4 {
                 /*", tooltip=" + this.tooltip +

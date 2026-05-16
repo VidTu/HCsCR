@@ -36,8 +36,8 @@ import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.HVariables;
-import ru.vidtu.hcscr.config.HConfig;
-import ru.vidtu.hcscr.config.HScreen;
+import ru.vidtu.hcscr.config.Config;
+import ru.vidtu.hcscr.config.ConfigScreen;
 
 //? if hacky_neoforge {
 /^import net.minecraft.client.gui.screens.Screen;
@@ -216,7 +216,7 @@ public final class HForge {
         }
 
         // Load the config.
-        HConfig.load();
+        Config.load();
 
         // Register the networking.
         //? if >=1.20.2 {
@@ -384,7 +384,7 @@ public final class HForge {
             }
 
             // Create.
-            return new HScreen(modsScreen);
+            return new ConfigScreen(modsScreen);
         }));
         container.registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> IExtensionPoint.DisplayTest.IGNORESERVERONLY, (final String remoteVersion, final Boolean isFromServer) -> true));
         ^///?} elif 1.20.2 {
@@ -395,14 +395,14 @@ public final class HForge {
             }
 
             // Create.
-            return new HScreen(modsScreen);
+            return new ConfigScreen(modsScreen);
         }));
         ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> IExtensionPoint.DisplayTest.IGNORESERVERONLY, (final String remoteVersion, final Boolean isFromServer) -> true));
         ^///?} elif >=1.19.2 {
-        ctx.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory(HScreen::new));
+        ctx.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory(ConfigScreen::new));
         ctx.registerDisplayTest(IExtensionPoint.DisplayTest.IGNORE_SERVER_VERSION);
         //?} elif >=1.18.2 {
-        /^ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, () -> new ConfigGuiHandler.ConfigGuiFactory(HScreen::new));
+        /^ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, () -> new ConfigGuiHandler.ConfigGuiFactory(ConfigScreen::new));
         ModLoadingContext.get().registerDisplayTest(IExtensionPoint.DisplayTest.IGNORE_SERVER_VERSION);
         ^///?} elif >=1.17.1 {
         /^ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, () -> new ConfigGuiHandler.ConfigGuiFactory((final Minecraft mcClient, final Screen modsScreen) -> {
@@ -412,7 +412,7 @@ public final class HForge {
             }
 
             // Create.
-            return new HScreen(modsScreen);
+            return new ConfigScreen(modsScreen);
         }));
         ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> FMLNetworkConstants.IGNORESERVERONLY, (final String remoteVersion, final Boolean isFromServer) -> true));
         ^///?} else {
@@ -423,7 +423,7 @@ public final class HForge {
             }
 
             // Create.
-            return new HScreen(modsScreen);
+            return new ConfigScreen(modsScreen);
         });
         ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (final String remoteVersion, final Boolean isFromServer) -> true));
         ^///?}

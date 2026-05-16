@@ -39,8 +39,8 @@ import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.HVariables;
-import ru.vidtu.hcscr.config.HConfig;
-import ru.vidtu.hcscr.config.HScreen;
+import ru.vidtu.hcscr.config.Config;
+import ru.vidtu.hcscr.config.ConfigScreen;
 
 //? if >=1.20.6 {
 import net.minecraft.network.FriendlyByteBuf;
@@ -121,7 +121,7 @@ public final class HNeoForge {
         }
 
         // Load the config.
-        HConfig.load();
+        Config.load();
 
         // Register the networking.
         //? if >=1.20.6 {
@@ -326,7 +326,7 @@ public final class HNeoForge {
             }
 
             // Return.
-            return new HScreen(modListScreen);
+            return new ConfigScreen(modListScreen);
         });
         //?} elif >=1.20.6 {
         /^container.registerExtensionPoint(IConfigScreenFactory.class, (final Minecraft mcClient, final Screen modListScreen) -> { // Implicit NPE for 'container'
@@ -336,7 +336,7 @@ public final class HNeoForge {
             }
 
             // Return.
-            return new HScreen(modListScreen);
+            return new ConfigScreen(modListScreen);
         });
         ^///?} else {
         /^container.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((final Minecraft mcClient, final Screen modsScreen) -> { // Implicit NPE for 'container'
@@ -346,7 +346,7 @@ public final class HNeoForge {
             }
 
             // Return.
-            return new HScreen(modsScreen);
+            return new ConfigScreen(modsScreen);
         }));
         container.registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> IExtensionPoint.DisplayTest.IGNORESERVERONLY, (final String remoteVersion, final Boolean isFromServer) -> true));
         ^///?}

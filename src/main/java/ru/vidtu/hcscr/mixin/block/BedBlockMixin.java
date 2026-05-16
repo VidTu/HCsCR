@@ -45,7 +45,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.HVariables;
 import ru.vidtu.hcscr.config.BlockMode;
-import ru.vidtu.hcscr.config.HConfig;
+import ru.vidtu.hcscr.config.Config;
 
 //? if >=1.20.6 {
 import ru.vidtu.hcscr.platform.HStonecutter;
@@ -98,8 +98,8 @@ public final class BedBlockMixin {
      * @param hitResult The exact position player used the bed at, ignored
      * @param cir       Callback data containing the bed interaction result, ignored
      * @apiNote Do not call, called by Mixin
-     * @see HConfig#enable()
-     * @see HConfig#blocks()
+     * @see Config#enable()
+     * @see Config#blocks()
      * @see BlockMode
      * @see HCsCR#CLIPPING_BLOCKS
      */
@@ -127,7 +127,7 @@ public final class BedBlockMixin {
         // - The mod is disabled via config or keybind.
         // - The bed doesn't explode in the current environment/dimension.
         // - The "remove blocks" feature is OFF. (in switch block)
-        if (!level.isClientSide() || !HConfig.enable() || !HStonecutter.willBedExplode(level)) { // Implicit NPE for 'level'
+        if (!level.isClientSide() || !Config.enable() || !HStonecutter.willBedExplode(level)) { // Implicit NPE for 'level'
             // Log. (**DEBUG**)
             if (HVariables.DEBUG_LOGS) {
                 HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Skipped bed right click removing. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
@@ -143,7 +143,7 @@ public final class BedBlockMixin {
         }
 
         // Remove or clip.
-        switch (HConfig.blocks()) {
+        switch (Config.blocks()) {
             case COLLISION:
                 // Get the bed's other part.
                 final BlockPos otherPosCollision = pos.relative(BedBlock.getConnectedDirection(state)); // Implicit NPE for 'pos', 'state'
@@ -201,8 +201,8 @@ public final class BedBlockMixin {
      * @param hitResult The exact position player used the bed at, ignored
      * @param cir       Callback data containing the bed interaction result, ignored
      * @apiNote Do not call, called by Mixin
-     * @see HConfig#enable()
-     * @see HConfig#blocks()
+     * @see Config#enable()
+     * @see Config#blocks()
      * @see BlockMode
      * @see HCsCR#CLIPPING_BLOCKS
      ^/
@@ -226,7 +226,7 @@ public final class BedBlockMixin {
         // - The bed doesn't explode in the current dimension.
         // - The mod is disabled via config or keybind.
         // - The "remove blocks" feature is OFF. (in switch block)
-        if (!level.isClientSide() || BedBlock.canSetSpawn(level) || !HConfig.enable()) { // Implicit NPE for 'level'
+        if (!level.isClientSide() || BedBlock.canSetSpawn(level) || !Config.enable()) { // Implicit NPE for 'level'
             // Log. (**DEBUG**)
             if (HVariables.DEBUG_LOGS) {
                 HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Skipped bed right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, hitResult: {}, bed: {})", state, level, pos, player, hand, hitResult, this);
@@ -242,7 +242,7 @@ public final class BedBlockMixin {
         }
 
         // Remove or clip.
-        switch (HConfig.blocks()) {
+        switch (Config.blocks()) {
             case COLLISION:
                 // Get the bed's other part.
                 final BlockPos otherPosCollision = pos.relative(BedBlock.getConnectedDirection(state)); // Implicit NPE for 'pos', 'state'

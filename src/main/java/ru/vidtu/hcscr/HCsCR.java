@@ -55,9 +55,9 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.UnknownNullability;
 import org.jspecify.annotations.NullMarked;
 import ru.vidtu.hcscr.compile.HVariables;
+import ru.vidtu.hcscr.config.Config;
+import ru.vidtu.hcscr.config.ConfigScreen;
 import ru.vidtu.hcscr.config.CrystalMode;
-import ru.vidtu.hcscr.config.HConfig;
-import ru.vidtu.hcscr.config.HScreen;
 import ru.vidtu.hcscr.mixin.block.BlockBehaviour_BlockStateBaseMixin;
 import ru.vidtu.hcscr.mixin.crystal.EntityMixin;
 import ru.vidtu.hcscr.platform.HStonecutter;
@@ -237,7 +237,7 @@ public final class HCsCR {
         }
 
         // Remove all entities that have expired or no longer in the world.
-        final int resync = HConfig.crystalsResync();
+        final int resync = Config.crystalsResync();
         final boolean noResync = (resync == 0);
         final long now = System.nanoTime();
         final ObjectIterator<Object2LongMap.Entry<Entity>> iterator = SCHEDULED_ENTITIES.object2LongEntrySet().iterator();
@@ -294,11 +294,11 @@ public final class HCsCR {
      * @param source Attack source (inaccurate if invoked on the client)
      * @param amount Total amount of damage done to the entity (inaccurate if invoked on the client)
      * @return Whether the entity has been removed
-     * @see HConfig#enable()
-     * @see HConfig#shouldProcess(Player, Entity)
-     * @see HConfig#crystals()
-     * @see HConfig#crystalsResync()
-     * @see HConfig#crystalsDelay()
+     * @see Config#enable()
+     * @see Config#shouldProcess(Player, Entity)
+     * @see Config#crystals()
+     * @see Config#crystalsResync()
+     * @see Config#crystalsDelay()
      */
     public static boolean handlePlayerHittingEntity(final Player player, final Entity entity,
                                                     final DamageSource source, final float amount) {
@@ -318,8 +318,8 @@ public final class HCsCR {
         // - This entity type shouldn't be processed at all (e.g. any living entity) or by the current config (e.g. slime).
         // - The damaging entity is not a player.
         if (!HStonecutter.levelOfEntity(entity).isClientSide() || (amount <= 0.0f) || // Implicit NPE for 'entity'
-                HStonecutter.isEntityRemoved(entity) || !HConfig.enable() ||
-                !HConfig.shouldProcess(player, entity)) return false;
+                HStonecutter.isEntityRemoved(entity) || !Config.enable() ||
+                !Config.shouldProcess(player, entity)) return false;
 
         // Validate.
         if (HVariables.DEBUG_ASSERTS) {
@@ -342,13 +342,13 @@ public final class HCsCR {
         if (attributeAmount <= 0.0d) return false;
 
         // Fast-remove one crystal entity, if the mode is DIRECT.
-        final CrystalMode mode = HConfig.crystals();
+        final CrystalMode mode = Config.crystals();
         if (mode == CrystalMode.DIRECT) {
             // Remove/hide the entity, if there's no delay.
-            final int delay = HConfig.crystalsDelay();
+            final int delay = Config.crystalsDelay();
             if (delay == 0) {
                 // Remove the entity instantly, if there's no resync.
-                final int resync = HConfig.crystalsResync();
+                final int resync = Config.crystalsResync();
                 if (resync == 0) {
                     HStonecutter.removeEntity(entity);
                     return true;
@@ -376,7 +376,7 @@ public final class HCsCR {
             // - The damaged entity is already scheduled for removal.
             // - This entity type shouldn't be processed at all (e.g. any living entity) or by the current config (e.g. slime).
             // - The other entity is not fully contained inside the enveloping entity.
-            if (HStonecutter.isEntityRemoved(other) || !HConfig.shouldProcess(local, other)) return false;
+            if (HStonecutter.isEntityRemoved(other) || !Config.shouldProcess(local, other)) return false;
             final AABB otherBox = other.getBoundingBox();
             return ((otherBox.minX >= entityBox.minX) && (otherBox.maxX <= entityBox.maxX) &&
                     (otherBox.minY >= entityBox.minY) && (otherBox.maxY <= entityBox.maxY) &&
@@ -384,10 +384,10 @@ public final class HCsCR {
         });
 
         // Remove/hide the entities, if there's no delay.
-        final int delay = HConfig.crystalsDelay();
+        final int delay = Config.crystalsDelay();
         if (delay == 0) {
             // Remove the entities instantly, if there's no resync.
-            final int resync = HConfig.crystalsResync();
+            final int resync = Config.crystalsResync();
             if (resync == 0) {
                 HStonecutter.removeEntity(entity);
                 for (final Entity other : entities) {
@@ -455,8 +455,8 @@ public final class HCsCR {
                 continue;
             }
 
-            // Open the screen.
-            final HScreen screen = new HScreen(null);
+            // Open the config screen.
+            final ConfigScreen screen = new ConfigScreen(null);
             HStonecutter.setScreen(client, screen);
 
             // Log. (**DEBUG**)
@@ -502,7 +502,7 @@ public final class HCsCR {
             }
 
             // Toggle the mod.
-            final boolean newState = HConfig.toggle();
+            final boolean newState = Config.toggle();
 
             // Show the bar, play the sound.
             HStonecutter.displayActionBar(client, HStonecutter.translate("hcscr." + newState) // Implicit NPE for 'client'

@@ -44,7 +44,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.HVariables;
 import ru.vidtu.hcscr.config.BlockMode;
-import ru.vidtu.hcscr.config.HConfig;
+import ru.vidtu.hcscr.config.Config;
 
 //? if >=1.20.6 {
 import ru.vidtu.hcscr.platform.HStonecutter;
@@ -99,8 +99,8 @@ public final class RespawnAnchorBlockMixin {
      * @param hitResult The exact position player used the anchor at, ignored
      * @param cir       Callback data containing the anchor interaction result, ignored
      * @apiNote Do not call, called by Mixin
-     * @see HConfig#enable()
-     * @see HConfig#blocks()
+     * @see Config#enable()
+     * @see Config#blocks()
      * @see BlockMode
      * @see HCsCR#CLIPPING_BLOCKS
      */
@@ -130,7 +130,7 @@ public final class RespawnAnchorBlockMixin {
         // - The anchor doesn't explode in the current environment/dimension.
         // - The "remove blocks" feature is OFF. (in switch block)
         if (!level.isClientSide() || (state.getValue(RespawnAnchorBlock.CHARGE) == 0) || // Implicit NPE for 'level', 'state'
-                !HConfig.enable() || !HStonecutter.willAnchorExplode(level)) {
+                !Config.enable() || !HStonecutter.willAnchorExplode(level)) {
             // Log. (**DEBUG**)
             if (HVariables.DEBUG_LOGS) {
                 HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, anchor: {})", state, level, pos, player, hitResult, this);
@@ -146,7 +146,7 @@ public final class RespawnAnchorBlockMixin {
         }
 
         // Remove or clip.
-        switch (HConfig.blocks()) {
+        switch (Config.blocks()) {
             case COLLISION:
                 // Clip.
                 HCsCR.CLIPPING_BLOCKS.put(pos, state);
@@ -190,8 +190,8 @@ public final class RespawnAnchorBlockMixin {
      * @param hitResult The exact position player used the anchor at, ignored
      * @param cir       Callback data containing the anchor interaction result, ignored
      * @apiNote Do not call, called by Mixin
-     * @see HConfig#enable()
-     * @see HConfig#blocks()
+     * @see Config#enable()
+     * @see Config#blocks()
      * @see BlockMode
      * @see HCsCR#CLIPPING_BLOCKS
      ^/
@@ -218,7 +218,7 @@ public final class RespawnAnchorBlockMixin {
         // - The anchor is currently being charged.
         // - The "remove blocks" feature is OFF. (in switch block)
         if (!level.isClientSide() || (state.getValue(RespawnAnchorBlock.CHARGE) == 0) || // Implicit NPE for 'level', 'state'
-                RespawnAnchorBlock.canSetSpawn(level) || !HConfig.enable()) {
+                RespawnAnchorBlock.canSetSpawn(level) || !Config.enable()) {
             // Log. (**DEBUG**)
             if (HVariables.DEBUG_LOGS) {
                 HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, hitResult: {}, anchor: {})", state, level, pos, player, hand, hitResult, this);
@@ -248,7 +248,7 @@ public final class RespawnAnchorBlockMixin {
         }
 
         // Remove or clip.
-        switch (HConfig.blocks()) {
+        switch (Config.blocks()) {
             case COLLISION:
                 // Clip.
                 HCsCR.CLIPPING_BLOCKS.put(pos, state);
