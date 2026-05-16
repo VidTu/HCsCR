@@ -185,13 +185,19 @@ dependencies {
 }
 
 tasks.withType<JavaCompile> {
-    // Compile with UTF-8, compatible Java, and with some debug options.
+    // Compile with UTF-8.
     options.encoding = "UTF-8"
+
+    // Set the compiler debug options.
     if ("${findProperty("ru.vidtu.hcscr.debug.javac") ?: findProperty("ru.vidtu.hcscr.debug")}".toBoolean()) {
         options.compilerArgs.addAll(listOf("-g", "-parameters"))
+    } else if ("${findProperty("ru.vidtu.hcscr.slim")}".toBoolean()) {
+        options.compilerArgs.add("-g:none")
     } else {
         options.compilerArgs.add("-g")
     }
+
+    // Set the compatible Java target.
     // JDK 8 (used by 1.16.x) doesn't support the "-release" flag and
     // uses "-source" and "-target" ones (see the top of the file),
     // so we must NOT specify it, or the "javac" will fail.

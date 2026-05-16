@@ -146,14 +146,20 @@ dependencies {
 }
 
 tasks.withType<JavaCompile> {
-    // Compile with UTF-8, compatible Java, and with some debug options.
+    // Compile with UTF-8.
     options.encoding = "UTF-8"
+
+    // Set the compiler debug options.
     if ("${findProperty("ru.vidtu.hcscr.debug.javac") ?: findProperty("ru.vidtu.hcscr.debug")}".toBoolean()) {
         options.compilerArgs.addAll(listOf("-g", "-parameters"))
+    } else if ("${findProperty("ru.vidtu.hcscr.slim")}".toBoolean()) {
+        options.compilerArgs.add("-g:none")
     } else {
         options.compilerArgs.add("-g")
     }
-    options.release = 17
+
+    // Set the Java 17 target.
+    options.release = javaTarget
 
     // Post-process classes. (strip metadata)
     if (!"${findProperty("ru.vidtu.hcscr.debug.metadata") ?: findProperty("ru.vidtu.hcscr.debug")}".toBoolean()) {
