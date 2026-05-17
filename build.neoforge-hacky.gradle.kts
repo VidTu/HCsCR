@@ -38,6 +38,7 @@
 
 import com.google.gson.Gson
 import com.google.gson.JsonElement
+import ru.vidtu.hcscr.buildsrc.Strip
 
 // Plugins.
 plugins {

@@ -35,6 +35,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonElement
 import net.fabricmc.loom.task.RemapJarTask
 import net.fabricmc.loom.task.RunGameTask
+import ru.vidtu.hcscr.buildsrc.Strip
 
 // Plugins.
 plugins {

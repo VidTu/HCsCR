@@ -34,6 +34,7 @@
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import net.minecraftforge.renamer.gradle.RenameJar
+import ru.vidtu.hcscr.buildsrc.Strip
 import java.io.FileInputStream
 import java.util.Properties
 
