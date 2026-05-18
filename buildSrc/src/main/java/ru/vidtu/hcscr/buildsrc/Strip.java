@@ -182,7 +182,6 @@ public final class Strip implements Closeable {
     public void close() throws IOException {
         // Delegate.
         this.resolver.close();
-        System.out.println(map.size());
     }
 
     @Contract(pure = true)
