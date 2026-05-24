@@ -88,11 +88,8 @@ loom {
             if (javaVersion.isJava9Compatible) {
                 vmArgs("@../dev/args.vm.txt")
             } else {
-                vmArgs(rootDir.resolve("dev/args.vm.txt")
-                    .readLines()
-                    .filter { it.isNotEmpty() }
-                    .filter { !it.startsWith('#') }
-                    .filter { "line.separator" !in it })
+                vmArgs(rootDir.resolve("dev/args.vm.txt").readLines()
+                    .filter { it.isNotEmpty() && !it.startsWith('#') && ("line.separator" !in it) })
             }
 
             // Set the run dir.

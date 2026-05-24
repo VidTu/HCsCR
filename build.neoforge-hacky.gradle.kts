@@ -94,10 +94,8 @@ legacyForge {
             client()
 
             // Set up debug VM args.
-            jvmArguments.addAll(rootDir.resolve("dev/args.vm.txt")
-                    .readLines()
-                    .filter { "line.separator" !in it }
-                    .filter { it.isNotBlank() })
+            jvmArguments.addAll(rootDir.resolve("dev/args.vm.txt").readLines()
+                    .filter { it.isNotEmpty() && !it.startsWith('#') && ("line.separator" !in it) })
             loggingConfigFile = rootDir.resolve("dev/log4j2.xml")
 
             // Set the run dir.
@@ -227,8 +225,7 @@ tasks.withType<ProcessResources> {
                     it.writeText(Gson().fromJson(it.readText(), JsonElement::class.java).toString())
                 } else if (it.name.endsWith(".toml", ignoreCase = true)) {
                     it.writeText(it.readLines()
-                        .filter { !it.startsWith('#') }
-                        .filter { it.isNotBlank() }
+                        .filter { it.isNotEmpty() && !it.startsWith('#') }
                         .joinToString("\n")
                         .replace(" = ", "="))
                 }

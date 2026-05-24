@@ -126,11 +126,8 @@ minecraft {
             if (javaVersion.isJava9Compatible) {
                 jvmArgs("@../dev/args.vm.txt")
             } else {
-                jvmArgs(rootDir.resolve("dev/args.vm.txt")
-                    .readLines()
-                    .filter { it.isNotEmpty() }
-                    .filter { !it.startsWith('#') }
-                    .filter { "line.separator" !in it })
+                jvmArgs(rootDir.resolve("dev/args.vm.txt").readLines()
+                    .filter { it.isNotEmpty() && !it.startsWith('#') && ("line.separator" !in it) })
             }
 
             // Set the run dir.
@@ -276,8 +273,7 @@ tasks.withType<ProcessResources> {
                     it.writeText(Gson().fromJson(it.readText(), JsonElement::class.java).toString())
                 } else if (it.name.endsWith(".toml", ignoreCase = true)) {
                     it.writeText(it.readLines()
-                        .filter { !it.startsWith('#') }
-                        .filter { it.isNotBlank() }
+                        .filter { it.isNotEmpty() && !it.startsWith('#') }
                         .joinToString("\n")
                         .replace(" = ", "="))
                 }
