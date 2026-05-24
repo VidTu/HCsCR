@@ -50,15 +50,18 @@ val mcv = mc.version // Literal version. (toString)
 val mcp = mc.parsed // Comparable version. (operator overloading)
 
 // Language.
-val javaTarget = if (mcp >= "1.20.6") 21
-else if (mcp >= "1.18.2") 17
-else if (mcp >= "1.17.1") 16
-else 8
+val javaTarget = when {
+    (mcp >= "1.20.6") -> 21
+    (mcp >= "1.18.2") -> 17
+    (mcp >= "1.17.1") -> 16
+    else -> 8
+}
 val javaVersion = JavaVersion.toVersion(javaTarget)
 java {
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
-    toolchain.languageVersion = JavaLanguageVersion.of(javaTarget)
+    val javaToolchain = if (javaTarget == 16) 17 else javaTarget
+    toolchain.languageVersion = JavaLanguageVersion.of(javaToolchain)
 }
 
 // Metadata.

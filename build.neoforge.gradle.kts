@@ -48,9 +48,11 @@ val mcv = mc.version // Literal version. (toString)
 val mcp = mc.parsed // Comparable version. (operator overloading)
 
 // Language.
-val javaTarget = if (mcp >= "26.1.2") 25
-else if (mcp >= "1.20.6") 21
-else 17
+val javaTarget = when {
+    (mcp >= "26.1.2") -> 25
+    (mcp >= "1.20.6") -> 21
+    else -> 17
+}
 val javaVersion = JavaVersion.toVersion(javaTarget)
 java {
     sourceCompatibility = javaVersion

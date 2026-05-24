@@ -227,7 +227,7 @@ To compile one specific Minecraft version of the mod from the source code:
 
 1. Have 4 GB of free RAM, 10 GB of free disk space,
    and an active internet connection.
-2. Install Java 25 (for Gradle; you may also need 8, 16, 17, or 21 for the
+2. Install Java 25 (for Gradle; you may also need 8, 17, or 21 for the
    compilation, download either of those, the other will be automatically
    downloaded via Java toolchains) and dump it into `PATH` and/or `JAVA_HOME`.
 3. Clone or download the repository. (`.git` folder is *not* required)
@@ -274,7 +274,7 @@ supported versions of the mod from the source code:
 
 1. Have 8 GB of free RAM, 30 GB of free disk space,
    and an active internet connection.
-2. Install Java 25 (for Gradle; you'll also need 8, 16, 17, and 21 for the
+2. Install Java 25 (for Gradle; you'll also need 8, 17, and 21 for the
    compilation, download either of those, the others will be automatically
    downloaded via Java toolchains) and dump it into `PATH` and/or `JAVA_HOME`.
 3. Clone or download the repository. (`.git` folder is *not* required)
