@@ -90,23 +90,13 @@ loom {
             } else {
                 vmArgs(rootDir.resolve("dev/args.vm.txt")
                     .readLines()
-                    .filter { "line.separator" !in it }
-                    .filter { it.isNotBlank() })
+                    .filter { it.isNotEmpty() }
+                    .filter { !it.startsWith('#') }
+                    .filter { "line.separator" !in it })
             }
 
             // Set the run dir.
             runDir = "../../run"
-
-            // AuthLib for 1.16.5 is bugged, disable Mojang API
-            // to fix issues with multiplayer testing.
-            if (mcp eq "1.16.5") {
-                vmArgs(
-                    "-Dminecraft.api.account.host=http://0.0.0.0:0/",
-                    "-Dminecraft.api.auth.host=http://0.0.0.0:0/",
-                    "-Dminecraft.api.services.host=http://0.0.0.0:0/",
-                    "-Dminecraft.api.session.host=http://0.0.0.0:0/"
-                )
-            }
         }
 
         // Remove server run, the mod is client-only.

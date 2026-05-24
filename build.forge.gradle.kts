@@ -128,20 +128,19 @@ minecraft {
             } else {
                 jvmArgs(rootDir.resolve("dev/args.vm.txt")
                     .readLines()
-                    .filter { "line.separator" !in it }
-                    .filter { it.isNotBlank() })
+                    .filter { it.isNotEmpty() }
+                    .filter { !it.startsWith('#') }
+                    .filter { "line.separator" !in it })
             }
 
             // Set the run dir.
             workingDir = file("../../run")
 
-            // AuthLib for 1.16.5 is bugged, disable Mojang API
-            // to fix issues with multiplayer testing.
-            if (mcp eq "1.16.5") {
-                systemProperty("minecraft.api.account.host", "http://0.0.0.0:0/")
-                systemProperty("minecraft.api.auth.host", "http://0.0.0.0:0/")
-                systemProperty("minecraft.api.services.host", "http://0.0.0.0:0/")
-                systemProperty("minecraft.api.session.host", "http://0.0.0.0:0/")
+            // Register source sets for debugging.
+            mods {
+                register("hcscr") {
+                    source(sourceSets["main"])
+                }
             }
         }
     }
