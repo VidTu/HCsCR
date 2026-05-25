@@ -1,25 +1,51 @@
 # Security Policy
 
-The only supported versions are:
+## Vulnerabilities
+
+### Reporting
+
+HCsCR is a Minecraft mod. Proper security in this realm is a rare occasion.
+Additionally, the niche/role of HCsCR isn't very prone to vulnerabilities.
+However, if you think the bug you have found is a vulnerability,
+you can report it privately via any of the following methods:
+
+- GitHub Private vulnerability reporting: Head over to the
+  [Security](https://github.com/VidTu/HCsCR/security)
+  tab and click "*Report a vulnerability*".
+- Mail: `imvidtu <at> proton <dot> me`
+
+Where possible, **prefer** GitHub Private vulnerability reporting.
+
+There are no public keys (e.g, PGP) to encrypt communication, sorry.[^1]
+
+[^1]: PGP encryption is on my TODO/TBD list. If you really want
+      to use it, you should use the same public key I sign my
+      commits with. It is *not* uploaded to any public keyserver.
+
+### Supported Versions
+
+The only supported versions for vulnerability reporting are:
 
 - The latest release published to GitHub.
-- The latest pre-release published to GitHub.
-  (Only if it is newer than the latest published release)
+- The latest pre-release published to GitHub[^2].
 - The latest Git commit build.
 
-# Reporting
+[^2]: Pre-release versions are supported *only* if they
+      were published after the latest *stable* release.
 
-If you think the issue you want to report can be considered a "security
-vulnerability" and should not be disclosed publicly, **report it via the
-"Security" tab on GitHub**. Please note that this modification is developed free
-of charge in my free time, so please give me a bit to respond. If you *can't or
-don't want to use the GitHub Security tab*, __please contact me using one or
-more of the following methods__:
+## Artifacts (Binaries/JARs)
 
-- Mail: [pig@vidtu.ru](mailto:pig@vidtu.ru)
-- Alt Mail: [imvidtu@proton.me](mailto:imvidtu@proton.me)
-- Discord: [vidtu](https://discord.com/users/339357082602176513)
-  (Snowflake ID: `339357082602176513`)
-- Telegram: [@ImVidTu](https://t.me/ImVidTu) (ID: `1067034567`)
+### Reproducible Builds
 
-Additional contact information may be found at [vidtu.ru](https://vidtu.ru).
+HCsCR reproducibility status is currently unknown.
+
+### Signing
+
+HCsCR is not signed by digital signatures (namely PGP). Sorry![^3]
+
+[^3]: PGP signing is on my TODO/TBD list.
+
+### Supply Chain
+
+HCsCR has implemented some supply chain validation, however,
+**most of the supply chain isn't validated currently**.
