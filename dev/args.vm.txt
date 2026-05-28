@@ -1,7 +1,7 @@
 # Run with 2 GB of RAM, large enough for testing, small enough to not require a beefy PC.
 -Xmx2G
 
-# Unlock various debug options and ignore ones, not recognized by VM.
+# Unlock various debug options and ignore ones not recognized by the VM.
 -XX:+UnlockExperimentalVMOptions
 -XX:+UnlockDiagnosticVMOptions
 -XX:+IgnoreUnrecognizedVMOptions
