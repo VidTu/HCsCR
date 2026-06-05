@@ -87,11 +87,13 @@ runs {
     }
 }
 
+// Repositories for dependencies.
 repositories {
     mavenCentral()
     maven("https://maven.neoforged.net/releases/") // NeoForge.
 }
 
+// Dependencies.
 dependencies {
     // Annotations.
     compileOnly(libs.jspecify)

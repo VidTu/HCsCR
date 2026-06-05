@@ -109,6 +109,7 @@ tasks.withType<RunGameTask> {
     javaLauncher = javaToolchains.launcherFor(java.toolchain)
 }
 
+// Repositories for dependencies.
 repositories {
     mavenCentral()
     maven("https://maven.fabricmc.net/") // Fabric.
@@ -118,6 +119,7 @@ repositories {
     }
 }
 
+// Dependencies.
 dependencies {
     // Annotations.
     compileOnly(libs.jspecify)

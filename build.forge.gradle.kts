@@ -146,6 +146,7 @@ minecraft {
     }
 }
 
+// Repositories for dependencies.
 repositories {
     mavenCentral()
     maven(fg.forgeMaven) // Forge.
@@ -153,6 +154,7 @@ repositories {
     minecraft.mavenizer(this) // Minecraft.
 }
 
+// Dependencies.
 dependencies {
     // Annotations.
     compileOnly(libs.jspecify)

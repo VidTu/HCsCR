@@ -116,12 +116,14 @@ mixin {
     config("hcscr.mixins.json")
 }
 
+// Repositories for dependencies.
 repositories {
     mavenCentral()
     maven("https://maven.neoforged.net/releases/") // NeoForge.
     maven("https://maven.minecraftforge.net/") // Forge.
 }
 
+// Dependencies.
 dependencies {
     // Annotations.
     compileOnly(libs.jspecify)
