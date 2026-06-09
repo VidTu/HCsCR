@@ -89,14 +89,14 @@ loom {
         named("client") {
             // Set up debug VM args.
             if (javaVersion.isJava9Compatible) {
-                vmArgs("@../dev/args.vm.txt")
+                jvmArguments.add("@../dev/args.vm.txt")
             } else {
-                vmArgs(rootDir.resolve("dev/args.vm.txt").readLines()
+                jvmArguments.addAll(rootDir.resolve("dev/args.vm.txt").readLines()
                     .filter { it.isNotEmpty() && !it.startsWith('#') && ("line.separator" !in it) })
             }
 
             // Set the run dir.
-            runDir = "../../run"
+            runDirectory = rootDir.resolve("run")
         }
 
         // Remove server run, the mod is client-only.

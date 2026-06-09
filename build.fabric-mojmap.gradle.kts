@@ -81,10 +81,10 @@ loom {
         // Customize the client run.
         named("client") {
             // Set up debug VM args.
-            vmArgs("@../dev/args.vm.txt")
+            jvmArguments.add("@../dev/args.vm.txt")
 
             // Set the run dir.
-            runDir = "../../run"
+            runDirectory = rootDir.resolve("run")
         }
 
         // Remove server run, the mod is client-only.
