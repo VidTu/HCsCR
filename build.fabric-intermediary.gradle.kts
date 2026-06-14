@@ -167,7 +167,6 @@ tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 
     // Set the compiler debug options.
-    options.encoding = "UTF-8"
     if ("${findProperty("ru.vidtu.hcscr.debug.javac") ?: findProperty("ru.vidtu.hcscr.debug")}".toBoolean()) {
         options.compilerArgs.addAll(listOf("-g", "-parameters"))
     } else if ("${findProperty("ru.vidtu.hcscr.slim")}".toBoolean()) {
