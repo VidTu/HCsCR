@@ -99,7 +99,7 @@ legacyForge {
             loggingConfigFile = rootDir.resolve("dev/log4j2.xml")
 
             // Set the run dir.
-            gameDirectory = file("../../run")
+            gameDirectory = rootDir.resolve("run")
         }
     }
 

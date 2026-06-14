@@ -134,7 +134,7 @@ minecraft {
             }
 
             // Set the run dir.
-            workingDir = file("../../run")
+            workingDir = rootDir.resolve("run")
 
             // Register source sets for debugging.
             mods {

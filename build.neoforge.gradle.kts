@@ -83,7 +83,7 @@ runs {
         jvmArguments("@../dev/args.vm.txt")
 
         // Set the run dir.
-        workingDirectory = file("../../run")
+        workingDirectory = rootDir.resolve("run")
     }
 }
 
