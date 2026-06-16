@@ -32,4 +32,3 @@
 
 # Forge and NeoForge don't get ported for snapshots.
 26.2-forge
-26.2-neoforge
