@@ -20,4 +20,3 @@
 #
 # List of "Beta" versions. See README.md for more information.
 # Empty lines and lines starting with "#" are ignored.
-26.2
