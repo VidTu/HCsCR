@@ -174,7 +174,8 @@ public final class ConfigScreen extends Screen {
         Config.save();
 
         // Close.
-        HStonecutter.setScreen(minecraft, this.parent); // Implicit NPE for 'minecraft'
+        //$ set_screen minecraft 'this.parent'
+        minecraft.gui.setScreen(this.parent);// Implicit NPE for 'minecraft'
     }
 
     /**

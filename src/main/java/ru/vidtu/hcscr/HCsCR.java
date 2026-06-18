@@ -36,6 +36,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.damagesource.DamageSource;
@@ -444,7 +445,11 @@ public final class HCsCR {
             }
 
             // Check the open screen.
-            final Screen currentScreen = HStonecutter.activeScreen(client); // Implicit NPE for 'client'
+            //? if >=26.2 {
+            final Screen currentScreen = client.gui.screen(); // Implicit NPE for 'client'
+            //?} else {
+            /*final Screen currentScreen = client.screen; // Implicit NPE for 'client'
+            *///?}
             if (currentScreen != null) {
                 // Log. (**DEBUG**)
                 if (HVariables.DEBUG_LOGS) {
@@ -457,7 +462,8 @@ public final class HCsCR {
 
             // Open the config screen.
             final ConfigScreen screen = new ConfigScreen(null);
-            HStonecutter.setScreen(client, screen);
+            //$ set_screen client screen
+            client.gui.setScreen(screen);
 
             // Log. (**DEBUG**)
             if (HVariables.DEBUG_LOGS) {
@@ -505,9 +511,14 @@ public final class HCsCR {
             final boolean newState = Config.toggle();
 
             // Show the bar, play the sound.
-            HStonecutter.displayActionBar(client, HStonecutter.translate("hcscr." + newState) // Implicit NPE for 'client'
+            final Component message = HStonecutter.translate("hcscr." + newState)
                     .withStyle(newState ? ChatFormatting.GREEN : ChatFormatting.RED)
-                    .withStyle(ChatFormatting.BOLD));
+                    .withStyle(ChatFormatting.BOLD);
+            //? if >=26.2 {
+            client.gui.hud.setOverlayMessage(message, /*animate=*/false);
+            //?} else {
+            /*client.gui.setOverlayMessage(message, /^animate=^/false);
+            *///?}
             client.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING, (newState ? 2.0f : 0.0f)));
 
             // Log. (**DEBUG**)

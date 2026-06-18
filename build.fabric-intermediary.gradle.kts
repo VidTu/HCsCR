@@ -70,13 +70,18 @@ base.archivesName = "HCsCR"
 version = "${version}+${name}"
 description = "Remove your end crystals before the server even knows you hit 'em!"
 
-// Define Stonecutter preprocessor variables/constants.
 sc {
+    // Stonecutter constants.
     constants["fabric"] = true
     constants["forge"] = false
     constants["hacky_neoforge"] = false
     constants["neoforge"] = false
+
+    // Stonecutter property path.
     properties.tags(mcv, "fabric")
+
+    // Stonecutter swaps.
+    swaps["set_screen"] = "$1.setScreen($2);"
 }
 
 loom {

@@ -47,9 +47,9 @@ import ru.vidtu.hcscr.compile.HVariables;
 import ru.vidtu.hcscr.config.BlockMode;
 import ru.vidtu.hcscr.config.Config;
 
-//? if >=1.20.6 {
-import ru.vidtu.hcscr.platform.HStonecutter;
-//?} else {
+//? if >=1.21.11 {
+import net.minecraft.world.level.dimension.DimensionType;
+//?} elif <1.20.6 {
 /*import net.minecraft.world.InteractionHand;
 *///?}
 
@@ -86,8 +86,6 @@ public final class BedBlockMixin {
         }
     }
 
-    //? if >=1.20.6 {
-
     /**
      * Handles the bed usage.
      *
@@ -95,6 +93,7 @@ public final class BedBlockMixin {
      * @param level     The level that this bed block is placed in
      * @param pos       Bed block position
      * @param player    Player interacting with the bed, ignored
+     * @param hand      The hand the player uses to interact with the bed (before 1.20.6), ignored
      * @param hitResult The exact position player used the bed at, ignored
      * @param cir       Callback data containing the bed interaction result, ignored
      * @apiNote Do not call, called by Mixin
@@ -103,133 +102,65 @@ public final class BedBlockMixin {
      * @see BlockMode
      * @see HCsCR#CLIPPING_BLOCKS
      */
+    //? if >=1.20.6 {
     @DoNotCall("Called by Mixin")
     @Inject(method = "useWithoutItem", at = @At("HEAD"))
     private void hcscr_useWithoutItem_head(final BlockState state, final Level level, final BlockPos pos,
                                            final Player player, final BlockHitResult hitResult,
                                            final CallbackInfoReturnable<InteractionResult> cir) {
+    //?} else {
+    /*@DoNotCall("Called by Mixin")
+    @Inject(method = "use", at = @At("HEAD"))
+    private void hcscr_use_head(final BlockState state, final Level level, final BlockPos pos, final Player player,
+                                final InteractionHand hand, final BlockHitResult hitResult,
+                                final CallbackInfoReturnable<InteractionResult> cir) {
+    *///?}
         // Validate.
         if (HVariables.DEBUG_ASSERTS) {
+            //? if >=1.20.6 {
             assert (state != null) : "HCsCR: Parameter 'state' is null. (level: " + level + ", pos: " + pos + ", player: " + player + ", hitResult: " + hitResult + ", bed: " + this + ')';
             assert (level != null) : "HCsCR: Parameter 'level' is null. (state: " + state + ", pos: " + pos + ", player: " + player + ", hitResult: " + hitResult + ", bed: " + this + ')';
             assert (pos != null) : "HCsCR: Parameter 'pos' is null. (state: " + state + ", level: " + level + ", player: " + player + ", hitResult: " + hitResult + ", bed: " + this + ')';
             assert (player != null) : "HCsCR: Parameter 'player' is null. (state: " + state + ", level: " + level + ", pos: " + pos + ", hitResult: " + hitResult + ", bed: " + this + ')';
             assert (hitResult != null) : "HCsCR: Parameter 'hitResult' is null. (state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", bed: " + this + ')';
-        }
-
-        // Log. (**TRACE**)
-        if (HVariables.DEBUG_LOGS) {
-            HCSCR_LOGGER.trace(HCsCR.MARKER, "HCsCR: Detected bed right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
-        }
-
-        // Do NOT process beds if any of the following conditions is met:
-        // - The current level (world) is not client-side. (e.g., integrated server world)
-        // - The mod is disabled via config or keybind.
-        // - The bed doesn't explode in the current environment/dimension.
-        // - The "remove blocks" feature is OFF. (in switch block)
-        if (!level.isClientSide() || !Config.enable() || !HStonecutter.willBedExplode(level)) { // Implicit NPE for 'level'
-            // Log. (**DEBUG**)
-            if (HVariables.DEBUG_LOGS) {
-                HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Skipped bed right click removing. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
-            }
-
-            // Stop.
-            return;
-        }
-
-        // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
-            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Clicking on a bed NOT from the main thread. (thread: " + Thread.currentThread() + ", state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", hitResult: " + hitResult + ", bed: " + this + ')';
-        }
-
-        // Remove or clip.
-        switch (Config.blocks()) {
-            case COLLISION:
-                // Get the bed's other part.
-                final BlockPos otherPosCollision = pos.relative(BedBlock.getConnectedDirection(state)); // Implicit NPE for 'pos', 'state'
-                final BlockState otherStateCollision = level.getBlockState(otherPosCollision);
-
-                // Clip.
-                HCsCR.CLIPPING_BLOCKS.put(pos, state);
-                if (otherStateCollision.is(BlockTags.BEDS)) {
-                    HCsCR.CLIPPING_BLOCKS.put(otherPosCollision, otherStateCollision);
-                }
-
-                // Log. (**DEBUG**)
-                if (HVariables.DEBUG_LOGS) {
-                    HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Clipping bed via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
-                }
-
-                // Break.
-                break;
-            case FULL:
-                // Get the bed's other part.
-                final BlockPos otherPosFull = pos.relative(BedBlock.getConnectedDirection(state)); // Implicit NPE for 'pos', 'state'
-                final BlockState otherStateFull = level.getBlockState(otherPosFull);
-
-                // Remove.
-                level.removeBlock(pos, false);
-                if (otherStateFull.is(BlockTags.BEDS)) {
-                    level.removeBlock(otherPosFull, false);
-                }
-
-                // Log. (**DEBUG**)
-                if (HVariables.DEBUG_LOGS) {
-                    HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Removed bed via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
-                }
-
-                // Break.
-                break;
-            default:
-                // Log. (**DEBUG**)
-                if (HVariables.DEBUG_LOGS) {
-                    HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Ignored bed right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
-                }
-        }
-    }
-
-    //?} else {
-
-    /*/^*
-     * Handles the bed usage.
-     *
-     * @param state     Bed block state
-     * @param level     The level that this bed block is placed in
-     * @param pos       Bed block position
-     * @param player    Player interacting with the bed, ignored
-     * @param hand      The hand the player uses to interact with the bed, ignored
-     * @param hitResult The exact position player used the bed at, ignored
-     * @param cir       Callback data containing the bed interaction result, ignored
-     * @apiNote Do not call, called by Mixin
-     * @see Config#enable()
-     * @see Config#blocks()
-     * @see BlockMode
-     * @see HCsCR#CLIPPING_BLOCKS
-     ^/
-    @DoNotCall("Called by Mixin")
-    @Inject(method = "use", at = @At("HEAD"))
-    private void hcscr_use_head(final BlockState state, final Level level, final BlockPos pos, final Player player,
-                                final InteractionHand hand, final BlockHitResult hitResult,
-                                final CallbackInfoReturnable<InteractionResult> cir) {
-        // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
-            assert (state != null) : "HCsCR: Parameter 'state' is null. (level: " + level + ", pos: " + pos + ", player: " + player + ", hand: " + hand + ", hitResult: " + hitResult + ", bed: " + this + ')';
+            //?} else {
+            /*assert (state != null) : "HCsCR: Parameter 'state' is null. (level: " + level + ", pos: " + pos + ", player: " + player + ", hand: " + hand + ", hitResult: " + hitResult + ", bed: " + this + ')';
             assert (level != null) : "HCsCR: Parameter 'level' is null. (state: " + state + ", pos: " + pos + ", player: " + player + ", hand: " + hand + ", hitResult: " + hitResult + ", bed: " + this + ')';
             assert (pos != null) : "HCsCR: Parameter 'pos' is null. (state: " + state + ", level: " + level + ", player: " + player + ", hand: " + hand + ", hitResult: " + hitResult + ", bed: " + this + ')';
             assert (player != null) : "HCsCR: Parameter 'player' is null. (state: " + state + ", level: " + level + ", pos: " + pos + ", hand: " + hand + ", hitResult: " + hitResult + ", bed: " + this + ')';
             assert (hand != null) : "HCsCR: Parameter 'hand' is null. (state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", hitResult: " + hitResult + ", bed: " + this + ')';
             assert (hitResult != null) : "HCsCR: Parameter 'hitResult' is null. (state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", hand: " + hand + ", bed: " + this + ')';
+            *///?}
+        }
+
+        // Log. (**TRACE**)
+        if (HVariables.DEBUG_LOGS) {
+            //? if >=1.20.6 {
+            HCSCR_LOGGER.trace(HCsCR.MARKER, "HCsCR: Detected bed right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
+            //?} else {
+            /*HCSCR_LOGGER.trace(HCsCR.MARKER, "HCsCR: Detected bed right click. (state: {}, level: {}, pos: {}, player: {}, hand: {}, hitResult: {}, bed: {})", state, level, pos, player, hand, hitResult, this);
+            *///?}
         }
 
         // Do NOT process beds if any of the following conditions is met:
         // - The current level (world) is not client-side. (e.g., integrated server world)
-        // - The bed doesn't explode in the current dimension.
         // - The mod is disabled via config or keybind.
+        // - The bed doesn't explode in the current environment/dimension. (heuristical in 1.21.11+)
         // - The "remove blocks" feature is OFF. (in switch block)
-        if (!level.isClientSide() || BedBlock.canSetSpawn(level) || !Config.enable()) { // Implicit NPE for 'level'
+        //? if >=1.21.11 {
+        // Environmental attributes from 25w42a for BED_WORKS are NOT synced to the client,
+        // so we just guess and check by comparing if the dimension doesn't have an OVERWORLD skybox.
+        if (!level.isClientSide() || !Config.enable() || (level.dimensionType().skybox() == DimensionType.Skybox.OVERWORLD)) { // Implicit NPE for 'level'
+        //?} else {
+        /*if (!level.isClientSide() || !Config.enable() || BedBlock.canSetSpawn(level)) { // Implicit NPE for 'level'
+        *///?}
             // Log. (**DEBUG**)
             if (HVariables.DEBUG_LOGS) {
-                HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Skipped bed right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, hitResult: {}, bed: {})", state, level, pos, player, hand, hitResult, this);
+                //? if >=1.20.6 {
+                HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Skipped bed right click removing. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
+                //?} else {
+                /*HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Skipped bed right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, hitResult: {}, bed: {})", state, level, pos, player, hand, hitResult, this);
+                *///?}
             }
 
             // Stop.
@@ -238,7 +169,11 @@ public final class BedBlockMixin {
 
         // Validate.
         if (HVariables.DEBUG_ASSERTS) {
-            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Clicking on a bed NOT from the main thread. (thread: " + Thread.currentThread() + ", state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", hand: " + hand + ", hitResult: " + hitResult + ", bed: " + this + ')';
+            //? if >=1.20.6 {
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Clicking on a bed NOT from the main thread. (thread: " + Thread.currentThread() + ", state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", hitResult: " + hitResult + ", bed: " + this + ')';
+            //?} else {
+            /*assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Clicking on a bed NOT from the main thread. (thread: " + Thread.currentThread() + ", state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", hand: " + hand + ", hitResult: " + hitResult + ", bed: " + this + ')';
+            *///?}
         }
 
         // Remove or clip.
@@ -256,7 +191,11 @@ public final class BedBlockMixin {
 
                 // Log. (**DEBUG**)
                 if (HVariables.DEBUG_LOGS) {
+                    //? if >=1.20.6 {
                     HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Clipping bed via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
+                    //?} else {
+                    /*HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Clipping bed via right click. (state: {}, level: {}, pos: {}, player: {}, hand: {}, hitResult: {}, bed: {})", state, level, pos, player, hand, hitResult, this);
+                    *///?}
                 }
 
                 // Break.
@@ -274,7 +213,11 @@ public final class BedBlockMixin {
 
                 // Log. (**DEBUG**)
                 if (HVariables.DEBUG_LOGS) {
+                    //? if >=1.20.6 {
                     HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Removed bed via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
+                    //?} else {
+                    /*HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Removed bed via right click. (state: {}, level: {}, pos: {}, player: {}, hand: {}, hitResult: {}, bed: {})", state, level, pos, player, hand, hitResult, this);
+                    *///?}
                 }
 
                 // Break.
@@ -282,9 +225,12 @@ public final class BedBlockMixin {
             default:
                 // Log. (**DEBUG**)
                 if (HVariables.DEBUG_LOGS) {
+                    //? if >=1.20.6 {
                     HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Ignored bed right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
+                    //?} else {
+                    /*HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Ignored bed right click. (state: {}, level: {}, pos: {}, player: {}, hand: {}, hitResult: {}, bed: {})", state, level, pos, player, hand, hitResult, this);
+                    *///?}
                 }
         }
     }
-    *///?}
 }

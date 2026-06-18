@@ -66,7 +66,6 @@ import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.profiling.Profiler;
-import net.minecraft.world.level.dimension.DimensionType;
 import java.time.Duration;
 //?} elif >=1.21.8 {
 /*import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
@@ -74,8 +73,6 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.Profiler;
-import net.minecraft.world.level.block.BedBlock;
-import net.minecraft.world.level.block.RespawnAnchorBlock;
 import java.time.Duration;
 *///?} elif >=1.21.4 {
 /*import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
@@ -83,8 +80,6 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.Profiler;
-import net.minecraft.world.level.block.BedBlock;
-import net.minecraft.world.level.block.RespawnAnchorBlock;
 import java.time.Duration;
 *///?} elif >=1.21.3 {
 /*import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -92,31 +87,23 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.Profiler;
-import net.minecraft.world.level.block.BedBlock;
-import net.minecraft.world.level.block.RespawnAnchorBlock;
 import java.time.Duration;
 *///?} elif >=1.20.6 {
 /*import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.BedBlock;
-import net.minecraft.world.level.block.RespawnAnchorBlock;
 import java.time.Duration;
 *///?} elif >=1.19.4 {
 /*import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.BedBlock;
-import net.minecraft.world.level.block.RespawnAnchorBlock;
 *///?} elif >=1.19.2 {
 /*import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.BedBlock;
-import net.minecraft.world.level.block.RespawnAnchorBlock;
 import org.apache.commons.lang3.mutable.MutableObject;
 *///?} elif >=1.17.1 {
 /*import com.mojang.blaze3d.vertex.PoseStack;
@@ -124,8 +111,6 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.BedBlock;
-import net.minecraft.world.level.block.RespawnAnchorBlock;
 import org.apache.commons.lang3.mutable.MutableObject;
 *///?} else {
 /*import com.mojang.blaze3d.vertex.PoseStack;
@@ -133,8 +118,6 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.BedBlock;
-import net.minecraft.world.level.block.RespawnAnchorBlock;
 import org.apache.commons.lang3.mutable.MutableObject;
 import ru.vidtu.hcscr.HEntityCollisionContext;
 *///?}
@@ -486,9 +469,9 @@ public final class HStonecutter {
         effect.getEffect().value().addAttributeModifiers(map, effect.getAmplifier()); // Implicit NPE for 'effect', 'map'
         //?} elif >=1.20.2 {
         /*effect.getEffect().addAttributeModifiers(map, effect.getAmplifier()); // Implicit NPE for 'effect', 'map'
-         *///?} else {
+        *///?} else {
         /*effect.getEffect().addAttributeModifiers(player, map, effect.getAmplifier()); // Implicit NPE for 'player', 'effect', 'map'
-         *///?}
+        *///?}
     }
 
     /**
@@ -516,122 +499,8 @@ public final class HStonecutter {
         effect.getEffect().value().removeAttributeModifiers(map); // Implicit NPE for 'effect', 'map'
         //?} elif >=1.20.2 {
         /*effect.getEffect().removeAttributeModifiers(map); // Implicit NPE for 'effect', 'map'
-         *///?} else {
+        *///?} else {
         /*effect.getEffect().removeAttributeModifiers(player, map, effect.getAmplifier()); // Implicit NPE for 'player', 'effect', 'map'
-         *///?}
-    }
-
-    /**
-     * Checks if the bed will explode when attempting to sleep.
-     *
-     * @param level Level in which bed is located in
-     * @return {@code true} if the bed will explode, {@code false} if the player will sleep
-     */
-    @Contract(pure = true)
-    public static boolean willBedExplode(final Level level) {
-        // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
-            assert (level != null) : "HCsCR: Parameter 'level' is null.";
-            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Checking bed explosion status NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ')';
-        }
-
-        // Delegate.
-        //? if >=1.21.11 {
-        // Environmental attributes from 25w42a for BED_WORKS are NOT synced to the client,
-        // so we just guess and check by comparing if the dimension doesn't have an OVERWORLD skybox.
-        return level.dimensionType().skybox() != DimensionType.Skybox.OVERWORLD; // Implicit NPE for 'level'
-        //?} else {
-        /*return !BedBlock.canSetSpawn(level); // Implicit NPE for 'level'
-        *///?}
-    }
-
-    /**
-     * Checks if the anchor will explode when attempting to set the spawn point.
-     *
-     * @param level Level in which anchor is located in
-     * @return {@code true} if the anchor will explode, {@code false} if the player will set the spawn point
-     */
-    @Contract(pure = true)
-    public static boolean willAnchorExplode(final Level level) {
-        // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
-            assert (level != null) : "HCsCR: Parameter 'level' is null.";
-            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Checking anchor explosion status NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ')';
-        }
-
-        // Delegate.
-        //? if >=1.21.11 {
-        // Environmental attributes from 25w42a for RESPAWN_ANCHOR_WORKS are NOT synced to the client,
-        // so we just guess and check by comparing if the dimension "doesn't" have skybox like NETHER.
-        return level.dimensionType().skybox() != DimensionType.Skybox.NONE; // Implicit NPE for 'level'
-        //?} else {
-        /*return !RespawnAnchorBlock.canSetSpawn(level); // Implicit NPE for 'level'
-        *///?}
-    }
-
-    /**
-     * Displays the action bar (above hotbar) message in-game.
-     *
-     * @param client  Client game instance
-     * @param message Message to display
-     */
-    public static void displayActionBar(final Minecraft client, final Component message) {
-        // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
-            assert (client != null) : "HCsCR: Parameter 'client' is null. (message: " + message + ')';
-            assert (message != null) : "HCsCR: Parameter 'message' is null. (client: " + client + ')';
-            assert (client.isSameThread()) : "HCsCR: Displaying an action bar message NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ", message: " + message + ')';
-        }
-
-        // Delegate.
-        //? if >=26.2 {
-        client.gui.hud.setOverlayMessage(message, /*animate=*/false); // Implicit NPE for 'client', 'message'
-        //?} else {
-        /*client.gui.setOverlayMessage(message, /^animate=^/false); // Implicit NPE for 'client', 'message'
-        *///?}
-    }
-
-    /**
-     * Gets the currently displayed (active) game UI screen.
-     *
-     * @param client Client game instance
-     * @return Currently displayed screen, {@code null} if no screen is displayed (in-game)
-     */
-    @Contract(pure = true)
-    @Nullable
-    public static Screen activeScreen(final Minecraft client) {
-        // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
-            assert (client != null) : "HCsCR: Parameter 'client' is null.";
-            assert (client.isSameThread()) : "HCsCR: Getting the active screen NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
-        }
-
-        // Delegate.
-        //? if >=26.2 {
-        return client.gui.screen(); // Implicit NPE for 'client'
-        //?} else {
-        /*return client.screen; // Implicit NPE for 'client'
-        *///?}
-    }
-
-    /**
-     * Sets the currently displayed (active) game UI screen.
-     *
-     * @param client Client game instance
-     * @param screen Screen to display, {@code null} to return in-game
-     */
-    public static void setScreen(final Minecraft client, final @Nullable Screen screen) {
-        // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
-            assert (client != null) : "HCsCR: Parameter 'client' is null. (screen: " + screen + ')';
-            assert (client.isSameThread()) : "HCsCR: Setting an active screen NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ", screen: " + screen + ')';
-        }
-
-        // Delegate.
-        //? if >=26.2 {
-        client.gui.setScreen(screen); // Implicit NPE for 'client'
-        //?} else {
-        /*client.setScreen(screen); // Implicit NPE for 'client'
         *///?}
     }
 

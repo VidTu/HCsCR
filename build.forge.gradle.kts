@@ -81,12 +81,17 @@ buildscript {
 }
 
 sc {
-    // Define Stonecutter preprocessor variables/constants.
+    // Stonecutter constants.
     constants["fabric"] = false
     constants["forge"] = true
     constants["hacky_neoforge"] = false
     constants["neoforge"] = false
+
+    // Stonecutter property path.
     properties.tags(mcv, "forge")
+
+    // Stonecutter swaps.
+    swaps["set_screen"] = if (mcp >= "26.2") "$1.gui.setScreen($2);" else "$1.setScreen($2);"
 
     // Define MCP replacements.
     replacements.string(mcp <= "1.16.5") {
