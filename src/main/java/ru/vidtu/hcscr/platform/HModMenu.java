@@ -50,8 +50,8 @@ import org.jetbrains.annotations.Blocking;
 import org.jetbrains.annotations.CheckReturnValue;
 import org.jspecify.annotations.Nullable;
 import ru.vidtu.hcscr.HCsCR;
-import ru.vidtu.hcscr.compile.HConstants;
-import ru.vidtu.hcscr.compile.HVariables;
+import ru.vidtu.hcscr.compile.Constants;
+import ru.vidtu.hcscr.compile.Variables;
 
 import java.io.StringReader;
 import java.net.HttpURLConnection;
@@ -182,14 +182,14 @@ public final class HModMenu implements ModMenuApi {
             try {
                 // TODO(VidTu): Add a memoizing supplier so spamming won't work.
                 // Log. (**TRACE**)
-                if (HVariables.DEBUG_LOGS) {
+                if (Variables.DEBUG_LOGS) {
                     LOGGER.trace(HCsCR.MARKER, "HCsCR: Checking for updates...");
                 }
 
                 // Allow forcefully disabling the updater.
                 if (Boolean.getBoolean("ru.vidtu.hcscr.nomodmenuupdater")) {
                     // Log. (**DEBUG**)
-                    if (HVariables.DEBUG_LOGS) {
+                    if (Variables.DEBUG_LOGS) {
                         LOGGER.debug(HCsCR.MARKER, "HCsCR: ModMenu updater is disabled.");
                     }
 
@@ -198,7 +198,7 @@ public final class HModMenu implements ModMenuApi {
                 }
 
                 // Create an HTTP client.
-                final Duration timeout = Duration.ofSeconds(HConstants.UPDATER_TIMEOUT_SECONDS);
+                final Duration timeout = Duration.ofSeconds(Constants.UPDATER_TIMEOUT_SECONDS);
                 final HttpClient client = HttpClient.newBuilder()
                         .connectTimeout(timeout)
                         .version(HttpClient.Version.HTTP_2)
@@ -212,18 +212,18 @@ public final class HModMenu implements ModMenuApi {
                     final UpdateChannel channel = UpdateChannel.getUserPreference();
 
                     // Log. (**TRACE**)
-                    if (HVariables.DEBUG_LOGS) {
-                        LOGGER.trace(HCsCR.MARKER, "HCsCR: Sending an update request... (version: " + HVariables.VERSION + ", minecraft: " + HVariables.MINECRAFT + ", user-agent: " + HVariables.USER_AGENT + ", channel: {})", channel);
+                    if (Variables.DEBUG_LOGS) {
+                        LOGGER.trace(HCsCR.MARKER, "HCsCR: Sending an update request... (version: " + Variables.VERSION + ", minecraft: " + Variables.MINECRAFT + ", user-agent: " + Variables.USER_AGENT + ", channel: {})", channel);
                     }
 
                     // Send the request.
                     final HttpResponse<String> response = client.send(HttpRequest.newBuilder()
-                            .uri(new URI(HConstants.UPDATER_URL))
+                            .uri(new URI(Constants.UPDATER_URL))
                             .timeout(timeout)
-                            .header(HttpHeaders.USER_AGENT, HVariables.USER_AGENT)
+                            .header(HttpHeaders.USER_AGENT, Variables.USER_AGENT)
                             .GET()
                             //? if >=26.1.2 {
-                            .build(), HttpResponse.BodyHandlers.limiting(HttpResponse.BodyHandlers.ofString(), HConstants.UPDATER_MAX_BODY_LENGTH));
+                            .build(), HttpResponse.BodyHandlers.limiting(HttpResponse.BodyHandlers.ofString(), Constants.UPDATER_MAX_BODY_LENGTH));
                             //? } else {
                             /*.build(), HttpResponse.BodyHandlers.ofString());
                             *///?}
@@ -234,12 +234,12 @@ public final class HModMenu implements ModMenuApi {
 
                     // Validate the length.
                     final int bodyLength = body.length();
-                    if (bodyLength > HConstants.UPDATER_MAX_BODY_LENGTH) {
+                    if (bodyLength > Constants.UPDATER_MAX_BODY_LENGTH) {
                         throw new IllegalStateException("HCsCR: Too long HTTP body. (code: " + code + ", response: " + response + ", bodyLength: " + bodyLength + ')');
                     }
 
                     // Log. (**DEBUG**)
-                    if (HVariables.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.MARKER)) {
+                    if (Variables.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.MARKER)) {
                         final String sanitizedBody = SANITIZER.escape(body);
                         LOGGER.debug(HCsCR.MARKER, "HCsCR: Got an update response. (code: {}, response: {}, sanitizedBody: '{}')", code, response, sanitizedBody);
                     }
@@ -257,11 +257,11 @@ public final class HModMenu implements ModMenuApi {
                     }
 
                     // Get the version, return nothing if not found.
-                    final String versionKey = (HVariables.MINECRAFT + HConstants.UPDATER_KEY_SEPARATOR + channel + HConstants.UPDATER_KEY_SEPARATOR + HConstants.UPDATER_KEY_VERSION_SUFFIX);
+                    final String versionKey = (Variables.MINECRAFT + Constants.UPDATER_KEY_SEPARATOR + channel + Constants.UPDATER_KEY_SEPARATOR + Constants.UPDATER_KEY_VERSION_SUFFIX);
                     final String rawVersion = properties.getProperty(versionKey);
                     if ((rawVersion == null) || rawVersion.isBlank()) {
                         // Log. (**DEBUG**)
-                        if (HVariables.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.MARKER)) {
+                        if (Variables.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.MARKER)) {
                             @SuppressWarnings("StreamToLoop") // <- Debug-only.
                             final String sanitizedKeys = '[' + properties.keySet().stream()
                                     .map((final Object key) -> '"' + SANITIZER.escape(key.toString()) + '"')
@@ -276,16 +276,16 @@ public final class HModMenu implements ModMenuApi {
 
                     // Validate the version length.
                     final int rawVersionLength = rawVersion.length();
-                    if (rawVersionLength > HConstants.UPDATER_MAX_COMPONENT_LENGTH) {
+                    if (rawVersionLength > Constants.UPDATER_MAX_COMPONENT_LENGTH) {
                         throw new IllegalStateException("HCsCR: Too long version. (rawVersionLength: " + rawVersionLength + ')');
                     }
 
                     // Parse the versions. skip if already up-to-date.
-                    final Version currentVersion = Version.parse(HVariables.VERSION);
+                    final Version currentVersion = Version.parse(Variables.VERSION);
                     final Version remoteVersion = Version.parse(rawVersion);
                     if (currentVersion.compareTo(remoteVersion) >= 0) {
                         // Log. (**DEBUG**)
-                        if (HVariables.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.MARKER)) {
+                        if (Variables.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.MARKER)) {
                             final String sanitizedRemoteVersion = SANITIZER.escape(remoteVersion.toString());
                             LOGGER.debug(HCsCR.MARKER, "HCsCR: No updates found. (currentVersion: {}, sanitizedRemoteVersion: '{}')", currentVersion, sanitizedRemoteVersion);
                         }
@@ -295,12 +295,12 @@ public final class HModMenu implements ModMenuApi {
                     }
 
                     // Extract the link.
-                    final String linkKey = (HVariables.MINECRAFT + HConstants.UPDATER_KEY_SEPARATOR + channel + HConstants.UPDATER_KEY_SEPARATOR + HConstants.UPDATER_KEY_LINK_SUFFIX);
-                    final String rawLink = properties.getProperty(linkKey, HConstants.UPDATER_FALLBACK_LINK);
+                    final String linkKey = (Variables.MINECRAFT + Constants.UPDATER_KEY_SEPARATOR + channel + Constants.UPDATER_KEY_SEPARATOR + Constants.UPDATER_KEY_LINK_SUFFIX);
+                    final String rawLink = properties.getProperty(linkKey, Constants.UPDATER_FALLBACK_LINK);
 
                     // Validate the link.
                     final int rawLinkLength = rawLink.length();
-                    if (rawLinkLength > HConstants.UPDATER_MAX_COMPONENT_LENGTH) {
+                    if (rawLinkLength > Constants.UPDATER_MAX_COMPONENT_LENGTH) {
                         throw new IllegalStateException("HCsCR: Too long link. (rawLinkLength: " + rawLinkLength + ')');
                     }
                     final URI link;
@@ -318,11 +318,11 @@ public final class HModMenu implements ModMenuApi {
 
                     // Log.
                     final String sanitizedRemoteVersion = SANITIZER.escape(remoteVersion.toString());
-                    if (HVariables.DEBUG_LOGS) {
-                        LOGGER.warn(HCsCR.MARKER, "[!] HCsCR: An update for HCsCR is available! (current: {}, available: {}, minecraft: " + HVariables.MINECRAFT + ", channel: {})", currentVersion, sanitizedRemoteVersion, channel);
+                    if (Variables.DEBUG_LOGS) {
+                        LOGGER.warn(HCsCR.MARKER, "[!] HCsCR: An update for HCsCR is available! (current: {}, available: {}, minecraft: " + Variables.MINECRAFT + ", channel: {})", currentVersion, sanitizedRemoteVersion, channel);
                         LOGGER.warn(HCsCR.MARKER, "[!] HCsCR: Download HCsCR update at: {}", asciiLink);
                     } else {
-                        LOGGER.warn("[!] HCsCR: An update for HCsCR is available! (current: {}, available: {}, minecraft: " + HVariables.MINECRAFT + ", channel: {})", currentVersion, sanitizedRemoteVersion, channel);
+                        LOGGER.warn("[!] HCsCR: An update for HCsCR is available! (current: {}, available: {}, minecraft: " + Variables.MINECRAFT + ", channel: {})", currentVersion, sanitizedRemoteVersion, channel);
                         LOGGER.warn("[!] HCsCR: Download HCsCR update at: {}", asciiLink);
                     }
 
@@ -338,7 +338,7 @@ public final class HModMenu implements ModMenuApi {
                 }
             } catch (final Throwable t) {
                 // Log.
-                if (HVariables.DEBUG_LOGS) {
+                if (Variables.DEBUG_LOGS) {
                     LOGGER.warn(HCsCR.MARKER, "HCsCR: Unable to check for updates.", t);
                 } else {
                     LOGGER.warn("HCsCR: Unable to check for updates.");
@@ -390,7 +390,7 @@ public final class HModMenu implements ModMenuApi {
         @Contract(pure = true)
         Update(final UpdateChannel channel, final String link, final String version) {
             // Validate.
-            if (HVariables.DEBUG_ASSERTS) {
+            if (Variables.DEBUG_ASSERTS) {
                 assert (channel != null) : "HCsCR: Parameter 'channel' is null. (link: " + link + ", version: " + version + ", update: " + this + ')';
                 assert (link != null) : "HCsCR: Parameter 'link' is null. (channel: " + channel + ", version: " + version + ", update: " + this + ')';
                 assert (version != null) : "HCsCR: Parameter 'version' is null. (channel: " + channel + ", link: " + link + ", update: " + this + ')';

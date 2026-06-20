@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import ru.vidtu.hcscr.HCsCR;
-import ru.vidtu.hcscr.compile.HVariables;
+import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.platform.HPlugin;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
@@ -60,7 +60,7 @@ public final class PlayerMixin_M {
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private PlayerMixin_M() {
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             throw new AssertionError("HCsCR: No instances.");
         }
     }
@@ -87,7 +87,7 @@ public final class PlayerMixin_M {
     private boolean hcscr_attack_hurtOrSimulate(final Entity target, final DamageSource damageSource,
                                                 final float totalDamage) {
         // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             assert (target != null) : "HCsCR: Parameter 'target' is null. (damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", player: " + this + ')';
             assert (damageSource != null) : "HCsCR: Parameter 'damageSource' is null. (target: " + target + ", totalDamage: " + totalDamage + ", player: " + this + ')';
             assert (Float.isFinite(totalDamage)) : "HCsCR: Parameter 'totalDamage' is not finite. (target: " + target + ", damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", player: " + this + ')';

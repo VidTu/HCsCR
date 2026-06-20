@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.vidtu.hcscr.HCsCR;
-import ru.vidtu.hcscr.compile.HVariables;
+import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
@@ -68,7 +68,7 @@ public final class EntityMixin {
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private EntityMixin() {
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             throw new AssertionError("HCsCR: No instances.");
         }
     }
@@ -87,7 +87,7 @@ public final class EntityMixin {
     private void hcscr_getBoundingBox_head(final CallbackInfoReturnable<AABB> cir) {
         // Validate.
         final Level level = HStonecutter.levelOfEntity((Entity) (Object) this);
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             assert (level != null) : "HCsCR: Getting entity bounding box with null level. (cir: " + cir + ", entity: " + this + ')';
         }
 

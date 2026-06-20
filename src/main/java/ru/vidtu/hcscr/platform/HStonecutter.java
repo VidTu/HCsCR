@@ -50,7 +50,7 @@ import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import ru.vidtu.hcscr.HCsCR;
-import ru.vidtu.hcscr.compile.HVariables;
+import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.config.ConfigScreen;
 
 import java.nio.file.Path;
@@ -119,7 +119,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.mutable.MutableObject;
-import ru.vidtu.hcscr.HEntityCollisionContext;
+import ru.vidtu.hcscr.extension.EntityCollisionContextExtension;
 *///?}
 
 //? if fabric {
@@ -201,7 +201,7 @@ public final class HStonecutter {
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private HStonecutter() {
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             throw new AssertionError("HCsCR: No instances.");
         }
     }
@@ -236,7 +236,7 @@ public final class HStonecutter {
     @Contract(value = "_ -> new", pure = true)
     public static KeyMapping keyBind(final String id) {
         // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             assert (id != null) : "HCsCR: Parameter 'id' is null.";
             assert (!id.isEmpty()) : "HCsCR: Creating a key binding with an empty ID.";
         }
@@ -258,7 +258,7 @@ public final class HStonecutter {
     @Contract(value = "_ -> new", pure = true)
     public static MutableComponent translate(final String key) {
         // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             assert (key != null) : "HCsCR: Parameter 'key' is null.";
             assert (!key.isEmpty()) : "HCsCR: Creating a translatable component with an empty key.";
         }
@@ -281,7 +281,7 @@ public final class HStonecutter {
     @Contract(value = "_, _ -> new", pure = true)
     public static MutableComponent translate(final String key, final Object... args) {
         // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             assert (key != null) : "HCsCR: Parameter 'key' is null. (args: " + Arrays.toString(args) + ')';
             assert (args != null) : "HCsCR: Parameter 'args' is null. (key: " + key + ')';
             assert (!key.isEmpty()) : "HCsCR: Creating a translatable component with an empty key. (args: " + Arrays.toString(args) + ')';
@@ -305,14 +305,14 @@ public final class HStonecutter {
     @Contract(pure = true)
     public static ProfilerFiller profilerOfClient(final Minecraft client) {
         // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             assert (client != null) : "HCsCR: Parameter 'client' is null.";
             assert (client.isSameThread()) : "HCsCR: Getting the client profiler NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
         }
 
         // Throw unconditionally.
-        if (!HVariables.DEBUG_PROFILER) {
-            throw (HVariables.DEBUG_ASSERTS ? new AssertionError("HCsCR: This mod build hasn't been compiled with profiler support.") : null);
+        if (!Variables.DEBUG_PROFILER) {
+            throw (Variables.DEBUG_ASSERTS ? new AssertionError("HCsCR: This mod build hasn't been compiled with profiler support.") : null);
         }
 
         // Delegate.
@@ -332,7 +332,7 @@ public final class HStonecutter {
     @Contract(pure = true)
     public static Level levelOfEntity(final Entity entity) {
         // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             assert (entity != null) : "HCsCR: Parameter 'entity' is null.";
             // No thread checks here because this can be called from the integrated server.
         }
@@ -355,7 +355,7 @@ public final class HStonecutter {
     @Contract(pure = true)
     public static boolean isEntityRemoved(final Entity entity) {
         // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             assert (entity != null) : "HCsCR: Parameter 'entity' is null.";
             assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Checking entity removal NOT from the main thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ')';
         }
@@ -378,7 +378,7 @@ public final class HStonecutter {
     @Nullable
     public static Entity collisionContextEntity(final EntityCollisionContext ctx) {
         // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             assert (ctx != null) : "HCsCR: Parameter 'ctx' is null.";
             // No thread checks here because this can be called from the integrated server.
         }
@@ -390,7 +390,7 @@ public final class HStonecutter {
         /*return ctx.getEntity().orElse(null); // Implicit NPE for 'ctx'
         *///?} else {
         /*//noinspection CastToIncompatibleInterface // <- Mixin Accessor.
-        return ((HEntityCollisionContext) ctx).hcscr_entity(); // Implicit NPE for 'ctx'
+        return ((EntityCollisionContextExtension) ctx).hcscr_entity(); // Implicit NPE for 'ctx'
         *///?}
     }
 
@@ -402,7 +402,7 @@ public final class HStonecutter {
      */
     public static void removeEntity(final Entity entity) {
         // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             assert (entity != null) : "HCsCR: Parameter 'entity' is null.";
             assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Removing an entity NOT from the main thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ')';
         }
@@ -428,7 +428,7 @@ public final class HStonecutter {
     @CheckReturnValue
     public static boolean hurtEntity(final Entity entity, final DamageSource source, final float amount) {
         // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             assert (entity != null) : "HCsCR: Parameter 'entity' is null. (source: " + source + ", amount: " + ')';
             assert (source != null) : "HCsCR: Parameter 'source' is null. (entity: " + entity + ", amount: " + ')';
             assert (Float.isFinite(amount)) : "HCsCR: Parameter 'amount' is not finite. (entity: " + entity + ", source: " + source + ", amount: " + ')';
@@ -454,7 +454,7 @@ public final class HStonecutter {
     public static void addEffectAttributes(final MobEffectInstance effect, final LocalPlayer player,
                                            final AttributeMap map) {
         // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             assert (effect != null) : "HCsCR: Parameter 'effect' is null. (player: " + player + ", map: " + map + ')';
             assert (player != null) : "HCsCR: Parameter 'player' is null. (effect: " + effect + ", map: " + map + ')';
             assert (map != null) : "HCsCR: Parameter 'map' is null. (effect: " + effect + ", player: " + player + ')';
@@ -484,7 +484,7 @@ public final class HStonecutter {
     public static void removeEffectAttributes(final MobEffectInstance effect, final LocalPlayer player,
                                               final AttributeMap map) {
         // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             assert (effect != null) : "HCsCR: Parameter 'effect' is null. (player: " + player + ", map: " + map + ')';
             assert (player != null) : "HCsCR: Parameter 'player' is null. (effect: " + effect + ", map: " + map + ')';
             assert (map != null) : "HCsCR: Parameter 'map' is null. (effect: " + effect + ", player: " + player + ')';
@@ -513,7 +513,7 @@ public final class HStonecutter {
     @Contract(pure = true)
     public static boolean isShiftKeyDown(final Minecraft client) {
         // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             assert (client != null) : "HCsCR: Parameter 'client' is null.";
             assert (client.isSameThread()) : "HCsCR: Checking the shift key state NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
         }
@@ -546,7 +546,7 @@ public final class HStonecutter {
                                       final BiConsumer<Button, Consumer<Component>> handler,
                                       final Consumer<List<FormattedCharSequence>> tooltipRenderer) {
         // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             assert (font != null) : "HCsCR: Parameter 'font' is null. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
             assert ((x >= -320) && (x <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320))) : "HCsCR: Parameter 'x' is not in the [" + -320 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
             assert ((y >= -240) && (y <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240))) : "HCsCR: Parameter 'y' is not in the [" + -240 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
@@ -563,14 +563,14 @@ public final class HStonecutter {
         //? if >=1.19.4 {
         final Button button = Button.builder(message, (final Button innerButton) -> {
             // Validate.
-            if (HVariables.DEBUG_ASSERTS) {
+            if (Variables.DEBUG_ASSERTS) {
                 assert (innerButton != null) : "HCsCR: Parameter 'innerButton' is null.";
             }
 
             // Click.
             handler.accept(innerButton, (final Component newTip) -> { // Implicit NPE for 'handler'
                 // Validate.
-                if (HVariables.DEBUG_ASSERTS) {
+                if (Variables.DEBUG_ASSERTS) {
                     assert (newTip != null) : "HCsCR: Parameter 'newTip' is null. (innerButton: " + innerButton + ')';
                     assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Setting a button tip NOT from the main thread. (thread: " + Thread.currentThread() + ", newTip: " + newTip + ", innerButton: " + innerButton + ')';
                 }
@@ -586,7 +586,7 @@ public final class HStonecutter {
         /*final MutableObject<List<FormattedCharSequence>> tipHolder = new MutableObject<>(font.split(tooltip, 170)); // Implicit NPE for 'font', 'tooltip'
         return new Button(x, y, width, height, message, (final Button innerButton) -> handler.accept(innerButton, (final Component newTip) -> { // Implicit NPE for 'handler'
             // Validate.
-            if (HVariables.DEBUG_ASSERTS) {
+            if (Variables.DEBUG_ASSERTS) {
                 assert (newTip != null) : "HCsCR: Parameter 'newTip' is null. (innerButton: " + innerButton + ')';
                 assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Setting a button tip NOT from the main thread. (thread: " + Thread.currentThread() + ", newTip: " + newTip + ", innerButton: " + innerButton + ')';
             }
@@ -639,7 +639,7 @@ public final class HStonecutter {
                                           final Component tooltip, final boolean check, final BooleanConsumer handler,
                                           final Consumer<List<FormattedCharSequence>> tooltipRenderer) {
         // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             assert (font != null) : "HCsCR: Parameter 'font' is null. (x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
             assert ((x >= -320) && (x <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320))) : "HCsCR: Parameter 'x' is not in the [" + -320 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
             assert ((y >= -240) && (y <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240))) : "HCsCR: Parameter 'y' is not in the [" + -240 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
@@ -732,7 +732,7 @@ public final class HStonecutter {
                                                     final int max, final IntConsumer handler,
                                                     final Consumer<List<FormattedCharSequence>> tooltipRenderer) {
         // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             assert (font != null) : "HCsCR: Parameter 'font' is null. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
             assert ((x >= -320) && (x <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320))) : "HCsCR: Parameter 'x' is not in the [" + -320 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
             assert ((y >= -240) && (y <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240))) : "HCsCR: Parameter 'y' is not in the [" + -240 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
@@ -752,7 +752,7 @@ public final class HStonecutter {
         final int clamped = Mth.clamp(value, min, max);
         final double normalized = (double) (clamped - min) / (max - min);
         final Component message = provider.apply(clamped);
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             assert (message != null) : "HCsCR: Slider's message was returned null initially. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
         }
         final AbstractSliderButton slider = new AbstractSliderButton(x, y, width, height, message, normalized) { // Implicit NPE for 'provider'
@@ -764,7 +764,7 @@ public final class HStonecutter {
             @Override
             protected void updateMessage() {
                 final Component message = provider.apply(this.denormalized);
-                if (HVariables.DEBUG_ASSERTS) {
+                if (Variables.DEBUG_ASSERTS) {
                     assert (message != null) : "HCsCR: Slider's message was returned null after updating. (provider: " + provider + ", slider: " + this + ')';
                 }
                 this.setMessage(message);

@@ -43,7 +43,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.vidtu.hcscr.HCsCR;
-import ru.vidtu.hcscr.compile.HVariables;
+import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.config.BlockMode;
 import ru.vidtu.hcscr.config.Config;
 
@@ -69,7 +69,7 @@ public final class BedBlockMixin {
      */
     @Unique
     @UnknownNullability
-    private static final Logger HCSCR_LOGGER = (HVariables.DEBUG_LOGS ? LogManager.getLogger("HCsCR/BedBlockMixin") : null);
+    private static final Logger HCSCR_LOGGER = (Variables.DEBUG_LOGS ? LogManager.getLogger("HCsCR/BedBlockMixin") : null);
 
     /**
      * An instance of this class cannot be created.
@@ -81,7 +81,7 @@ public final class BedBlockMixin {
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private BedBlockMixin() {
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             throw new AssertionError("HCsCR: No instances.");
         }
     }
@@ -116,7 +116,7 @@ public final class BedBlockMixin {
                                 final CallbackInfoReturnable<InteractionResult> cir) {
     *///?}
         // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             //? if >=1.20.6 {
             assert (state != null) : "HCsCR: Parameter 'state' is null. (level: " + level + ", pos: " + pos + ", player: " + player + ", hitResult: " + hitResult + ", bed: " + this + ')';
             assert (level != null) : "HCsCR: Parameter 'level' is null. (state: " + state + ", pos: " + pos + ", player: " + player + ", hitResult: " + hitResult + ", bed: " + this + ')';
@@ -134,7 +134,7 @@ public final class BedBlockMixin {
         }
 
         // Log. (**TRACE**)
-        if (HVariables.DEBUG_LOGS) {
+        if (Variables.DEBUG_LOGS) {
             //? if >=1.20.6 {
             HCSCR_LOGGER.trace(HCsCR.MARKER, "HCsCR: Detected bed right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
             //?} else {
@@ -155,7 +155,7 @@ public final class BedBlockMixin {
         /*if (!level.isClientSide() || !Config.enable() || BedBlock.canSetSpawn(level)) { // Implicit NPE for 'level'
         *///?}
             // Log. (**DEBUG**)
-            if (HVariables.DEBUG_LOGS) {
+            if (Variables.DEBUG_LOGS) {
                 //? if >=1.20.6 {
                 HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Skipped bed right click removing. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
                 //?} else {
@@ -168,7 +168,7 @@ public final class BedBlockMixin {
         }
 
         // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             //? if >=1.20.6 {
             assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Clicking on a bed NOT from the main thread. (thread: " + Thread.currentThread() + ", state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", hitResult: " + hitResult + ", bed: " + this + ')';
             //?} else {
@@ -190,7 +190,7 @@ public final class BedBlockMixin {
                 }
 
                 // Log. (**DEBUG**)
-                if (HVariables.DEBUG_LOGS) {
+                if (Variables.DEBUG_LOGS) {
                     //? if >=1.20.6 {
                     HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Clipping bed via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
                     //?} else {
@@ -212,7 +212,7 @@ public final class BedBlockMixin {
                 }
 
                 // Log. (**DEBUG**)
-                if (HVariables.DEBUG_LOGS) {
+                if (Variables.DEBUG_LOGS) {
                     //? if >=1.20.6 {
                     HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Removed bed via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
                     //?} else {
@@ -224,7 +224,7 @@ public final class BedBlockMixin {
                 break;
             default:
                 // Log. (**DEBUG**)
-                if (HVariables.DEBUG_LOGS) {
+                if (Variables.DEBUG_LOGS) {
                     //? if >=1.20.6 {
                     HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Ignored bed right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, bed: {})", state, level, pos, player, hitResult, this);
                     //?} else {

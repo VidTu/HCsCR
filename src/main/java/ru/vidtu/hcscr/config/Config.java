@@ -38,7 +38,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Range;
 import org.jspecify.annotations.NullMarked;
 import ru.vidtu.hcscr.HCsCR;
-import ru.vidtu.hcscr.compile.HVariables;
+import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.io.BufferedReader;
@@ -146,7 +146,7 @@ public final class Config {
     public static void load() {
         try {
             // Log. (**TRACE**)
-            if (HVariables.DEBUG_LOGS) {
+            if (Variables.DEBUG_LOGS) {
                 LOGGER.trace(HCsCR.MARKER, "HCsCR: Loading the config... (directory: {})", HStonecutter.CONFIG_DIRECTORY);
             }
 
@@ -160,17 +160,17 @@ public final class Config {
             }
 
             // Log. (**DEBUG**)
-            if (HVariables.DEBUG_LOGS) {
+            if (Variables.DEBUG_LOGS) {
                 LOGGER.debug(HCsCR.MARKER, "HCsCR: Config has been loaded. (directory: {}, file: {})", HStonecutter.CONFIG_DIRECTORY, file);
             }
         } catch (final NoSuchFileException nsfe) {
             // Log. (**DEBUG**)
-            if (HVariables.DEBUG_LOGS) {
+            if (Variables.DEBUG_LOGS) {
                 LOGGER.debug(HCsCR.MARKER, "HCsCR: Ignored missing HCsCR config.", nsfe);
             }
         } catch (final Throwable t) {
             // Log.
-            if (HVariables.DEBUG_LOGS) {
+            if (Variables.DEBUG_LOGS) {
                 LOGGER.error(HCsCR.MARKER, "HCsCR: Unable to load the HCsCR config.", t);
             } else {
                 LOGGER.error("HCsCR: Unable to load the HCsCR config.", t);
@@ -192,7 +192,7 @@ public final class Config {
     /*package-private*/ static void save() {
         try {
             // Log. (**TRACE**)
-            if (HVariables.DEBUG_LOGS) {
+            if (Variables.DEBUG_LOGS) {
                 LOGGER.trace(HCsCR.MARKER, "HCsCR: Saving the config... (directory: {})", HStonecutter.CONFIG_DIRECTORY);
             }
 
@@ -206,12 +206,12 @@ public final class Config {
             }
 
             // Log. (**DEBUG**)
-            if (HVariables.DEBUG_LOGS) {
+            if (Variables.DEBUG_LOGS) {
                 LOGGER.debug(HCsCR.MARKER, "HCsCR: Config has been saved. (directory: {}, file: {})", HStonecutter.CONFIG_DIRECTORY, file);
             }
         } catch (final Throwable t) {
             // Log.
-            if (HVariables.DEBUG_LOGS) {
+            if (Variables.DEBUG_LOGS) {
                 LOGGER.error(HCsCR.MARKER, "HCsCR: Unable to save the HCsCR config.", t);
             } else {
                 LOGGER.error("HCsCR: Unable to save the HCsCR config.", t);
@@ -366,7 +366,7 @@ public final class Config {
     @Contract(pure = true)
     public static boolean shouldProcess(final Player player, final Entity entity) {
         // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             assert (player != null) : "HCsCR: Parameter 'player' is null. (entity: " + entity + ')';
             assert (entity != null) : "HCsCR: Parameter 'entity' is null. (player: " + player + ')';
         }

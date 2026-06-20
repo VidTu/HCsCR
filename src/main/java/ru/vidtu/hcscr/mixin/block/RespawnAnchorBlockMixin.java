@@ -42,7 +42,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.vidtu.hcscr.HCsCR;
-import ru.vidtu.hcscr.compile.HVariables;
+import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.config.BlockMode;
 import ru.vidtu.hcscr.config.Config;
 
@@ -70,7 +70,7 @@ public final class RespawnAnchorBlockMixin {
      */
     @Unique
     @UnknownNullability
-    private static final Logger HCSCR_LOGGER = (HVariables.DEBUG_LOGS ? LogManager.getLogger("HCsCR/RespawnBlockMixin") : null);
+    private static final Logger HCSCR_LOGGER = (Variables.DEBUG_LOGS ? LogManager.getLogger("HCsCR/RespawnBlockMixin") : null);
 
     /**
      * An instance of this class cannot be created.
@@ -82,7 +82,7 @@ public final class RespawnAnchorBlockMixin {
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private RespawnAnchorBlockMixin() {
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             throw new AssertionError("HCsCR: No instances.");
         }
     }
@@ -116,7 +116,7 @@ public final class RespawnAnchorBlockMixin {
                                 final CallbackInfoReturnable<InteractionResult> cir) {
     *///?}
         // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             //? if >=1.20.6 {
             assert (state != null) : "HCsCR: Parameter 'state' is null. (level: " + level + ", pos: " + pos + ", player: " + player + ", hitResult: " + hitResult + ", anchor: " + this + ')';
             assert (level != null) : "HCsCR: Parameter 'level' is null. (state: " + state + ", pos: " + pos + ", player: " + player + ", hitResult: " + hitResult + ", anchor: " + this + ')';
@@ -134,7 +134,7 @@ public final class RespawnAnchorBlockMixin {
         }
 
         // Log. (**TRACE**)
-        if (HVariables.DEBUG_LOGS) {
+        if (Variables.DEBUG_LOGS) {
             //? if >=1.20.6 {
             HCSCR_LOGGER.trace(HCsCR.MARKER, "HCsCR: Detected anchor right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, anchor: {})", state, level, pos, player, hitResult, this);
             //?} else {
@@ -159,7 +159,7 @@ public final class RespawnAnchorBlockMixin {
                 !Config.enable() || RespawnAnchorBlock.canSetSpawn(level)) {
         *///?}
             // Log. (**DEBUG**)
-            if (HVariables.DEBUG_LOGS) {
+            if (Variables.DEBUG_LOGS) {
                 //? if >=1.20.6 {
                 HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, anchor: {})", state, level, pos, player, hitResult, this);
                 //?} else {
@@ -172,7 +172,7 @@ public final class RespawnAnchorBlockMixin {
         }
 
         // Validate.
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             //? if >=1.20.6 {
             assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Clicking on an anchor NOT from the main thread. (thread: " + Thread.currentThread() + ", state: " + state + ", level: " + level + ", pos: " + pos + ", player: " + player + ", hitResult: " + hitResult + ", anchor: " + this + ')';
             //?} else {
@@ -187,7 +187,7 @@ public final class RespawnAnchorBlockMixin {
                 isRespawnFuel(player.getItemInHand(InteractionHand.OFF_HAND))) ||
                 (isRespawnFuel(itemInHand) && canBeCharged(state))) {
             // Log. (**DEBUG**)
-            if (HVariables.DEBUG_LOGS) {
+            if (Variables.DEBUG_LOGS) {
                 HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Skipped anchor right click removing. (state: {}, level: {}, pos: {}, player: {}, hand: {}, hitResult: {}, itemInHand: {}, anchor: {})", state, level, pos, player, hand, hitResult, itemInHand, this);
             }
 
@@ -203,7 +203,7 @@ public final class RespawnAnchorBlockMixin {
                 HCsCR.CLIPPING_BLOCKS.put(pos, state);
 
                 // Log. (**DEBUG**)
-                if (HVariables.DEBUG_LOGS) {
+                if (Variables.DEBUG_LOGS) {
                     //? if >=1.20.6 {
                     HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Clipping anchor via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, anchor: {})", state, level, pos, player, hitResult, this);
                     //?} else {
@@ -218,7 +218,7 @@ public final class RespawnAnchorBlockMixin {
                 level.removeBlock(pos, false); // Implicit NPE for 'pos'
 
                 // Log. (**DEBUG**)
-                if (HVariables.DEBUG_LOGS) {
+                if (Variables.DEBUG_LOGS) {
                     //? if >=1.20.6 {
                     HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Removed anchor via right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, anchor: {})", state, level, pos, player, hitResult, this);
                     //?} else {
@@ -230,7 +230,7 @@ public final class RespawnAnchorBlockMixin {
                 break;
             default:
                 // Log. (**DEBUG**)
-                if (HVariables.DEBUG_LOGS) {
+                if (Variables.DEBUG_LOGS) {
                     //? if >=1.20.6 {
                     HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Ignored anchor right click. (state: {}, level: {}, pos: {}, player: {}, hitResult: {}, anchor: {})", state, level, pos, player, hitResult, this);
                     //?} else {
@@ -244,13 +244,13 @@ public final class RespawnAnchorBlockMixin {
     /*@Contract(pure = true)
     @Shadow
     private static boolean isRespawnFuel(final ItemStack itemInHand) {
-        throw (HVariables.DEBUG_ASSERTS ? new AssertionError("HCsCR: Unreachable code.") : null);
+        throw (Variables.DEBUG_ASSERTS ? new AssertionError("HCsCR: Unreachable code.") : null);
     }
 
     @Contract(pure = true)
     @Shadow
     private static boolean canBeCharged(final BlockState state) {
-        throw (HVariables.DEBUG_ASSERTS ? new AssertionError("HCsCR: Unreachable code.") : null);
+        throw (Variables.DEBUG_ASSERTS ? new AssertionError("HCsCR: Unreachable code.") : null);
     }
     *///?}
 }

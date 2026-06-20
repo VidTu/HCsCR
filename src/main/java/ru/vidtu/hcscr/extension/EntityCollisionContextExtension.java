@@ -21,7 +21,7 @@
  */
 
 //? if <1.17.1 {
-/*package ru.vidtu.hcscr;
+/*package ru.vidtu.hcscr.extension;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
@@ -32,15 +32,15 @@ import org.jspecify.annotations.Nullable;
 import ru.vidtu.hcscr.mixin.block.EntityCollisionContextMixin;
 
 /^*
- * Mixin extender for {@link EntityCollisionContextMixin} that allows getting the entity of
- * {@link EntityCollisionContext}. (<1.17.1)
+ * Mixin extender for {@link EntityCollisionContextMixin} that allows
+ * getting the entity of {@link EntityCollisionContext}. (<1.17.1)
  *
  * @author VidTu
  * @apiNote Internal use only
  ^/
 @ApiStatus.Internal
 @NullMarked
-public interface HEntityCollisionContext {
+public interface EntityCollisionContextExtension {
     /^*
      * Gets the entity.
      *

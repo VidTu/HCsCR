@@ -2,14 +2,14 @@
   "26.2": {
     "fabric": {
       "api": "0.152.2+26.2",
-      "modmenu": "20.0.0-beta.2"
+      "modmenu": "20.0.0-beta.3"
     },
     "forge": {
       "loader": "26.2-65.0.0",
       "constraints": "[65,66)"
     },
     "neoforge": {
-      "loader": "26.2.0.3-beta",
+      "loader": "26.2.0.6-beta",
       "constraints": "[26.2.0,26.2.1)"
     }
   },

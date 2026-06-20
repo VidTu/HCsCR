@@ -36,11 +36,11 @@ import org.jspecify.annotations.NullMarked;
  * @author VidTu
  * @apiNote Internal use only
  * @see <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-15.html#jls-15.28">Compile-time References</a>
- * @see HVariables
+ * @see Variables
  */
 @ApiStatus.Internal
 @NullMarked
-public final class HConstants {
+public final class Constants {
     /**
      * URL for fetching the update info.
      */
@@ -116,7 +116,7 @@ public final class HConstants {
     @ApiStatus.ScheduledForRemoval
     @Deprecated
     @Contract(value = "-> fail", pure = true)
-    private HConstants() {
+    private Constants() {
         throw new AssertionError("HCsCR: Compile-time code.");
     }
 }

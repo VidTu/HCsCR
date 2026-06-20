@@ -35,7 +35,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 import ru.vidtu.hcscr.HCsCR;
-import ru.vidtu.hcscr.compile.HVariables;
+import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.config.Config;
 
 //? if >=26.1.2 {
@@ -97,10 +97,10 @@ public final class HFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         // Log.
-        if (HVariables.DEBUG_LOGS) {
-            LOGGER.info(HCsCR.MARKER, "HCsCR: Loading... (platform: fabric, target: " + HVariables.MINECRAFT + ", version: " + HVariables.VERSION + ')');
+        if (Variables.DEBUG_LOGS) {
+            LOGGER.info(HCsCR.MARKER, "HCsCR: Loading... (platform: fabric, target: " + Variables.MINECRAFT + ", version: " + Variables.VERSION + ')');
         } else {
-            LOGGER.info("HCsCR: Loading... (platform: fabric, target: " + HVariables.MINECRAFT + ", version: " + HVariables.VERSION + ')');
+            LOGGER.info("HCsCR: Loading... (platform: fabric, target: " + Variables.MINECRAFT + ", version: " + Variables.VERSION + ')');
         }
 
         // Load the config.
@@ -127,7 +127,7 @@ public final class HFabric implements ClientModInitializer {
             throw new UnsupportedOperationException("HCsCR: Client-side mod should not send/encode this packet. (output: " + output + ", value: " + value + ')');
         }, (final FriendlyByteBuf input) -> {
             // Validate.
-            if (HVariables.DEBUG_ASSERTS) {
+            if (Variables.DEBUG_ASSERTS) {
                 assert (input != null) : "HCsCR: Parameter 'input' is null.";
             }
 
@@ -145,7 +145,7 @@ public final class HFabric implements ClientModInitializer {
         ClientConfigurationNetworking.registerGlobalReceiver(type, (final CustomPacketPayload payload, final ClientConfigurationNetworking.Context context) -> {
             // Validate.
             final PacketSender sender;
-            if (HVariables.DEBUG_ASSERTS) {
+            if (Variables.DEBUG_ASSERTS) {
                 assert (payload != null) : "HCsCR: Parameter 'payload' is null. (context: " + context + ')';
                 assert (context != null) : "HCsCR: Parameter 'context' is null. (payload: " + payload + ')';
                 sender = context.responseSender(); // Implicit NPE for 'context'
@@ -160,7 +160,7 @@ public final class HFabric implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(type, (final CustomPacketPayload payload, final ClientPlayNetworking.Context context) -> {
             // Validate.
             final PacketSender sender;
-            if (HVariables.DEBUG_ASSERTS) {
+            if (Variables.DEBUG_ASSERTS) {
                 assert (payload != null) : "HCsCR: Parameter 'payload' is null. (context: " + context + ')';
                 assert (context != null) : "HCsCR: Parameter 'context' is null. (payload: " + payload + ')';
                 sender = context.responseSender(); // Implicit NPE for 'context'
@@ -175,7 +175,7 @@ public final class HFabric implements ClientModInitializer {
         //?} elif >=1.20.2 {
         /*ClientConfigurationNetworking.registerGlobalReceiver(HStonecutter.CHANNEL_IDENTIFIER, (final Minecraft client, final ClientConfigurationPacketListenerImpl handler, final FriendlyByteBuf buf, final PacketSender responseSender) -> {
             // Validate.
-            if (HVariables.DEBUG_ASSERTS) {
+            if (Variables.DEBUG_ASSERTS) {
                 assert (client != null) : "HCsCR: Parameter 'client' is null. (handler: " + handler + ", buf: " + buf + ", responseSender: " + responseSender + ')';
                 assert (handler != null) : "HCsCR: Parameter 'handler' is null. (client: " + client + ", buf: " + buf + ", responseSender: " + responseSender + ')';
                 assert (buf != null) : "HCsCR: Parameter 'buf' is null. (client: " + client + ", handler: " + handler + ", responseSender: " + responseSender + ')';
@@ -187,7 +187,7 @@ public final class HFabric implements ClientModInitializer {
         });
         ClientPlayNetworking.registerGlobalReceiver(HStonecutter.CHANNEL_IDENTIFIER, (final Minecraft client, final ClientPacketListener handler, final FriendlyByteBuf buf, final PacketSender responseSender) -> {
             // Validate.
-            if (HVariables.DEBUG_ASSERTS) {
+            if (Variables.DEBUG_ASSERTS) {
                 assert (client != null) : "HCsCR: Parameter 'client' is null. (handler: " + handler + ", buf: " + buf + ", responseSender: " + responseSender + ')';
                 assert (handler != null) : "HCsCR: Parameter 'handler' is null. (client: " + client + ", buf: " + buf + ", responseSender: " + responseSender + ')';
                 assert (buf != null) : "HCsCR: Parameter 'buf' is null. (client: " + client + ", handler: " + handler + ", responseSender: " + responseSender + ')';
@@ -200,7 +200,7 @@ public final class HFabric implements ClientModInitializer {
         *///?} else {
         /*ClientPlayNetworking.registerGlobalReceiver(HStonecutter.CHANNEL_IDENTIFIER, (final Minecraft client, final ClientPacketListener handler, final FriendlyByteBuf buf, final PacketSender responseSender) -> {
             // Validate.
-            if (HVariables.DEBUG_ASSERTS) {
+            if (Variables.DEBUG_ASSERTS) {
                 assert (client != null) : "HCsCR: Parameter 'client' is null. (handler: " + handler + ", buf: " + buf + ", responseSender: " + responseSender + ')';
                 assert (handler != null) : "HCsCR: Parameter 'handler' is null. (client: " + client + ", buf: " + buf + ", responseSender: " + responseSender + ')';
                 assert (buf != null) : "HCsCR: Parameter 'buf' is null. (client: " + client + ", handler: " + handler + ", responseSender: " + responseSender + ')';
@@ -228,7 +228,7 @@ public final class HFabric implements ClientModInitializer {
         // Config screen handling (ModMenu entrypoint) is in the HModMenu class.
 
         // Done.
-        if (HVariables.DEBUG_LOGS) {
+        if (Variables.DEBUG_LOGS) {
             LOGGER.info(HCsCR.MARKER, "HCsCR: Ready to remove 'em crystals.");
         } else {
             LOGGER.info("HCsCR: Ready to remove 'em crystals.");

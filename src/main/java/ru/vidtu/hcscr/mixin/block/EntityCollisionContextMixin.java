@@ -34,8 +34,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import ru.vidtu.hcscr.HEntityCollisionContext;
-import ru.vidtu.hcscr.compile.HVariables;
+import ru.vidtu.hcscr.compile.Variables;
+import ru.vidtu.hcscr.extension.EntityCollisionContextExtension;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /^*
@@ -43,13 +43,13 @@ import ru.vidtu.hcscr.platform.HStonecutter;
  *
  * @author VidTu
  * @apiNote Internal use only
- * @see HEntityCollisionContext
+ * @see EntityCollisionContextExtension
  * @see BlockStateBaseMixin
  ^/
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(EntityCollisionContext.class)
 @NullMarked
-public final class EntityCollisionContextMixin implements HEntityCollisionContext {
+public final class EntityCollisionContextMixin implements EntityCollisionContextExtension {
     /^*
      * Entity involving in the context, {@code null} if none.
      ^/
@@ -67,7 +67,7 @@ public final class EntityCollisionContextMixin implements HEntityCollisionContex
     @Deprecated
     @Contract(value = "-> fail", pure = true)
     private EntityCollisionContextMixin() {
-        if (HVariables.DEBUG_ASSERTS) {
+        if (Variables.DEBUG_ASSERTS) {
             throw new AssertionError("HCsCR: No instances.");
         }
     }
