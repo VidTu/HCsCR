@@ -121,7 +121,7 @@
       "constraints": "[52.0.9,53)"
     },
     "neoforge": {
-      "loader": "21.1.233",
+      "loader": "21.1.234",
       "constraints": "[21.1,21.2)"
     }
   },
