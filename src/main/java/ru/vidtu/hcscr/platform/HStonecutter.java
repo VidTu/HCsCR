@@ -135,8 +135,10 @@ import net.fabricmc.loader.api.FabricLoader;
  *
  * @author VidTu
  * @apiNote Internal use only
+ * @deprecated Centralized preprocessing is bad design
  */
 @ApiStatus.Internal
+@Deprecated
 @NullMarked
 public final class HStonecutter {
     /**
