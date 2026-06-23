@@ -1,8 +1,16 @@
 {
+  "26.3": {
+    "fabric": {
+      "api": "0.153.1+26.3",
+      "modmenu": "20.0.0-beta.4",
+      "minecraft": "26.3-snapshot-1",
+      "constraints": "26.3-alpha.1"
+    }
+  },
   "26.2": {
     "fabric": {
-      "api": "0.152.2+26.2",
-      "modmenu": "20.0.0-beta.3"
+      "api": "0.153.0+26.2",
+      "modmenu": "20.0.0-beta.4"
     },
     "forge": {
       "loader": "26.2-65.0.0",
@@ -15,7 +23,7 @@
   },
   "26.1.2": {
     "fabric": {
-      "api": "0.152.1+26.1.2",
+      "api": "0.153.0+26.1.2",
       "modmenu": "18.0.0-beta.1"
     },
     "forge": {
