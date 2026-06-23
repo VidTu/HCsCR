@@ -17,7 +17,7 @@
       "constraints": "[65,66)"
     },
     "neoforge": {
-      "loader": "26.2.0.6-beta",
+      "loader": "26.2.0.7-beta",
       "constraints": "[26.2.0,26.2.1)"
     }
   },
