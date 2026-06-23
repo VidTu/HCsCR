@@ -92,6 +92,7 @@ sc {
 
     // Stonecutter swaps.
     swaps["set_screen"] = if (mcp >= "26.2") "$1.gui.setScreen($2);" else "$1.setScreen($2);"
+    swaps["remove_entity"] = if (mcp >= "1.17.1") "$1.discard();" else "$1.remove();"
 
     // Define MCP replacements.
     replacements.string(mcp <= "1.16.5") {

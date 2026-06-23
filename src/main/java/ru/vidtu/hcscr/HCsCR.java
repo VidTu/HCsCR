@@ -195,7 +195,7 @@ public final class HCsCR {
         handleConfigBind(client, profiler); // Implicit NPE for 'client'
         handleToggleBind(client, profiler); // Implicit NPE for 'client'
 
-        // Entities/anchors.
+        // Entities/blocks.
         cleanHiddenEntities(client, profiler); // Implicit NPE for 'client'
         cleanClippingBlocks(client, profiler); // Implicit NPE for 'client'
 
@@ -270,7 +270,8 @@ public final class HCsCR {
 
             // Hide or remove the entity.
             if (noResync) {
-                HStonecutter.removeEntity(entity);
+                //$ remove_entity entity
+                entity.discard();
             } else {
                 HIDDEN_ENTITIES.put(entity, resync);
             }
@@ -331,14 +332,25 @@ public final class HCsCR {
         }
 
         // Don't process player hits that deal zero damage, e.g. with the weakness effect.
-        final LocalPlayer local = (LocalPlayer) player;
-        final AttributeMap map = local.getAttributes();
-        for (final MobEffectInstance instance : local.getActiveEffects()) {
-            HStonecutter.addEffectAttributes(instance, local, map);
+        final AttributeMap map = player.getAttributes();
+        for (final MobEffectInstance instance : player.getActiveEffects()) {
+            //? if >=1.20.6 {
+            instance.getEffect().value().addAttributeModifiers(map, instance.getAmplifier()); // Implicit NPE for 'effect', 'map'
+            //?} elif >=1.20.2 {
+            /*instance.getEffect().addAttributeModifiers(map, instance.getAmplifier()); // Implicit NPE for 'effect', 'map'
+            *///?} else {
+            /*instance.getEffect().addAttributeModifiers(player, map, instance.getAmplifier()); // Implicit NPE for 'player', 'effect', 'map'
+            *///?}
         }
-        final double attributeAmount = local.getAttributeValue(Attributes.ATTACK_DAMAGE);
-        for (final MobEffectInstance instance : local.getActiveEffects()) {
-            HStonecutter.removeEffectAttributes(instance, local, map);
+        final double attributeAmount = player.getAttributeValue(Attributes.ATTACK_DAMAGE);
+        for (final MobEffectInstance instance : player.getActiveEffects()) {
+            //? if >=1.20.6 {
+            instance.getEffect().value().removeAttributeModifiers(map); // Implicit NPE for 'effect', 'map'
+            //?} elif >=1.20.2 {
+            /*instance.getEffect().removeAttributeModifiers(map); // Implicit NPE for 'effect', 'map'
+            *///?} else {
+            /*instance.getEffect().removeAttributeModifiers(player, map, instance.getAmplifier()); // Implicit NPE for 'player', 'effect', 'map'
+            *///?}
         }
         if (attributeAmount <= 0.0d) return false;
 
@@ -351,7 +363,8 @@ public final class HCsCR {
                 // Remove the entity instantly, if there's no resync.
                 final int resync = Config.crystalsResync();
                 if (resync == 0) {
-                    HStonecutter.removeEntity(entity);
+                    //$ remove_entity entity
+                    entity.discard();
                     return true;
                 }
 
@@ -377,7 +390,7 @@ public final class HCsCR {
             // - The damaged entity is already scheduled for removal.
             // - This entity type shouldn't be processed at all (e.g. any living entity) or by the current config (e.g. slime).
             // - The other entity is not fully contained inside the enveloping entity.
-            if (HStonecutter.isEntityRemoved(other) || !Config.shouldProcess(local, other)) return false;
+            if (HStonecutter.isEntityRemoved(other) || !Config.shouldProcess(player, other)) return false;
             final AABB otherBox = other.getBoundingBox();
             return ((otherBox.minX >= entityBox.minX) && (otherBox.maxX <= entityBox.maxX) &&
                     (otherBox.minY >= entityBox.minY) && (otherBox.maxY <= entityBox.maxY) &&
@@ -390,9 +403,11 @@ public final class HCsCR {
             // Remove the entities instantly, if there's no resync.
             final int resync = Config.crystalsResync();
             if (resync == 0) {
-                HStonecutter.removeEntity(entity);
+                //$ remove_entity entity
+                entity.discard();
                 for (final Entity other : entities) {
-                    HStonecutter.removeEntity(other);
+                    //$ remove_entity other
+                    other.discard();
                 }
                 return true;
             }

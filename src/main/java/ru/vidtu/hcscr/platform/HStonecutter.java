@@ -32,16 +32,13 @@ import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import org.jetbrains.annotations.ApiStatus;
@@ -70,52 +67,44 @@ import java.time.Duration;
 //?} elif >=1.21.8 {
 /*import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.Profiler;
 import java.time.Duration;
 *///?} elif >=1.21.4 {
 /*import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.Profiler;
 import java.time.Duration;
 *///?} elif >=1.21.3 {
 /*import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.Profiler;
 import java.time.Duration;
 *///?} elif >=1.20.6 {
 /*import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 import java.time.Duration;
 *///?} elif >=1.19.4 {
 /*import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 *///?} elif >=1.19.2 {
 /*import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.mutable.MutableObject;
 *///?} elif >=1.17.1 {
 /*import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.mutable.MutableObject;
 *///?} else {
 /*import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.mutable.MutableObject;
@@ -396,27 +385,6 @@ public final class HStonecutter {
         *///?}
     }
 
-    /**
-     * Marks the entity as to be removed from the world.
-     *
-     * @param entity Target entity to remove
-     * @see #isEntityRemoved(Entity)
-     */
-    public static void removeEntity(final Entity entity) {
-        // Validate.
-        if (Variables.DEBUG_ASSERTS) {
-            assert (entity != null) : "HCsCR: Parameter 'entity' is null.";
-            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Removing an entity NOT from the main thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ')';
-        }
-
-        // Delegate.
-        //? if >=1.17.1 {
-        entity.discard(); // Implicit NPE for 'entity'
-        //?} else {
-        /*entity.remove(); // Implicit NPE for 'entity'
-        *///?}
-    }
-
     //? if forge || hacky_neoforge {
     /*/^*
      * Hurts (damages) the entity the specified amount.
@@ -445,88 +413,6 @@ public final class HStonecutter {
         ^///?}
     }
     *///?}
-
-    /**
-     * Adds the effect attributes onto the player.
-     *
-     * @param effect Effect to add the attributes from
-     * @param player Target player
-     * @param map    Player's attribute map
-     */
-    public static void addEffectAttributes(final MobEffectInstance effect, final LocalPlayer player,
-                                           final AttributeMap map) {
-        // Validate.
-        if (Variables.DEBUG_ASSERTS) {
-            assert (effect != null) : "HCsCR: Parameter 'effect' is null. (player: " + player + ", map: " + map + ')';
-            assert (player != null) : "HCsCR: Parameter 'player' is null. (effect: " + effect + ", map: " + map + ')';
-            assert (map != null) : "HCsCR: Parameter 'map' is null. (effect: " + effect + ", player: " + player + ')';
-            //noinspection ObjectEquality // <- Should be the same reference.
-            assert (player.getAttributes() == map) : "HCsCR: Provided map is not from the provided player while adding attributes. (effect: " + effect + ", player: " + player + ", map: " + map + ", playerMap: " + player.getAttributes() + ')';
-            assert (player.getActiveEffects().contains(effect)) : "HCsCR: Provided effect is not active for the player while adding attributes. (effect: " + effect + ", player: " + player + ", map: " + map + ", playerEffects: " + player.getActiveEffects() + ')';
-            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Adding effect attributes NOT from the main thread. (thread: " + Thread.currentThread() + ", effect: " + effect + ", player: " + player + ", map: " + map + ')';
-        }
-
-        // Delegate.
-        //? if >=1.20.6 {
-        effect.getEffect().value().addAttributeModifiers(map, effect.getAmplifier()); // Implicit NPE for 'effect', 'map'
-        //?} elif >=1.20.2 {
-        /*effect.getEffect().addAttributeModifiers(map, effect.getAmplifier()); // Implicit NPE for 'effect', 'map'
-        *///?} else {
-        /*effect.getEffect().addAttributeModifiers(player, map, effect.getAmplifier()); // Implicit NPE for 'player', 'effect', 'map'
-        *///?}
-    }
-
-    /**
-     * Removes the effect attributes onto the player.
-     *
-     * @param effect Effect to remove the attributes from
-     * @param player Target player
-     * @param map    Player's attribute map
-     */
-    public static void removeEffectAttributes(final MobEffectInstance effect, final LocalPlayer player,
-                                              final AttributeMap map) {
-        // Validate.
-        if (Variables.DEBUG_ASSERTS) {
-            assert (effect != null) : "HCsCR: Parameter 'effect' is null. (player: " + player + ", map: " + map + ')';
-            assert (player != null) : "HCsCR: Parameter 'player' is null. (effect: " + effect + ", map: " + map + ')';
-            assert (map != null) : "HCsCR: Parameter 'map' is null. (effect: " + effect + ", player: " + player + ')';
-            //noinspection ObjectEquality // <- Should be the same reference.
-            assert (player.getAttributes() == map) : "HCsCR: Provided map is not from the provided player while removing attributes. (effect: " + effect + ", player: " + player + ", map: " + map + ", playerMap: " + player.getAttributes() + ')';
-            assert (player.getActiveEffects().contains(effect)) : "HCsCR: Provided effect is not active for the player while removing attributes. (effect: " + effect + ", player: " + player + ", map: " + map + ", playerEffects: " + player.getActiveEffects() + ')';
-            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Removing effect attributes NOT from the main thread. (thread: " + Thread.currentThread() + ", effect: " + effect + ", player: " + player + ", map: " + map + ')';
-        }
-
-        // Delegate.
-        //? if >=1.20.6 {
-        effect.getEffect().value().removeAttributeModifiers(map); // Implicit NPE for 'effect', 'map'
-        //?} elif >=1.20.2 {
-        /*effect.getEffect().removeAttributeModifiers(map); // Implicit NPE for 'effect', 'map'
-        *///?} else {
-        /*effect.getEffect().removeAttributeModifiers(player, map, effect.getAmplifier()); // Implicit NPE for 'player', 'effect', 'map'
-        *///?}
-    }
-
-    /**
-     * Checks if the Shift key is down.
-     *
-     * @param client Client game instance
-     * @return {@code true} if the Shift key is down, {@code false} if not
-     */
-    @Contract(pure = true)
-    public static boolean isShiftKeyDown(final Minecraft client) {
-        // Validate.
-        if (Variables.DEBUG_ASSERTS) {
-            assert (client != null) : "HCsCR: Parameter 'client' is null.";
-            assert (client.isSameThread()) : "HCsCR: Checking the shift key state NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
-        }
-
-        // Delegate.
-        //? if >=1.21.10 {
-        return client.hasShiftDown(); // Implicit NPE for 'client'
-        //?} else {
-        /*return Screen.hasShiftDown();
-        *///?}
-    }
 
     /**
      * Creates a new GUI button instance.

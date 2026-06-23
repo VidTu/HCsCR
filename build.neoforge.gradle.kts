@@ -78,6 +78,7 @@ sc {
 
     // Stonecutter swaps.
     swaps["set_screen"] = if (mcp >= "26.2") "$1.gui.setScreen($2);" else "$1.setScreen($2);"
+    swaps["remove_entity"] = "$1.discard();"
 }
 
 // Set up runs.

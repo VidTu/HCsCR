@@ -112,12 +112,13 @@ public final class ConfigScreen extends Screen {
                 HStonecutter.translate("hcscr.enable.tip"), Config.enable(),
                 Config::enable, this::tooltip));
 
+        //~ if >=1.21.10 'Screen.hasShiftDown()' -> 'minecraft.hasShiftDown()' {
         // Crystals.
         final int buttonX = (centerX - 100);
         final CrystalMode crystals = Config.crystals();
         this.addVersionedWidget(HStonecutter.createButton(font, buttonX, calculateWidgetY(index++), 200, 20, crystals.label(), crystals.tip(), (final Button button, final Consumer<Component> tipSetter) -> {
             // Update the crystals.
-            final CrystalMode newCrystals = Config.cycleCrystals(/*back=*/HStonecutter.isShiftKeyDown(minecraft));
+            final CrystalMode newCrystals = Config.cycleCrystals(/*back=*/minecraft.hasShiftDown());
 
             // Update the label and tooltip.
             button.setMessage(newCrystals.label());
@@ -140,16 +141,17 @@ public final class ConfigScreen extends Screen {
                 HStonecutter.translate("hcscr.crystalsResync.tip"), Config.crystalsResync(), 0, 50,
                 Config::crystalsResync, this::tooltip));
 
-        // Anchors.
-        final BlockMode anchors = Config.blocks();
-        this.addVersionedWidget(HStonecutter.createButton(font, buttonX, calculateWidgetY(index++), 200, 20, anchors.label(), anchors.tip(), (final Button button, final Consumer<Component> tipSetter) -> {
-            // Update the anchors.
-            final BlockMode newAnchors = Config.cycleBlocks(/*back=*/HStonecutter.isShiftKeyDown(minecraft));
+        // Blocks.
+        final BlockMode blocks = Config.blocks();
+        this.addVersionedWidget(HStonecutter.createButton(font, buttonX, calculateWidgetY(index++), 200, 20, blocks.label(), blocks.tip(), (final Button button, final Consumer<Component> tipSetter) -> {
+            // Update the blocks.
+            final BlockMode newBlocks = Config.cycleBlocks(/*back=*/minecraft.hasShiftDown());
 
             // Update the label and tooltip.
-            button.setMessage(newAnchors.label());
-            tipSetter.accept(newAnchors.tip());
+            button.setMessage(newBlocks.label());
+            tipSetter.accept(newBlocks.tip());
         }, this::tooltip));
+        //~}
 
         // Add done button.
         this.addVersionedWidget(HStonecutter.createButton(font, buttonX, this.height - 28, 200, 20,

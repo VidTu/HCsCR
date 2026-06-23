@@ -82,6 +82,7 @@ sc {
 
     // Stonecutter swaps.
     swaps["set_screen"] = "$1.setScreen($2);"
+    swaps["remove_entity"] = if (mcp >= "1.17.1") "$1.discard();" else "$1.remove();"
 }
 
 loom {

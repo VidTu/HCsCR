@@ -73,6 +73,7 @@ sc {
 
     // Stonecutter swaps.
     swaps["set_screen"] = "$1.setScreen($2);"
+    swaps["remove_entity"] = "$1.discard();"
 }
 
 legacyForge {
