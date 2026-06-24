@@ -22,10 +22,8 @@
 
 package ru.vidtu.hcscr.platform;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractSliderButton;
@@ -139,27 +137,6 @@ public final class HStonecutter {
     /*public static final Path CONFIG_DIRECTORY = FMLPaths.CONFIGDIR.get();
     *///?}
 
-    //? if >=1.21.10 {
-    /**
-     * Key category for {@link #keyBind(String)}.
-     *
-     * @see #keyBind(String)
-     */
-        //? if neoforge {
-            /*//? if >=1.21.11 {
-    /^/^¹package-private¹^/ static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(Identifier.fromNamespaceAndPath("hcscr", "root"));
-            ^///?} else {
-    /^package-private^/ static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(ResourceLocation.fromNamespaceAndPath("hcscr", "root"));
-            //?}
-        *///?} else {
-            //? if >=1.21.11 {
-    private static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("hcscr", "root"));
-            //?} else {
-    /*private static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(ResourceLocation.fromNamespaceAndPath("hcscr", "root"));
-            *///?}
-        //?}
-    //?}
-
     /**
      * A channel identifier for servers to know that this mod is installed.
      */
@@ -213,30 +190,6 @@ public final class HStonecutter {
         return new Object2IntArrayMap<>(0);
         //?} else {
         /*return new Object2IntOpenHashMap<>(0);
-        *///?}
-    }
-
-    /**
-     * Creates a new key bind. The key bind won't have a default key.
-     *
-     * @param id Key bind ID
-     * @return A newly created unbound key bind
-     * @see HCsCR#CONFIG_BIND
-     * @see HCsCR#TOGGLE_BIND
-     */
-    @Contract(value = "_ -> new", pure = true)
-    public static KeyMapping keyBind(final String id) {
-        // Validate.
-        if (Variables.DEBUG_ASSERTS) {
-            assert (id != null) : "HCsCR: Parameter 'id' is null.";
-            assert (!id.isEmpty()) : "HCsCR: Creating a key binding with an empty ID.";
-        }
-
-        // Delegate.
-        //? if >=1.21.10 {
-        return new KeyMapping(id, InputConstants.UNKNOWN.getValue(), KEY_CATEGORY);
-        //?} else {
-        /*return new KeyMapping(id, InputConstants.UNKNOWN.getValue(), "key.category.hcscr.root");
         *///?}
     }
 

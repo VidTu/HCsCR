@@ -28,16 +28,10 @@ import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -57,8 +51,8 @@ import org.jetbrains.annotations.UnknownNullability;
 import org.jspecify.annotations.NullMarked;
 import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.config.Config;
-import ru.vidtu.hcscr.config.ConfigScreen;
 import ru.vidtu.hcscr.config.CrystalMode;
+import ru.vidtu.hcscr.handler.KeyHandler;
 import ru.vidtu.hcscr.mixin.block.BlockBehaviour_BlockStateBaseMixin;
 import ru.vidtu.hcscr.mixin.crystal.EntityMixin;
 import ru.vidtu.hcscr.platform.HStonecutter;
@@ -81,22 +75,6 @@ public final class HCsCR {
      */
     @UnknownNullability
     public static final Marker MARKER = (Variables.DEBUG_LOGS ? MarkerManager.getMarker("MOD_HCSCR") : null);
-
-    /**
-     * Open config screen keybind. Not bound by default.
-     *
-     * @see #handleConfigBind(Minecraft, ProfilerFiller)
-     * @see HStonecutter#keyBind(String)
-     */
-    public static final KeyMapping CONFIG_BIND = HStonecutter.keyBind("hcscr.key.config");
-
-    /**
-     * Toggle the mod keybind. Not bound by default.
-     *
-     * @see #handleToggleBind(Minecraft, ProfilerFiller)
-     * @see HStonecutter#keyBind(String)
-     */
-    public static final KeyMapping TOGGLE_BIND = HStonecutter.keyBind("hcscr.key.toggle");
 
     /**
      * Hit entities mapped to their time of removal/hiding time in units of {@link System#nanoTime()}.
@@ -192,8 +170,7 @@ public final class HCsCR {
         }
 
         // Keybinds.
-        handleConfigBind(client, profiler); // Implicit NPE for 'client'
-        handleToggleBind(client, profiler); // Implicit NPE for 'client'
+        KeyHandler.handleKeys(client, profiler); // Implicit NPE for 'client'
 
         // Entities/blocks.
         cleanHiddenEntities(client, profiler); // Implicit NPE for 'client'
@@ -427,125 +404,6 @@ public final class HCsCR {
             SCHEDULED_ENTITIES.putIfAbsent(other, removeAt);
         }
         return true;
-    }
-
-    /**
-     * Handles the config keybind.
-     *
-     * @param client   Client game instance
-     * @param profiler Client profiler
-     * @see #handleClientTickEnd(Minecraft)
-     * @see #handleToggleBind(Minecraft, ProfilerFiller)
-     */
-    private static void handleConfigBind(final Minecraft client, final @UnknownNullability ProfilerFiller profiler) {
-        // Validate.
-        if (Variables.DEBUG_ASSERTS) {
-            assert (client != null) : "HCsCR: Parameter 'client' is null. (profiler: " + profiler + ')';
-            if (Variables.DEBUG_PROFILER) {
-                assert (profiler != null) : "HCsCR: Parameter 'profiler' is null. (client: " + client + ')';
-            }
-            assert (client.isSameThread()) : "HCsCR: Handling the config bind NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ", profiler: " + profiler + ')';
-        }
-
-        // Push the profiler.
-        if (Variables.DEBUG_PROFILER) {
-            profiler.push("hcscr:config_bind"); // Implicit NPE for 'profiler'
-        }
-
-        // Consume the bind.
-        while (CONFIG_BIND.consumeClick()) {
-            // Log. (**TRACE**)
-            if (Variables.DEBUG_LOGS) {
-                LOGGER.trace(MARKER, "HCsCR: Config keybind was consumed, opening the config screen. (client: {}, keybind: {})", client, CONFIG_BIND);
-            }
-
-            // Check the open screen.
-            //? if >=26.2 {
-            final Screen currentScreen = client.gui.screen(); // Implicit NPE for 'client'
-            //?} else {
-            /*final Screen currentScreen = client.screen; // Implicit NPE for 'client'
-            *///?}
-            if (currentScreen != null) {
-                // Log. (**DEBUG**)
-                if (Variables.DEBUG_LOGS) {
-                    LOGGER.debug(MARKER, "HCsCR: Can't open the config screen via the keybind, screen is open. (client: {}, currentScreen: {}, keybind: {})", client, currentScreen, CONFIG_BIND);
-                }
-
-                // Continue.
-                continue;
-            }
-
-            // Open the config screen.
-            final ConfigScreen screen = new ConfigScreen(null);
-            //$ set_screen client screen
-            client.gui.setScreen(screen);
-
-            // Log. (**DEBUG**)
-            if (Variables.DEBUG_LOGS) {
-                LOGGER.debug(MARKER, "HCsCR: Opened the config screen via the keybind. (client: {}, screen: {}, keybind: {})", client, screen, CONFIG_BIND);
-            }
-        }
-
-        // Pop the profiler.
-        if (Variables.DEBUG_PROFILER) {
-            profiler.pop();
-        }
-    }
-
-    /**
-     * Handles the toggle keybind.
-     *
-     * @param client   Client game instance
-     * @param profiler Client profiler
-     * @see #handleClientTickEnd(Minecraft)
-     * @see #handleConfigBind(Minecraft, ProfilerFiller)
-     */
-    private static void handleToggleBind(final Minecraft client, final @UnknownNullability ProfilerFiller profiler) {
-        // Validate.
-        if (Variables.DEBUG_ASSERTS) {
-            assert (client != null) : "HCsCR: Parameter 'client' is null. (profiler: " + profiler + ')';
-            if (Variables.DEBUG_PROFILER) {
-                assert (profiler != null) : "HCsCR: Parameter 'profiler' is null. (client: " + client + ')';
-            }
-            assert (client.isSameThread()) : "HCsCR: Handling the toggle bind NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ", profiler: " + profiler + ')';
-        }
-
-        // Push the profiler.
-        if (Variables.DEBUG_PROFILER) {
-            profiler.push("hcscr:toggle_bind"); // Implicit NPE for 'profiler'
-        }
-
-        // Consume the bind.
-        while (TOGGLE_BIND.consumeClick()) {
-            // Log. (**TRACE**)
-            if (Variables.DEBUG_LOGS) {
-                LOGGER.trace(MARKER, "HCsCR: Toggle keybind was consumed, toggling the mod. (client: {}, keybind: {})", client, TOGGLE_BIND);
-            }
-
-            // Toggle the mod.
-            final boolean newState = Config.toggle();
-
-            // Show the bar, play the sound.
-            final Component message = HStonecutter.translate("hcscr." + newState)
-                    .withStyle(newState ? ChatFormatting.GREEN : ChatFormatting.RED)
-                    .withStyle(ChatFormatting.BOLD);
-            //? if >=26.2 {
-            client.gui.hud.setOverlayMessage(message, /*animate=*/false);
-            //?} else {
-            /*client.gui.setOverlayMessage(message, /^animate=^/false);
-            *///?}
-            client.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING, (newState ? 2.0f : 0.0f)));
-
-            // Log. (**DEBUG**)
-            if (Variables.DEBUG_LOGS) {
-                LOGGER.debug(MARKER, "HCsCR: Mod has been toggled via the keybind. (client: {}, newState: {}, keybind: {})", client, newState, TOGGLE_BIND);
-            }
-        }
-
-        // Pop the profiler.
-        if (Variables.DEBUG_PROFILER) {
-            profiler.pop();
-        }
     }
 
     /**

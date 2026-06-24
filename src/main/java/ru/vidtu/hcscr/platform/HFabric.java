@@ -37,6 +37,7 @@ import org.jspecify.annotations.NullMarked;
 import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.config.Config;
+import ru.vidtu.hcscr.handler.KeyHandler;
 
 //? if >=26.1.2 {
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
@@ -214,11 +215,11 @@ public final class HFabric implements ClientModInitializer {
 
         // Register the binds.
         //? if >=26.1.2 {
-        KeyMappingHelper.registerKeyMapping(HCsCR.CONFIG_BIND);
-        KeyMappingHelper.registerKeyMapping(HCsCR.TOGGLE_BIND);
+        KeyMappingHelper.registerKeyMapping(KeyHandler.CONFIG);
+        KeyMappingHelper.registerKeyMapping(KeyHandler.TOGGLE);
         //?} else {
-        /*KeyBindingHelper.registerKeyBinding(HCsCR.CONFIG_BIND);
-        KeyBindingHelper.registerKeyBinding(HCsCR.TOGGLE_BIND);
+        /*KeyBindingHelper.registerKeyBinding(KeyHandler.CONFIG);
+        KeyBindingHelper.registerKeyBinding(KeyHandler.TOGGLE);
         *///?}
 
         // Register the client tick end handler.

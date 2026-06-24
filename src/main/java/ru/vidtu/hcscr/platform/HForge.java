@@ -38,6 +38,7 @@ import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.config.Config;
 import ru.vidtu.hcscr.config.ConfigScreen;
+import ru.vidtu.hcscr.handler.KeyHandler;
 
 //? if hacky_neoforge {
 /^import net.minecraft.client.gui.screens.Screen;
@@ -291,8 +292,8 @@ public final class HForge {
             }
 
             // Register.
-            event.register(HCsCR.CONFIG_BIND); // Implicit NPE for 'event'
-            event.register(HCsCR.TOGGLE_BIND);
+            event.register(KeyHandler.CONFIG); // Implicit NPE for 'event'
+            event.register(KeyHandler.TOGGLE);
         });
         //?} else {
         /^bus.addListener((final FMLClientSetupEvent event) -> {
@@ -302,8 +303,8 @@ public final class HForge {
             }
 
             // Register.
-            ClientRegistry.registerKeyBinding(HCsCR.CONFIG_BIND);
-            ClientRegistry.registerKeyBinding(HCsCR.TOGGLE_BIND);
+            ClientRegistry.registerKeyBinding(KeyHandler.CONFIG);
+            ClientRegistry.registerKeyBinding(KeyHandler.TOGGLE);
         });
         ^///?}
 

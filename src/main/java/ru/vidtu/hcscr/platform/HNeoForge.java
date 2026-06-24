@@ -41,6 +41,7 @@ import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.config.Config;
 import ru.vidtu.hcscr.config.ConfigScreen;
+import ru.vidtu.hcscr.handler.KeyHandler;
 
 //? if >=1.20.6 {
 import net.minecraft.network.FriendlyByteBuf;
@@ -263,10 +264,10 @@ public final class HNeoForge {
 
             // Register.
             //? if >=1.21.10 {
-            event.registerCategory(HStonecutter.KEY_CATEGORY);
+            event.registerCategory(KeyHandler.CATEGORY);
             //?}
-            event.register(HCsCR.CONFIG_BIND);
-            event.register(HCsCR.TOGGLE_BIND);
+            event.register(KeyHandler.CONFIG);
+            event.register(KeyHandler.TOGGLE);
         });
 
         // Register the client tick end handler.
