@@ -42,13 +42,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.Variables;
+import ru.vidtu.hcscr.handler.BlockClips;
 
 /**
- * Mixin that nukes blocks from {@link HCsCR#CLIPPING_BLOCKS} on block update.
+ * Mixin that calls {@link BlockClips#remove(BlockPos)} on block update.
  *
  * @author VidTu
  * @apiNote Internal use only
- * @see HCsCR#CLIPPING_BLOCKS
+ * @see BlockClips#remove(BlockPos)
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(ClientPacketListener.class)
@@ -94,20 +95,22 @@ public final class ClientPacketListenerMixin {
             assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Receiving block update packet NOT from the main thread. (thread: " + Thread.currentThread() + ", packet: " + packet + ", handler: " + this + ')';
         }
 
-        // Nuke.
+        // Remove.
         final BlockPos pos = packet.getPos(); // Implicit NPE for 'packet'
-        HCsCR.CLIPPING_BLOCKS.remove(pos);
+        BlockClips.remove(pos);
 
-        // Find the bed, skip if not bed.
+        // Find the bed, do nothing if the block is not bed.
         final Level level = this.level;
         if (level == null) return;
         final BlockState state = level.getBlockState(pos);
         if (!state.is(BlockTags.BEDS)) return;
 
-        // Nuke the bed's other part, skip if not bed.
-        final BlockPos otherPos = pos.relative(BedBlock.getConnectedDirection(state));
-        final BlockState otherState = level.getBlockState(otherPos);
-        if (!otherState.is(BlockTags.BEDS)) return;
-        HCsCR.CLIPPING_BLOCKS.remove(otherPos);
+        // Find the bed's connected part, do nothing if the other part is not bed.
+        final BlockPos connectedPos = pos.relative(BedBlock.getConnectedDirection(state));
+        final BlockState connectedState = level.getBlockState(connectedPos);
+        if (!connectedState.is(BlockTags.BEDS)) return;
+
+        // Remove the bed's connected part.
+        BlockClips.remove(connectedPos);
     }
 }

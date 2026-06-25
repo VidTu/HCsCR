@@ -46,6 +46,7 @@ import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.config.BlockMode;
 import ru.vidtu.hcscr.config.Config;
+import ru.vidtu.hcscr.handler.BlockClips;
 
 //? if >=1.21.11 {
 import net.minecraft.world.level.dimension.DimensionType;
@@ -59,6 +60,7 @@ import net.minecraft.world.level.dimension.DimensionType;
  * @author VidTu
  * @apiNote Internal use only
  * @see BlockMode
+ * @see BlockClips
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(BedBlock.class)
@@ -100,7 +102,7 @@ public final class BedBlockMixin {
      * @see Config#enable()
      * @see Config#blocks()
      * @see BlockMode
-     * @see HCsCR#CLIPPING_BLOCKS
+     * @see BlockClips
      */
     //? if >=1.20.6 {
     @DoNotCall("Called by Mixin")
@@ -180,13 +182,13 @@ public final class BedBlockMixin {
         switch (Config.blocks()) {
             case COLLISION:
                 // Get the bed's other part.
-                final BlockPos otherPosCollision = pos.relative(BedBlock.getConnectedDirection(state)); // Implicit NPE for 'pos', 'state'
-                final BlockState otherStateCollision = level.getBlockState(otherPosCollision);
+                final BlockPos connectedPosCollision = pos.relative(BedBlock.getConnectedDirection(state)); // Implicit NPE for 'pos', 'state'
+                final BlockState connectedStateCollision = level.getBlockState(connectedPosCollision);
 
                 // Clip.
-                HCsCR.CLIPPING_BLOCKS.put(pos, state);
-                if (otherStateCollision.is(BlockTags.BEDS)) {
-                    HCsCR.CLIPPING_BLOCKS.put(otherPosCollision, otherStateCollision);
+                BlockClips.add(pos, state);
+                if (connectedStateCollision.is(BlockTags.BEDS)) {
+                    BlockClips.add(connectedPosCollision, connectedStateCollision);
                 }
 
                 // Log. (**DEBUG**)
@@ -201,14 +203,14 @@ public final class BedBlockMixin {
                 // Break.
                 break;
             case FULL:
-                // Get the bed's other part.
-                final BlockPos otherPosFull = pos.relative(BedBlock.getConnectedDirection(state)); // Implicit NPE for 'pos', 'state'
-                final BlockState otherStateFull = level.getBlockState(otherPosFull);
+                // Get the bed's connected part.
+                final BlockPos connectedPosFull = pos.relative(BedBlock.getConnectedDirection(state)); // Implicit NPE for 'pos', 'state'
+                final BlockState connectedStateFull = level.getBlockState(connectedPosFull);
 
                 // Remove.
                 level.removeBlock(pos, false);
-                if (otherStateFull.is(BlockTags.BEDS)) {
-                    level.removeBlock(otherPosFull, false);
+                if (connectedStateFull.is(BlockTags.BEDS)) {
+                    level.removeBlock(connectedPosFull, false);
                 }
 
                 // Log. (**DEBUG**)

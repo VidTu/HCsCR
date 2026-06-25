@@ -40,6 +40,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.Variables;
+import ru.vidtu.hcscr.handler.BlockClips;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
@@ -91,7 +92,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
      * @apiNote Do not call, called by Mixin
      * @see HCsCR#SCHEDULED_ENTITIES
      * @see HCsCR#HIDDEN_ENTITIES
-     * @see HCsCR#CLIPPING_BLOCKS
+     * @see BlockClips#clear()
      */
     @DoNotCall("Called by Mixin")
     //? if >=1.21.11 {
@@ -124,7 +125,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
         // Clear the maps.
         HCsCR.SCHEDULED_ENTITIES.clear();
         HCsCR.HIDDEN_ENTITIES.clear();
-        HCsCR.CLIPPING_BLOCKS.clear();
+        BlockClips.clear();
 
         // Log. (**DEBUG**)
         if (Variables.DEBUG_LOGS) {

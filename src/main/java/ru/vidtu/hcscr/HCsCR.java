@@ -25,13 +25,8 @@ package ru.vidtu.hcscr;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -39,7 +34,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,14 +46,13 @@ import org.jspecify.annotations.NullMarked;
 import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.config.Config;
 import ru.vidtu.hcscr.config.CrystalMode;
-import ru.vidtu.hcscr.handler.KeyHandler;
-import ru.vidtu.hcscr.mixin.block.BlockBehaviour_BlockStateBaseMixin;
+import ru.vidtu.hcscr.handler.BlockClips;
+import ru.vidtu.hcscr.handler.Keys;
 import ru.vidtu.hcscr.mixin.crystal.EntityMixin;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Main HCsCR class.
@@ -108,22 +101,6 @@ public final class HCsCR {
     public static final Object2IntMap<Entity> HIDDEN_ENTITIES = HStonecutter.linearRemovableInt2ObjectMap();
 
     /**
-     * A map of block positions that the player won't
-     * collide with mapped to expected block states.
-     * <p>
-     * These blocks won't collide with the player in the world as
-     * their hitbox will be removed via {@link BlockBehaviour_BlockStateBaseMixin}.
-     * <p>
-     * The validity is checked in {@link #cleanClippingBlocks(Minecraft, ProfilerFiller)}.
-     *
-     * @see BlockBehaviour_BlockStateBaseMixin
-     * @see #cleanClippingBlocks(Minecraft, ProfilerFiller)
-     */
-    // This map is not expected to grow more than a few elements, so it's an array-baked map, not a hash-baked one.
-    // Moreover, it's being iterated linearly anyway in handleTick(...).
-    public static final Object2ObjectMap<BlockPos, BlockState> CLIPPING_BLOCKS = new Object2ObjectArrayMap<>(0);
-
-    /**
      * Logger for this class.
      */
     @UnknownNullability
@@ -169,12 +146,14 @@ public final class HCsCR {
             profiler = null;
         }
 
-        // Keybinds.
-        KeyHandler.handleKeys(client, profiler); // Implicit NPE for 'client'
+        // Keys.
+        Keys.tick(client, profiler); // Implicit NPE for 'client'
+
+        // Block clipping.
+        BlockClips.tick(client, profiler); // Implicit NPE for 'client'
 
         // Entities/blocks.
         cleanHiddenEntities(client, profiler); // Implicit NPE for 'client'
-        cleanClippingBlocks(client, profiler); // Implicit NPE for 'client'
 
         // Pop the profiler.
         if (Variables.DEBUG_PROFILER) {
@@ -218,7 +197,7 @@ public final class HCsCR {
         final int resync = Config.crystalsResync();
         final boolean noResync = (resync == 0);
         final long now = System.nanoTime();
-        final ObjectIterator<Object2LongMap.Entry<Entity>> iterator = SCHEDULED_ENTITIES.object2LongEntrySet().iterator();
+        final Iterator<Object2LongMap.Entry<Entity>> iterator = SCHEDULED_ENTITIES.object2LongEntrySet().iterator();
         while (iterator.hasNext()) {
             // Extract.
             final Object2LongMap.Entry<Entity> entry = iterator.next();
@@ -467,7 +446,7 @@ public final class HCsCR {
         }
 
         // Iterate.
-        final ObjectIterator<Object2IntMap.Entry<Entity>> iterator = HIDDEN_ENTITIES.object2IntEntrySet().iterator();
+        final Iterator<Object2IntMap.Entry<Entity>> iterator = HIDDEN_ENTITIES.object2IntEntrySet().iterator();
         while (iterator.hasNext()) {
             // Extract.
             final Object2IntMap.Entry<Entity> entry = iterator.next();
@@ -509,97 +488,6 @@ public final class HCsCR {
 
             // Countdown.
             entry.setValue(ticksBeforeResync - 1);
-        }
-
-        // Pop the profiler.
-        if (Variables.DEBUG_PROFILER) {
-            profiler.pop();
-        }
-    }
-
-    /**
-     * Cleans the clipping blocks. Removes redundant entries from {@link #CLIPPING_BLOCKS}.
-     *
-     * @param client   Client game instance
-     * @param profiler Client profiler
-     * @see #handleClientTickEnd(Minecraft)
-     * @see #CLIPPING_BLOCKS
-     */
-    private static void cleanClippingBlocks(final Minecraft client, final @UnknownNullability ProfilerFiller profiler) {
-        // Validate.
-        if (Variables.DEBUG_ASSERTS) {
-            assert (client != null) : "HCsCR: Parameter 'client' is null. (profiler: " + profiler + ')';
-            if (Variables.DEBUG_PROFILER) {
-                assert (profiler != null) : "HCsCR: Parameter 'profiler' is null. (client: " + client + ')';
-            }
-            assert (client.isSameThread()) : "HCsCR: Cleaning clipping blocks NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ", profiler: " + profiler + ')';
-        }
-
-        // Push the profiler.
-        if (Variables.DEBUG_PROFILER) {
-            profiler.push("hcscr:clean_clipping_blocks"); // Implicit NPE for 'profiler'
-        }
-
-        // Skip if no clipping blocks.
-        if (CLIPPING_BLOCKS.isEmpty()) {
-            // Pop the profiler.
-            if (Variables.DEBUG_PROFILER) {
-                profiler.pop();
-            }
-
-            // Stop.
-            return;
-        }
-
-        // Nuke all blocks, if level is empty.
-        final ClientLevel level = client.level; // Implicit NPE for 'client'
-        if (level == null) {
-            // Log. (**TRACE**)
-            if (Variables.DEBUG_LOGS) {
-                LOGGER.trace(MARKER, "HCsCR: Level has been unloaded, nuking clipping blocks...");
-            }
-
-            // Clear.
-            CLIPPING_BLOCKS.clear();
-
-            // Log. (**DEBUG**)
-            if (Variables.DEBUG_LOGS) {
-                LOGGER.debug(MARKER, "HCsCR: Level has been unloaded, nuked clipping blocks.");
-            }
-
-            // Pop the profiler.
-            if (Variables.DEBUG_PROFILER) {
-                profiler.pop();
-            }
-
-            // Stop.
-            return;
-        }
-
-        // Iterate.
-        final Iterator<Map.Entry<BlockPos, BlockState>> iterator = CLIPPING_BLOCKS.entrySet().iterator();
-        while (iterator.hasNext()) {
-            // Extract.
-            final Map.Entry<BlockPos, BlockState> entry = iterator.next();
-            final BlockPos pos = entry.getKey();
-            final BlockState expectedState = entry.getValue();
-
-            // Log. (**TRACE**)
-            if (Variables.DEBUG_LOGS) {
-                LOGGER.trace(MARKER, "HCsCR: Ticking clipping block... (pos: {}, expectedState: {})", pos, expectedState);
-            }
-
-            // Skip if block is still there.
-            final BlockState actualState = level.getBlockState(pos);
-            if (actualState.equals(expectedState)) continue;
-
-            // Remove from the map.
-            iterator.remove();
-
-            // Log. (**DEBUG**)
-            if (Variables.DEBUG_LOGS) {
-                LOGGER.debug(MARKER, "HCsCR: Removed clipping block. (pos: {}, expectedState: {}, actualState: {})", pos, expectedState, actualState);
-            }
         }
 
         // Pop the profiler.

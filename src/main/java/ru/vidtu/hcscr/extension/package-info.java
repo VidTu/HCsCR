@@ -21,7 +21,7 @@
  */
 
 /**
- * HCsCR package with mixin extension interfaces.
+ * HCsCR package with Mixin extension interfaces.
  *
  * @author VidTu
  * @apiNote Internal use only

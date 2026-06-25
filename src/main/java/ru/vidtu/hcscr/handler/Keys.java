@@ -50,7 +50,7 @@ import net.minecraft.resources.Identifier;
 *///?}
 
 /**
- * HCsCR class that handles keys. (aka key-bindings aka key-mappings)
+ * Handling logic for the mod's keys. (aka key-bindings aka key-mappings)
  *
  * @author VidTu
  * @apiNote Internal use only
@@ -59,7 +59,7 @@ import net.minecraft.resources.Identifier;
  */
 @ApiStatus.Internal
 @NullMarked
-public final class KeyHandler {
+public final class Keys {
     //? if >=1.21.10 {
         //~ if >=1.21.11 'ResourceLocation' -> 'Identifier' {
             //~ if neoforge 'KeyMapping.Category.register' -> 'new KeyMapping.Category' {
@@ -75,9 +75,9 @@ public final class KeyHandler {
     //?}
 
     /**
-     * "Open config screen" key. Not bound by default.
+     * "Open the config screen" key. Not bound by default.
      *
-     * @see #handleConfig(Minecraft, ProfilerFiller)
+     * @see #config(Minecraft, ProfilerFiller)
      */
     //~ if >=1.21.10 '"key.category.hcscr.root"' -> 'CATEGORY' {
     public static final KeyMapping CONFIG = new KeyMapping("hcscr.key.config", InputConstants.UNKNOWN.getValue(), CATEGORY);
@@ -85,7 +85,7 @@ public final class KeyHandler {
     /**
      * "Toggle the mod" key. Not bound by default.
      *
-     * @see #handleToggle(Minecraft, ProfilerFiller)
+     * @see #toggle(Minecraft, ProfilerFiller)
      */
     public static final KeyMapping TOGGLE = new KeyMapping("hcscr.key.toggle", InputConstants.UNKNOWN.getValue(), CATEGORY);
     //~}
@@ -94,7 +94,7 @@ public final class KeyHandler {
      * Logger for this class.
      */
     @UnknownNullability
-    private static final Logger LOGGER = (Variables.DEBUG_LOGS ? LogManager.getLogger("HCsCR/KeyHandler") : null);
+    private static final Logger LOGGER = (Variables.DEBUG_LOGS ? LogManager.getLogger("HCsCR/Keys") : null);
 
     /**
      * An instance of this class cannot be created.
@@ -105,22 +105,22 @@ public final class KeyHandler {
     @ApiStatus.ScheduledForRemoval
     @Deprecated
     @Contract(value = "-> fail", pure = true)
-    private KeyHandler() {
+    private Keys() {
         if (Variables.DEBUG_ASSERTS) {
             throw new AssertionError("HCsCR: No instances.");
         }
     }
 
     /**
-     * Handles the keys. Should be called every tick.
+     * Handles the keys. Should be called every tick from {@link HCsCR#tick(Minecraft)}.
      *
      * @param client   Client game instance
      * @param profiler Client profiler, {@code null} if {@link Variables#DEBUG_PROFILER} is {@code false}
-     * @see #handleClientTickEnd(Minecraft)
-     * @see #handleConfig(Minecraft, ProfilerFiller)
-     * @see #handleToggle(Minecraft, ProfilerFiller)
+     * @see HCsCR#tick(Minecraft)
+     * @see #config(Minecraft, ProfilerFiller)
+     * @see #toggle(Minecraft, ProfilerFiller)
      */
-    public static void handleKeys(final Minecraft client, final @UnknownNullability ProfilerFiller profiler) {
+    public static void tick(final Minecraft client, final @UnknownNullability ProfilerFiller profiler) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert (client != null) : "HCsCR: Parameter 'client' is null. (profiler: " + profiler + ')';
@@ -132,12 +132,12 @@ public final class KeyHandler {
 
         // Push the profiler.
         if (Variables.DEBUG_PROFILER) {
-            profiler.push("hcscr:key"); // Implicit NPE for 'profiler'
+            profiler.push("hcscr:keys"); // Implicit NPE for 'profiler'
         }
 
         // Delegate.
-        handleConfig(client, profiler);
-        handleToggle(client, profiler);
+        config(client, profiler); // Implicit NPE for 'client'
+        toggle(client, profiler); // Implicit NPE for 'client'
 
         // Pop the profiler.
         if (Variables.DEBUG_PROFILER) {
@@ -146,14 +146,15 @@ public final class KeyHandler {
     }
 
     /**
-     * Handles the config key. Should be called every tick.
+     * Handles the {@link #CONFIG} key. Should be called every tick.
      *
      * @param client   Client game instance
      * @param profiler Client profiler, {@code null} if {@link Variables#DEBUG_PROFILER} is {@code false}
-     * @see #handleKeys(Minecraft, ProfilerFiller)
-     * @see #handleToggle(Minecraft, ProfilerFiller)
+     * @see #CONFIG
+     * @see #tick(Minecraft, ProfilerFiller)
+     * @see #toggle(Minecraft, ProfilerFiller)
      */
-    private static void handleConfig(final Minecraft client, final @UnknownNullability ProfilerFiller profiler) {
+    private static void config(final Minecraft client, final @UnknownNullability ProfilerFiller profiler) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert (client != null) : "HCsCR: Parameter 'client' is null. (profiler: " + profiler + ')';
@@ -165,7 +166,7 @@ public final class KeyHandler {
 
         // Push the profiler.
         if (Variables.DEBUG_PROFILER) {
-            profiler.push("hcscr:key/config"); // Implicit NPE for 'profiler'
+            profiler.push("hcscr:keys/config"); // Implicit NPE for 'profiler'
         }
 
         // Consume the key.
@@ -175,7 +176,7 @@ public final class KeyHandler {
                 LOGGER.trace(HCsCR.MARKER, "HCsCR: Consuming config key... (client: {}, key: {})", client, CONFIG);
             }
 
-            // Check the open screen.
+            // Do nothing if some (another) screen is open.
             //? if >=26.2 {
             final Screen currentScreen = client.gui.screen(); // Implicit NPE for 'client'
             //?} else {
@@ -209,14 +210,15 @@ public final class KeyHandler {
     }
 
     /**
-     * Handles the toggle key. Should be called every tick.
+     * Handles the {@link #TOGGLE} key. Should be called every tick.
      *
      * @param client   Client game instance
      * @param profiler Client profiler, {@code null} if {@link Variables#DEBUG_PROFILER} is {@code false}
-     * @see #handleKeys(Minecraft, ProfilerFiller)
-     * @see #handleConfig(Minecraft, ProfilerFiller)
+     * @see #TOGGLE
+     * @see #tick(Minecraft, ProfilerFiller)
+     * @see #config(Minecraft, ProfilerFiller)
      */
-    private static void handleToggle(final Minecraft client, final @UnknownNullability ProfilerFiller profiler) {
+    private static void toggle(final Minecraft client, final @UnknownNullability ProfilerFiller profiler) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert (client != null) : "HCsCR: Parameter 'client' is null. (profiler: " + profiler + ')';
@@ -228,7 +230,7 @@ public final class KeyHandler {
 
         // Push the profiler.
         if (Variables.DEBUG_PROFILER) {
-            profiler.push("hcscr:key/toggle"); // Implicit NPE for 'profiler'
+            profiler.push("hcscr:keys/toggle"); // Implicit NPE for 'profiler'
         }
 
         // Consume the key.
@@ -246,9 +248,9 @@ public final class KeyHandler {
                     .withStyle(newState ? ChatFormatting.GREEN : ChatFormatting.RED)
                     .withStyle(ChatFormatting.BOLD);
             //? if >=26.2 {
-            client.gui.hud.setOverlayMessage(message, /*animate=*/false);
+            client.gui.hud.setOverlayMessage(message, /*animate=*/false); // Implicit NPE for 'client'
             //?} else {
-            /*client.gui.setOverlayMessage(message, /^animate=^/false);
+            /*client.gui.setOverlayMessage(message, /^animate=^/false); // Implicit NPE for 'client'
             *///?}
             client.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING, (newState ? 2.0f : 0.0f)));
 

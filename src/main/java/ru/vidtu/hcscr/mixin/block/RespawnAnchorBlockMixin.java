@@ -45,6 +45,7 @@ import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.config.BlockMode;
 import ru.vidtu.hcscr.config.Config;
+import ru.vidtu.hcscr.handler.BlockClips;
 
 //? if >=1.21.11 {
 import net.minecraft.world.level.dimension.DimensionType;
@@ -60,6 +61,7 @@ import org.spongepowered.asm.mixin.Shadow;
  * @author VidTu
  * @apiNote Internal use only
  * @see BlockMode
+ * @see BlockClips
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(RespawnAnchorBlock.class)
@@ -100,7 +102,7 @@ public final class RespawnAnchorBlockMixin {
      * @see Config#enable()
      * @see Config#blocks()
      * @see BlockMode
-     * @see HCsCR#CLIPPING_BLOCKS
+     * @see BlockClips
      */
     //? if >=1.20.6 {
     @DoNotCall("Called by Mixin")
@@ -200,7 +202,7 @@ public final class RespawnAnchorBlockMixin {
         switch (Config.blocks()) {
             case COLLISION:
                 // Clip.
-                HCsCR.CLIPPING_BLOCKS.put(pos, state);
+                BlockClips.add(pos, state);
 
                 // Log. (**DEBUG**)
                 if (Variables.DEBUG_LOGS) {

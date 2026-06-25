@@ -41,13 +41,14 @@ import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.config.BlockMode;
 import ru.vidtu.hcscr.platform.HStonecutter;
+import ru.vidtu.hcscr.handler.BlockClips;
 
 /**
- * Mixin that removes client player collision from blocks contained in {@link HCsCR#CLIPPING_BLOCKS}.
+ * Mixin that removes client player collision from {@link BlockClips#has(BlockPos)} blocks.
  *
  * @author VidTu
  * @apiNote Internal use only
- * @see HCsCR#CLIPPING_BLOCKS
+ * @see BlockClips#has(BlockPos)
  * @see BlockMode#COLLISION
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
@@ -96,10 +97,10 @@ public final class BlockBehaviour_BlockStateBaseMixin {
         // Do NOT remove collision if any of the following conditions is met:
         // - The current collision context lacks an entity.
         // - The context's entity is not a client-side player. (either non-player entity or a server-side player)
-        // - The block position is not contained in HCsCR.CLIPPING_BLOCKS.
+        // - The block position is not contained in BlockClips.has(...).
         if (!(context instanceof EntityCollisionContext) ||
                 !(HStonecutter.collisionContextEntity((EntityCollisionContext) context) instanceof LocalPlayer) ||
-                !HCsCR.CLIPPING_BLOCKS.containsKey(pos)) return;
+                !BlockClips.has(pos)) return;
 
         // Spoof collision data to empty.
         cir.setReturnValue(Shapes.empty());
