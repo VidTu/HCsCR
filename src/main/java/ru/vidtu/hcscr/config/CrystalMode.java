@@ -23,6 +23,8 @@
 package ru.vidtu.hcscr.config;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
@@ -35,8 +37,9 @@ import java.util.Locale;
  *
  * @author VidTu
  * @apiNote Internal use only
- * @see BlockMode
+ * @see CrystalMode
  * @see Config#crystals()
+ * @see Config#shouldProcess(Player, Entity)
  */
 @ApiStatus.Internal
 @NullMarked
@@ -78,7 +81,7 @@ public enum CrystalMode {
      * Creates a new mode.
      */
     @Contract(pure = true)
-    /*enum-private*/ CrystalMode() {
+    /*private*/ CrystalMode() {
         // Create the translation key.
         final String key = ("hcscr.crystals." + this.name().toLowerCase(Locale.ROOT));
 

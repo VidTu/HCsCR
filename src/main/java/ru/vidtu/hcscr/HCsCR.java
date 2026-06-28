@@ -22,7 +22,6 @@
 
 package ru.vidtu.hcscr;
 
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import net.minecraft.client.Minecraft;
@@ -47,6 +46,7 @@ import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.config.Config;
 import ru.vidtu.hcscr.config.CrystalMode;
 import ru.vidtu.hcscr.handler.BlockClips;
+import ru.vidtu.hcscr.handler.HiddenEntities;
 import ru.vidtu.hcscr.handler.Keys;
 import ru.vidtu.hcscr.mixin.crystal.EntityMixin;
 import ru.vidtu.hcscr.platform.HStonecutter;
@@ -85,22 +85,6 @@ public final class HCsCR {
     public static final Object2LongMap<Entity> SCHEDULED_ENTITIES = new Object2LongArrayMap<>(0);
 
     /**
-     * Hidden entities mapped to their remaining resync game ticks.
-     * <p>
-     * These entities won't appear in the world as their
-     * hitbox will be removed via {@link EntityMixin}.
-     * <p>
-     * They are counted down in {@link #cleanHiddenEntities(Minecraft, ProfilerFiller)}.
-     *
-     * @see EntityMixin
-     * @see #cleanHiddenEntities(Minecraft, ProfilerFiller)
-     * @see HStonecutter#linearRemovableInt2ObjectMap()
-     */
-    // This map should array-backed too, but it must support setValue(int) in iterators, so sometimes it's a hash-backed
-    // map, even when it's suboptimal. See HStonecutter.linearRemovableInt2ObjectMap() for details.
-    public static final Object2IntMap<Entity> HIDDEN_ENTITIES = HStonecutter.linearRemovableInt2ObjectMap();
-
-    /**
      * Logger for this class.
      */
     @UnknownNullability
@@ -130,7 +114,7 @@ public final class HCsCR {
      * @see #cleanHiddenEntities(Minecraft, ProfilerFiller)
      * @see #cleanClippingBlocks(Minecraft, ProfilerFiller)
      */
-    public static void handleClientTickEnd(final Minecraft client) {
+    public static void tick(final Minecraft client) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert (client != null) : "HCsCR: Parameter 'client' is null.";
@@ -146,14 +130,14 @@ public final class HCsCR {
             profiler = null;
         }
 
-        // Keys.
+        // Keys. (process key-bindings/key-mappings)
         Keys.tick(client, profiler); // Implicit NPE for 'client'
 
-        // Block clipping.
-        BlockClips.tick(client, profiler); // Implicit NPE for 'client'
+        // Hidden entities. (cleanup unused)
+        HiddenEntities.tick(client, profiler); // Implicit NPE for 'client'
 
-        // Entities/blocks.
-        cleanHiddenEntities(client, profiler); // Implicit NPE for 'client'
+        // Block clipping. (cleanup unused)
+        BlockClips.tick(client, profiler); // Implicit NPE for 'client'
 
         // Pop the profiler.
         if (Variables.DEBUG_PROFILER) {
@@ -229,7 +213,7 @@ public final class HCsCR {
                 //$ remove_entity entity
                 entity.discard();
             } else {
-                HIDDEN_ENTITIES.put(entity, resync);
+                HiddenEntities.hideForTicks(entity, resync);
             }
 
             // Log. (**DEBUG**)
@@ -325,7 +309,7 @@ public final class HCsCR {
                 }
 
                 // Hide the entity.
-                HIDDEN_ENTITIES.put(entity, resync);
+                HiddenEntities.hideForTicks(entity, resync);
                 return true;
             }
 
@@ -369,9 +353,9 @@ public final class HCsCR {
             }
 
             // Hide the entity.
-            HIDDEN_ENTITIES.put(entity, resync);
+            HiddenEntities.hideForTicks(entity, resync);
             for (final Entity other : entities) {
-                HIDDEN_ENTITIES.put(other, resync);
+                HiddenEntities.hideForTicks(other, resync);
             }
             return true;
         }
@@ -383,116 +367,5 @@ public final class HCsCR {
             SCHEDULED_ENTITIES.putIfAbsent(other, removeAt);
         }
         return true;
-    }
-
-    /**
-     * Cleans the hidden entities. Removes redundant entities from {@link #HIDDEN_ENTITIES} or processes them in a
-     * way similar to {@link #handlePlayerHittingEntity(Player, Entity, DamageSource, float)}.
-     *
-     * @param client   Client game instance
-     * @param profiler Client profiler
-     * @see #handleClientTickEnd(Minecraft)
-     * @see #HIDDEN_ENTITIES
-     * @see #handlePlayerHittingEntity(Player, Entity, DamageSource, float)
-     */
-    private static void cleanHiddenEntities(final Minecraft client, final @UnknownNullability ProfilerFiller profiler) {
-        // Validate.
-        if (Variables.DEBUG_ASSERTS) {
-            assert (client != null) : "HCsCR: Parameter 'client' is null. (profiler: " + profiler + ')';
-            if (Variables.DEBUG_PROFILER) {
-                assert (profiler != null) : "HCsCR: Parameter 'profiler' is null. (client: " + client + ')';
-            }
-            assert (client.isSameThread()) : "HCsCR: Cleaning hidden entities NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ", profiler: " + profiler + ')';
-        }
-
-        // Push the profiler.
-        if (Variables.DEBUG_PROFILER) {
-            profiler.push("hcscr:clean_hidden_entities"); // Implicit NPE for 'profiler'
-        }
-
-        // Skip if no hidden entities.
-        if (HIDDEN_ENTITIES.isEmpty()) {
-            // Pop the profiler.
-            if (Variables.DEBUG_PROFILER) {
-                profiler.pop();
-            }
-
-            // Stop.
-            return;
-        }
-
-        // Nuke all entities, if level is empty.
-        if (client.level == null) { // Implicit NPE for 'client'
-            // Log. (**TRACE**)
-            if (Variables.DEBUG_LOGS) {
-                LOGGER.trace(MARKER, "HCsCR: Level has been unloaded, nuking hidden entities...");
-            }
-
-            // Clear.
-            HIDDEN_ENTITIES.clear();
-
-            // Log. (**DEBUG**)
-            if (Variables.DEBUG_LOGS) {
-                LOGGER.debug(MARKER, "HCsCR: Level has been unloaded, nuked hidden entities.");
-            }
-
-            // Pop the profiler.
-            if (Variables.DEBUG_PROFILER) {
-                profiler.pop();
-            }
-
-            // Stop.
-            return;
-        }
-
-        // Iterate.
-        final Iterator<Object2IntMap.Entry<Entity>> iterator = HIDDEN_ENTITIES.object2IntEntrySet().iterator();
-        while (iterator.hasNext()) {
-            // Extract.
-            final Object2IntMap.Entry<Entity> entry = iterator.next();
-            final Entity entity = entry.getKey();
-            final int ticksBeforeResync = entry.getIntValue();
-
-            // Log. (**TRACE**)
-            if (Variables.DEBUG_LOGS && LOGGER.isTraceEnabled(MARKER)) {
-                LOGGER.trace(MARKER, "HCsCR: Ticking hidden entity... (entity: {}, ticksBeforeResync: {})", entity, ticksBeforeResync);
-            }
-
-            // Entity has been removed.
-            if (HStonecutter.isEntityRemoved(entity)) {
-                // Remove from the map.
-                iterator.remove();
-
-                // Log. (**DEBUG**)
-                if (Variables.DEBUG_LOGS && LOGGER.isDebugEnabled(MARKER)) {
-                    LOGGER.debug(MARKER, "HCsCR: Removed hidden entity. (entity: {}, ticksBeforeResync: {})", entity, ticksBeforeResync);
-                }
-
-                // Continue.
-                continue;
-            }
-
-            // Entity should be resynced.
-            if (ticksBeforeResync <= 0) {
-                // Remove  from the map.
-                iterator.remove();
-
-                // Log, continue. (**DEBUG**)
-                if (Variables.DEBUG_LOGS && LOGGER.isDebugEnabled(MARKER)) {
-                    LOGGER.debug(MARKER, "HCsCR: Resynced hidden entity. (entity: {}, ticksBeforeResync: {})", entity, ticksBeforeResync);
-                }
-
-                // Continue.
-                continue;
-            }
-
-            // Countdown.
-            entry.setValue(ticksBeforeResync - 1);
-        }
-
-        // Pop the profiler.
-        if (Variables.DEBUG_PROFILER) {
-            profiler.pop();
-        }
     }
 }

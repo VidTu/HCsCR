@@ -26,7 +26,7 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
-import ru.vidtu.hcscr.HCsCR;
+import ru.vidtu.hcscr.handler.BlockClips;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.util.Locale;
@@ -43,24 +43,25 @@ import java.util.Locale;
 @NullMarked
 public enum BlockMode {
     /**
-     * Anchors/beds won't be instantly removed via right mouse click.
+     * Blocks (anchors/beds) won't be instantly removed via right mouse click.
      */
     OFF,
 
     /**
-     * The player collision for anchors will be instantly removed via right mouse click.
+     * Only the player collision for blocks (anchors/beds)
+     * will be instantly removed via right mouse click.
      * <p>
-     * This is the recommended mode for most situations and is the
-     * default/only mode in other anchor/bed optimizers.
+     * This is the recommended mode for most situations
+     * and is the default/only mode in other optimizers.
      *
-     * @see HCsCR#CLIPPING_BLOCKS
+     * @see BlockCLips
      */
     COLLISION,
 
     /**
-     * The anchor/bed will be instantly removed via right mouse click.
+     * The block (anchor/bed) will be instantly removed via right mouse click.
      * <p>
-     * Will make the "air place" mechanic significantly harder to use.
+     * The "air place" strategy will become harder to use.
      */
     FULL;
 
@@ -78,7 +79,7 @@ public enum BlockMode {
      * Creates a new mode.
      */
     @Contract(pure = true)
-    /*enum-private*/ BlockMode() {
+    /*private*/ BlockMode() {
         // Create the translation key.
         final String key = ("hcscr.blocks." + this.name().toLowerCase(Locale.ROOT));
 

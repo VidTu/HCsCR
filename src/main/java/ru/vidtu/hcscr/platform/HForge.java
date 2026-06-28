@@ -303,7 +303,7 @@ public final class HForge {
             }
 
             // Register.
-            ClientRegistry.registerKeyBinding(KeysCONFIG);
+            ClientRegistry.registerKeyBinding(Keys.CONFIG);
             ClientRegistry.registerKeyBinding(Keys.TOGGLE);
         });
         ^///?}
@@ -317,7 +317,7 @@ public final class HForge {
             }
 
             // Handle.
-            HCsCR.handleClientTickEnd(Minecraft.getInstance());
+            HCsCR.tick(Minecraft.getInstance());
         });
         //?} elif >=1.20.4 {
         /^MinecraftForge.EVENT_BUS.addListener((final TickEvent.ClientTickEvent.Post event) -> {
@@ -327,7 +327,7 @@ public final class HForge {
             }
 
             // Handle.
-            HCsCR.handleClientTickEnd(Minecraft.getInstance());
+            HCsCR.tick(Minecraft.getInstance());
         });
         ^///?} else {
         /^MinecraftForge.EVENT_BUS.addListener((final TickEvent.ClientTickEvent event) -> {
@@ -338,7 +338,7 @@ public final class HForge {
 
             // Handle.
             if (event.phase != TickEvent.Phase.END) return; // Implicit NPE for 'event'
-            HCsCR.handleClientTickEnd(Minecraft.getInstance());
+            HCsCR.tick(Minecraft.getInstance());
         });
         ^///?}
 

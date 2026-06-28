@@ -39,12 +39,15 @@ import ru.vidtu.hcscr.extension.EntityCollisionContextExtension;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /^*
- * Mixin that stored the source entity of {@link EntityCollisionContext}. (<1.17.1)
+ * Mixin that stored the source entity of {@link EntityCollisionContext}
+ * for the {@link EntityCollisionContextExtension} extension. (pre-1.17.1)
+ * <p>
+ * On newer (1.17.1+) versions, this logic is provided by vanilla.
  *
  * @author VidTu
  * @apiNote Internal use only
  * @see EntityCollisionContextExtension
- * @see BlockStateBaseMixin
+ * @see BlockBehaviour_BlockStateBaseMixin
  ^/
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(EntityCollisionContext.class)
@@ -78,16 +81,20 @@ public final class EntityCollisionContextMixin implements EntityCollisionContext
      * @param entity The entity to store in the context, {@code null} if none
      * @param ci     Callback data, ignored
      * @apiNote Do not call, called by Mixin
-     * @see HStonecutter#collisionContextEntity(EntityCollisionContext)
      * @see #hcscr_entity()
      ^/
     @DoNotCall("Called by Mixin")
-    @Inject(method = "<init>(Lnet/minecraft/world/entity/Entity;)V", at = @At("RETURN"))
+    @Inject(method = "<init>(Lnet/minecraft/world/entity/Entity;)V", at = @At("RETURN")) // RETURN here for non-Fabric mixin.
     private void hcscr_init_return(final @Nullable Entity entity, final CallbackInfo ci) {
         // Store.
         this.hcscr_entity = entity;
     }
 
+    /^*
+     * Gets the entity.
+     *
+     * @return Entity involving in the context, {@code null} if none or not stored
+     ^/
     @Contract(pure = true)
     @Override
     @Nullable

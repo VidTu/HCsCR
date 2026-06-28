@@ -50,7 +50,7 @@ import net.minecraft.resources.Identifier;
 *///?}
 
 /**
- * Handling logic for the mod's keys. (aka key-bindings aka key-mappings)
+ * Handling logic for the mod's keys. (aka key bindings or key mappings)
  *
  * @author VidTu
  * @apiNote Internal use only

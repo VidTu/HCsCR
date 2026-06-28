@@ -41,14 +41,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.handler.BlockClips;
+import ru.vidtu.hcscr.handler.HiddenEntities;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
- * Mixin that clears {@link HCsCR#SCHEDULED_ENTITIES} and {@link HCsCR#HIDDEN_ENTITIES} on world switching.
+ * Mixin that clears various world-dependant data on world switching.
  *
  * @author VidTu
  * @apiNote Internal use only
- * @see HCsCR
+ * @see HiddenEntities#showAll()
+ * @see BlockClips#clearClips()
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(Minecraft.class)
@@ -91,7 +93,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
      * @param ci        Callback data, ignored
      * @apiNote Do not call, called by Mixin
      * @see HCsCR#SCHEDULED_ENTITIES
-     * @see HCsCR#HIDDEN_ENTITIES
+     * @see HiddenEntities#clear()
      * @see BlockClips#clear()
      */
     @DoNotCall("Called by Mixin")
@@ -105,31 +107,43 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
     *///?}
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
-            assert (this.isSameThread()) : "HCsCR: Updating level in engines NOT from the main thread. (thread: " + Thread.currentThread() + ", level: " + level + ", client: " + this + ')';
-        }
+            //? if >=1.21.11 {
+            assert (this.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", level: " + level + ", stopSound: " + stopSound + ", client: " + this + ')';
+            //?} else {
+            /*assert (this.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", level: " + level + ", client: " + this + ')';
+            *///?}
+            }
 
         // Get and push the profiler.
         final ProfilerFiller profiler;
         if (Variables.DEBUG_PROFILER) {
             profiler = HStonecutter.profilerOfClient((Minecraft) (Object) this);
-            profiler.push("hcscr:clear_data");
+            profiler.push("hcscr:clear");
         } else {
             profiler = null;
         }
 
         // Log. (**TRACE**)
         if (Variables.DEBUG_LOGS) {
-            HCSCR_LOGGER.trace(HCsCR.MARKER, "HCsCR: Clearing data... (level: {}, client: {})", level, this);
+            //? if >=1.21.11 {
+            HCSCR_LOGGER.trace(HCsCR.MARKER, "HCsCR: Clearing... (level: {}, stopSound: {}, client: {})", level, stopSound, this);
+            //?} else {
+            /*HCSCR_LOGGER.trace(HCsCR.MARKER, "HCsCR: Clearing... (level: {}, client: {})", level, this);
+            *///?}
         }
 
-        // Clear the maps.
+        // Clear various handlers.
         HCsCR.SCHEDULED_ENTITIES.clear();
-        HCsCR.HIDDEN_ENTITIES.clear();
-        BlockClips.clear();
+        HiddenEntities.showAll();
+        BlockClips.clearClips();
 
         // Log. (**DEBUG**)
         if (Variables.DEBUG_LOGS) {
-            HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Cleared data. (level: {}, client: {})", level, this);
+            //? if >=1.21.11 {
+            HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Cleared. (level: {}, stopSound: {}, client: {})", level, stopSound, this);
+            //?} else {
+            /*HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Cleared. (level: {}, client: {})", level, this);
+            *///?}
         }
 
         // Pop the profiler.

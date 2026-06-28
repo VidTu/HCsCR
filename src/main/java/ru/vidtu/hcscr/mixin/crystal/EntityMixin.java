@@ -34,17 +34,19 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.Variables;
+import ru.vidtu.hcscr.handler.HiddenEntities;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
- * Mixin that disables the bounding box for entities marked as {@link HCsCR#HIDDEN_ENTITIES}.
+ * Mixin that disables the bounding box for entities
+ * marked as {@link HiddenEntities#isHidden(Entity)}.
  *
  * @author VidTu
  * @apiNote Internal use only
- * @see HCsCR#HIDDEN_ENTITIES
+ * @see HiddenEntities#isHidden(Entity)
  * @see Entity#getBoundingBox()
+ * @see Config#crystalsResync()
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(Entity.class)
@@ -74,30 +76,31 @@ public final class EntityMixin {
     }
 
     /**
-     * Sets the bounding box to {@link #INITIAL_AABB} if this entity is contained inside
-     * {@link HCsCR#HIDDEN_ENTITIES}, removing their bounding box from the world that way.
+     * Sets the bounding box to {@link #INITIAL_AABB} if this entity is {@link HiddenEntities#isHidden(Entity)},
+     * removing its bounding box from the world. Does nothing otherwise. Also does nothing if entity's
+     * level (world) is not client one. (e.g., an integrated server world)
      *
      * @param cir Callback data containing the resulting bounding box
      * @apiNote Do not call, called by Mixin
-     * @see HCsCR#HIDDEN_ENTITIES
+     * @see HiddenEntities#isHidden(Entity)
      * @see #INITIAL_AABB
      */
     @DoNotCall("Called by Mixin")
-    @Inject(method = "getBoundingBox", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getBoundingBox", at = @At("HEAD"), cancellable = true) // HEAD here for early return.
     private void hcscr_getBoundingBox_head(final CallbackInfoReturnable<AABB> cir) {
         // Validate.
         final Level level = HStonecutter.levelOfEntity((Entity) (Object) this);
         if (Variables.DEBUG_ASSERTS) {
-            assert (level != null) : "HCsCR: Getting entity bounding box with null level. (cir: " + cir + ", entity: " + this + ')';
+            assert (level != null) : "HCsCR: Level is null. (cir: " + cir + ", entity: " + this + ')';
+            // No thread checks, called from either side.
         }
 
-        // Do NOT hide entity if any of the following conditions is met:
+        // Do nothing if either:
         // - The current level (world) is not client-side. (e.g., integrated server world)
-        // - The entity is not actually hidden via HCsCR.HIDDEN_ENTITIES.
-        //noinspection SuspiciousMethodCalls // <- Mixin.
-        if (!level.isClientSide() || !HCsCR.HIDDEN_ENTITIES.containsKey(this)) return; // Implicit NPE for 'level'
+        // - The entity is not hidden via HiddenEntities.isHidden(...).
+        if (!level.isClientSide() || !HiddenEntities.isHidden((Entity) (Object) this)) return; // Implicit NPE for 'level'
 
-        // Set to empty hitbox.
+        // Spoof to an empty hitbox.
         cir.setReturnValue(INITIAL_AABB);
     }
 }

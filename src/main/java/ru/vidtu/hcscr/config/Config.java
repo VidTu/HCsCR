@@ -38,8 +38,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Range;
 import org.jspecify.annotations.NullMarked;
 import ru.vidtu.hcscr.HCsCR;
+import ru.vidtu.hcscr.compile.Constants;
 import ru.vidtu.hcscr.compile.Variables;
-import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -48,13 +48,21 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 
-//? if >=26.2 {
-import net.minecraft.world.entity.Interaction;
-import net.minecraft.world.entity.monster.cubemob.AbstractCubeMob;
-//?} elif >=1.19.4 {
-/*import net.minecraft.world.entity.Interaction;
-import net.minecraft.world.entity.monster.Slime;
+//? if fabric {
+import net.fabricmc.loader.api.FabricLoader;
+//?} elif neoforge {
+/*import net.neoforged.fml.loading.FMLPaths;
 *///?} else {
+/*import net.minecraftforge.fml.loading.FMLPaths;
+*///?}
+
+//? if >=1.19.4 {
+import net.minecraft.world.entity.Interaction;
+//?}
+
+//? if >=26.2 {
+import net.minecraft.world.entity.monster.cubemob.AbstractCubeMob;
+//?} else {
 /*import net.minecraft.world.entity.monster.Slime;
 *///?}
 
@@ -72,6 +80,15 @@ public final class Config {
      * Logger for this class.
      */
     private static final Logger LOGGER = LogManager.getLogger("HCsCR/Config");
+
+    /**
+     * HCsCR config file.
+     */
+    //? if fabric {
+    private static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve("hcscr.json");
+    //?} else {
+    /*private static final Path FILE = FMLPaths.CONFIGDIR.get().resolve("hcscr.json");
+    *///?}
 
     /**
      * GSON instance for configuration loading/saving.
@@ -109,20 +126,24 @@ public final class Config {
     private static /*non-final*/ int crystalsDelay = 0;
 
     /**
-     * Crystals resync delay in ticks, {@code 20} by default.
+     * Crystals resync delay in ticks, {@link Constants#DEFAULT_HIDE_TICKS} by default. Allowed values:
+     * from {@link Constants#MIN_HIDE_TICKS} inclusive to {@link Constants#MAX_HIDE_TICKS} inclusive.
      * <p>
-     * This is the delay after which the crystal will reappear again,
-     * if the server hasn't actually removed it.
+     * This is the delay after which the crystal will reappear
+     * again, if the server hasn't actually removed it.
      * <p>
-     * Useful to prevent ghost crystals, when a crystal
-     * hit is not registered by the server.
+     * Useful to prevent ghost crystals, when a
+     * crystal hit isn't registered by the server.
      *
      * @see #crystals
      * @see #crystalsDelay
+     * @see Constants#MIN_HIDE_TICKS
+     * @see Constants#DEFAULT_HIDE_TICKS
+     * @see Constants#MAX_HIDE_TICKS
      */
     @SerializedName("crystalsResync")
-    @Range(from = 0L, to = 50L)
-    private static /*non-final*/ int crystalsResync = 20;
+    @Range(from = Constants.MIN_HIDE_TICKS, to = Constants.MAX_HIDE_TICKS)
+    private static /*non-final*/ int crystalsResync = Constants.DEFAULT_HIDE_TICKS;
 
     /**
      * Blocks (anchors/beds) removal mode, {@link BlockMode#COLLISION} by default.
@@ -147,21 +168,18 @@ public final class Config {
         try {
             // Log. (**TRACE**)
             if (Variables.DEBUG_LOGS) {
-                LOGGER.trace(HCsCR.MARKER, "HCsCR: Loading the config... (directory: {})", HStonecutter.CONFIG_DIRECTORY);
+                LOGGER.trace(HCsCR.MARKER, "HCsCR: Loading the config... (file: {})", FILE);
             }
 
-            // Resolve the file.
-            final Path file = HStonecutter.CONFIG_DIRECTORY.resolve("hcscr.json");
-
             // Read the config.
-            try (final BufferedReader reader = Files.newBufferedReader(file)) {
+            try (final BufferedReader reader = Files.newBufferedReader(FILE)) {
                 // Load the config.
                 final Config ignoredInstance = GSON.fromJson(reader, Config.class);
             }
 
             // Log. (**DEBUG**)
             if (Variables.DEBUG_LOGS) {
-                LOGGER.debug(HCsCR.MARKER, "HCsCR: Config has been loaded. (directory: {}, file: {})", HStonecutter.CONFIG_DIRECTORY, file);
+                LOGGER.debug(HCsCR.MARKER, "HCsCR: Config has been loaded. (file: {})", FILE);
             }
         } catch (final NoSuchFileException nsfe) {
             // Log. (**DEBUG**)
@@ -179,7 +197,7 @@ public final class Config {
             // Clamp.
             crystals = MoreObjects.firstNonNull(crystals, CrystalMode.DIRECT);
             crystalsDelay = Mth.clamp(((crystalsDelay / 1_000_000) * 1_000_000), 0, 200_000_000);
-            crystalsResync = Mth.clamp(crystalsResync, 0, 50);
+            crystalsResync = Mth.clamp(crystalsResync, Constants.MIN_HIDE_TICKS, Constants.MAX_HIDE_TICKS);
             blocks = MoreObjects.firstNonNull(blocks, BlockMode.COLLISION);
         }
     }
@@ -193,21 +211,18 @@ public final class Config {
         try {
             // Log. (**TRACE**)
             if (Variables.DEBUG_LOGS) {
-                LOGGER.trace(HCsCR.MARKER, "HCsCR: Saving the config... (directory: {})", HStonecutter.CONFIG_DIRECTORY);
+                LOGGER.trace(HCsCR.MARKER, "HCsCR: Saving the config... (file: {})", FILE);
             }
 
-            // Resolve the file.
-            final Path file = HStonecutter.CONFIG_DIRECTORY.resolve("hcscr.json");
-
             // Write the config.
-            Files.createDirectories(file.getParent());
-            try (final BufferedWriter writer = Files.newBufferedWriter(file)) {
+            Files.createDirectories(FILE.getParent());
+            try (final BufferedWriter writer = Files.newBufferedWriter(FILE)) {
                 GSON.toJson(new Config(), writer);
             }
 
             // Log. (**DEBUG**)
             if (Variables.DEBUG_LOGS) {
-                LOGGER.debug(HCsCR.MARKER, "HCsCR: Config has been saved. (directory: {}, file: {})", HStonecutter.CONFIG_DIRECTORY, file);
+                LOGGER.debug(HCsCR.MARKER, "HCsCR: Config has been saved. (file: {})", FILE);
             }
         } catch (final Throwable t) {
             // Log.
@@ -306,13 +321,16 @@ public final class Config {
     /**
      * Gets the crystals resync.
      *
-     * @return Crystals resync delay in ticks, {@code 20} by default
+     * @return Crystals resync delay in ticks, {@link Constants#DEFAULT_HIDE_TICKS} by default
      * @see #crystalsResync(int)
      * @see #crystals()
      * @see #crystalsDelay()
+     * @see Constants#MIN_HIDE_TICKS
+     * @see Constants#DEFAULT_HIDE_TICKS
+     * @see Constants#MAX_HIDE_TICKS
      */
     @Contract(pure = true)
-    @Range(from = 0L, to = 50L)
+    @Range(from = Constants.MIN_HIDE_TICKS, to = Constants.MAX_HIDE_TICKS)
     public static int crystalsResync() {
         return crystalsResync;
     }
@@ -320,11 +338,20 @@ public final class Config {
     /**
      * Sets the crystals resync.
      *
-     * @param crystalsResync Crystals resync delay in ticks, {@code 20} by default
+     * @param crystalsResync Crystals resync delay in ticks, {@link Constants#DEFAULT_HIDE_TICKS} by default
      * @see #crystalsResync()
+     * @see Constants#MIN_HIDE_TICKS
+     * @see Constants#DEFAULT_HIDE_TICKS
+     * @see Constants#MAX_HIDE_TICKS
      */
-    /*package-private*/ static void crystalsResync(final @Range(from = 0L, to = 50L) int crystalsResync) {
-        Config.crystalsResync = Mth.clamp(crystalsResync, 0, 50);
+    /*package-private*/ static void crystalsResync(final @Range(from = Constants.MIN_HIDE_TICKS, to = Constants.MAX_HIDE_TICKS) int crystalsResync) {
+        // Validate.
+        if (Variables.DEBUG_ASSERTS) {
+            assert ((crystalsResync >= Constants.MIN_HIDE_TICKS) && (crystalsResync <= Constants.MAX_HIDE_TICKS)) : "HCsCR: Parameter 'crystalsResync' is not in the [" + Constants.MIN_HIDE_TICKS + ".." + Constants.MAX_HIDE_TICKS + "] range. (crystalsResync: " + crystalsResync + ')';
+        }
+
+        // Set. (with clamping)
+        Config.crystalsResync = Mth.clamp(crystalsResync, Constants.MIN_HIDE_TICKS, Constants.MAX_HIDE_TICKS);
     }
 
     /**
@@ -372,7 +399,7 @@ public final class Config {
         }
 
         // Check depending on the mode.
-        //noinspection RedundantSuppression // <- Preprocessor Statement.
+        //noinspection RedundantSuppression // <- Preprocessor.
         switch (crystals) {
             case DIRECT:
                 return (entity instanceof EndCrystal);
@@ -380,13 +407,15 @@ public final class Config {
                 //? if >=1.19.4 {
                 if (entity instanceof Interaction) return true;
                 //?}
+
                 //? if >=26.2 {
-                //noinspection SimplifiableIfStatement // <- Preprocessor Statement.
+                //noinspection SimplifiableIfStatement // <- Preprocessor.
                 if ((entity instanceof AbstractCubeMob) && entity.isInvisibleTo(player)) return true;
                 //?} else {
-                /*//noinspection SimplifiableIfStatement // <- Preprocessor Statement.
+                /*//noinspection SimplifiableIfStatement // <- Preprocessor.
                 if ((entity instanceof Slime) && entity.isInvisibleTo(player)) return true;
                 *///?}
+
                 return (entity instanceof EndCrystal);
             default:
                 return false;

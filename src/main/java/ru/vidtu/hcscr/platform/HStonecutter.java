@@ -23,7 +23,6 @@
 package ru.vidtu.hcscr.platform;
 
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractSliderButton;
@@ -38,7 +37,6 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.CheckReturnValue;
 import org.jetbrains.annotations.Contract;
@@ -57,64 +55,46 @@ import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
 
 //? if >=1.21.11 {
-import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.profiling.Profiler;
 import java.time.Duration;
 //?} elif >=1.21.8 {
-/*import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
-import net.minecraft.client.gui.components.Tooltip;
+/*import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.Profiler;
 import java.time.Duration;
 *///?} elif >=1.21.4 {
-/*import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
-import net.minecraft.client.gui.components.Tooltip;
+/*import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.Profiler;
 import java.time.Duration;
 *///?} elif >=1.21.3 {
-/*import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.client.gui.components.Tooltip;
+/*import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.Profiler;
 import java.time.Duration;
 *///?} elif >=1.20.6 {
-/*import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.client.gui.components.Tooltip;
+/*import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.resources.ResourceLocation;
 import java.time.Duration;
 *///?} elif >=1.19.4 {
-/*import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.client.gui.components.Tooltip;
+/*import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.resources.ResourceLocation;
 *///?} elif >=1.19.2 {
 /*import com.mojang.blaze3d.vertex.PoseStack;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.mutable.MutableObject;
 *///?} elif >=1.17.1 {
 /*import com.mojang.blaze3d.vertex.PoseStack;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.mutable.MutableObject;
 *///?} else {
 /*import com.mojang.blaze3d.vertex.PoseStack;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.mutable.MutableObject;
-import ru.vidtu.hcscr.extension.EntityCollisionContextExtension;
-*///?}
-
-//? if fabric {
-import net.fabricmc.loader.api.FabricLoader;
-//?} elif neoforge {
-/*import net.neoforged.fml.loading.FMLPaths;
-*///?} else {
-/*import net.minecraftforge.fml.loading.FMLPaths;
 *///?}
 
 /**
@@ -128,15 +108,6 @@ import net.fabricmc.loader.api.FabricLoader;
 @Deprecated
 @NullMarked
 public final class HStonecutter {
-    /**
-     * Game config directory.
-     */
-    //? if fabric {
-    public static final Path CONFIG_DIRECTORY = FabricLoader.getInstance().getConfigDir();
-    //?} else {
-    /*public static final Path CONFIG_DIRECTORY = FMLPaths.CONFIGDIR.get();
-    *///?}
-
     /**
      * A channel identifier for servers to know that this mod is installed.
      */
@@ -172,25 +143,6 @@ public final class HStonecutter {
         if (Variables.DEBUG_ASSERTS) {
             throw new AssertionError("HCsCR: No instances.");
         }
-    }
-
-    /**
-     * Creates a new linear (array-baked) map that supports {@code setValue(int)} operations in iterators.
-     * The created map will have initial capacity of {@code 0}.
-     *
-     * @param <T> Map value type
-     * @return A newly created linear map
-     * @implNote In some cases (due to a faulty implementation), a suboptimal hash-baked map will be used to allow {@code setValue(int)}
-     */
-    @Contract(value = "-> new", pure = true)
-    public static <T> Object2IntMap<T> linearRemovableInt2ObjectMap() {
-        // Ideally, an array-baked map should be always used here. Due to a bug in fastutil, setValue(int) is not
-        // supported until 8.5.12: https://github.com/vigna/fastutil/blob/fcac58f7d3df8e7d903fad533f4caada7f4937cf/CHANGES#L4
-        //? if >=1.21.4 {
-        return new Object2IntArrayMap<>(0);
-        //?} else {
-        /*return new Object2IntOpenHashMap<>(0);
-        *///?}
     }
 
     /**
@@ -309,32 +261,6 @@ public final class HStonecutter {
         return entity.isRemoved(); // Implicit NPE for 'entity'
         //?} else {
         /*return entity.removed; // Implicit NPE for 'entity'
-        *///?}
-    }
-
-    /**
-     * Gets the entity involved in the collision context.
-     *
-     * @param ctx Target collision context to get the entity from
-     * @return Entity involving in the context, {@code null} if none
-     */
-    @Contract(pure = true)
-    @Nullable
-    public static Entity collisionContextEntity(final EntityCollisionContext ctx) {
-        // Validate.
-        if (Variables.DEBUG_ASSERTS) {
-            assert (ctx != null) : "HCsCR: Parameter 'ctx' is null.";
-            // No thread checks here because this can be called from the integrated server.
-        }
-
-        // Delegate.
-        //? if >=1.18.2 {
-        return ctx.getEntity(); // Implicit NPE for 'ctx'
-        //?} elif >=1.17.1 {
-        /*return ctx.getEntity().orElse(null); // Implicit NPE for 'ctx'
-        *///?} else {
-        /*//noinspection CastToIncompatibleInterface // <- Mixin Accessor.
-        return ((EntityCollisionContextExtension) ctx).hcscr_entity(); // Implicit NPE for 'ctx'
         *///?}
     }
 

@@ -223,7 +223,7 @@ public final class HFabric implements ClientModInitializer {
         *///?}
 
         // Register the client tick end handler.
-        ClientTickEvents.END_CLIENT_TICK.register(HCsCR::handleClientTickEnd);
+        ClientTickEvents.END_CLIENT_TICK.register(HCsCR::tick);
 
         // Client game loop handling is done via the MinecraftMixin. (Fabric only for now)
         // Config screen handling (ModMenu entrypoint) is in the HModMenu class.

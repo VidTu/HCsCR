@@ -71,10 +71,10 @@ public final class BlockClips {
      * 
      * @see BlockBehaviour_BlockStateBaseMixin
      * @see #tick(Minecraft, ProfilerFiller)
-     * @see #has(BlockPos)
-     * @see #add(BlockPos, BlockState)
-     * @see #remove(BlockPos)
-     * @see #clear()
+     * @see #shouldClip(BlockPos)
+     * @see #addClip(BlockPos, BlockState)
+     * @see #removeClip(BlockPos)
+     * @see #clearClips()
      */
     // This map is not expected to grow more than a few elements, so it's an array-baked map,
     // not a hash-baked one. Moreover, it's being iterated linearly anyway in tick(...).
@@ -102,8 +102,9 @@ public final class BlockClips {
     }
 
     /**
-     * Cleans the block clips. Removes redundant entries
-     * from {@link #CLIPS}. Should be called every tick.
+     * Cleans the block clips. Removes redundant entries from {@link #CLIPS}. A redundant
+     * entry is one that's actual state located at its "key" position is not equal to its
+     * "value" state. Should be called every tick from {@link HCsCR#tick(Minecraft)}.
      *
      * @param client   Client game instance
      * @param profiler Client profiler, {@code null} if {@link Variables#DEBUG_PROFILER} is {@code false}
@@ -141,7 +142,7 @@ public final class BlockClips {
         if (level == null) {
             // Log. (**TRACE**)
             if (Variables.DEBUG_LOGS) {
-                LOGGER.trace(HCsCR.MARKER, "HCsCR: Null level, clearing block clips...");
+                LOGGER.trace(HCsCR.MARKER, "HCsCR: Null level, clearing block clips... (clips: {})", CLIPS);
             }
 
             // Clear.
@@ -149,7 +150,7 @@ public final class BlockClips {
 
             // Log. (**DEBUG**)
             if (Variables.DEBUG_LOGS) {
-                LOGGER.debug(HCsCR.MARKER, "HCsCR: Null level, cleared block clips.");
+                LOGGER.debug(HCsCR.MARKER, "HCsCR: Null level, cleared block clips. (clips: {})", CLIPS);
             }
 
             // Pop the profiler.
@@ -218,12 +219,12 @@ public final class BlockClips {
      * @param pos Block position to check a clip at
      * @return {@code true} if a clip exists in {@link #CLIPS} for that location, {@code false} if not
      * @see #CLIPS
-     * @see #add(BlockPos, BlockState)
-     * @see #remove(BlockPos)
-     * @see #clear()
+     * @see #addClip(BlockPos, BlockState)
+     * @see #removeClip(BlockPos)
+     * @see #clearClips()
      */
     @Contract(pure = true)
-    public static boolean has(final BlockPos pos) {
+    public static boolean shouldClip(final BlockPos pos) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert (pos != null) : "HCsCR: Parameter 'pos' is null.";
@@ -241,11 +242,11 @@ public final class BlockClips {
      * @param pos   Block position to create a clip for
      * @param state Expected block state at the clip for it to be effective
      * @see #CLIPS
-     * @see #has(BlockPos)
-     * @see #remove(BlockPos)
-     * @see #clear()
+     * @see #shouldClip(BlockPos)
+     * @see #removeClip(BlockPos)
+     * @see #clearClips()
      */
-    public static void add(final BlockPos pos, final BlockState state) {
+    public static void addClip(final BlockPos pos, final BlockState state) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert (pos != null) : "HCsCR: Parameter 'pos' is null. (state: " + state + ')';
@@ -253,8 +254,20 @@ public final class BlockClips {
             assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", pos: " + pos + ", state: " + state + ')';
         }
 
-        // Put.
-        CLIPS.put(pos, state);
+        // Split debug logic.
+        if (Variables.DEBUG_LOGS) {
+            // Log. (**TRACE**)
+            LOGGER.trace(HCsCR.MARKER, "HCsCR: Adding a block clip... (pos: {}, state: {}, clips: {})", pos, state, CLIPS);
+
+            // Put. (store previous)
+            final BlockState previous = CLIPS.put(pos, state);
+
+            // Log. (**DEBUG**)
+            LOGGER.debug(HCsCR.MARKER, "HCsCR: Added a block clip. (pos: {}, state: {}, previous: {}, clips: {})", pos, state, previous, CLIPS);
+        } else {
+            // Put.
+            CLIPS.put(pos, state);
+        }
     }
 
     /**
@@ -263,19 +276,31 @@ public final class BlockClips {
      *
      * @param pos Block position to remove a clip at
      * @see #CLIPS
-     * @see #has(BlockPos)
-     * @see #add(BlockPos, BlockState)
-     * @see #clear()
+     * @see #shouldClip(BlockPos)
+     * @see #addClip(BlockPos, BlockState)
+     * @see #clearClips()
      */
-    public static void remove(final BlockPos pos) {
+    public static void removeClip(final BlockPos pos) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert (pos != null) : "HCsCR: Parameter 'pos' is null.";
             assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", pos: " + pos + ')';
         }
 
-        // Remove.
-        CLIPS.remove(pos);
+        // Split debug logic.
+        if (Variables.DEBUG_LOGS) {
+            // Log. (**TRACE**)
+            LOGGER.trace(HCsCR.MARKER, "HCsCR: Removing a block clip... (pos: {}, clips: {})", pos, CLIPS);
+
+            // Remove. (store previous)
+            final BlockState previous = CLIPS.remove(pos);
+
+            // Log. (**DEBUG**)
+            LOGGER.debug(HCsCR.MARKER, "HCsCR: Removed a block clip. (pos: {}, previous: {}, clips: {})", pos, previous, CLIPS);
+        } else {
+            // Remove.
+            CLIPS.remove(pos);
+        }
     }
 
     /**
@@ -283,17 +308,27 @@ public final class BlockClips {
      * Should be called when a world is unloaded in {@link MinecraftMixin}.
      *
      * @see #CLIPS
-     * @see #has(BlockPos)
-     * @see #add(BlockPos, BlockState)
-     * @see #remove(BlockPos)
+     * @see #shouldClip(BlockPos)
+     * @see #addClip(BlockPos, BlockState)
+     * @see #removeClip(BlockPos)
      */
-    public static void clear() {
+    public static void clearClips() {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ')';
         }
 
+        // Log. (**TRACE**)
+        if (Variables.DEBUG_LOGS) {
+            LOGGER.trace(HCsCR.MARKER, "HCsCR: Clearing block clips... (clips: {})", CLIPS);
+        }
+
         // Clear.
         CLIPS.clear();
+
+        // Log. (**DEBUG**)
+        if (Variables.DEBUG_LOGS) {
+            LOGGER.debug(HCsCR.MARKER, "HCsCR: Cleared block clips. (clips: {})", CLIPS);
+        }
     }
 }

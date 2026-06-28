@@ -42,6 +42,30 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public final class Constants {
     /**
+     * Ninimum amount of ticks the entities are allowed to be hidden for.
+     * <p>
+     * Equals to {@code 0} ticks.
+     */
+    @CompileTimeConstant
+    public static final int MIN_HIDE_TICKS = 0;
+
+    /**
+     * Default value for the amount of ticks the entities are allowed to be hidden for.
+     * <p>
+     * Equals to {@code 20} ticks.
+     */
+    @CompileTimeConstant
+    public static final int DEFAULT_HIDE_TICKS = 20;
+
+    /**
+     * Maximum amount of ticks the entities are allowed to be hidden for.
+     * <p>
+     * Equals to {@code 50} ticks.
+     */
+    @CompileTimeConstant
+    public static final int MAX_HIDE_TICKS = 50;
+
+    /**
      * URL for fetching the update info.
      */
     @CompileTimeConstant
