@@ -27,7 +27,7 @@
       "modmenu": "18.0.0-beta.1"
     },
     "forge": {
-      "loader": "26.1.2-64.0.10",
+      "loader": "26.1.2-64.0.11",
       "constraints": "[64,65)"
     },
     "neoforge": {
