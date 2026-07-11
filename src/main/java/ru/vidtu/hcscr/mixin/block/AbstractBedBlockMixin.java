@@ -54,6 +54,11 @@ import net.minecraft.world.level.dimension.DimensionType;
 /*import net.minecraft.world.InteractionHand;
 *///?}
 
+//? if >=26.3 {
+import net.minecraft.world.level.block.AbstractBedBlock;
+//?}
+
+//~ if >=26.3 'BedBlock.' -> 'AbstractBedBlock.' {
 /**
  * Mixin that allows beds to be removed (or clipped) via clicking
  * if {@link Config#blocks()} is not {@link BlockMode#OFF}.
@@ -64,15 +69,15 @@ import net.minecraft.world.level.dimension.DimensionType;
  * @see BlockClips#addClip(BlockPos, BlockState)
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
-@Mixin(BedBlock.class)
+@Mixin(AbstractBedBlock.class)
 @NullMarked
-public final class BedBlockMixin {
+public final class AbstractBedBlockMixin {
     /**
      * Logger for this class.
      */
     @Unique
     @UnknownNullability
-    private static final Logger HCSCR_LOGGER = (Variables.DEBUG_LOGS ? LogManager.getLogger("HCsCR/BedBlockMixin") : null);
+    private static final Logger HCSCR_LOGGER = (Variables.DEBUG_LOGS ? LogManager.getLogger("HCsCR/AbstractBedBlockMixin") : null);
 
     /**
      * An instance of this class cannot be created.
@@ -83,7 +88,7 @@ public final class BedBlockMixin {
     // @ApiStatus.ScheduledForRemoval // Can't annotate this without logging in the console.
     @Deprecated
     @Contract(value = "-> fail", pure = true)
-    private BedBlockMixin() {
+    private AbstractBedBlockMixin() {
         if (Variables.DEBUG_ASSERTS) {
             throw new AssertionError("HCsCR: No instances.");
         }
@@ -150,16 +155,21 @@ public final class BedBlockMixin {
         }
 
         // Do nothing if either:
+        // - The bed is not a wool bed. (e.g., a straw bed from 26.3+)
         // - The current level (world) is not client's. (e.g., integrated server world)
         // - The mod is fully disabled via config.
         // - The bed doesn't explode in the current environment/dimension. (heuristical in 1.21.11+)
         // - The "remove blocks" feature is OFF. (in switch block below)
-        //? if >=1.21.11 {
+        //? if >=26.3 {
         // Environmental attributes from 25w42a for BED_WORKS are NOT synced to the client,
         // so we just guess and check by comparing if the dimension doesn't have an OVERWORLD skybox.
+        if (!((Object) this instanceof BedBlock) || !level.isClientSide() || !Config.enable() || (level.dimensionType().skybox() == DimensionType.Skybox.OVERWORLD)) { // Implicit NPE for 'level'
+        //?} elif >=1.21.11 {
+        /*// Environmental attributes from 25w42a for BED_WORKS are NOT synced to the client,
+        // so we just guess and check by comparing if the dimension doesn't have an OVERWORLD skybox.
         if (!level.isClientSide() || !Config.enable() || (level.dimensionType().skybox() == DimensionType.Skybox.OVERWORLD)) { // Implicit NPE for 'level'
-        //?} else {
-        /*if (!level.isClientSide() || !Config.enable() || BedBlock.canSetSpawn(level)) { // Implicit NPE for 'level'
+        *///?} else {
+        /*if (!level.isClientSide() || !Config.enable() || AbstractBedBlock.canSetSpawn(level)) { // Implicit NPE for 'level'
         *///?}
             // Log. (**DEBUG**)
             if (Variables.DEBUG_LOGS) {
@@ -199,7 +209,7 @@ public final class BedBlockMixin {
                 BlockClips.addClip(pos, state);
 
                 // Find the bed's connected part.
-                final BlockPos connectedPos = pos.relative(BedBlock.getConnectedDirection(state)); // Implicit NPE for 'pos', 'state'
+                final BlockPos connectedPos = pos.relative(AbstractBedBlock.getConnectedDirection(state)); // Implicit NPE for 'pos', 'state'
                 final BlockState connectedState = level.getBlockState(connectedPos);
 
                 // Add the bed's connected part to block clips. (only if it's really a part of the bed)
@@ -226,7 +236,7 @@ public final class BedBlockMixin {
                 level.removeBlock(pos, false); // Implicit NPE for 'pos'
 
                 // Find the bed's connected part.
-                final BlockPos connectedPos = pos.relative(BedBlock.getConnectedDirection(state)); // Implicit NPE for 'state'
+                final BlockPos connectedPos = pos.relative(AbstractBedBlock.getConnectedDirection(state)); // Implicit NPE for 'state'
                 final BlockState connectedState = level.getBlockState(connectedPos);
 
                 // Remove the bed's connected part. (only if it's really a part of the bed)
@@ -261,3 +271,4 @@ public final class BedBlockMixin {
         }
     }
 }
+//~}
