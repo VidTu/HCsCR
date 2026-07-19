@@ -40,7 +40,7 @@ import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.config.Config;
 import ru.vidtu.hcscr.config.BlockMode;
 import ru.vidtu.hcscr.mixin.MinecraftMixin;
-import ru.vidtu.hcscr.mixin.block.BedBlockMixin;
+import ru.vidtu.hcscr.mixin.block.AbstractBedBlockMixin;
 import ru.vidtu.hcscr.mixin.block.BlockBehaviour_BlockStateBaseMixin;
 import ru.vidtu.hcscr.mixin.block.ClientPacketListenerMixin;
 import ru.vidtu.hcscr.mixin.block.RespawnAnchorBlockMixin;
@@ -237,7 +237,7 @@ public final class BlockClips {
 
     /**
      * Adds a clip into {@link #CLIPS}. Should be called when on right click
-     * from {@link BedBlockMixin} or {@link RespawnAnchorBlockMixin}.
+     * from {@link AbstractBedBlockMixin} or {@link RespawnAnchorBlockMixin}.
      *
      * @param pos   Block position to create a clip for
      * @param state Expected block state at the clip for it to be effective
