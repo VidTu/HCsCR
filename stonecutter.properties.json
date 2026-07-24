@@ -31,7 +31,7 @@
       "constraints": "[64,65)"
     },
     "neoforge": {
-      "loader": "26.1.2.84",
+      "loader": "26.1.2.86",
       "constraints": "[26.1.2,26.1.3)"
     }
   },
