@@ -22,7 +22,7 @@
 
 package ru.vidtu.hcscr.handler;
 
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
@@ -44,9 +44,9 @@ import ru.vidtu.hcscr.platform.HStonecutter;
 import java.util.Iterator;
 
 //? if >=1.21.4 {
-import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
+import it.unimi.dsi.fastutil.objects.Reference2IntArrayMap;
 //?} else {
-/*import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+/*import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 *///?}
 
 /**
@@ -78,12 +78,12 @@ public final class HiddenEntities {
      */
     // This map should be array-backed, but it must support setValue(int) in iterators.
     // fastutil versions before 8.5.12 (shipped before MC1.21.4) don't have this due to a bug:
-    // https://github.com/vigna/fastutil/blob/fcac58f7d3df8e7d903fad533f4caada7f4937cf/CHANGES#L4
+    // https://github.com/vigna/fastutil/blob/8.5.14/CHANGES#L15-L17
     // So we're forced to use hash-based map before 1.21.4, even though hashing is useless for us.
     //? if >=1.21.4 {
-    private static final Object2IntMap<Entity> HIDDEN = new Object2IntArrayMap<>(0);
+    private static final Reference2IntMap<Entity> HIDDEN = new Reference2IntArrayMap<>(0);
     //?} else {
-    /*private static final Object2IntMap<Entity> HIDDEN = new Object2IntOpenHashMap<>(0);
+    /*private static final Reference2IntMap<Entity> HIDDEN = new Reference2IntOpenHashMap<>(0);
     *///?}
 
     /**
@@ -173,10 +173,10 @@ public final class HiddenEntities {
         }
 
         // Iterate.
-        final Iterator<Object2IntMap.Entry<Entity>> iterator = HIDDEN.object2IntEntrySet().iterator();
+        final Iterator<Reference2IntMap.Entry<Entity>> iterator = HIDDEN.reference2IntEntrySet().iterator();
         while (iterator.hasNext()) {
             // Extract.
-            final Object2IntMap.Entry<Entity> entry = iterator.next();
+            final Reference2IntMap.Entry<Entity> entry = iterator.next();
             final Entity entity = entry.getKey();
             final int ticksBeforeResync = entry.getIntValue();
 
