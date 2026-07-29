@@ -4,12 +4,12 @@
 
 Это - ~~электробус~~ страница с технической информацией о моде HCsCR.
 
-**Загляните на [основную страницу](https://github.com/VidTu/HCsCR/blob/main/README_ru.md),
-если вы не разбираетесь в коде/не разработче. (и не задрот)
+**Загляните на [основную страницу](https://github.com/VidTu/HCsCR/blob/main/docs/README_ru.md),
+если вы не разбираетесь в коде/не разработче. (и не задрот)**
 
 ## Язык (Language)
 
-- [English](https://github.com/VidTu/HCsCR/blob/main/CONTRIBUTING.md)
+- [English](https://github.com/VidTu/HCsCR/blob/main/docs/CONTRIBUTING.md)
 - **Русский**
 
 ## ЧаВО (FAQ) для разработчиков

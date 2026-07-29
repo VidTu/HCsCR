@@ -1,4 +1,4 @@
-<img alt src=hcscr.png>
+<img alt src=https://github.com/VidTu/HCsCR/raw/main/docs/hcscr.png>
 
 # HCsCR
 
@@ -7,7 +7,7 @@ Remove your end crystals before the server even knows you hit 'em!
 ## Language
 
 - **English**
-- [Русский](https://github.com/VidTu/HCsCR/blob/main/README_ru.md)
+- [Русский](https://github.com/VidTu/HCsCR/blob/main/docs/README_ru.md)
 
 ## Downloads
 
@@ -117,11 +117,11 @@ it depends on the ping, server MSPT, etc.
 
 <details>
 <summary>Totally Real™ Reviews From Happy Users</summary>
-<img alt="Grandma is happy with the crystal optimizer" src=totally_legit_review_en.png>
+<img alt="Grandma is happy with the crystal optimizer" src=https://github.com/VidTu/HCsCR/raw/main/docs/totally_legit_review_en.png>
 </details>
 
 Be sure to check out the
-[Developer FAQ](https://github.com/VidTu/HCsCR/blob/main/CONTRIBUTING.md#Developer-FAQ)
+[Developer FAQ](https://github.com/VidTu/HCsCR/blob/main/docs/CONTRIBUTING.md#developer-faq)
 for the FAQ about this mod's inner workings.
 
 ## License
@@ -167,4 +167,4 @@ It also uses [Gradle](https://gradle.org/) and [Java](https://java.com/).
 
 ## Development
 
-Check out the [Dev's Corner](https://github.com/VidTu/HCsCR/blob/main/CONTRIBUTING.md).
+Check out the [Dev's Corner](https://github.com/VidTu/HCsCR/blob/main/docs/CONTRIBUTING.md).

@@ -1,4 +1,4 @@
-<img alt src=hcscr.png>
+<img alt src=https://github.com/VidTu/HCsCR/raw/main/docs/hcscr.png>
 
 # HCsCR
 
@@ -6,7 +6,7 @@
 
 ## Язык (Language)
 
-- [English](https://github.com/VidTu/HCsCR/blob/main/README.md)
+- [English](https://github.com/VidTu/HCsCR/blob/main/docs/README.md)
 - **Русский**
 
 ## Скачать
@@ -116,11 +116,11 @@ PvP на кристаллах ("кпвп" или "cpvp") стало достат
 
 <details>
 <summary>Абсолютно реальные™ отзывы от счастливых пользователей</summary>
-<img alt="Профессионалы® в СНГ сообществе любят мод не просто так" src=totally_legit_review_ru.png>
+<img alt="Профессионалы® в СНГ сообществе любят мод не просто так" src=https://github.com/VidTu/HCsCR/raw/main/docs/totally_legit_review_ru.png>
 </details>
 
 Не забудьте посмотреть
-[ЧаВО (FAQ) для разработчиков](https://github.com/VidTu/HCsCR/blob/main/CONTRIBUTING.md#Developer-FAQ)
+[ЧаВО (FAQ) для разработчиков](https://github.com/VidTu/HCsCR/blob/main/docs/CONTRIBUTING.md#чаво-faq-для-разработчиков)
 для частых вопросов по внутреннему фукнционированию мода.
 
 ## Лицензия
@@ -167,4 +167,4 @@ PvP на кристаллах ("кпвп" или "cpvp") стало достат
 
 ## Разработка
 
-Загляните в [уголок разраба](https://github.com/VidTu/HCsCR/blob/main/CONTRIBUTING_ru.md).
+Загляните в [уголок разраба](https://github.com/VidTu/HCsCR/blob/main/docs/CONTRIBUTING_ru.md).
