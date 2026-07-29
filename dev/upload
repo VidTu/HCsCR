@@ -80,17 +80,13 @@ echo "NOTE: Version: ${UPLOAD_VERSION}"
 # Create a display name.
 UPLOAD_NAME="HCsCR ${UPLOAD_VERSION}"
 UPLOAD_NAME_JSON=$(echo "${UPLOAD_NAME}" | jq --raw-input --compact-output)
-echo "NOTE: Name: ${UPLOAD_VERSION}"
+echo "NOTE: Name: ${UPLOAD_NAME}"
 
 # Guess version type.
 echo 'Guessing the version type...'
 UPLOAD_VERSION_PRE='false'
-UPLOAD_VERSION_TYPE='release'
-echo "${UPLOAD_VERSION}" | grep -Eiq -- '-(beta|rc)' && UPLOAD_VERSION_TYPE='beta'
-echo "${UPLOAD_VERSION}" | grep -Eiq -- '-(alpha|snapshot)' && UPLOAD_VERSION_TYPE='alpha'
 [ "${UPLOAD_VERSION_TYPE}" != 'release' ] && UPLOAD_VERSION_PRE='true'
 echo "NOTE: Version Pre-Release (GitHub): ${UPLOAD_VERSION_PRE}"
-echo "NOTE: Version Type (Modrinth/CurseForge): ${UPLOAD_VERSION_TYPE}"
 
 # Extract the versions into a temporary file.
 echo 'Extracting the versions into a temporary file...'
