@@ -120,7 +120,7 @@ PvP на кристаллах ("кпвп" или "cpvp") стало достат
 </details>
 
 Не забудьте посмотреть
-[ЧаВО (FAQ) для разработчиков](https://github.com/VidTu/HCsCR/blob/main/docs/CONTRIBUTING.md#чаво-faq-для-разработчиков)
+[ЧаВО (FAQ) для разработчиков](https://github.com/VidTu/HCsCR/blob/main/docs/CONTRIBUTING_ru.md#чаво-faq-для-разработчиков)
 для частых вопросов по внутреннему фукнционированию мода.
 
 ## Лицензия
