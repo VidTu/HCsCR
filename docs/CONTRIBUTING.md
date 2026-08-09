@@ -7,11 +7,6 @@ This is the page with various technical information for the HCsCR mod.
 **Check out the [main page](https://github.com/VidTu/HCsCR/blob/main/docs/README.md)
 if you are not a technical person/not a developer. (and not a nerd)**
 
-## Language
-
-- **English**
-- [Русский](https://github.com/VidTu/HCsCR/blob/main/docs/CONTRIBUTING_ru.md)
-
 ## Developer FAQ
 
 **Q**: Is this mod open source?  
