@@ -120,9 +120,7 @@ it depends on the ping, server MSPT, etc.
 <img alt="Grandma is happy with the crystal optimizer" src=https://github.com/VidTu/HCsCR/raw/main/docs/totally_legit_review_en.png>
 </details>
 
-Be sure to check out the
-[Developer FAQ](https://github.com/VidTu/HCsCR/blob/main/docs/CONTRIBUTING.md#developer-faq)
-for the FAQ about this mod's inner workings.
+###### Be sure to check out the [Developer FAQ](https://github.com/VidTu/HCsCR/blob/main/docs/CONTRIBUTING.md#developer-faq) for the FAQ about this mod's inner workings.
 
 ## License
 

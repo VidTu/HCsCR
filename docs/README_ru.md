@@ -119,9 +119,7 @@ PvP на кристаллах ("кпвп" или "cpvp") стало достат
 <img alt="Профессионалы® в СНГ сообществе любят мод не просто так" src=https://github.com/VidTu/HCsCR/raw/main/docs/totally_legit_review_ru.png>
 </details>
 
-Не забудьте посмотреть
-[Developer FAQ](https://github.com/VidTu/HCsCR/blob/main/docs/CONTRIBUTING.md#developer-faq)
-для частых вопросов по внутреннему фукнционированию мода. (на английском языке)
+###### Не забудьте посмотреть [Developer FAQ](https://github.com/VidTu/HCsCR/blob/main/docs/CONTRIBUTING.md#developer-faq) для частых вопросов по внутреннему фукнционированию мода. (на английском языке)
 
 ## Лицензия
 
