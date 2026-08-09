@@ -219,4 +219,5 @@ The main requirements for PRs are basically the bare minimum. PRs must be:
 
 ## Security
 
-Check out [SECURITY.md](SECURITY.md) if you're insecure. <3
+Check out [SECURITY.md](https://github.com/VidTu/HCsCR/blob/main/docs/SECURITY.md)
+if you're insecure. <3
