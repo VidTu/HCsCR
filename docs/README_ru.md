@@ -158,8 +158,8 @@ PvP на кристаллах ("кпвп" или "cpvp") стало достат
   [LlamaLad7](https://github.com/LlamaLad7). (и контрибьюторов)
 - [Minecraft](https://minecraft.net/) от
   [Mojang](https://mojang.com/).
-- Разные CLI инструменты (`cat, curl, grep, jq, mktemp, sed, sh, tr`),
-  которые используются в [upload](../dev/upload)-скрипте.
+- Разные CLI инструменты (`cat, curl, grep, jq, mktemp, sed, sh, tr`) для
+  [upload](https://github.com/VidTu/HCsCR/blob/main/dev/upload)-скрипта.
 
 Используются [Gradle](https://gradle.org/) и [Java](https://java.com/).
 

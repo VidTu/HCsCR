@@ -216,3 +216,7 @@ The main requirements for PRs are basically the bare minimum. PRs must be:
 - Relevant (related to the project's functionality)
 - Understandable (by you and project's authors)
 - In English (both the code and the description)
+
+## Security
+
+Check out [SECURITY.md](SECURITY.md) if you're insecure. <3
