@@ -16,36 +16,13 @@ you can report it privately via any of the following methods:
 
 Where possible, **prefer** GitHub Private vulnerability reporting.
 
-There are no public keys (e.g, PGP) to encrypt communication, sorry.[^1]
-
-[^1]: PGP encryption is on my TODO/TBD list. If you really want
-      to use it, you should use the same public key I sign my
-      commits with. It is *not* uploaded to any public keyserver.
-
 ### Supported Versions
 
 The only supported versions for vulnerability reporting are:
 
 - The latest release published to GitHub.
-- The latest pre-release published to GitHub[^2].
+- The latest pre-release published to GitHub[^1].
 - The latest Git commit build.
 
-[^2]: Pre-release versions are supported *only* if they
+[^1]: Pre-release versions are supported *only* if they
       were published after the latest *stable* release.
-
-## Artifacts (Binaries/JARs)
-
-### Reproducible Builds
-
-HCsCR reproducibility status is currently unknown.
-
-### Signing
-
-HCsCR is not signed by digital signatures (namely PGP). Sorry![^3]
-
-[^3]: PGP signing is on my TODO/TBD list.
-
-### Supply Chain
-
-HCsCR has implemented some supply chain validation, however,
-**most of the supply chain isn't validated currently**.
