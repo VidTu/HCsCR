@@ -165,5 +165,5 @@ PvP на кристаллах ("кпвп" или "cpvp") стало достат
 
 ## Разработка
 
-Загляните в [Dev's Corner](https://github.com/VidTu/HCsCR/blob/main/docs/CONTRIBUTING_ru.md).
+Загляните в [Dev's Corner](https://github.com/VidTu/HCsCR/blob/main/docs/CONTRIBUTING.md).
 (на английском языке)
