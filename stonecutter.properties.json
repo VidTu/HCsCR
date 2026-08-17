@@ -27,7 +27,7 @@
       "modmenu": "18.0.0"
     },
     "forge": {
-      "loader": "26.1.2-64.1.0",
+      "loader": "26.1.2-64.1.1",
       "constraints": "[64,65)"
     },
     "neoforge": {
@@ -41,7 +41,7 @@
       "modmenu": "17.0.0"
     },
     "forge": {
-      "loader": "1.21.11-61.2.0",
+      "loader": "1.21.11-61.2.1",
       "constraints": "[61,62)"
     },
     "neoforge": {
@@ -55,7 +55,7 @@
       "modmenu": "16.0.1"
     },
     "forge": {
-      "loader": "1.21.10-60.1.13",
+      "loader": "1.21.10-60.1.15",
       "constraints": "[60,61)"
     },
     "neoforge": {
@@ -69,7 +69,7 @@
       "modmenu": "15.0.2"
     },
     "forge": {
-      "loader": "1.21.8-58.1.21",
+      "loader": "1.21.8-58.1.22",
       "constraints": "[58,59)"
     },
     "neoforge": {
@@ -83,7 +83,7 @@
       "modmenu": "14.0.2"
     },
     "forge": {
-      "loader": "1.21.5-55.1.12",
+      "loader": "1.21.5-55.1.13",
       "constraints": "[55,56)"
     },
     "neoforge": {
