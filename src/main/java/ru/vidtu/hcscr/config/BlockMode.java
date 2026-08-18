@@ -79,7 +79,7 @@ public enum BlockMode {
      * Creates a new mode.
      */
     @Contract(pure = true)
-    /*private*/ BlockMode() {
+    /*enum-private*/ BlockMode() {
         // Create the translation key.
         final String key = ("hcscr.blocks." + this.name().toLowerCase(Locale.ROOT));
 

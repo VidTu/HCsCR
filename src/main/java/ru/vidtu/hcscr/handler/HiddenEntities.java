@@ -22,6 +22,9 @@
 
 package ru.vidtu.hcscr.handler;
 
+//~ if >=1.21.4 'Reference2IntOpenHashMap' -> 'Reference2IntArrayMap' {
+import it.unimi.dsi.fastutil.objects.Reference2IntArrayMap;
+//~}
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -42,12 +45,6 @@ import ru.vidtu.hcscr.mixin.crystal.EntityMixin;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.util.Iterator;
-
-//? if >=1.21.4 {
-import it.unimi.dsi.fastutil.objects.Reference2IntArrayMap;
-//?} else {
-/*import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
-*///?}
 
 /**
  * Handling logic for the mod's temporarily hidden entities until they are truly removed by
@@ -80,11 +77,9 @@ public final class HiddenEntities {
     // fastutil versions before 8.5.12 (shipped before MC1.21.4) don't have this due to a bug:
     // https://github.com/vigna/fastutil/blob/8.5.14/CHANGES#L15-L17
     // So we're forced to use hash-based map before 1.21.4, even though hashing is useless for us.
-    //? if >=1.21.4 {
+    //~ if >=1.21.4 'Reference2IntOpenHashMap' -> 'Reference2IntArrayMap' {
     private static final Reference2IntMap<Entity> HIDDEN = new Reference2IntArrayMap<>(0);
-    //?} else {
-    /*private static final Reference2IntMap<Entity> HIDDEN = new Reference2IntOpenHashMap<>(0);
-    *///?}
+    //~}
 
     /**
      * Logger for this class.

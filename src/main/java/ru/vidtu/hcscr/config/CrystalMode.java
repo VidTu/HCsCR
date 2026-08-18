@@ -81,7 +81,7 @@ public enum CrystalMode {
      * Creates a new mode.
      */
     @Contract(pure = true)
-    /*private*/ CrystalMode() {
+    /*enum-private*/ CrystalMode() {
         // Create the translation key.
         final String key = ("hcscr.crystals." + this.name().toLowerCase(Locale.ROOT));
 
