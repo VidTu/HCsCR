@@ -264,35 +264,6 @@ public final class HStonecutter {
         *///?}
     }
 
-    //? if forge || hacky_neoforge {
-    /*/^*
-     * Hurts (damages) the entity the specified amount.
-     *
-     * @param entity Target entity to hurt
-     * @param source Attack source (inaccurate if invoked on the client)
-     * @param amount Total amount of damage done to the entity (inaccurate if invoked on the client)
-     * @return The result of the hurting
-     ^/
-    @SuppressWarnings({"deprecation", "RedundantSuppression"}) // <- Used in vanilla code. (1.21.3+)
-    @CheckReturnValue
-    public static boolean hurtEntity(final Entity entity, final DamageSource source, final float amount) {
-        // Validate.
-        if (Variables.DEBUG_ASSERTS) {
-            assert (entity != null) : "HCsCR: Parameter 'entity' is null. (source: " + source + ", amount: " + ')';
-            assert (source != null) : "HCsCR: Parameter 'source' is null. (entity: " + entity + ", amount: " + ')';
-            assert (Float.isFinite(amount)) : "HCsCR: Parameter 'amount' is not finite. (entity: " + entity + ", source: " + source + ", amount: " + ')';
-            // No thread checks here because this can be called from the integrated server.
-        }
-
-        // Delegate.
-        //? if >=1.21.3 {
-        return entity.hurtOrSimulate(source, amount); // Implicit NPE for 'entity', 'source'
-        //?} else {
-        /^return entity.hurt(source, amount); // Implicit NPE for 'entity', 'source'
-        ^///?}
-    }
-    *///?}
-
     /**
      * Creates a new GUI button instance.
      *

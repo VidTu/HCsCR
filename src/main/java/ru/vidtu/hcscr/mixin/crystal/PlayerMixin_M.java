@@ -75,15 +75,11 @@ public final class PlayerMixin_M {
      * @param totalDamage  Total amount of damage done to the entity (inaccurate if invoked on the client)
      * @return Whether the attack has succeeded
      * @apiNote Do not call, called by Mixin
-     * @see HStonecutter#hurtEntity(Entity, DamageSource, float)
      * @see HCsCR#handlePlayerHittingEntity(Player, Entity, DamageSource, float)
      ^/
     @DoNotCall("Called by Mixin")
-    //? if >=1.21.3 {
+    //~ if >=1.21.3 'hurt' -> 'hurtOrSimulate' {
     @Redirect(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurtOrSimulate(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
-    //?} else {
-    /^@Redirect(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
-    ^///?}
     private boolean hcscr_attack_hurtOrSimulate(final Entity target, final DamageSource damageSource,
                                                 final float totalDamage) {
         // Validate.
@@ -95,7 +91,8 @@ public final class PlayerMixin_M {
 
         // Delegate.
         //noinspection NonShortCircuitBooleanExpression // <- Needs to call both methods.
-        return (HStonecutter.hurtEntity(target, damageSource, totalDamage) | HCsCR.handlePlayerHittingEntity((Player) (Object) this, target, damageSource, totalDamage));
+        return (target.hurtOrSimulate(damageSource, totalDamage) | HCsCR.handlePlayerHittingEntity((Player) (Object) this, target, damageSource, totalDamage));
     }
+    //~}
 }
 *///?}

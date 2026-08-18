@@ -75,11 +75,8 @@ public final class PlayerMixin_E {
      * @see HCsCR#handlePlayerHittingEntity(Player, Entity, DamageSource, float)
      */
     @DoNotCall("Called by Mixin")
-    //? if >=1.21.3 {
+    //~ if >=1.21.3 'hurt' -> 'hurtOrSimulate' {
     @WrapOperation(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurtOrSimulate(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
-    //?} else {
-    /*@WrapOperation(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
-    *///?}
     private boolean hcscr_attack_hurtOrSimulate(final Entity target, final DamageSource damageSource,
                                                 final float totalDamage, final Operation<Boolean> original) {
         // Validate.
@@ -94,4 +91,5 @@ public final class PlayerMixin_E {
         //noinspection NonShortCircuitBooleanExpression // <- Needs to call both methods.
         return (original.call(target, damageSource, totalDamage) | HCsCR.handlePlayerHittingEntity((Player) (Object) this, target, damageSource, totalDamage));
     }
+    //~}
 }
