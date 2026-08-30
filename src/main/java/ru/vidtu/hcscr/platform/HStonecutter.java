@@ -22,19 +22,10 @@
 
 package ru.vidtu.hcscr.platform;
 
-import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.AbstractSliderButton;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Checkbox;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.util.Mth;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.ApiStatus;
@@ -49,52 +40,32 @@ import ru.vidtu.hcscr.config.ConfigScreen;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.IntConsumer;
-import java.util.function.IntFunction;
 
 //? if >=1.21.11 {
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.profiling.Profiler;
-import java.time.Duration;
 //?} elif >=1.21.8 {
-/*import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.resources.ResourceLocation;
+/*import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.Profiler;
-import java.time.Duration;
 *///?} elif >=1.21.4 {
-/*import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.resources.ResourceLocation;
+/*import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.Profiler;
-import java.time.Duration;
 *///?} elif >=1.21.3 {
-/*import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.resources.ResourceLocation;
+/*import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.Profiler;
-import java.time.Duration;
 *///?} elif >=1.20.6 {
-/*import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.resources.ResourceLocation;
-import java.time.Duration;
+/*import net.minecraft.resources.ResourceLocation;
 *///?} elif >=1.19.4 {
-/*import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.resources.ResourceLocation;
+/*import net.minecraft.resources.ResourceLocation;
 *///?} elif >=1.19.2 {
-/*import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.resources.ResourceLocation;
-import org.apache.commons.lang3.mutable.MutableObject;
+/*import net.minecraft.resources.ResourceLocation;
 *///?} elif >=1.17.1 {
-/*import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.network.chat.TranslatableComponent;
+/*import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import org.apache.commons.lang3.mutable.MutableObject;
 *///?} else {
-/*import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.network.chat.TranslatableComponent;
+/*import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import org.apache.commons.lang3.mutable.MutableObject;
 *///?}
 
 /**
@@ -117,17 +88,6 @@ public final class HStonecutter {
     /*/^package-private^/ static final ResourceLocation CHANNEL_IDENTIFIER = ResourceLocation.fromNamespaceAndPath("hcscr", "imhere");
     *///?} else {
     /*/^package-private^/ static final ResourceLocation CHANNEL_IDENTIFIER = new ResourceLocation("hcscr", "imhere");
-    *///?}
-
-    /**
-     * A duration for tooltips in version-dependant units. Currently {@code 250} milliseconds.
-     */
-    //? if >=1.20.6 {
-    private static final Duration TOOLTIP_DURATION = Duration.ofMillis(250L);
-    //?} elif >=1.19.4 {
-    /*private static final int TOOLTIP_DURATION = 250; // Millis.
-    *///?} else {
-    /*private static final long TOOLTIP_DURATION = 250_000_000L; // Nanos.
     *///?}
 
     /**
@@ -262,293 +222,5 @@ public final class HStonecutter {
         //?} else {
         /*return entity.removed; // Implicit NPE for 'entity'
         *///?}
-    }
-
-    /**
-     * Creates a new GUI button instance.
-     *
-     * @param font            Font renderer used by the GUI
-     * @param x               Button X position
-     * @param y               Button Y position
-     * @param width           Button width in scaled pixels
-     * @param height          Button height in scaled pixels
-     * @param message         Button label
-     * @param tooltip         Button tooltip
-     * @param handler         Button click handler (button itself and tooltip setter)
-     * @param tooltipRenderer Last pass tooltip renderer, typically {@link ConfigScreen}
-     * @return A new button instance
-     */
-    @Contract(value = "_, _, _, _, _, _, _, _, _ -> new", pure = true)
-    public static Button createButton(final Font font, final int x, final int y, final int width, final int height,
-                                      final Component message, final Component tooltip,
-                                      final BiConsumer<Button, Consumer<Component>> handler,
-                                      final Consumer<List<FormattedCharSequence>> tooltipRenderer) {
-        // Validate.
-        if (Variables.DEBUG_ASSERTS) {
-            assert (font != null) : "HCsCR: Parameter 'font' is null. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert ((x >= -320) && (x <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320))) : "HCsCR: Parameter 'x' is not in the [" + -320 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert ((y >= -240) && (y <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240))) : "HCsCR: Parameter 'y' is not in the [" + -240 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert (width == 200) : "HCsCR: Parameter 'width' is not 200. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert (height == 20) : "HCsCR: Parameter 'height' is 20. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert (message != null) : "HCsCR: Parameter 'message' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert (tooltip != null) : "HCsCR: Parameter 'tooltip' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert (handler != null) : "HCsCR: Parameter 'handler' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert (tooltipRenderer != null) : "HCsCR: Parameter 'tooltipRenderer' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ')';
-            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Creating a button NOT from the main thread. (thread: " + Thread.currentThread() + ", font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        }
-
-        // Create.
-        //? if >=1.19.4 {
-        final Button button = Button.builder(message, (final Button innerButton) -> {
-            // Validate.
-            if (Variables.DEBUG_ASSERTS) {
-                assert (innerButton != null) : "HCsCR: Parameter 'innerButton' is null.";
-            }
-
-            // Click.
-            handler.accept(innerButton, (final Component newTip) -> { // Implicit NPE for 'handler'
-                // Validate.
-                if (Variables.DEBUG_ASSERTS) {
-                    assert (newTip != null) : "HCsCR: Parameter 'newTip' is null. (innerButton: " + innerButton + ')';
-                    assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Setting a button tip NOT from the main thread. (thread: " + Thread.currentThread() + ", newTip: " + newTip + ", innerButton: " + innerButton + ')';
-                }
-
-                // Set.
-                innerButton.setTooltip(Tooltip.create(newTip));
-                innerButton.setTooltipDelay(TOOLTIP_DURATION);
-            });
-        }).tooltip(Tooltip.create(tooltip)).bounds(x, y, width, height).build();
-        button.setTooltipDelay(TOOLTIP_DURATION);
-        return button;
-        //?} else {
-        /*final MutableObject<List<FormattedCharSequence>> tipHolder = new MutableObject<>(font.split(tooltip, 170)); // Implicit NPE for 'font', 'tooltip'
-        return new Button(x, y, width, height, message, (final Button innerButton) -> handler.accept(innerButton, (final Component newTip) -> { // Implicit NPE for 'handler'
-            // Validate.
-            if (Variables.DEBUG_ASSERTS) {
-                assert (newTip != null) : "HCsCR: Parameter 'newTip' is null. (innerButton: " + innerButton + ')';
-                assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Setting a button tip NOT from the main thread. (thread: " + Thread.currentThread() + ", newTip: " + newTip + ", innerButton: " + innerButton + ')';
-            }
-
-            // Set.
-            tipHolder.setValue(font.split(newTip, 170));
-        })) {
-            /^*
-             * Last time when the mouse was NOT over this element in units of {@link System#nanoTime()}.
-             ^/
-            private /^non-final^/ long lastAway = System.nanoTime();
-
-            @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") // <- Parameter names are not provided by Mojmap.
-            @Override
-            public void renderButton(final PoseStack graphics, final int mouseX, final int mouseY, final float delta) {
-                // Render the element itself.
-                super.renderButton(graphics, mouseX, mouseY, delta);
-
-                // Button is not hovered, update the state.
-                if (!this.isHovered) {
-                    this.lastAway = System.nanoTime();
-                    return;
-                }
-
-                // Button is not hovered for enough time.
-                if ((System.nanoTime() - this.lastAway) < TOOLTIP_DURATION) return;
-
-                // Render the tooltip.
-                tooltipRenderer.accept(tipHolder.getValue()); // Implicit NPE for 'tooltipRenderer'
-            }
-        };
-        *///?}
-    }
-
-    /**
-     * Creates a new GUI checkbox instance.
-     *
-     * @param font            Font renderer used by the GUI
-     * @param x               Checkbox X position
-     * @param y               Checkbox Y position
-     * @param message         Checkbox label
-     * @param tooltip         Checkbox tooltip
-     * @param check           Whether the checkbox is checked
-     * @param handler         Checkbox click handler
-     * @param tooltipRenderer Last pass tooltip renderer, typically {@link ConfigScreen}
-     * @return A new checkbox instance
-     */
-    @Contract(value = "_, _, _, _, _, _, _, _ -> new", pure = true)
-    public static Checkbox createCheckbox(final Font font, final int x, final int y, final Component message,
-                                          final Component tooltip, final boolean check, final BooleanConsumer handler,
-                                          final Consumer<List<FormattedCharSequence>> tooltipRenderer) {
-        // Validate.
-        if (Variables.DEBUG_ASSERTS) {
-            assert (font != null) : "HCsCR: Parameter 'font' is null. (x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert ((x >= -320) && (x <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320))) : "HCsCR: Parameter 'x' is not in the [" + -320 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert ((y >= -240) && (y <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240))) : "HCsCR: Parameter 'y' is not in the [" + -240 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert (message != null) : "HCsCR: Parameter 'message' is null. (font: " + font + ", x: " + x + ", y: " + y + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert (tooltip != null) : "HCsCR: Parameter 'tooltip' is null. (font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert (handler != null) : "HCsCR: Parameter 'handler' is null. (font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert (tooltipRenderer != null) : "HCsCR: Parameter 'tooltipRenderer' is null. (font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ')';
-            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Creating a checkbox NOT from the main thread. (thread: " + Thread.currentThread() + ", font: " + font + ", x: " + x + ", y: " + y + ", message: " + message + ", tooltip: " + tooltip + ", check: " + check + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        }
-
-        // Create.
-        //? if >=1.20.4 {
-        final Checkbox box = Checkbox.builder(message, font) // Implicit NPE for 'message', 'font'
-                .pos(x - ((font.width(message) + 24) / 2), y)
-                .selected(check)
-                .onValueChange((final Checkbox ignoredCheckbox, final boolean value) -> handler.accept(value)) // Implicit NPE for 'handler'
-                .build();
-        //?} else {
-        /*final int width = font.width(message) + 24; // Implicit NPE for 'font', 'message'
-        final Checkbox box = new Checkbox(x - (width / 2), y, width, 20, message, check) {
-            @Override
-            public void onPress() {
-                // Toggle the checkbox.
-                super.onPress();
-
-                // Invoke the handler.
-                handler.accept(this.selected()); // Implicit NPE for 'handler'
-            }
-
-            //? if <1.19.4 {
-            /^/^¹*
-             * A tooltip split to {@code 170} scaled pixels wide, a value used in modern versions
-             ¹^/
-            private final List<FormattedCharSequence> tip = font.split(tooltip, 170); // Implicit NPE for 'tooltip'
-
-            /^¹*
-             * Last time when the mouse was NOT over this element in units of {@link System#nanoTime()}.
-             ¹^/
-            private /^¹non-final¹^/ long lastAway = System.nanoTime();
-
-            @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") // <- Parameter names are not provided by Mojmap.
-            @Override
-            public void renderButton(final PoseStack graphics, final int mouseX, final int mouseY, final float delta) {
-                // Render the element itself.
-                super.renderButton(graphics, mouseX, mouseY, delta);
-
-                // Button is not hovered, update the state.
-                if (!this.isHovered) {
-                    this.lastAway = System.nanoTime();
-                    return;
-                }
-
-                // Button is not hovered for enough time.
-                if ((System.nanoTime() - this.lastAway) < TOOLTIP_DURATION) return;
-
-                // Render the tooltip.
-                tooltipRenderer.accept(this.tip); // Implicit NPE for 'tooltipRenderer'
-            }
-            ^///?}
-        };
-        *///?}
-        //? if >=1.19.4 {
-        box.setTooltip(Tooltip.create(tooltip));
-        box.setTooltipDelay(TOOLTIP_DURATION);
-        //?}
-        return box;
-    }
-
-    /**
-     * Creates a new GUI slider instance.
-     *
-     * @param font            Font renderer used by the GUI
-     * @param x               Slider X position
-     * @param y               Slider Y position
-     * @param width           Slider width in scaled pixels
-     * @param height          Slider height in scaled pixels
-     * @param provider        Slider label provider by value
-     * @param tooltip         Slider tooltip
-     * @param value           Slider value
-     * @param min             Slider minimum allowed value
-     * @param max             Slider maximum value
-     * @param handler         Slider move handler
-     * @param tooltipRenderer Last pass tooltip renderer, typically {@link ConfigScreen}
-     * @return A new slider instance
-     */
-    @Contract(value = "_, _, _, _, _, _, _, _, _, _, _, _ -> new", pure = true)
-    public static AbstractSliderButton createSlider(final Font font, final int x, final int y, final int width,
-                                                    final int height, final IntFunction<Component> provider,
-                                                    final Component tooltip, final int value, final int min,
-                                                    final int max, final IntConsumer handler,
-                                                    final Consumer<List<FormattedCharSequence>> tooltipRenderer) {
-        // Validate.
-        if (Variables.DEBUG_ASSERTS) {
-            assert (font != null) : "HCsCR: Parameter 'font' is null. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert ((x >= -320) && (x <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320))) : "HCsCR: Parameter 'x' is not in the [" + -320 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledWidth(), 320) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert ((y >= -240) && (y <= Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240))) : "HCsCR: Parameter 'y' is not in the [" + -240 + ".." + Math.max(Minecraft.getInstance().getWindow().getGuiScaledHeight(), 240) + "] range. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert (width == 200) : "HCsCR: Parameter 'width' is not 200. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert (height == 20) : "HCsCR: Parameter 'height' is 20. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert (provider != null) : "HCsCR: Parameter 'provider' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert (tooltip != null) : "HCsCR: Parameter 'tooltip' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert (max > min) : "HCsCR: Parameter 'min' is not bigger than 'max'. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert (value >= min) : "HCsCR: Parameter 'value' is smaller than 'min'. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert (value <= max) : "HCsCR: Parameter 'value' is bigger than 'max'. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert (handler != null) : "HCsCR: Parameter 'handler' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", tooltipRenderer: " + tooltipRenderer + ')';
-            assert (tooltipRenderer != null) : "HCsCR: Parameter 'tooltipRenderer' is null. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ')';
-            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Creating a slider NOT from the main thread. (thread: " + Thread.currentThread() + ", font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        }
-
-        // Create the slider.
-        final int clamped = Mth.clamp(value, min, max);
-        final double normalized = (double) (clamped - min) / (max - min);
-        final Component message = provider.apply(clamped);
-        if (Variables.DEBUG_ASSERTS) {
-            assert (message != null) : "HCsCR: Slider's message was returned null initially. (font: " + font + ", x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", tooltipRenderer: " + tooltipRenderer + ')';
-        }
-        final AbstractSliderButton slider = new AbstractSliderButton(x, y, width, height, message, normalized) { // Implicit NPE for 'provider'
-            /**
-             * A denormalized value, i.e. back in its original range.
-             */
-            private /*non-final*/ int denormalized = clamped;
-
-            @Override
-            protected void updateMessage() {
-                final Component message = provider.apply(this.denormalized);
-                if (Variables.DEBUG_ASSERTS) {
-                    assert (message != null) : "HCsCR: Slider's message was returned null after updating. (provider: " + provider + ", slider: " + this + ')';
-                }
-                this.setMessage(message);
-            }
-
-            @Override
-            protected void applyValue() {
-                final int denormalized = this.denormalized = (int) Math.round(Mth.lerp(this.value, min, max));
-                handler.accept(denormalized); // Implicit NPE for 'handler'
-            }
-
-            //? if <1.19.4 {
-            /*/^*
-             * A tooltip split to {@code 170} scaled pixels wide, a value used in modern versions
-             ^/
-            private final List<FormattedCharSequence> tip = font.split(tooltip, 170); // Implicit NPE for 'font', 'tooltip'
-
-            /^*
-             * Last time when the mouse was NOT over this element in units of {@link System#nanoTime()}.
-             ^/
-            private /^non-final^/ long lastAway = System.nanoTime();
-
-            @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") // <- Parameter names are not provided by Mojmap.
-            @Override
-            public void renderButton(final PoseStack graphics, final int mouseX, final int mouseY, final float delta) {
-                // Render the element itself.
-                super.renderButton(graphics, mouseX, mouseY, delta);
-
-                // Button is not hovered, update the state.
-                if (!this.isHovered) {
-                    this.lastAway = System.nanoTime();
-                    return;
-                }
-
-                // Button is not hovered for enough time.
-                if ((System.nanoTime() - this.lastAway) < TOOLTIP_DURATION) return;
-
-                // Render the tooltip.
-                tooltipRenderer.accept(this.tip); // Implicit NPE for 'tooltipRenderer'
-            }
-            *///?}
-        };
-        //? if >=1.19.4 {
-        slider.setTooltip(Tooltip.create(tooltip));
-        slider.setTooltipDelay(TOOLTIP_DURATION);
-        //?}
-        return slider;
     }
 }

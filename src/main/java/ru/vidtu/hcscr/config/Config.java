@@ -26,6 +26,13 @@ import com.google.common.base.MoreObjects;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+//? if fabric {
+import net.fabricmc.loader.api.FabricLoader;
+//?} elif neoforge {
+/*import net.neoforged.fml.loading.FMLPaths;
+*///?} else {
+/*import net.minecraftforge.fml.loading.FMLPaths;
+*///?}
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
@@ -48,13 +55,6 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 
-//? if fabric {
-import net.fabricmc.loader.api.FabricLoader;
-//?} elif neoforge {
-/*import net.neoforged.fml.loading.FMLPaths;
-*///?} else {
-/*import net.minecraftforge.fml.loading.FMLPaths;
-*///?}
 
 //? if >=1.19.4 {
 import net.minecraft.world.entity.Interaction;
@@ -148,7 +148,7 @@ public final class Config {
     /**
      * Blocks (anchors/beds) removal mode, {@link BlockMode#COLLISION} by default.
      */
-    @SerializedName(value = "blocks", alternate = "anchors") // was "anchors" in HCsCR 2.0.2
+    @SerializedName(value = "blocks", alternate = "anchors") // Was "anchors" in HCsCR before 2.1.0.
     private static /*non-final*/ BlockMode blocks = BlockMode.COLLISION;
 
     /**
