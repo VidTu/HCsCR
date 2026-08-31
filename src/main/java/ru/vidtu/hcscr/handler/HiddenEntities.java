@@ -44,12 +44,11 @@ import java.util.Iterator;
 
 /**
  * Handling logic for the mod's temporarily hidden entities until they are truly removed by
- * the server side. Only does something when {@link Config#crystalsResync()} is non-zero}.
+ * the server side. Only does something when {@link Config#crystalsResync()} is non-zero.
  *
  * @author VidTu
  * @apiNote Internal use only
- * @see BlockMode#COLLISION
- * @see Config#blocks()
+ * @see Config#crystalsResync()
  */
 @ApiStatus.Internal
 @NullMarked
@@ -261,12 +260,13 @@ public final class HiddenEntities {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert (entity != null) : "HCsCR: Parameter 'entity' is null. (ticks: " + ticks + ')';
-            assert ((ticks >= Constants.MIN_HIDE_TICKS) && (ticks <= Constants.MAX_HIDE_TICKS)) : "HCsCR: Parameter 'ticks' is not in the [" + Constants.MIN_HIDE_TICKS + ".." + Constants.MAX_HIDE_TICKS + "] range. (entity: " + entity + ", ticks: " + ticks + ')';
+            final int resync = Config.crystalsResync();
+            assert (ticks == resync) : "HCsCR: Parameter 'ticks' doesn't match config's 'crystalsResync'. (entity: " + entity + ", ticks: " + ticks + ", resync: " + resync + ')';
             assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ", ticks: " + ticks + ')';
-            // TODO(VidTu): Check if remove.
+            //~ if >=1.17.1 'removed' -> 'isRemoved()' {
+            assert (!entity.isRemoved()) : "HCsCR: Invalid entity. (entity: " + entity + ", ticks: " + ticks + ')';
+            //~}
         }
-
-        // TODO(VidTu): Should we clamp here?
 
         // Split debug logic.
         if (Variables.DEBUG_LOGS && (LOGGER.isDebugEnabled(HCsCR.MARKER) || LOGGER.isTraceEnabled(HCsCR.MARKER))) {

@@ -251,7 +251,12 @@ public final class BlockClips {
         if (Variables.DEBUG_ASSERTS) {
             assert (pos != null) : "HCsCR: Parameter 'pos' is null. (state: " + state + ')';
             assert (state != null) : "HCsCR: Parameter 'state' is null. (pos: " + pos + ')';
-            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", pos: " + pos + ", state: " + state + ')';
+            final Minecraft client = Minecraft.getInstance();
+            assert (client.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", pos: " + pos + ", state: " + state + ')';
+            final ClientLevel level = client.level;
+            assert (level != null) : "HCsCR: Level is null. (pos: " + pos + ", state: " + state + ')';
+            final BlockState actualState = level.getBlockState(pos);
+            assert (state == actualState) : "HCsCR: Mismatching block state. (pos: " + pos + ", state: " + state + ", actualState: " + actualState + ')';
         }
 
         // Split debug logic.

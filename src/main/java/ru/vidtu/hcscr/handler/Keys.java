@@ -50,6 +50,8 @@ import ru.vidtu.hcscr.platform.HStonecutter;
  * @apiNote Internal use only
  * @see #CONFIG
  * @see #TOGGLE
+ * @see Config
+ * @see ConfigScreen
  */
 @ApiStatus.Internal
 @NullMarked
@@ -72,6 +74,7 @@ public final class Keys {
      * "Open the config screen" key. Not bound by default.
      *
      * @see #config(Minecraft, ProfilerFiller)
+     * @see ConfigScreen
      */
     //~ if >=1.21.10 '"key.category.hcscr.root"' -> 'CATEGORY' {
     public static final KeyMapping CONFIG = new KeyMapping("hcscr.key.config", InputConstants.UNKNOWN.getValue(), CATEGORY);
@@ -80,6 +83,7 @@ public final class Keys {
      * "Toggle the mod" key. Not bound by default.
      *
      * @see #toggle(Minecraft, ProfilerFiller)
+     * @see Config#toggle()
      */
     public static final KeyMapping TOGGLE = new KeyMapping("hcscr.key.toggle", InputConstants.UNKNOWN.getValue(), CATEGORY);
     //~}
@@ -147,6 +151,7 @@ public final class Keys {
      * @see #CONFIG
      * @see #tick(Minecraft, ProfilerFiller)
      * @see #toggle(Minecraft, ProfilerFiller)
+     * @see ConfigScreen
      */
     private static void config(final Minecraft client, final @UnknownNullability ProfilerFiller profiler) {
         // Validate.
@@ -209,6 +214,7 @@ public final class Keys {
      * @see #TOGGLE
      * @see #tick(Minecraft, ProfilerFiller)
      * @see #config(Minecraft, ProfilerFiller)
+     * @see Config#toggle()
      */
     private static void toggle(final Minecraft client, final @UnknownNullability ProfilerFiller profiler) {
         // Validate.

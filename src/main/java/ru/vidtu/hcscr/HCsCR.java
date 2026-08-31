@@ -22,8 +22,6 @@
 
 package ru.vidtu.hcscr;
 
-import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
-import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -48,10 +46,10 @@ import ru.vidtu.hcscr.config.CrystalMode;
 import ru.vidtu.hcscr.handler.BlockClips;
 import ru.vidtu.hcscr.handler.HiddenEntities;
 import ru.vidtu.hcscr.handler.Keys;
+import ru.vidtu.hcscr.handler.ScheduledEntities;
 import ru.vidtu.hcscr.mixin.crystal.EntityMixin;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -81,21 +79,6 @@ public final class HCsCR {
     *///?}
 
     /**
-     * Hit entities mapped to their time of removal/hiding time in units of {@link System#nanoTime()}.
-     * <p>
-     * As soon as current time will reach the removal time, {@link #handleClientMainLoop(Minecraft)}
-     * will either remove them via {@link HStonecutter#removeEntity(Entity)} or mark them
-     * as hidden entities into {@link #HIDDEN_ENTITIES}.
-     *
-     * @see #handleClientMainLoop(Minecraft)
-     * @see HStonecutter#removeEntity(Entity)
-     * @see #HIDDEN_ENTITIES
-     */
-    // This map is not expected to grow more than a few elements, so it's an array-baked map, not a hash-baked one.
-    // Moreover, it's being iterated linearly anyway in handleFrame(...).
-    public static final Object2LongMap<Entity> SCHEDULED_ENTITIES = new Object2LongArrayMap<>(0);
-
-    /**
      * Logger for this class.
      */
     @UnknownNullability
@@ -117,26 +100,25 @@ public final class HCsCR {
     }
 
     /**
-     * Handles the client tick end.
+     * Handles the client tick. (ending of a client tick)
      *
      * @param client Client game instance
-     * @see #handleConfigBind(Minecraft, ProfilerFiller)
-     * @see #handleToggleBind(Minecraft, ProfilerFiller)
-     * @see #cleanHiddenEntities(Minecraft, ProfilerFiller)
-     * @see #cleanClippingBlocks(Minecraft, ProfilerFiller)
+     * @see Keys#tick(Minecraft, ProfilerFiller)
+     * @see HiddenEntities#tick(Minecraft, ProfilerFiller)
+     * @see BlockClips#tick(Minecraft, ProfilerFiller)
      */
     public static void tick(final Minecraft client) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert (client != null) : "HCsCR: Parameter 'client' is null.";
-            assert (client.isSameThread()) : "HCsCR: Handling a client game tick end NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
+            assert (client.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
         }
 
         // Get and push the profiler.
         final ProfilerFiller profiler;
         if (Variables.DEBUG_PROFILER) {
             profiler = HStonecutter.profilerOfClient(client); // Implicit NPE for 'client'
-            profiler.push("hcscr:client_tick_end");
+            profiler.push("hcscr:tick");
         } else {
             profiler = null;
         }
@@ -144,10 +126,10 @@ public final class HCsCR {
         // Keys. (process key-bindings/key-mappings)
         Keys.tick(client, profiler); // Implicit NPE for 'client'
 
-        // Hidden entities. (cleanup unused)
+        // Hidden entities. (cleanup/resync)
         HiddenEntities.tick(client, profiler); // Implicit NPE for 'client'
 
-        // Block clipping. (cleanup unused)
+        // Block clipping. (cleanup/resync)
         BlockClips.tick(client, profiler); // Implicit NPE for 'client'
 
         // Pop the profiler.
@@ -157,81 +139,29 @@ public final class HCsCR {
     }
 
     /**
-     * Handles the client main loop. Removes redundant elements from {@link #SCHEDULED_ENTITIES}.
+     * Handles the client main loop. (a single game frame)
      *
      * @param client Client game instance
+     * @see ScheduledEntities#loop(Minecraft, ProfilerFiller)
      */
-    public static void handleClientMainLoop(final Minecraft client) {
+    public static void loop(final Minecraft client) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert (client != null) : "HCsCR: Parameter 'client' is null.";
-            assert (client.isSameThread()) : "HCsCR: Handling client main loop NOT from the main thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
+            assert (client.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
         }
 
         // Get and push the profiler.
         final ProfilerFiller profiler;
         if (Variables.DEBUG_PROFILER) {
             profiler = HStonecutter.profilerOfClient(client); // Implicit NPE for 'client'
-            profiler.push("hcscr:client_main_loop");
+            profiler.push("hcscr:loop");
         } else {
             profiler = null;
         }
 
-        // Skip if there's no entities to remove.
-        if (SCHEDULED_ENTITIES.isEmpty()) {
-            // Pop the profiler.
-            if (Variables.DEBUG_PROFILER) {
-                profiler.pop();
-            }
-
-            // Stop.
-            return;
-        }
-
-        // Remove all entities that have expired or no longer in the world.
-        final int resync = Config.crystalsResync();
-        final boolean noResync = (resync == 0);
-        final long now = System.nanoTime();
-        final Iterator<Object2LongMap.Entry<Entity>> iterator = SCHEDULED_ENTITIES.object2LongEntrySet().iterator();
-        while (iterator.hasNext()) {
-            // Extract.
-            final Object2LongMap.Entry<Entity> entry = iterator.next();
-            final Entity entity = entry.getKey();
-            final long expiry = entry.getLongValue();
-
-            // Entity has been deleted from the world.
-            if (HStonecutter.isEntityRemoved(entity)) {
-                // Remove from iterator.
-                iterator.remove();
-
-                // Log. (**DEBUG**)
-                if (Variables.DEBUG_LOGS && LOGGER.isDebugEnabled(MARKER)) {
-                    LOGGER.debug(MARKER, "HCsCR: Forgot hit entity. (now: {}, entity: {}, expiry: {})", now, entity, expiry);
-                }
-
-                // Continue.
-                continue;
-            }
-
-            // Skip if entry is still in the world and hasn't reached the timeout.
-            if ((expiry - now) >= 0L) continue;
-
-            // Remove from iterator.
-            iterator.remove();
-
-            // Hide or remove the entity.
-            if (noResync) {
-                //$ remove_entity entity
-                entity.discard();
-            } else {
-                HiddenEntities.hideForTicks(entity, resync);
-            }
-
-            // Log. (**DEBUG**)
-            if (Variables.DEBUG_LOGS && LOGGER.isDebugEnabled(MARKER)) {
-                LOGGER.debug(MARKER, "HCsCR: Removed/hidden hit entity. (now: {}, entity: {}, expiry: {})", now, entity, expiry);
-            }
-        }
+        // Scheduled entities. (cleanup/remove)
+        ScheduledEntities.loop(client, profiler); // Implicit NPE for 'client'
 
         // Pop the profiler.
         if (Variables.DEBUG_PROFILER) {
@@ -325,7 +255,7 @@ public final class HCsCR {
             }
 
             // Schedule the removal of the entity, if the delay exists.
-            SCHEDULED_ENTITIES.putIfAbsent(entity, System.nanoTime() + delay);
+            ScheduledEntities.scheduleAt(entity, System.nanoTime() + delay);
             return true;
         }
 
@@ -373,9 +303,9 @@ public final class HCsCR {
 
         // Schedule the removal of the entities, if the delay exists.
         final long removeAt = (System.nanoTime() + delay);
-        SCHEDULED_ENTITIES.putIfAbsent(entity, removeAt);
+        ScheduledEntities.scheduleAt(entity, removeAt);
         for (final Entity other : entities) {
-            SCHEDULED_ENTITIES.putIfAbsent(other, removeAt);
+            ScheduledEntities.scheduleAt(other, removeAt);
         }
         return true;
     }

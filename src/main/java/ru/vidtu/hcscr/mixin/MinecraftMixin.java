@@ -42,6 +42,7 @@ import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.handler.BlockClips;
 import ru.vidtu.hcscr.handler.HiddenEntities;
+import ru.vidtu.hcscr.handler.ScheduledEntities;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
@@ -118,7 +119,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
         final ProfilerFiller profiler;
         if (Variables.DEBUG_PROFILER) {
             profiler = HStonecutter.profilerOfClient((Minecraft) (Object) this);
-            profiler.push("hcscr:clear");
+            profiler.push("hcscr:update_level");
         } else {
             profiler = null;
         }
@@ -133,7 +134,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
         }
 
         // Clear various handlers.
-        HCsCR.SCHEDULED_ENTITIES.clear();
+        ScheduledEntities.unscheduleAll();
         HiddenEntities.showAll();
         BlockClips.clearClips();
 
@@ -154,12 +155,12 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 
     //? if fabric {
     /**
-     * Calls the {@link HCsCR#handleClientMainLoop(Minecraft)} if the game is ticking.
+     * Calls the {@link HCsCR#loop(Minecraft)} if the game is ticking.
      *
      * @param advanceGameTime Whether the game should be explicitly ticked or just updated, no logic is being run by the mod unless set to {@code true}
      * @param ci              Callback data, ignored
      * @apiNote Do not call, called by Mixin
-     * @see HCsCR#handleClientMainLoop(Minecraft)
+     * @see HCsCR#loop(Minecraft)
      */
     @DoNotCall("Called by Mixin")
     @Inject(method = "runTick", at = @At("RETURN"))
@@ -169,7 +170,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
         if (!advanceGameTime) return;
 
         // Tick.
-        HCsCR.handleClientMainLoop((Minecraft) (Object) this);
+        HCsCR.loop((Minecraft) (Object) this);
     }
     //?}
 }
