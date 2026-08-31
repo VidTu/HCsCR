@@ -519,7 +519,7 @@ public final class ConfigScreen extends Screen {
 
         // Create the slider.
         final int clamped = Mth.clamp(value, min, max);
-        final double normalized = (double) ((clamped - min) / (max - min));
+        final double normalized = ((double) (clamped - min) / (max - min));
         final Component message = provider.apply(clamped); // Implicit NPE for 'provider'
         if (Variables.DEBUG_ASSERTS) {
             assert (message != null) : "HCsCR: Message is null. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", screen: " + this + ')';
