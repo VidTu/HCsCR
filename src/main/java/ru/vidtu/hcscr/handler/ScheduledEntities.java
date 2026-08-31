@@ -226,7 +226,7 @@ public final class ScheduledEntities {
             LOGGER.trace(HCsCR.MARKER, "HCsCR: Scheduling an entity removal... (entity: {}, deadline: {}, scheduled: {})", entity, deadline, SCHEDULED);
 
             // Put. (store previous)
-            final long previous = SCHEDULED.put(entity, deadline);
+            final long previous = SCHEDULED.putIfAbsent(entity, deadline);
 
             // Log. (**DEBUG**)
             LOGGER.debug(HCsCR.MARKER, "HCsCR: Scheduled an entity removal. (entity: {}, deadline: {}, previous: {}, scheduled: {})", entity, deadline, previous, SCHEDULED);
