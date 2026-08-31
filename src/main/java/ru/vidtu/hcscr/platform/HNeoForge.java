@@ -133,7 +133,7 @@ public final class HNeoForge {
             }
 
             // Prepare.
-            final CustomPacketPayload.Type<CustomPacketPayload> type = new CustomPacketPayload.Type<>(HStonecutter.CHANNEL_IDENTIFIER);
+            final CustomPacketPayload.Type<CustomPacketPayload> type = new CustomPacketPayload.Type<>(HCsCR.CHANNEL);
             final CustomPacketPayload instance = new CustomPacketPayload() {
                 @Contract(pure = true)
                 @Override
@@ -192,7 +192,7 @@ public final class HNeoForge {
                 @Contract(pure = true)
                 @Override
                 public ResourceLocation id() {
-                    return HStonecutter.CHANNEL_IDENTIFIER;
+                    return HCsCR.CHANNEL;
                 }
 
                 @Contract(pure = true)
@@ -203,7 +203,7 @@ public final class HNeoForge {
             };
 
             // Register.
-            event.registrar("hcscr").optional().common(HStonecutter.CHANNEL_IDENTIFIER, (final FriendlyByteBuf input) -> { // Implicit NPE for 'event'
+            event.registrar("hcscr").optional().common(HCsCR.CHANNEL, (final FriendlyByteBuf input) -> { // Implicit NPE for 'event'
                 // Validate.
                 if (Variables.DEBUG_ASSERTS) {
                     assert (input != null) : "HCsCR: Parameter 'input' is null.";
@@ -229,7 +229,7 @@ public final class HNeoForge {
             });
         });
         ^///?} else {
-        /^NetworkRegistry.newEventChannel(HStonecutter.CHANNEL_IDENTIFIER, () -> "hcscr", (final String version) -> true, (final String version) -> true).addListener((final NetworkEvent event) -> {
+        /^NetworkRegistry.newEventChannel(HStonecutter.CHANNEL, () -> "hcscr", (final String version) -> true, (final String version) -> true).addListener((final NetworkEvent event) -> {
             // Validate.
             if (Variables.DEBUG_ASSERTS) {
                 assert (event != null) : "HCsCR: Parameter 'event' is null.";

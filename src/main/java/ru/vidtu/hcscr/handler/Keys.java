@@ -29,9 +29,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
-//~ if >=1.21.11 'ResourceLocation' -> 'Identifier' {
-import net.minecraft.resources.Identifier;
-//~}
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.apache.logging.log4j.LogManager;
@@ -66,7 +63,7 @@ public final class Keys {
      * @see #CONFIG
      * @see #TOGGLE
      */
-    public static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("hcscr", "root"));
+    public static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(net.minecraft.resources.Identifier.fromNamespaceAndPath("hcscr", "root"));
             //~}
         //~}
     //?}
@@ -174,7 +171,7 @@ public final class Keys {
             }
 
             // Do nothing if some (another) screen is open.
-            //~ if >=26.2 'client.screen' -> 'client.gui.screen()' {
+            //~ if >=26.2 'screen' -> 'gui.screen()' {
             final Screen currentScreen = client.gui.screen(); // Implicit NPE for 'client'
             //~}
             if (currentScreen != null) {
@@ -242,7 +239,7 @@ public final class Keys {
             final Component message = HStonecutter.translate("hcscr." + newState)
                     .withStyle(newState ? ChatFormatting.GREEN : ChatFormatting.RED)
                     .withStyle(ChatFormatting.BOLD);
-            //~ if >=26.2 'client.gui' -> 'client.gui.hud' {
+            //~ if >=26.2 'gui' -> 'gui.hud' {
             client.gui.hud.setOverlayMessage(message, /*animate=*/false); // Implicit NPE for 'client'
             //~}
             client.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING, (newState ? 2.0f : 0.0f)));

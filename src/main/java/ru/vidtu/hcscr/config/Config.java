@@ -35,15 +35,7 @@ import net.fabricmc.loader.api.FabricLoader;
 *///?}
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-//? if >=1.19.4 {
-import net.minecraft.world.entity.Interaction;
-//?}
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
-//? if >=26.2 {
-import net.minecraft.world.entity.monster.cubemob.AbstractCubeMob;
-//?} else {
-/*import net.minecraft.world.entity.monster.Slime;
-*///?}
 import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -402,12 +394,12 @@ public final class Config {
                 return (entity instanceof EndCrystal);
             case ENVELOPING:
                 //? if >=1.19.4 {
-                if (entity instanceof Interaction) return true;
+                if (entity instanceof net.minecraft.world.entity.Interaction) return true;
                 //?}
 
-                //~ if >=26.2 'Slime' -> 'AbstractCubeMob' {
+                //~ if >=26.2 'Slime' -> 'cubemob.AbstractCubeMob' {
                 //noinspection SimplifiableIfStatement // <- Preprocessor.
-                if ((entity instanceof AbstractCubeMob) && entity.isInvisibleTo(player)) return true; // Implicit NPE for 'player'
+                if ((entity instanceof net.minecraft.world.entity.monster.cubemob.AbstractCubeMob) && entity.isInvisibleTo(player)) return true; // Implicit NPE for 'player'
                 //~}
 
                 return (entity instanceof EndCrystal);

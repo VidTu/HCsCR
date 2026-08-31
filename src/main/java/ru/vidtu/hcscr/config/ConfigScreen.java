@@ -55,9 +55,6 @@ import org.jspecify.annotations.Nullable;
 import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
-//? if >=1.20.6 {
-import java.time.Duration;
-//?}
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -78,7 +75,7 @@ public final class ConfigScreen extends Screen {
      * A duration for tooltips in version-dependant units. Currently {@code 250} milliseconds.
      */
     //? if >=1.20.6 {
-    private static final Duration TOOLTIP_DURATION = Duration.ofMillis(250L);
+    private static final java.time.Duration TOOLTIP_DURATION = java.time.Duration.ofMillis(250L);
     //?} elif >=1.19.4 {
     /*private static final int TOOLTIP_DURATION = 250; // Millis.
     *///?} else {
@@ -121,8 +118,8 @@ public final class ConfigScreen extends Screen {
     @DoNotCall("Called by Minecraft")
     @Override
     protected void init() {
-        //~ if >=1.17.1 'this.addButton' -> 'this.addRenderableWidget' {
-            //~ if >=1.21.10 'Screen.hasShiftDown()' -> 'minecraft.hasShiftDown()' {
+        //~ if >=1.17.1 'addButton' -> 'addRenderableWidget' {
+            //~ if >=1.21.10 'Screen.hasShiftDown' -> 'minecraft.hasShiftDown' {
         // Extract and validate.
         final Minecraft minecraft = this.minecraft;
         if (Variables.DEBUG_ASSERTS) {

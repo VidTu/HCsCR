@@ -109,7 +109,7 @@ public final class HFabric implements ClientModInitializer {
 
         // Register the networking.
         //? if >=1.20.6 {
-        final CustomPacketPayload.Type<CustomPacketPayload> type = new CustomPacketPayload.Type<>(HStonecutter.CHANNEL_IDENTIFIER);
+        final CustomPacketPayload.Type<CustomPacketPayload> type = new CustomPacketPayload.Type<>(HCsCR.CHANNEL);
         final CustomPacketPayload instance = new CustomPacketPayload() {
             @Contract(pure = true)
             @Override
@@ -174,7 +174,7 @@ public final class HFabric implements ClientModInitializer {
             sender.disconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'sender'
         });
         //?} elif >=1.20.2 {
-        /*ClientConfigurationNetworking.registerGlobalReceiver(HStonecutter.CHANNEL_IDENTIFIER, (final Minecraft client, final ClientConfigurationPacketListenerImpl handler, final FriendlyByteBuf buf, final PacketSender responseSender) -> {
+        /*ClientConfigurationNetworking.registerGlobalReceiver(HCsCR.CHANNEL, (final Minecraft client, final ClientConfigurationPacketListenerImpl handler, final FriendlyByteBuf buf, final PacketSender responseSender) -> {
             // Validate.
             if (Variables.DEBUG_ASSERTS) {
                 assert (client != null) : "HCsCR: Parameter 'client' is null. (handler: " + handler + ", buf: " + buf + ", responseSender: " + responseSender + ')';
@@ -186,7 +186,7 @@ public final class HFabric implements ClientModInitializer {
             // Close the connection.
             handler.onDisconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'handler'
         });
-        ClientPlayNetworking.registerGlobalReceiver(HStonecutter.CHANNEL_IDENTIFIER, (final Minecraft client, final ClientPacketListener handler, final FriendlyByteBuf buf, final PacketSender responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(HCsCR.CHANNEL, (final Minecraft client, final ClientPacketListener handler, final FriendlyByteBuf buf, final PacketSender responseSender) -> {
             // Validate.
             if (Variables.DEBUG_ASSERTS) {
                 assert (client != null) : "HCsCR: Parameter 'client' is null. (handler: " + handler + ", buf: " + buf + ", responseSender: " + responseSender + ')';
@@ -199,7 +199,7 @@ public final class HFabric implements ClientModInitializer {
             handler.onDisconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'handler'
         });
         *///?} else {
-        /*ClientPlayNetworking.registerGlobalReceiver(HStonecutter.CHANNEL_IDENTIFIER, (final Minecraft client, final ClientPacketListener handler, final FriendlyByteBuf buf, final PacketSender responseSender) -> {
+        /*ClientPlayNetworking.registerGlobalReceiver(HCsCR.CHANNEL, (final Minecraft client, final ClientPacketListener handler, final FriendlyByteBuf buf, final PacketSender responseSender) -> {
             // Validate.
             if (Variables.DEBUG_ASSERTS) {
                 assert (client != null) : "HCsCR: Parameter 'client' is null. (handler: " + handler + ", buf: " + buf + ", responseSender: " + responseSender + ')';

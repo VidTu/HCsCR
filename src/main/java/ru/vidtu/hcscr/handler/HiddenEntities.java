@@ -22,9 +22,6 @@
 
 package ru.vidtu.hcscr.handler;
 
-//~ if >=1.21.4 'Reference2IntOpenHashMap' -> 'Reference2IntArrayMap' {
-import it.unimi.dsi.fastutil.objects.Reference2IntArrayMap;
-//~}
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -42,7 +39,6 @@ import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.config.Config;
 import ru.vidtu.hcscr.mixin.MinecraftMixin;
 import ru.vidtu.hcscr.mixin.crystal.EntityMixin;
-import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.util.Iterator;
 
@@ -77,8 +73,8 @@ public final class HiddenEntities {
     // fastutil versions before 8.5.12 (shipped before MC1.21.4) don't have this due to a bug:
     // https://github.com/vigna/fastutil/blob/8.5.14/CHANGES#L15-L17
     // So we're forced to use hash-based map before 1.21.4, even though hashing is useless for us.
-    //~ if >=1.21.4 'Reference2IntOpenHashMap' -> 'Reference2IntArrayMap' {
-    private static final Reference2IntMap<Entity> HIDDEN = new Reference2IntArrayMap<>(0);
+    //~ if >=1.21.4 'OpenHash' -> 'Array' {
+    private static final Reference2IntMap<Entity> HIDDEN = new it.unimi.dsi.fastutil.objects.Reference2IntArrayMap<>(0);
     //~}
 
     /**
@@ -181,7 +177,9 @@ public final class HiddenEntities {
             }
 
             // Entity has been removed.
-            if (HStonecutter.isEntityRemoved(entity)) {
+            //~ if >=1.17.1 'removed' -> 'isRemoved()' {
+            if (entity.isRemoved()) {
+            //~}
                 // Remove.
                 iterator.remove();
 

@@ -70,6 +70,17 @@ public final class HCsCR {
     public static final Marker MARKER = (Variables.DEBUG_LOGS ? MarkerManager.getMarker("MOD_HCSCR") : null);
 
     /**
+     * A channel identifier for servers to know that this mod is installed.
+     */
+    //? if >=1.21.11 {
+    public static final net.minecraft.resources.Identifier CHANNEL = net.minecraft.resources.Identifier.fromNamespaceAndPath("hcscr", "imhere");
+    //?} elif >=1.21.1 || (forge && (!hacky_neoforge) && >=1.18.2 && (!1.20.2)) {
+    /*public static final net.minecraft.resources.ResourceLocation CHANNEL = net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "imhere");
+    *///?} else {
+    /*public static final net.minecraft.resources.ResourceLocation CHANNEL = new net.minecraft.resources.ResourceLocation("hcscr", "imhere");
+    *///?}
+
+    /**
      * Hit entities mapped to their time of removal/hiding time in units of {@link System#nanoTime()}.
      * <p>
      * As soon as current time will reach the removal time, {@link #handleClientMainLoop(Minecraft)}

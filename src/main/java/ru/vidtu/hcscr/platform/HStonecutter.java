@@ -41,33 +41,6 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
-//? if >=1.21.11 {
-import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.resources.Identifier;
-import net.minecraft.util.profiling.Profiler;
-//?} elif >=1.21.8 {
-/*import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.profiling.Profiler;
-*///?} elif >=1.21.4 {
-/*import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.profiling.Profiler;
-*///?} elif >=1.21.3 {
-/*import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.profiling.Profiler;
-*///?} elif >=1.20.6 {
-/*import net.minecraft.resources.ResourceLocation;
-*///?} elif >=1.19.4 {
-/*import net.minecraft.resources.ResourceLocation;
-*///?} elif >=1.19.2 {
-/*import net.minecraft.resources.ResourceLocation;
-*///?} elif >=1.17.1 {
-/*import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
-*///?} else {
-/*import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
-*///?}
-
 /**
  * A helper class that contains methods that depend on Stonecutter, a Java source code preprocessor.
  *
@@ -79,17 +52,6 @@ import net.minecraft.resources.ResourceLocation;
 @Deprecated
 @NullMarked
 public final class HStonecutter {
-    /**
-     * A channel identifier for servers to know that this mod is installed.
-     */
-    //? if >=1.21.11 {
-    /*package-private*/ static final Identifier CHANNEL_IDENTIFIER = Identifier.fromNamespaceAndPath("hcscr", "imhere");
-    //?} elif >=1.21.1 || (forge && (!hacky_neoforge) && >=1.18.2 && (!1.20.2)) {
-    /*/^package-private^/ static final ResourceLocation CHANNEL_IDENTIFIER = ResourceLocation.fromNamespaceAndPath("hcscr", "imhere");
-    *///?} else {
-    /*/^package-private^/ static final ResourceLocation CHANNEL_IDENTIFIER = new ResourceLocation("hcscr", "imhere");
-    *///?}
-
     /**
      * An instance of this class cannot be created.
      *
@@ -123,7 +85,7 @@ public final class HStonecutter {
         //? if >=1.19.2 {
         return Component.translatable(key);
         //?} else {
-        /*return new TranslatableComponent(key);
+        /*return new net.minecraft.network.chat.TranslatableComponent(key);
         *///?}
     }
 
@@ -148,7 +110,7 @@ public final class HStonecutter {
         //? if >=1.19.2 {
         return Component.translatable(key, args);
         //?} else {
-        /*return new TranslatableComponent(key, args);
+        /*return new net.minecraft.network.chat.TranslatableComponent(key, args);
         *///?}
     }
 
@@ -173,7 +135,7 @@ public final class HStonecutter {
 
         // Delegate.
         //? if >=1.21.3 {
-        return Profiler.get();
+        return net.minecraft.util.profiling.Profiler.get();
         //?} else {
         /*return client.getProfiler(); // Implicit NPE for 'client'
         *///?}

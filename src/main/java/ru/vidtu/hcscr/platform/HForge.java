@@ -221,7 +221,7 @@ public final class HForge {
 
         // Register the networking.
         //? if >=1.20.2 {
-        ChannelBuilder.named(HStonecutter.CHANNEL_IDENTIFIER).networkProtocolVersion(1).acceptedVersions((final Channel.VersionTest.Status status, final int version) -> true).eventNetworkChannel().addListener((final CustomPayloadEvent event) -> {
+        ChannelBuilder.named(HCsCR.CHANNEL).networkProtocolVersion(1).acceptedVersions((final Channel.VersionTest.Status status, final int version) -> true).eventNetworkChannel().addListener((final CustomPayloadEvent event) -> {
             // Validate.
             if (Variables.DEBUG_ASSERTS) {
                 assert (event != null) : "HCsCR: Parameter 'event' is null.";
@@ -246,7 +246,7 @@ public final class HForge {
             connection.disconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'connection'
         });
         //?} else {
-        /^NetworkRegistry.newEventChannel(HStonecutter.CHANNEL_IDENTIFIER, () -> "hcscr", (final String version) -> true, (final String version) -> true).addListener((final NetworkEvent event) -> {
+        /^NetworkRegistry.newEventChannel(HCsCR.CHANNEL, () -> "hcscr", (final String version) -> true, (final String version) -> true).addListener((final NetworkEvent event) -> {
             // Validate.
             if (Variables.DEBUG_ASSERTS) {
                 assert (event != null) : "HCsCR: Parameter 'event' is null.";
