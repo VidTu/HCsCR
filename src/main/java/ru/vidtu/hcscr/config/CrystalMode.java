@@ -68,6 +68,11 @@ public enum CrystalMode {
     ENVELOPING;
 
     /**
+     * Default crystals mode, currently {@link #DIRECT}.
+     */
+    static final CrystalMode DEFAULT = CrystalMode.DIRECT;
+
+    /**
      * Mode button label.
      */
     private final Component label;

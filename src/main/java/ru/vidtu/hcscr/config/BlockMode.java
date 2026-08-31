@@ -66,6 +66,11 @@ public enum BlockMode {
     FULL;
 
     /**
+     * Default blocks mode, currently {@link #COLLISION}.
+     */
+    static final BlockMode DEFAULT = BlockMode.COLLISION;
+
+    /**
      * Mode button label.
      */
     private final Component label;

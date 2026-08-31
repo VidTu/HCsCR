@@ -35,7 +35,15 @@ import net.fabricmc.loader.api.FabricLoader;
 *///?}
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+//? if >=1.19.4 {
+import net.minecraft.world.entity.Interaction;
+//?}
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
+//? if >=26.2 {
+import net.minecraft.world.entity.monster.cubemob.AbstractCubeMob;
+//?} else {
+/*import net.minecraft.world.entity.monster.Slime;
+*///?}
 import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,17 +62,6 @@ import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-
-
-//? if >=1.19.4 {
-import net.minecraft.world.entity.Interaction;
-//?}
-
-//? if >=26.2 {
-import net.minecraft.world.entity.monster.cubemob.AbstractCubeMob;
-//?} else {
-/*import net.minecraft.world.entity.monster.Slime;
-*///?}
 
 /**
  * HCsCR config storage.
@@ -104,13 +101,13 @@ public final class Config {
     private static /*non-final*/ boolean enable = true;
 
     /**
-     * Crystals removal mode, {@link CrystalMode#DIRECT} by default.
+     * Crystals removal mode, {@link CrystalMode#DEFAULT} by default.
      *
      * @see #crystalsDelay
      * @see #crystalsResync
      */
     @SerializedName("crystals")
-    private static /*non-final*/ CrystalMode crystals = CrystalMode.DIRECT;
+    private static /*non-final*/ CrystalMode crystals = CrystalMode.DEFAULT;
 
     /**
      * Crystals removal delay in nanos, {@code 0} by default.
@@ -146,10 +143,10 @@ public final class Config {
     private static /*non-final*/ int crystalsResync = Constants.DEFAULT_HIDE_TICKS;
 
     /**
-     * Blocks (anchors/beds) removal mode, {@link BlockMode#COLLISION} by default.
+     * Blocks (anchors/beds) removal mode, {@link BlockMode#DEFAULT} by default.
      */
     @SerializedName(value = "blocks", alternate = "anchors") // Was "anchors" in HCsCR before 2.1.0.
-    private static /*non-final*/ BlockMode blocks = BlockMode.COLLISION;
+    private static /*non-final*/ BlockMode blocks = BlockMode.DEFAULT;
 
     /**
      * Creates a new config via GSON.
@@ -195,10 +192,10 @@ public final class Config {
             }
         } finally {
             // Clamp.
-            crystals = MoreObjects.firstNonNull(crystals, CrystalMode.DIRECT);
+            crystals = MoreObjects.firstNonNull(crystals, CrystalMode.DEFAULT);
             crystalsDelay = Mth.clamp(((crystalsDelay / 1_000_000) * 1_000_000), 0, 200_000_000);
             crystalsResync = Mth.clamp(crystalsResync, Constants.MIN_HIDE_TICKS, Constants.MAX_HIDE_TICKS);
-            blocks = MoreObjects.firstNonNull(blocks, BlockMode.COLLISION);
+            blocks = MoreObjects.firstNonNull(blocks, BlockMode.DEFAULT);
         }
     }
 
@@ -266,7 +263,7 @@ public final class Config {
     /**
      * Gets the crystals.
      *
-     * @return Crystals removal mode, {@link CrystalMode#DIRECT} by default.
+     * @return Crystals removal mode, {@link CrystalMode#DEFAULT} by default.
      * @see #cycleCrystals(boolean)
      * @see #shouldProcess(Player, Entity)
      * @see #crystalsDelay()
@@ -290,7 +287,7 @@ public final class Config {
             case OFF: return (crystals = (back ? CrystalMode.ENVELOPING : CrystalMode.DIRECT));
             case DIRECT: return (crystals = (back ? CrystalMode.OFF : CrystalMode.ENVELOPING));
             case ENVELOPING: return (crystals = (back ? CrystalMode.DIRECT : CrystalMode.OFF));
-            default: return (crystals = CrystalMode.DIRECT);
+            default: return (crystals = CrystalMode.DEFAULT);
         }
     }
 
@@ -357,7 +354,7 @@ public final class Config {
     /**
      * Gets the blocks.
      *
-     * @return Blocks removal mode, {@link BlockMode#COLLISION} by default
+     * @return Blocks removal mode, {@link BlockMode#DEFAULT} by default
      * @see #cycleBlocks(boolean)
      */
     @Contract(pure = true)
@@ -378,7 +375,7 @@ public final class Config {
             case OFF: return (blocks = (back ? BlockMode.FULL : BlockMode.COLLISION));
             case COLLISION: return (blocks = (back ? BlockMode.OFF : BlockMode.FULL));
             case FULL: return (blocks = (back ? BlockMode.COLLISION : BlockMode.OFF));
-            default: return (blocks = BlockMode.COLLISION);
+            default: return (blocks = BlockMode.DEFAULT);
         }
     }
 
@@ -408,13 +405,10 @@ public final class Config {
                 if (entity instanceof Interaction) return true;
                 //?}
 
-                //? if >=26.2 {
+                //~ if >=26.2 'Slime' -> 'AbstractCubeMob' {
                 //noinspection SimplifiableIfStatement // <- Preprocessor.
-                if ((entity instanceof AbstractCubeMob) && entity.isInvisibleTo(player)) return true;
-                //?} else {
-                /*//noinspection SimplifiableIfStatement // <- Preprocessor.
-                if ((entity instanceof Slime) && entity.isInvisibleTo(player)) return true;
-                *///?}
+                if ((entity instanceof AbstractCubeMob) && entity.isInvisibleTo(player)) return true; // Implicit NPE for 'player'
+                //~}
 
                 return (entity instanceof EndCrystal);
             default:

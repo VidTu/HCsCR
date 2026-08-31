@@ -141,7 +141,7 @@ public final class ConfigScreen extends Screen {
         final CrystalMode crystals = Config.crystals();
         this.addRenderableWidget(this.createButton(buttonX, calculateWidgetY(index++), 200, 20, crystals.label(), crystals.tip(), (final Button button, final Consumer<Component> tipSetter) -> {
             // Update the config.
-            final CrystalMode newCrystals = Config.cycleCrystals(/*back=*/minecraft.hasShiftDown());
+            final CrystalMode newCrystals = Config.cycleCrystals(/*back=*/minecraft.hasShiftDown()); // Implicit NPE for 'minecraft'
 
             // Update the label/tooltip.
             button.setMessage(newCrystals.label());
@@ -168,7 +168,7 @@ public final class ConfigScreen extends Screen {
         final BlockMode blocks = Config.blocks();
         this.addRenderableWidget(this.createButton(buttonX, calculateWidgetY(index++), 200, 20, blocks.label(), blocks.tip(), (final Button button, final Consumer<Component> tipSetter) -> {
             // Update the blocks.
-            final BlockMode newBlocks = Config.cycleBlocks(/*back=*/minecraft.hasShiftDown());
+            final BlockMode newBlocks = Config.cycleBlocks(/*back=*/minecraft.hasShiftDown()); // Implicit NPE for 'minecraft'
 
             // Update the label and tooltip.
             button.setMessage(newBlocks.label());
@@ -251,11 +251,11 @@ public final class ConfigScreen extends Screen {
 
         // Render the title.
         //? if >=26.1.2 {
-        graphics.centeredText(font, this.title, this.width / 2, 12, 0xFF_FF_FF_FF);
+        graphics.centeredText(font, this.title, this.width / 2, 12, 0xFF_FF_FF_FF); // Implicit NPE for 'font'
         //?} elif >=1.20.1 {
-        /*graphics.drawCenteredString(font, this.title, this.width / 2, 12, 0xFF_FF_FF_FF);
+        /*graphics.drawCenteredString(font, this.title, this.width / 2, 12, 0xFF_FF_FF_FF); // Implicit NPE for 'font'
         *///?} else {
-        /*drawCenteredString(graphics, font, this.title, this.width / 2, 12, 0xFF_FF_FF_FF);
+        /*drawCenteredString(graphics, font, this.title, this.width / 2, 12, 0xFF_FF_FF_FF); // Implicit NPE for 'font'
         *///?}
 
         // Render the tooltip. (pre-1.19.4)
@@ -574,7 +574,7 @@ public final class ConfigScreen extends Screen {
                 if ((System.nanoTime() - this.lastAway) < TOOLTIP_DURATION) return;
 
                 // Render (defer) the tooltip.
-                ConfigScreen.this.tooltip = this.tip; // Implicit NPE for 'tooltipRenderer'
+                ConfigScreen.this.tooltip = this.tip;
             }
             *///?}
         };
@@ -606,7 +606,7 @@ public final class ConfigScreen extends Screen {
     private static int calculateWidgetY(final int index) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
-            assert ((index >= 0) && (index <= Byte.MAX_VALUE)) : "HCsCR: Parameter 'index' is not in the [0.." + Byte.MAX_VALUE + "] range. (index: " + index + ')';
+            assert ((index >= 0) && (index <= 8)) : "HCsCR: Parameter 'index' is not in the [0..8] range. (index: " + index + ')';
         }
 
         // Calculate.
