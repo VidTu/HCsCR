@@ -45,10 +45,12 @@
                 <RegexFilter regex="^Could not authorize you against Realms server: .*$" useRawMsg="true" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <RegexFilter regex="^Couldn't connect to realms$" useRawMsg="true" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <RegexFilter regex="^Couldn't look up profile properties for .*$" useRawMsg="true" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <RegexFilter regex="^Failed to connect$" useRawMsg="true" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <RegexFilter regex="^Failed to fetch Realms feature flags$" useRawMsg="true" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <RegexFilter regex="^Failed to fetch user properties$" useRawMsg="true" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <RegexFilter regex="^Failed to retrieve profile key pair$" useRawMsg="true" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <RegexFilter regex="^Failed to verify authentication$" useRawMsg="true" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <RegexFilter regex="^Services are unavailable, unable to fetch uri for .*$" useRawMsg="true" onMatch="DENY" onMismatch="NEUTRAL"/>
 
                 <!-- Mixin. (non-debug level; above ThresholdFilter) -->
                 <RegexFilter regex="^.*:.* from mod .*: Class version \d+ required is higher than the class version supported by the current version of Mixin \(JAVA_\d+ supports class version \d+\)$" onMatch="DENY" onMismatch="NEUTRAL"/>

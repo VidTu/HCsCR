@@ -73,6 +73,7 @@
 -Dmax.bg.threads=1
 -Dminecraft.api.account.host=http://0.0.0.0:0
 -Dminecraft.api.auth.host=http://0.0.0.0:0
+-Dminecraft.api.discovery.host=http://0.0.0.0:0
 -Dminecraft.api.services.host=http://0.0.0.0:0
 -Dminecraft.api.session.host=http://0.0.0.0:0
 
