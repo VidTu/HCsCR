@@ -351,7 +351,7 @@ public final class HForge {
             }
 
             // Handle.
-            HCsCR.handleClientMainLoop(Minecraft.getInstance());
+            HCsCR.loop(Minecraft.getInstance());
         });
         //?} elif >=1.20.4 {
         /^MinecraftForge.EVENT_BUS.addListener((final TickEvent.RenderTickEvent.Post event) -> {
@@ -361,7 +361,7 @@ public final class HForge {
             }
 
             // Handle.
-            HCsCR.handleClientMainLoop(Minecraft.getInstance());
+            HCsCR.loop(Minecraft.getInstance());
         });
         ^///?} else {
         /^MinecraftForge.EVENT_BUS.addListener((final TickEvent.RenderTickEvent event) -> {
@@ -372,7 +372,7 @@ public final class HForge {
 
             // Handle.
             if (event.phase != TickEvent.Phase.END) return; // Implicit NPE for 'event'
-            HCsCR.handleClientMainLoop(Minecraft.getInstance());
+            HCsCR.loop(Minecraft.getInstance());
         });
         ^///?}
 

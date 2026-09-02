@@ -303,7 +303,7 @@ public final class HNeoForge {
             }
 
             // Handle.
-            HCsCR.handleClientMainLoop(Minecraft.getInstance());
+            HCsCR.loop(Minecraft.getInstance());
         });
         //?} else {
         /^NeoForge.EVENT_BUS.addListener(TickEvent.RenderTickEvent.class, (final TickEvent.RenderTickEvent event) -> {
@@ -314,7 +314,7 @@ public final class HNeoForge {
 
             // Handle.
             if (event.phase != TickEvent.Phase.END) return; // Implicit NPE for 'event'
-            HCsCR.handleClientMainLoop(Minecraft.getInstance());
+            HCsCR.loop(Minecraft.getInstance());
         });
         ^///?}
 
