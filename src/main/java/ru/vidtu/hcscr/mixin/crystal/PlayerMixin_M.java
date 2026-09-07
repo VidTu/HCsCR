@@ -38,7 +38,7 @@ import ru.vidtu.hcscr.platform.HPlugin;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /^*
- * Mixin that speeds up entity removing via {@link HCsCR#handlePlayerHittingEntity(Player, Entity, DamageSource, float)}
+ * Mixin that speeds up entity removing via {@link HCsCR#hit(Player, Entity, DamageSource, float)}
  * in absence of MixinExtras via {@link Redirect} hook. See {@link PlayerMixin_E} for the default (non-fallback) Mixin.
  *
  * @author VidTu
@@ -75,7 +75,7 @@ public final class PlayerMixin_M {
      * @param totalDamage  Total amount of damage done to the entity (inaccurate if invoked on the client)
      * @return Whether the attack has succeeded
      * @apiNote Do not call, called by Mixin
-     * @see HCsCR#handlePlayerHittingEntity(Player, Entity, DamageSource, float)
+     * @see HCsCR#hit(Player, Entity, DamageSource, float)
      ^/
     @DoNotCall("Called by Mixin")
     //~ if >=1.21.3 'hurt' -> 'hurtOrSimulate' {
@@ -91,7 +91,7 @@ public final class PlayerMixin_M {
 
         // Delegate.
         //noinspection NonShortCircuitBooleanExpression // <- Needs to call both methods.
-        return (target.hurtOrSimulate(damageSource, totalDamage) | HCsCR.handlePlayerHittingEntity((Player) (Object) this, target, damageSource, totalDamage));
+        return (target.hurtOrSimulate(damageSource, totalDamage) | HCsCR.hit((Player) (Object) this, target, damageSource, totalDamage));
     }
     //~}
 }

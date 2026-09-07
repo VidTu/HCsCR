@@ -59,12 +59,13 @@ public final class HiddenEntities {
      * These entities won't appear in the world as their
      * hitbox will be removed via {@link EntityMixin}.
      * <p>
-     * They are counted down in {@link #tick(Minecraft, ProfilerFiller)}.
+     * They are counted down in {@link #tick(Minecraft, ProfilerFiller)}. If the counter
+     * reaches zero before the entity is removed, the entity becomes visible once again.
      *
      * @see EntityMixin
      * @see #tick(Minecraft, ProfilerFiller)
      * @see #isHidden(Entity)
-     * @see #hideForTicks(Entity, int)
+     * @see #hideFor(Entity, int)
      * @see #show(Entity)
      * @see #showAll()
      */
@@ -133,7 +134,7 @@ public final class HiddenEntities {
             return;
         }
 
-        // Clear all entities, if level is null.
+        // Clear all entities if the level is null.
         if (client.level == null) { // Implicit NPE for 'client'
             // Log. (**TRACE**)
             if (Variables.DEBUG_LOGS) {
@@ -168,11 +169,11 @@ public final class HiddenEntities {
             // Extract.
             final Reference2IntMap.Entry<Entity> entry = iterator.next();
             final Entity entity = entry.getKey();
-            final int ticksBeforeResync = entry.getIntValue();
+            final int remainingTicks = entry.getIntValue();
 
             // Log. (**TRACE**)
             if (Variables.DEBUG_LOGS && LOGGER.isTraceEnabled(HCsCR.MARKER)) {
-                LOGGER.trace(HCsCR.MARKER, "HCsCR: Ticking hidden entity... (entity: {}, ticksBeforeResync: {})", entity, ticksBeforeResync);
+                LOGGER.trace(HCsCR.MARKER, "HCsCR: Ticking hidden entity... (entity: {}, remainingTicks: {})", entity, remainingTicks);
             }
 
             // Entity has been removed.
@@ -184,7 +185,7 @@ public final class HiddenEntities {
 
                 // Log. (**DEBUG**)
                 if (Variables.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.MARKER)) {
-                    LOGGER.debug(HCsCR.MARKER, "HCsCR: Removed hidden entity. (entity: {}, ticksBeforeResync: {})", entity, ticksBeforeResync);
+                    LOGGER.debug(HCsCR.MARKER, "HCsCR: Removed hidden entity. (entity: {}, remainingTicks: {})", entity, remainingTicks);
                 }
 
                 // Continue.
@@ -192,13 +193,13 @@ public final class HiddenEntities {
             }
 
             // Entity should be resynced.
-            if (ticksBeforeResync <= 0) {
+            if (remainingTicks <= 0) {
                 // Remove.
                 iterator.remove();
 
                 // Log. (**DEBUG**)
                 if (Variables.DEBUG_LOGS && LOGGER.isDebugEnabled(HCsCR.MARKER)) {
-                    LOGGER.debug(HCsCR.MARKER, "HCsCR: Resynced hidden entity. (entity: {}, ticksBeforeResync: {})", entity, ticksBeforeResync);
+                    LOGGER.debug(HCsCR.MARKER, "HCsCR: Resynced hidden entity. (entity: {}, remainingTicks: {})", entity, remainingTicks);
                 }
 
                 // Continue.
@@ -206,7 +207,7 @@ public final class HiddenEntities {
             }
 
             // Decrement the remaining ticks.
-            entry.setValue(ticksBeforeResync - 1);
+            entry.setValue(remainingTicks - 1);
         }
 
         // Log. (**TRACE**)
@@ -227,7 +228,7 @@ public final class HiddenEntities {
      * @param entity Entity to check the hidden status of
      * @return {@code true} if an entity is currently hidden, {@code false} if not
      * @see #HIDDEN
-     * @see #hideForTicks(Entity, int)
+     * @see #hideFor(Entity, int)
      * @see #show(Entity)
      * @see #showAll()
      */
@@ -247,16 +248,17 @@ public final class HiddenEntities {
      * Adds (hides) an entity into {@link #HIDDEN}. Should be called in TODO.
      *
      * @param entity Entity to hide
-     * @param ticks  Amount of ticks to hide the entity for (in the range of {@link Constants#MIN_HIDE_TICKS} inclusive to {@link Constants#MAX_HIDE_TICKS} inclusive)
+     * @param ticks  Amount of ticks to hide the entity for (in the range of {@link Constants#MIN_CRYSTALS_RESYNC} inclusive to {@link Constants#MAX_CRYSTALS_RESYNC} inclusive)
      * @see #HIDDEN
      * @see #isHidden(Entity)
      * @see #show(Entity)
      * @see #showAll()
-     * @see Constants#MIN_HIDE_TICKS
-     * @see Constants#DEFAULT_HIDE_TICKS
-     * @see Constants#MAX_HIDE_TICKS
+     * @see Config#crystalsResync()
+     * @see Constants#MIN_CRYSTALS_RESYNC
+     * @see Constants#DEFAULT_CRYSTALS_RESYNC
+     * @see Constants#MAX_CRYSTALS_RESYNC
      */
-    public static void hideForTicks(final Entity entity, final @Range(from = Constants.MIN_HIDE_TICKS, to = Constants.MAX_HIDE_TICKS) int ticks) {
+    public static void hideFor(final Entity entity, final @Range(from = Constants.MIN_CRYSTALS_RESYNC, to = Constants.MAX_CRYSTALS_RESYNC) int ticks) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert (entity != null) : "HCsCR: Parameter 'entity' is null. (ticks: " + ticks + ')';
@@ -291,7 +293,7 @@ public final class HiddenEntities {
      * @param Entity to show
      * @see #HIDDEN
      * @see #isHidden(Entity)
-     * @see #hideForTicks(Entity, int)
+     * @see #hideFor(Entity, int)
      * @see #showAll()
      */
     public static void show(final Entity entity) { // TODO(VidTu): Implement.
@@ -323,7 +325,7 @@ public final class HiddenEntities {
      *
      * @see #HIDDEN
      * @see #isHidden(Entity)
-     * @see #hideForTicks(Entity, int)
+     * @see #hideFor(Entity, int)
      * @see #show(Entity)
      */
     public static void showAll() {

@@ -42,28 +42,60 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public final class Constants {
     /**
-     * Ninimum amount of ticks the entities are allowed to be hidden for.
+     * Minimum amount of nanoseconds the entity removal can be delayed for. (after hitting)
+     * <p>
+     * Equals to {@code 0} nanos.
+     */
+    @CompileTimeConstant
+    public static final long MIN_CRYSTALS_DELAY = 0L;
+
+    /**
+     * Default value for the amount of nanoseconds the entity removal can be delayed for. (after hitting)
+     * <p>
+     * Equals to {@link #MIN_CRYSTALS_DELAY}. ({@code 0} nanos)
+     */
+    @CompileTimeConstant
+    public static final long DEFAULT_CRYSTALS_DELAY = MIN_CRYSTALS_DELAY;
+
+    /**
+     * Maximum amount of nanoseconds the entity removal can be delayed for. (after hitting)
+     * <p>
+     * Equals to {@code 200_000_000} nanos. ({@code 200} ms)
+     */
+    @CompileTimeConstant
+    public static final long MAX_CRYSTALS_DELAY = 200_000_000L;
+
+    /**
+     * The precision/resolution/rounding of the crystal delay setting.
+     * <p>
+     * Equals to {@code 1_000_000} nanos. (rounds nanoseconds to milliseconds)
+     */
+    @CompileTimeConstant
+    public static final long CRYSTALS_DELAY_RESOLUTION = 1_000_000L;
+
+    /**
+     * Minimum amount of ticks the entities are allowed to be hidden for. (before resync)
      * <p>
      * Equals to {@code 0} ticks.
      */
     @CompileTimeConstant
-    public static final int MIN_HIDE_TICKS = 0;
+    public static final int MIN_CRYSTALS_RESYNC = 0;
 
     /**
-     * Default value for the amount of ticks the entities are allowed to be hidden for.
+     * Default value for the amount of ticks the entities are allowed to be hidden for. (before resync)
      * <p>
      * Equals to {@code 20} ticks.
      */
     @CompileTimeConstant
-    public static final int DEFAULT_HIDE_TICKS = 20;
+    public static final int DEFAULT_CRYSTALS_RESYNC = 20;
 
     /**
-     * Maximum amount of ticks the entities are allowed to be hidden for.
+     * Maximum amount of ticks the entities are allowed to be hidden for. (before resync)
      * <p>
      * Equals to {@code 50} ticks.
      */
     @CompileTimeConstant
-    public static final int MAX_HIDE_TICKS = 50;
+    public static final int MAX_CRYSTALS_RESYNC = 50;
 
     /**
      * URL for fetching the update info.
@@ -88,13 +120,13 @@ public final class Constants {
     /**
      * Maximum length for the updater response to prevent abuse.
      * <p>
-     * Equals to {@code 32767} units.
+     * Equals to {@code 65536} units.
      * <p>
      * Depending on the implementation, this might be counted
      * in either or both UTF-8 codepoints or UTF-8 bytes.
      */
     @CompileTimeConstant
-    public static final int UPDATER_MAX_BODY_LENGTH = 32767;
+    public static final int UPDATER_MAX_BODY_LENGTH = 65536;
 
     /**
      * Maximum length for the updater single component to prevent abuse.

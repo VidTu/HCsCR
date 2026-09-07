@@ -137,7 +137,7 @@ public final class BlockClips {
             return;
         }
 
-        // Clear all clips, if level is null.
+        // Clear all clips if the level is null.
         final ClientLevel level = client.level; // Implicit NPE for 'client'
         if (level == null) {
             // Log. (**TRACE**)
@@ -236,7 +236,7 @@ public final class BlockClips {
     }
 
     /**
-     * Adds a clip into {@link #CLIPS}. Should be called when on right click
+     * Adds a clip into {@link #CLIPS}. Should be called when right clicking
      * from {@link AbstractBedBlockMixin} or {@link RespawnAnchorBlockMixin}.
      *
      * @param pos   Block position to create a clip for

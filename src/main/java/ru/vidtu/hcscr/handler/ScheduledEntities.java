@@ -122,7 +122,7 @@ public final class ScheduledEntities {
             return;
         }
 
-        // Clear all entities, if level is null.
+        // Clear all entities if the level is null.
         if (client.level == null) { // Implicit NPE for 'client'
             // Log. (**TRACE**)
             if (Variables.DEBUG_LOGS) {
@@ -146,10 +146,12 @@ public final class ScheduledEntities {
             return;
         }
 
-        // Iterate.
+        // Prepare some variables used in the loop.
         final int resync = Config.crystalsResync();
-        final boolean noResync = (resync == 0);
+        final boolean shouldHide = (resync != 0);
         final long now = System.nanoTime();
+
+        // Iterate.
         final Iterator<Reference2LongMap.Entry<Entity>> iterator = SCHEDULED.reference2LongEntrySet().iterator();
         while (iterator.hasNext()) {
             // Extract.
@@ -173,18 +175,18 @@ public final class ScheduledEntities {
                 continue;
             }
 
-            // Skip if entry is still in the world and hasn't reached the deadline.
-            if ((deadline - now) >= 0L) continue;
+            // Do nothing if the entity is still in the world and hasn't reached the deadline.
+            if ((deadline - now) > 0L) continue;
 
             // Remove.
             iterator.remove();
 
             // Hide or remove the entity.
-            if (noResync) {
+            if (shouldHide) {
+                HiddenEntities.hideFor(entity, resync);
+            } else {
                 //$ remove_entity entity
                 entity.discard();
-            } else {
-                HiddenEntities.hideForTicks(entity, resync);
             }
 
             // Log. (**DEBUG**)
@@ -207,13 +209,17 @@ public final class ScheduledEntities {
      * @see #SCHEDULED
      * @see #unschedule(Entity)
      * @see #unscheduleAll()
+     * @see Config#crystalsDelay()
+     * @see Constants#MIN_CRYSTALS_RESYNC
+     * @see Constants#DEFAULT_CRYSTALS_RESYNC
+     * @see Constants#MAX_CRYSTALS_RESYNC
      */
     public static void scheduleAt(final Entity entity, final long deadline) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert (entity != null) : "HCsCR: Parameter 'entity' is null. (deadline: " + deadline + ')';
             final long diff = (System.nanoTime() - deadline);
-            assert (diff >= -10_000_000_000L && diff <= 10_000_000_000L) : "HCsCR: Parameter 'deadline' differs from current time for more than 10 seconds. (entity: " + entity + ", deadline: " + deadline + ", diff: " + diff + ')';
+            assert (diff >= -2_000_000_000L && diff <= 2_000_000_000L) : "HCsCR: Parameter 'deadline' differs from current time for more than 2 seconds. (entity: " + entity + ", deadline: " + deadline + ", diff: " + diff + ')';
             assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ", deadline: " + deadline + ')';
             //~ if >=1.17.1 'removed' -> 'isRemoved()' {
             assert (!entity.isRemoved()) : "HCsCR: Invalid entity. (entity: " + entity + ", deadline: " + deadline + ')';

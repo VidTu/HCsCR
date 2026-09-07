@@ -36,7 +36,7 @@ import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.Variables;
 
 /**
- * Mixin that speeds up entity removing via {@link HCsCR#handlePlayerHittingEntity(Player, Entity, DamageSource, float)}
+ * Mixin that speeds up entity removing via {@link HCsCR#hit(Player, Entity, DamageSource, float)}
  * via MixinExtras via {@link WrapOperation} hook. See {@code PlayerMixin_M} for a fallback.
  *
  * @author VidTu
@@ -72,7 +72,7 @@ public final class PlayerMixin_E {
      * @param original     Original method callback handler
      * @return Whether the attack has succeeded
      * @apiNote Do not call, called by Mixin
-     * @see HCsCR#handlePlayerHittingEntity(Player, Entity, DamageSource, float)
+     * @see HCsCR#hit(Player, Entity, DamageSource, float)
      */
     @DoNotCall("Called by Mixin")
     //~ if >=1.21.3 'hurt' -> 'hurtOrSimulate' {
@@ -89,7 +89,7 @@ public final class PlayerMixin_E {
 
         // Delegate.
         //noinspection NonShortCircuitBooleanExpression // <- Needs to call both methods.
-        return (original.call(target, damageSource, totalDamage) | HCsCR.handlePlayerHittingEntity((Player) (Object) this, target, damageSource, totalDamage));
+        return (original.call(target, damageSource, totalDamage) | HCsCR.hit((Player) (Object) this, target, damageSource, totalDamage));
     }
     //~}
 }

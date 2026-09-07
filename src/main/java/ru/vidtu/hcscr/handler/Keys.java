@@ -165,7 +165,7 @@ public final class Keys {
 
         // Push the profiler.
         if (Variables.DEBUG_PROFILER) {
-            profiler.push("hcscr:keys/config"); // Implicit NPE for 'profiler'
+            profiler.push("hcscr:config_key"); // Implicit NPE for 'profiler'
         }
 
         // Consume the key.
@@ -228,7 +228,7 @@ public final class Keys {
 
         // Push the profiler.
         if (Variables.DEBUG_PROFILER) {
-            profiler.push("hcscr:keys/toggle"); // Implicit NPE for 'profiler'
+            profiler.push("hcscr:toggle_key"); // Implicit NPE for 'profiler'
         }
 
         // Consume the key.
@@ -241,7 +241,7 @@ public final class Keys {
             // Toggle the mod.
             final boolean newState = Config.toggle();
 
-            // Show the bar, play the sound.
+            // Show the action bar message, play the sound.
             final Component message = HStonecutter.translate("hcscr." + newState)
                     .withStyle(newState ? ChatFormatting.GREEN : ChatFormatting.RED)
                     .withStyle(ChatFormatting.BOLD);

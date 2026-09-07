@@ -183,8 +183,7 @@ public final class HCsCR {
      * @see Config#crystalsResync()
      * @see Config#crystalsDelay()
      */
-    public static boolean handlePlayerHittingEntity(final Player player, final Entity entity,
-                                                    final DamageSource source, final float amount) {
+    public static boolean hit(final Player player, final Entity entity, final DamageSource source, final float amount) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert (player != null) : "HCsCR: Parameter 'player' is null. (entity: " + entity + ", source: " + source + ", amount: " + amount + ')';
@@ -250,7 +249,7 @@ public final class HCsCR {
                 }
 
                 // Hide the entity.
-                HiddenEntities.hideForTicks(entity, resync);
+                HiddenEntities.hideFor(entity, resync);
                 return true;
             }
 
@@ -294,9 +293,9 @@ public final class HCsCR {
             }
 
             // Hide the entity.
-            HiddenEntities.hideForTicks(entity, resync);
+            HiddenEntities.hideFor(entity, resync);
             for (final Entity other : entities) {
-                HiddenEntities.hideForTicks(other, resync);
+                HiddenEntities.hideFor(other, resync);
             }
             return true;
         }

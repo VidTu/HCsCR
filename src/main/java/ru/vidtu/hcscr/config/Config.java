@@ -115,8 +115,8 @@ public final class Config {
     private static /*non-final*/ int crystalsDelay = 0;
 
     /**
-     * Crystals resync delay in ticks, {@link Constants#DEFAULT_HIDE_TICKS} by default. Allowed values:
-     * from {@link Constants#MIN_HIDE_TICKS} inclusive to {@link Constants#MAX_HIDE_TICKS} inclusive.
+     * Crystals resync delay in ticks, {@link Constants#DEFAULT_CRYSTALS_RESYNC} by default. Allowed values:
+     * from {@link Constants#MIN_CRYSTALS_RESYNC} inclusive to {@link Constants#MAX_CRYSTALS_RESYNC} inclusive.
      * <p>
      * This is the delay after which the crystal will reappear
      * again, if the server hasn't actually removed it.
@@ -126,13 +126,13 @@ public final class Config {
      *
      * @see #crystals
      * @see #crystalsDelay
-     * @see Constants#MIN_HIDE_TICKS
-     * @see Constants#DEFAULT_HIDE_TICKS
-     * @see Constants#MAX_HIDE_TICKS
+     * @see Constants#MIN_CRYSTALS_RESYNC
+     * @see Constants#DEFAULT_CRYSTALS_RESYNC
+     * @see Constants#MAX_CRYSTALS_RESYNC
      */
     @SerializedName("crystalsResync")
-    @Range(from = Constants.MIN_HIDE_TICKS, to = Constants.MAX_HIDE_TICKS)
-    private static /*non-final*/ int crystalsResync = Constants.DEFAULT_HIDE_TICKS;
+    @Range(from = Constants.MIN_CRYSTALS_RESYNC, to = Constants.MAX_CRYSTALS_RESYNC)
+    private static /*non-final*/ int crystalsResync = Constants.DEFAULT_CRYSTALS_RESYNC;
 
     /**
      * Blocks (anchors/beds) removal mode, {@link BlockMode#DEFAULT} by default.
@@ -186,7 +186,7 @@ public final class Config {
             // Clamp.
             crystals = MoreObjects.firstNonNull(crystals, CrystalMode.DEFAULT);
             crystalsDelay = Mth.clamp(((crystalsDelay / 1_000_000) * 1_000_000), 0, 200_000_000);
-            crystalsResync = Mth.clamp(crystalsResync, Constants.MIN_HIDE_TICKS, Constants.MAX_HIDE_TICKS);
+            crystalsResync = Mth.clamp(crystalsResync, Constants.MIN_CRYSTALS_RESYNC, Constants.MAX_CRYSTALS_RESYNC);
             blocks = MoreObjects.firstNonNull(blocks, BlockMode.DEFAULT);
         }
     }
@@ -310,16 +310,16 @@ public final class Config {
     /**
      * Gets the crystals resync.
      *
-     * @return Crystals resync delay in ticks, {@link Constants#DEFAULT_HIDE_TICKS} by default
+     * @return Crystals resync delay in ticks, {@link Constants#DEFAULT_CRYSTALS_RESYNC} by default
      * @see #crystalsResync(int)
      * @see #crystals()
      * @see #crystalsDelay()
-     * @see Constants#MIN_HIDE_TICKS
-     * @see Constants#DEFAULT_HIDE_TICKS
-     * @see Constants#MAX_HIDE_TICKS
+     * @see Constants#MIN_CRYSTALS_RESYNC
+     * @see Constants#DEFAULT_CRYSTALS_RESYNC
+     * @see Constants#MAX_CRYSTALS_RESYNC
      */
     @Contract(pure = true)
-    @Range(from = Constants.MIN_HIDE_TICKS, to = Constants.MAX_HIDE_TICKS)
+    @Range(from = Constants.MIN_CRYSTALS_RESYNC, to = Constants.MAX_CRYSTALS_RESYNC)
     public static int crystalsResync() {
         return crystalsResync;
     }
@@ -327,20 +327,20 @@ public final class Config {
     /**
      * Sets the crystals resync.
      *
-     * @param crystalsResync Crystals resync delay in ticks, {@link Constants#DEFAULT_HIDE_TICKS} by default
+     * @param crystalsResync Crystals resync delay in ticks, {@link Constants#DEFAULT_CRYSTALS_RESYNC} by default
      * @see #crystalsResync()
-     * @see Constants#MIN_HIDE_TICKS
-     * @see Constants#DEFAULT_HIDE_TICKS
-     * @see Constants#MAX_HIDE_TICKS
+     * @see Constants#MIN_CRYSTALS_RESYNC
+     * @see Constants#DEFAULT_CRYSTALS_RESYNC
+     * @see Constants#MAX_CRYSTALS_RESYNC
      */
-    /*package-private*/ static void crystalsResync(final @Range(from = Constants.MIN_HIDE_TICKS, to = Constants.MAX_HIDE_TICKS) int crystalsResync) {
+    /*package-private*/ static void crystalsResync(final @Range(from = Constants.MIN_CRYSTALS_RESYNC, to = Constants.MAX_CRYSTALS_RESYNC) int crystalsResync) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
-            assert ((crystalsResync >= Constants.MIN_HIDE_TICKS) && (crystalsResync <= Constants.MAX_HIDE_TICKS)) : "HCsCR: Parameter 'crystalsResync' is not in the [" + Constants.MIN_HIDE_TICKS + ".." + Constants.MAX_HIDE_TICKS + "] range. (crystalsResync: " + crystalsResync + ')';
+            assert ((crystalsResync >= Constants.MIN_CRYSTALS_RESYNC) && (crystalsResync <= Constants.MAX_CRYSTALS_RESYNC)) : "HCsCR: Parameter 'crystalsResync' is not in the [" + Constants.MIN_CRYSTALS_RESYNC + ".." + Constants.MAX_CRYSTALS_RESYNC + "] range. (crystalsResync: " + crystalsResync + ')';
         }
 
         // Set. (with clamping)
-        Config.crystalsResync = Mth.clamp(crystalsResync, Constants.MIN_HIDE_TICKS, Constants.MAX_HIDE_TICKS);
+        Config.crystalsResync = Mth.clamp(crystalsResync, Constants.MIN_CRYSTALS_RESYNC, Constants.MAX_CRYSTALS_RESYNC);
     }
 
     /**
