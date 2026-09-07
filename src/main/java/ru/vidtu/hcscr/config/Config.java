@@ -33,10 +33,12 @@ import net.fabricmc.loader.api.FabricLoader;
 *///?} else {
 /*import net.minecraftforge.fml.loading.FMLPaths;
 *///?}
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
@@ -102,17 +104,24 @@ public final class Config {
     private static /*non-final*/ CrystalMode crystals = CrystalMode.DEFAULT;
 
     /**
-     * Crystals removal delay in nanos, {@code 0} by default.
+     * Crystals removal delay in nanoseconds, {@link Constants#DEFAULT_CRYSTALS_DELAY} by default. Allowed values:
+     * from {@link Constants#MIN_CRYSTALS_DELAY} inclusive to {@link Constants#MAX_CRYSTALS_DELAY} inclusive.
+     * <p>
+     * The resolution/precision is usually rounded to milliseconds using {@link Constants#CRYSTALS_DELAY_RESOLUTION}.
      * <p>
      * Some users report that setting the delay to the server's
      * MSPT value actually makes crystal spamming a bit faster.
      *
      * @see #crystals
      * @see #crystalsResync
+     * @see Constants#MIN_CRYSTALS_DELAY
+     * @see Constants#DEFAULT_CRYSTALS_DELAY
+     * @see Constants#MAX_CRYSTALS_DELAY
+     * @see Constants#CRYSTALS_DELAY_RESOLUTION
      */
     @SerializedName("crystalsDelay")
-    @Range(from = 0L, to = 200_000_000L)
-    private static /*non-final*/ int crystalsDelay = 0;
+    @Range(from = Constants.MIN_CRYSTALS_DELAY, to = Constants.MAX_CRYSTALS_DELAY)
+    private static /*non-final*/ int crystalsDelay = Constants.DEFAULT_CRYSTALS_DELAY;
 
     /**
      * Crystals resync delay in ticks, {@link Constants#DEFAULT_CRYSTALS_RESYNC} by default. Allowed values:
@@ -154,6 +163,7 @@ public final class Config {
      * @see #save()
      */
     public static void load() {
+        // Wrap.
         try {
             // Log. (**TRACE**)
             if (Variables.DEBUG_LOGS) {
@@ -183,9 +193,9 @@ public final class Config {
                 LOGGER.error("HCsCR: Unable to load the HCsCR config.", t);
             }
         } finally {
-            // Clamp.
+            // Clamp. (to avoid invalid values)
             crystals = MoreObjects.firstNonNull(crystals, CrystalMode.DEFAULT);
-            crystalsDelay = Mth.clamp(((crystalsDelay / 1_000_000) * 1_000_000), 0, 200_000_000);
+            crystalsDelay = Mth.clamp(((crystalsDelay / Constants.CRYSTALS_DELAY_RESOLUTION) * Constants.CRYSTALS_DELAY_RESOLUTION), Constants.MIN_CRYSTALS_DELAY, Constants.MAX_CRYSTALS_DELAY);
             crystalsResync = Mth.clamp(crystalsResync, Constants.MIN_CRYSTALS_RESYNC, Constants.MAX_CRYSTALS_RESYNC);
             blocks = MoreObjects.firstNonNull(blocks, BlockMode.DEFAULT);
         }
@@ -197,6 +207,12 @@ public final class Config {
      * @see #load()
      */
     /*package-private*/ static void save() {
+        // Validate.
+        if (Variables.DEBUG_ASSERTS) {
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ')';
+        }
+
+        // Wrap.
         try {
             // Log. (**TRACE**)
             if (Variables.DEBUG_LOGS) {
@@ -238,6 +254,12 @@ public final class Config {
      */
     @Contract(pure = true)
     public static boolean enable() {
+        // Validate.
+        if (Variables.DEBUG_ASSERTS) {
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ')';
+        }
+
+        // Get.
         return enable;
     }
 
@@ -249,6 +271,12 @@ public final class Config {
      * @see #toggle()
      */
     /*package-private*/ static void enable(final boolean enable) {
+        // Validate.
+        if (Variables.DEBUG_ASSERTS) {
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", enable: " + enable + ')';
+        }
+
+        // Set.
         Config.enable = enable;
     }
 
@@ -263,6 +291,12 @@ public final class Config {
      */
     @Contract(pure = true)
     public static CrystalMode crystals() {
+        // Validate.
+        if (Variables.DEBUG_ASSERTS) {
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ')';
+        }
+
+        // Get.
         return crystals;
     }
 
@@ -275,6 +309,12 @@ public final class Config {
      */
     @CheckReturnValue
     /*package-private*/ static CrystalMode cycleCrystals(final boolean back) {
+        // Validate.
+        if (Variables.DEBUG_ASSERTS) {
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", back: " + back + ')';
+        }
+
+        // Cycle.
         switch (crystals) {
             case OFF: return (crystals = (back ? CrystalMode.ENVELOPING : CrystalMode.DIRECT));
             case DIRECT: return (crystals = (back ? CrystalMode.OFF : CrystalMode.ENVELOPING));
@@ -286,25 +326,46 @@ public final class Config {
     /**
      * Gets the crystals delay.
      *
-     * @return Crystals removal delay in nanos, {@code 0} by default
+     * @return Crystals removal delay in nanoseconds, {@link Constants#DEFAULT_CRYSTALS_DELAY} by default
      * @see #crystalsDelay(int)
      * @see #crystals()
      * @see #crystalsResync()
+     * @see Constants#MIN_CRYSTALS_DELAY
+     * @see Constants#DEFAULT_CRYSTALS_DELAY
+     * @see Constants#MAX_CRYSTALS_RESYNC
+     * @see Constants#CRYSTALS_DELAY_RESOLUTION
      */
     @Contract(pure = true)
-    @Range(from = 0L, to = 200_000_000L)
+    @Range(from = Constants.MIN_CRYSTALS_DELAY, to = Constants.MAX_CRYSTALS_DELAY)
     public static int crystalsDelay() {
+        // Validate.
+        if (Variables.DEBUG_ASSERTS) {
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ')';
+        }
+
+        // Get.
         return crystalsDelay;
     }
 
     /**
      * Sets the crystals delay.
      *
-     * @param crystalsDelay Crystals removal delay in nanos, {@code 0} by default
+     * @param crystalsDelay Crystals removal delay in nanoseconds, {@link Constants#DEFAULT_CRYSTALS_DELAY} by default
      * @see #crystalsDelay()
+     * @see Constants#MIN_CRYSTALS_DELAY
+     * @see Constants#DEFAULT_CRYSTALS_DELAY
+     * @see Constants#MAX_CRYSTALS_RESYNC
+     * @see Constants#CRYSTALS_DELAY_RESOLUTION
      */
-    /*package-private*/ static void crystalsDelay(final @Range(from = 0L, to = 200_000_000L) int crystalsDelay) {
-        Config.crystalsDelay = Mth.clamp(((crystalsDelay / 1_000_000) * 1_000_000), 0, 200_000_000);
+    /*package-private*/ static void crystalsDelay(final @Range(from = Constants.MIN_CRYSTALS_DELAY, to = Constants.MAX_CRYSTALS_DELAY) int crystalsDelay) {
+        // Validate.
+        if (Variables.DEBUG_ASSERTS) {
+            assert ((crystalsDelay >= Constants.MIN_CRYSTALS_DELAY) && (crystalsResync <= Constants.MAX_CRYSTALS_DELAY)) : "HCsCR: Parameter 'crystalsDelay' is not in the [" + Constants.MIN_CRYSTALS_DELAY + ".." + Constants.MAX_CRYSTALS_DELAY + "] range. (crystalsDelay: " + crystalsDelay + ')';
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", crystalsDelay: " + crystalsDelay + ')';
+        }
+
+        // Set. (with clamping)
+        Config.crystalsDelay = Mth.clamp(((crystalsDelay / Constants.CRYSTALS_DELAY_RESOLUTION) * Constants.CRYSTALS_DELAY_RESOLUTION), Constants.MIN_CRYSTALS_DELAY, Constants.MAX_CRYSTALS_DELAY);
     }
 
     /**
@@ -321,6 +382,12 @@ public final class Config {
     @Contract(pure = true)
     @Range(from = Constants.MIN_CRYSTALS_RESYNC, to = Constants.MAX_CRYSTALS_RESYNC)
     public static int crystalsResync() {
+        // Validate.
+        if (Variables.DEBUG_ASSERTS) {
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ')';
+        }
+
+        // Get.
         return crystalsResync;
     }
 
@@ -337,6 +404,7 @@ public final class Config {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert ((crystalsResync >= Constants.MIN_CRYSTALS_RESYNC) && (crystalsResync <= Constants.MAX_CRYSTALS_RESYNC)) : "HCsCR: Parameter 'crystalsResync' is not in the [" + Constants.MIN_CRYSTALS_RESYNC + ".." + Constants.MAX_CRYSTALS_RESYNC + "] range. (crystalsResync: " + crystalsResync + ')';
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", crystalsResync: " + crystalsResync + ')';
         }
 
         // Set. (with clamping)
@@ -351,6 +419,12 @@ public final class Config {
      */
     @Contract(pure = true)
     public static BlockMode blocks() {
+        // Validate.
+        if (Variables.DEBUG_ASSERTS) {
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ')';
+        }
+
+        // Get.
         return blocks;
     }
 
@@ -363,6 +437,12 @@ public final class Config {
      */
     @CheckReturnValue
     /*package-private*/ static BlockMode cycleBlocks(final boolean back) {
+        // Validate.
+        if (Variables.DEBUG_ASSERTS) {
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", back: " + back + ')';
+        }
+
+        // Cycle.
         switch (blocks) {
             case OFF: return (blocks = (back ? BlockMode.FULL : BlockMode.COLLISION));
             case COLLISION: return (blocks = (back ? BlockMode.OFF : BlockMode.FULL));
@@ -385,6 +465,10 @@ public final class Config {
         if (Variables.DEBUG_ASSERTS) {
             assert (player != null) : "HCsCR: Parameter 'player' is null. (entity: " + entity + ')';
             assert (entity != null) : "HCsCR: Parameter 'entity' is null. (player: " + player + ')';
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", player: " + player + ", entity: " + entity + ')';
+            final Level level = player.level();
+            assert (level == entity.level()) : "HCsCR: Mismatching levels. (player: " + player + ", entity: " + entity + ", playerLevel: " + level + ", entityLevel: " + entity.level() + ')';
+            assert (level.isClientSide()) : "HCsCR: Server-side level. (player: " + player + ", entity: " + entity + ", level: " + level + ')';
         }
 
         // Check depending on the mode.
@@ -418,8 +502,18 @@ public final class Config {
      */
     @CheckReturnValue
     public static boolean toggle() {
+        // Validate.
+        if (Variables.DEBUG_ASSERTS) {
+            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ')';
+        }
+
+        // Toggle.
         final boolean newState = (enable = !enable);
+
+        // Save.
         save();
+
+        // Return new value.
         return newState;
     }
 }

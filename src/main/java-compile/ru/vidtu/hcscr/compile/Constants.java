@@ -47,7 +47,7 @@ public final class Constants {
      * Equals to {@code 0} nanos.
      */
     @CompileTimeConstant
-    public static final long MIN_CRYSTALS_DELAY = 0L;
+    public static final int MIN_CRYSTALS_DELAY = 0;
 
     /**
      * Default value for the amount of nanoseconds the entity removal can be delayed for. (after hitting)
@@ -55,7 +55,7 @@ public final class Constants {
      * Equals to {@link #MIN_CRYSTALS_DELAY}. ({@code 0} nanos)
      */
     @CompileTimeConstant
-    public static final long DEFAULT_CRYSTALS_DELAY = MIN_CRYSTALS_DELAY;
+    public static final int DEFAULT_CRYSTALS_DELAY = MIN_CRYSTALS_DELAY;
 
     /**
      * Maximum amount of nanoseconds the entity removal can be delayed for. (after hitting)
@@ -63,7 +63,7 @@ public final class Constants {
      * Equals to {@code 200_000_000} nanos. ({@code 200} ms)
      */
     @CompileTimeConstant
-    public static final long MAX_CRYSTALS_DELAY = 200_000_000L;
+    public static final int MAX_CRYSTALS_DELAY = 200_000_000;
 
     /**
      * The precision/resolution/rounding of the crystal delay setting.
@@ -71,7 +71,7 @@ public final class Constants {
      * Equals to {@code 1_000_000} nanos. (rounds nanoseconds to milliseconds)
      */
     @CompileTimeConstant
-    public static final long CRYSTALS_DELAY_RESOLUTION = 1_000_000L;
+    public static final int CRYSTALS_DELAY_RESOLUTION = 1_000_000;
 
     /**
      * Minimum amount of ticks the entities are allowed to be hidden for. (before resync)
