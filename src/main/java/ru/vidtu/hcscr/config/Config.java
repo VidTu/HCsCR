@@ -351,6 +351,7 @@ public final class Config {
      * Sets the crystals delay.
      *
      * @param crystalsDelay Crystals removal delay in nanoseconds, {@link Constants#DEFAULT_CRYSTALS_DELAY} by default
+     * @apiNote The crystals delay will be rounded down to {@link Constants#CRYSTALS_DELAY_RESOLUTION}
      * @see #crystalsDelay()
      * @see Constants#MIN_CRYSTALS_DELAY
      * @see Constants#DEFAULT_CRYSTALS_DELAY
@@ -361,7 +362,7 @@ public final class Config {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert ((crystalsDelay >= Constants.MIN_CRYSTALS_DELAY) && (crystalsResync <= Constants.MAX_CRYSTALS_DELAY)) : "HCsCR: Parameter 'crystalsDelay' is not in the [" + Constants.MIN_CRYSTALS_DELAY + ".." + Constants.MAX_CRYSTALS_DELAY + "] range. (crystalsDelay: " + crystalsDelay + ')';
-            assert ((crystalsDelay % Constants.CRYSTALS_DELAY_RESOLUTION) == 0) : "HCsCR: Parameter 'crystalsDelay' is not rounded to (divisible by) " + Constants.CRYSTALS_DELAY_RESOLUTION + ". (crystalsDelay: " + crystalsDelay + ')';
+            // No divisibility check, intended to be rounded by this method call.
             assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", crystalsDelay: " + crystalsDelay + ')';
         }
 
