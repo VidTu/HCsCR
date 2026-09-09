@@ -96,6 +96,7 @@ public final class ScheduledEntities {
      * @see HCsCR#loop(Minecraft)
      * @see #SCHEDULED
      */
+    @SuppressWarnings({"deprecation", "RedundantSuppression"}) // <- Forge 1.16.5 for Entity.removed.
     public static void loop(final Minecraft client, final @UnknownNullability ProfilerFiller profiler) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
@@ -214,6 +215,7 @@ public final class ScheduledEntities {
      * @see Constants#DEFAULT_CRYSTALS_RESYNC
      * @see Constants#MAX_CRYSTALS_RESYNC
      */
+    @SuppressWarnings({"deprecation", "RedundantSuppression"}) // <- Forge 1.16.5 for Entity.removed.
     public static void scheduleAt(final Entity entity, final long deadline) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {

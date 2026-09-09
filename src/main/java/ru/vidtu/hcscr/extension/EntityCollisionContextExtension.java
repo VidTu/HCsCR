@@ -49,7 +49,7 @@ public interface EntityCollisionContextExtension {
     /^*
      * Gets the entity.
      *
-     * @return Entity involving in the context, {@code null} if none or not stored
+     * @return Entity involved in the context, {@code null} if none or not stored
      ^/
     @Contract(pure = true)
     @Nullable

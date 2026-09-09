@@ -361,6 +361,7 @@ public final class Config {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert ((crystalsDelay >= Constants.MIN_CRYSTALS_DELAY) && (crystalsResync <= Constants.MAX_CRYSTALS_DELAY)) : "HCsCR: Parameter 'crystalsDelay' is not in the [" + Constants.MIN_CRYSTALS_DELAY + ".." + Constants.MAX_CRYSTALS_DELAY + "] range. (crystalsDelay: " + crystalsDelay + ')';
+            assert ((crystalsDelay % Constants.CRYSTALS_DELAY_RESOLUTION) == 0) : "HCsCR: Parameter 'crystalsDelay' is not rounded to (divisible by) " + Constants.CRYSTALS_DELAY_RESOLUTION + ". (crystalsDelay: " + crystalsDelay + ')';
             assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", crystalsDelay: " + crystalsDelay + ')';
         }
 
@@ -466,8 +467,10 @@ public final class Config {
             assert (player != null) : "HCsCR: Parameter 'player' is null. (entity: " + entity + ')';
             assert (entity != null) : "HCsCR: Parameter 'entity' is null. (player: " + player + ')';
             assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", player: " + player + ", entity: " + entity + ')';
+            //~ if >=1.20.1 '.level' -> '.level()' {
             final Level level = player.level();
             assert (level == entity.level()) : "HCsCR: Mismatching levels. (player: " + player + ", entity: " + entity + ", playerLevel: " + level + ", entityLevel: " + entity.level() + ')';
+            //~}
             assert (level.isClientSide()) : "HCsCR: Server-side level. (player: " + player + ", entity: " + entity + ", level: " + level + ')';
         }
 

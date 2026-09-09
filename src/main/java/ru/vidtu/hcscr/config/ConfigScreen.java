@@ -77,9 +77,9 @@ public final class ConfigScreen extends Screen {
     //? if >=1.20.6 {
     private static final java.time.Duration TOOLTIP_DURATION = java.time.Duration.ofMillis(250L);
     //?} elif >=1.19.4 {
-    /*private static final int TOOLTIP_DURATION = 250; // Millis.
+    /*private static final int TOOLTIP_DURATION = 250; // Milliseconds.
     *///?} else {
-    /*private static final long TOOLTIP_DURATION = 250_000_000L; // Nanos.
+    /*private static final long TOOLTIP_DURATION = 250_000_000L; // Nanoseconds.
     *///?}
 
     /**
@@ -90,7 +90,7 @@ public final class ConfigScreen extends Screen {
 
     //? if <1.19.4 {
     /*/^*
-     * Tooltip to be rendered. (pre-1.19.4)
+     * Tooltip deferred to be rendered. (pre-1.19.4)
      ^/
     @Nullable
     private /^non-final^/ List<FormattedCharSequence> tooltip;
@@ -225,8 +225,8 @@ public final class ConfigScreen extends Screen {
         // Extract and validate.
         final Font font = this.font;
         if (Variables.DEBUG_ASSERTS) {
-            assert (graphics != null) : "HCsCR: Parameter 'graphics' is null. (mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
-            assert ((tickDelta >= 0.0f) && (tickDelta < Float.POSITIVE_INFINITY)) : "HCsCR: Parameter 'tickDelta' is not in the [0..+INF) range. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen:" + this + ')';
+            assert (graphics != null) : "HCsCR: Parameter 'graphics' is null. (mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
+            assert ((tickDelta >= 0.0f) && (tickDelta < Float.POSITIVE_INFINITY)) : "HCsCR: Parameter 'tickDelta' is not in the [0..+INF) range. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
             assert (font != null) : "HCsCR: Font is null. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
             final Minecraft minecraft = this.minecraft;
             assert (minecraft != null) : "HCsCR: Client is null. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
@@ -255,8 +255,8 @@ public final class ConfigScreen extends Screen {
         /*drawCenteredString(graphics, font, this.title, this.width / 2, 12, 0xFF_FF_FF_FF); // Implicit NPE for 'font'
         *///?}
 
-        // Render the tooltip. (pre-1.19.4)
-        // Newer versions (1.19.4+) support native last-pass tooltips.
+        // Render the deferred tooltip. (pre-1.19.4)
+        // Newer versions (1.19.4+) support native deferred tooltips.
         //? if <1.19.4 {
         /*final List<FormattedCharSequence> tooltip = this.tooltip;
         if (tooltip == null) return;
@@ -354,16 +354,16 @@ public final class ConfigScreen extends Screen {
 
             @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") // <- Parameter names are not provided by Mojmap.
             @Override
-            public void renderButton(final PoseStack graphics, final int mouseX, final int mouseY, final float delta) {
+            public void renderButton(final PoseStack graphics, final int mouseX, final int mouseY, final float tickDelta) {
                 // Validate.
                 if (Variables.DEBUG_ASSERTS) {
-                    assert (graphics != null) : "HCsCR: Parameter 'graphics' is null. (mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", button: " + this + ", screen:" + ConfigScreen.this + ')';
-                    assert ((tickDelta >= 0.0f) && (tickDelta < Float.POSITIVE_INFINITY)) : "HCsCR: Parameter 'tickDelta' is not in the [0..+INF) range. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", button: " + this + ", screen:" + ConfigScreen.this + ')';
-                    assert (minecraft.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", button: " + this + ", screen":  + ConfigScreen.this + ')';
+                    assert (graphics != null) : "HCsCR: Parameter 'graphics' is null. (mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", button: " + this + ", screen: " + ConfigScreen.this + ')';
+                    assert ((tickDelta >= 0.0f) && (tickDelta < Float.POSITIVE_INFINITY)) : "HCsCR: Parameter 'tickDelta' is not in the [0..+INF) range. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", button: " + this + ", screen: " + ConfigScreen.this + ')';
+                    assert (minecraft.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", button: " + this + ", screen: " + ConfigScreen.this + ')';
                 }
 
                 // Render the button.
-                super.renderButton(graphics, mouseX, mouseY, delta);
+                super.renderButton(graphics, mouseX, mouseY, tickDelta);
 
                 // Button is not hovered, update the state.
                 if (!this.isHovered) {
@@ -453,16 +453,16 @@ public final class ConfigScreen extends Screen {
 
             @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") // <- Parameter names are not provided by Mojmap.
             @Override
-            public void renderButton(final PoseStack graphics, final int mouseX, final int mouseY, final float delta) {
+            public void renderButton(final PoseStack graphics, final int mouseX, final int mouseY, final float tickDelta) {
                 // Validate.
                 if (Variables.DEBUG_ASSERTS) {
-                    assert (graphics != null) : "HCsCR: Parameter 'graphics' is null. (mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", checkbox: " + this + ", screen:" + ConfigScreen.this + ')';
-                    assert ((tickDelta >= 0.0f) && (tickDelta < Float.POSITIVE_INFINITY)) : "HCsCR: Parameter 'tickDelta' is not in the [0..+INF) range. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", checkbox: " + this + ", screen:" + ConfigScreen.this + ')';
-                    assert (minecraft.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", checkbox: " + this + ", screen":  + ConfigScreen.this + ')';
+                    assert (graphics != null) : "HCsCR: Parameter 'graphics' is null. (mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", checkbox: " + this + ", screen: " + ConfigScreen.this + ')';
+                    assert ((tickDelta >= 0.0f) && (tickDelta < Float.POSITIVE_INFINITY)) : "HCsCR: Parameter 'tickDelta' is not in the [0..+INF) range. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", checkbox: " + this + ", screen: " + ConfigScreen.this + ')';
+                    assert (minecraft.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", checkbox: " + this + ", screen: " + ConfigScreen.this + ')';
                 }
 
                 // Render the checkbox itself.
-                super.renderButton(graphics, mouseX, mouseY, delta);
+                super.renderButton(graphics, mouseX, mouseY, tickDelta);
 
                 // Checkbox is not hovered, update the state.
                 if (!this.isHovered) {
@@ -568,16 +568,16 @@ public final class ConfigScreen extends Screen {
 
             @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") // <- Parameter names are not provided by Mojmap.
             @Override
-            public void renderButton(final PoseStack graphics, final int mouseX, final int mouseY, final float delta) {
+            public void renderButton(final PoseStack graphics, final int mouseX, final int mouseY, final float tickDelta) {
                 // Validate.
                 if (Variables.DEBUG_ASSERTS) {
-                    assert (graphics != null) : "HCsCR: Parameter 'graphics' is null. (mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", slider: " + this + ", screen:" + ConfigScreen.this + ')';
-                    assert ((tickDelta >= 0.0f) && (tickDelta < Float.POSITIVE_INFINITY)) : "HCsCR: Parameter 'tickDelta' is not in the [0..+INF) range. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", slider: " + this + ", screen:" + ConfigScreen.this + ')';
-                    assert (minecraft.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", slider: " + this + ", screen":  + ConfigScreen.this + ')';
+                    assert (graphics != null) : "HCsCR: Parameter 'graphics' is null. (mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", slider: " + this + ", screen: " + ConfigScreen.this + ')';
+                    assert ((tickDelta >= 0.0f) && (tickDelta < Float.POSITIVE_INFINITY)) : "HCsCR: Parameter 'tickDelta' is not in the [0..+INF) range. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", slider: " + this + ", screen: " + ConfigScreen.this + ')';
+                    assert (minecraft.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", slider: " + this + ", screen: " + ConfigScreen.this + ')';
                 }
 
                 // Render the slider itself.
-                super.renderButton(graphics, mouseX, mouseY, delta);
+                super.renderButton(graphics, mouseX, mouseY, tickDelta);
 
                 // Slider is not hovered, update the state.
                 if (!this.isHovered) {
