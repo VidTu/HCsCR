@@ -33,6 +33,7 @@ import ru.vidtu.hcscr.config.Config;
 import ru.vidtu.hcscr.config.ConfigScreen;
 
 //? if >=1.20.4 {
+import com.google.common.base.Suppliers;
 import com.google.common.escape.Escaper;
 import com.google.common.escape.Escapers;
 import com.google.common.net.HttpHeaders;
@@ -61,6 +62,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 //?}
 
 /**
@@ -159,6 +162,14 @@ public final class HModMenu implements ModMenuApi {
         }
 
         /**
+         * Memoizing supplier for update caching.
+         *
+         * @see #checkForUpdates()
+         * @see #update()
+         */
+        private static final Supplier<UpdateInfo> CACHE = Suppliers.memoizeWithExpiration(Updater::update, Constants.UPDATER_CACHE_SECONDS, TimeUnit.SECONDS);
+
+        /**
          * Creates a new updater.
          */
         @Contract(pure = true)
@@ -167,10 +178,15 @@ public final class HModMenu implements ModMenuApi {
         }
 
         /**
-         * Checks for updates.
+         * Checks for updates with memoizing/caching.
+         * <p>
+         * <b>Blocks the calling thread!</b>
+         * May return instantly if the result is memoized.
          *
-         * @return Found update, {@code null} if update is not needed
+         * @return Found update, {@code null} if update is not needed or can't check for updates
          * @apiNote Do not call, called by ModMenu
+         * @see #CACHE
+         * @see #update()
          */
         @Blocking
         @DoNotCall("Called by ModMenu")
@@ -178,9 +194,38 @@ public final class HModMenu implements ModMenuApi {
         @Nullable
         @Override
         public UpdateInfo checkForUpdates() {
+            // Log. (**TRACE**)
+            if (Variables.DEBUG_LOGS) {
+                LOGGER.trace(HCsCR.MARKER, "HCsCR: Requested an update check...");
+            }
+
+            // Check.
+            final UpdateInfo update = CACHE.get();
+
+            // Log. (**DEBUG**)
+            if (Variables.DEBUG_LOGS) {
+                LOGGER.debug(HCsCR.MARKER, "HCsCR: Returning update info. (update: {})", update);
+            }
+
+            // Return.
+            return update;
+        }
+
+        /**
+         * Checks for updates without memoizing/caching.
+         * <p>
+         * <b>Blocks the calling thread!</b>
+         *
+         * @return Found update, {@code null} if update is not needed or can't check for updates
+         * @see #CACHE
+         * @see #checkForUpdates()
+         */
+        @Blocking
+        @CheckReturnValue
+        @Nullable
+        private static UpdateInfo update() {
             // Wrap.
             try {
-                // TODO(VidTu): Add a memoizing supplier so spamming won't work.
                 // Log. (**TRACE**)
                 if (Variables.DEBUG_LOGS) {
                     LOGGER.trace(HCsCR.MARKER, "HCsCR: Checking for updates...");
@@ -327,7 +372,15 @@ public final class HModMenu implements ModMenuApi {
                     }
 
                     // Create an update.
-                    return new Update(channel, asciiLink, remoteVersion.getFriendlyString());
+                    final Update update = new Update(channel, asciiLink, remoteVersion.getFriendlyString());
+
+                    // Log. (**DEBUG**)
+                    if (Variables.DEBUG_LOGS) {
+                        LOGGER.debug(HCsCR.MARKER, "HCsCR: Update found. (update: {})", update);
+                    }
+
+                    // Return.
+                    return update;
                 } finally {
                     // Close the client if it's closable. (Java 21+)
                     //? if >=1.20.6 {

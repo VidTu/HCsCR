@@ -84,7 +84,7 @@ public final class Constants {
     /**
      * Default value for the amount of ticks the entities are allowed to be hidden for. (before resync)
      * <p>
-     * Equals to {@code 20} ticks.
+     * Equals to {@code 20} ticks. (i.e., {@code 1} second)
      */
     @CompileTimeConstant
     public static final int DEFAULT_CRYSTALS_RESYNC = 20;
@@ -92,10 +92,18 @@ public final class Constants {
     /**
      * Maximum amount of ticks the entities are allowed to be hidden for. (before resync)
      * <p>
-     * Equals to {@code 50} ticks.
+     * Equals to {@code 50} ticks. (i.e., {@code 2.5} seconds)
      */
     @CompileTimeConstant
     public static final int MAX_CRYSTALS_RESYNC = 50;
+
+    /**
+     * Cache/memoization time for the updater in seconds.
+     * <p>
+     * Equals to {@code 300} seconds. (i.e., {@code 5} minutes)
+     */
+    @CompileTimeConstant
+    public static final long UPDATER_CACHE_SECONDS = 300L;
 
     /**
      * URL for fetching the update info.
