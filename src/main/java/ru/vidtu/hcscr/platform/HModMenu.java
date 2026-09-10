@@ -167,7 +167,8 @@ public final class HModMenu implements ModMenuApi {
          * @see #checkForUpdates()
          * @see #update()
          */
-        private static final Supplier<UpdateInfo> CACHE = Suppliers.memoizeWithExpiration(Updater::update, Constants.UPDATER_CACHE_SECONDS, TimeUnit.SECONDS);
+        private static final Supplier<UpdateInfo> CACHE = Suppliers.memoizeWithExpiration(Updater::update,
+                Constants.UPDATER_CACHE_SECONDS, TimeUnit.SECONDS);
 
         /**
          * Creates a new updater.

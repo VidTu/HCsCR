@@ -20,38 +20,42 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# This script helps me publish HCsCR effortlessly
-# onto GitHub and Discord. It does the following:
+# This script helps me publish HCsCR effortlessly onto
+# GitHub, Modrinth and Discord. It does the following:
 #
 # 1.  Checks that all required (CLI) tools are installed.
 # 2.  Extracts the actual mod version from 'gradle.properties'.
 # 3.  Guesses the version flavor based on the version string:
-#     - "alpha", "beta", "rc", and "snapshot" versions
-#       will become Pre-Release on GitHub.
-#     - Other versions will become Release on GitHub.
+#     - "alpha" or "snapshot" versions will become Alpha
+#       on Modrinth and Pre-Release on GitHub.
+#     - "beta" or "rc" versions will become Beta on
+#       Modrinth and Pre-Release on GitHub.
+#     - Other versions will become Release on GitHub/Modrinth.
 # 4.  Locates and checks the JAR files in the 'build/libs' folder.
 # 5.  Sources the authentication tokens from the environment.
 #     - GitHub token is sourced from UPLOAD_GITHUB_TOKEN.
+#     - Modrinth token is sourced from UPLOAD_MODRINTH_TOKEN.
 #     - Discord webhook URL is sourced from UPLOAD_DISCORD_WEBHOOK.
 #     - Additional sourcing is done by executing 'dev/.env' file. It is
 #       an optional Git-ignored shell script, you can paste tokens
 #       as-is or do custom sourcing (like from a password manager).
 # 6.  If tokens aren't found, errors and stops.
 # 7.  Asks the user for the Markdown changelog in some $EDITOR. (vim/nano)
-# 8.  Does some hackery to make changelogs on Discord appear the same
-#     as they do on GitHub. (e.g., adds the issue/PR hyperlinks, "Full
-#     Changelog" Git tag comparisons on GitHub hyperlinks and more)
+# 8.  Does some hackery to make changelogs on Modrinth/Discord appear
+#     the same as they do on GitHub. (e.g., adds the issue/PR hyperlinks,
+#     "Full Changelog" Git tag comparisons on GitHub hyperlinks and more)
 # 9.  Shows the changelog and asks for the final confirmation.
 # 10. Publishes to GitHub. (In multiple steps to support Immutable Releases)
 #     - Creates a Draft release, attaches all metadata but files. (mutable)
 #     - Attaches the file assets to the release.
 #     - Publishes it, making it immutable.
-# 11. Notifies via the webhook on Discord.
+# 11. Uploads to Modrinth.
+# 12. Notifies via the webhook on Discord.
 #
 # This script is adapted from the GitHub:VidTu/Ksyxis repository.
 #
 # Required CLI tools:
-#  cat curl grep jq mktemp sed sh tr
+#  cat cut curl grep jq mktemp sed sh tr
 #
 # Any POSIX shell should work, no bash-isms used (intentionally). The script
 # should be system-agnostic, but was tested with MinGW (Windows) and Debian.
@@ -64,7 +68,7 @@ echo 'NOTE: Uploading HCsCR...'
 
 # Test the tools.
 echo 'Checking tools...'
-UPLOAD_TOOLS='cat curl grep jq mktemp sed tr'
+UPLOAD_TOOLS='cat cut curl grep jq mktemp sed tr'
 for UPLOAD_TOOL in $UPLOAD_TOOLS; do
     command -v "${UPLOAD_TOOL}" >/dev/null || { echo "ERROR: Missing command '${UPLOAD_TOOL}'. All needed tools: ${UPLOAD_TOOLS}"; exit 1; }
 done
@@ -85,8 +89,12 @@ echo "NOTE: Name: ${UPLOAD_NAME}"
 # Guess version type.
 echo 'Guessing the version type...'
 UPLOAD_VERSION_PRE='false'
+UPLOAD_VERSION_TYPE='release'
+echo "${UPLOAD_VERSION}" | grep -Eiq -- '-(beta|rc)' && UPLOAD_VERSION_TYPE='beta'
+echo "${UPLOAD_VERSION}" | grep -Eiq -- '-(alpha|snapshot)' && UPLOAD_VERSION_TYPE='alpha'
 [ "${UPLOAD_VERSION_TYPE}" != 'release' ] && UPLOAD_VERSION_PRE='true'
 echo "NOTE: Version Pre-Release (GitHub): ${UPLOAD_VERSION_PRE}"
+echo "NOTE: Version Type (Modrinth): ${UPLOAD_VERSION_TYPE}"
 
 # Extract the versions into a temporary file.
 echo 'Extracting the versions into a temporary file...'
@@ -131,6 +139,7 @@ fi
 # Verify the tokens.
 echo 'Checking the tokens...'
 [ -z "${UPLOAD_GITHUB_SKIP:-}" ] && [ -z "${UPLOAD_GITHUB_TOKEN:-}" ] && echo "ERROR: Missing UPLOAD_GITHUB_TOKEN. Use '.env' file in 'dev' or your shell's environment variables." && exit 1
+[ -z "${UPLOAD_MODRINTH_SKIP:-}" ] && [ -z "${UPLOAD_MODRINTH_TOKEN:-}" ] && echo "ERROR: Missing UPLOAD_MODRINTH_TOKEN. Use '.env' file in 'dev' or your shell's environment variables." && exit 1
 [ -z "${UPLOAD_DISCORD_SKIP:-}" ] && [ -z "${UPLOAD_DISCORD_WEBHOOK:-}" ] && echo "ERROR: Missing UPLOAD_DISCORD_WEBHOOK. Use '.env' file in 'dev' or your shell's environment variables." && exit 1
 echo 'All tokens found.'
 
@@ -162,7 +171,9 @@ UPLOAD_CHANGELOG=$(cat -- "${UPLOAD_CHANGELOG_FILE}")
 rm -- "${UPLOAD_CHANGELOG_FILE}"
 UPLOAD_CHANGELOG_GITHUB=$(echo "${UPLOAD_CHANGELOG}" && echo && echo "### Click [here](https://github.com/VidTu/HCsCR/releases/tag/${UPLOAD_VERSION}) to see all Minecraft versions.")
 UPLOAD_CHANGELOG_GITHUB_JSON=$(echo "${UPLOAD_CHANGELOG_GITHUB}" | jq --raw-input --slurp --compact-output)
-UPLOAD_CHANGELOG_DISCORD=$(echo "${UPLOAD_CHANGELOG}" | sed -Ee 's/^\*\*Full Changelog\*\*: (https:\/\/github.com\/VidTu\/HCsCR\/compare\/(.*))$/**Full Changelog**: [\2](\1)/g' -e 's/(issue|PR): #([0-9]+)/\1: [#\2](https:\/\/github.com\/VidTu\/HCsCR\/issues\/\2)/g' -e 's/thanks to: @([a-zA-Z0-9\-]+)/thanks to: [@\1](https:\/\/github.com\/\1)/g' | tr '\n' '\r' | sed 's/\r\r/\r/g' | tr '\r' '\n' | sed -Ee 's/^###### /-# /g' -e 's/^#####? //g')
+UPLOAD_CHANGELOG_MODIFIED=$(echo "${UPLOAD_CHANGELOG}" | sed -Ee 's/^\*\*Full Changelog\*\*: (https:\/\/github.com\/VidTu\/HCsCR\/compare\/(.*))$/**Full Changelog**: [\2](\1)/g' -e 's/(issue|PR): #([0-9]+)/\1: [#\2](https:\/\/github.com\/VidTu\/HCsCR\/issues\/\2)/g' -e 's/thanks to: @([a-zA-Z0-9\-]+)/thanks to: [@\1](https:\/\/github.com\/\1)/g')
+UPLOAD_CHANGELOG_MODIFIED_JSON=$(echo "${UPLOAD_CHANGELOG_MODIFIED}" | jq --raw-input --slurp --compact-output)
+UPLOAD_CHANGELOG_DISCORD=$(echo "${UPLOAD_CHANGELOG_MODIFIED}" | tr '\n' '\r' | sed 's/\r\r/\r/g' | tr '\r' '\n' | sed -Ee 's/^###### /-# /g' -e 's/^#####? //g')
 UPLOAD_CHANGELOG_DISCORD_JSON=$(echo "${UPLOAD_CHANGELOG_DISCORD}" | jq --raw-input --slurp --compact-output)
 
 # Print the changelogs.
@@ -173,6 +184,10 @@ echo
 echo '===== GITHUB CHANGELOG START ====='
 echo "${UPLOAD_CHANGELOG_GITHUB}"
 echo '===== GITHUB CHANGELOG END ====='
+echo
+echo '===== MODIFIED CHANGELOG START ====='
+echo "${UPLOAD_CHANGELOG_MODIFIED}"
+echo '===== MODIFIED CHANGELOG END ====='
 echo
 echo '===== DISCORD CHANGELOG START ====='
 echo "${UPLOAD_CHANGELOG_DISCORD}"
@@ -208,6 +223,38 @@ if [ -z "${UPLOAD_GITHUB_SKIP:-}" ]; then
     echo 'Publishing a GitHub release from the draft...'
     curl --fail-with-body --max-time 30 --retry 3 --request PATCH --header 'Content-Type: application/json' --header "Authorization: Bearer ${UPLOAD_GITHUB_TOKEN}" --data-raw '{"draft":false}' "https://api.github.com/repos/VidTu/HCsCR/releases/${UPLOAD_GITHUB_ID}"
     echo 'Published a GitHub release from the draft.'
+fi
+
+# Skip Modrinth, if desired.
+if [ -z "${UPLOAD_MODRINTH_SKIP:-}" ]; then
+    # Create Modrinth releases.
+    echo 'Publishing Modrinth release...'
+    echo "${UPLOAD_FILES}" | while read -r UPLOAD_FILE; do
+        # Extract data.
+        UPLOAD_FILENAME=$(basename -- "${UPLOAD_FILE}")
+        echo "Extracting data for '${UPLOAD_FILENAME}'..."
+        UPLOAD_ID=$(echo "${UPLOAD_FILENAME}" | sed -E 's/^.*\+(.*)\..*$/\1/g')
+        UPLOAD_MC=$(echo "${UPLOAD_ID}" | cut -d '-' -f 1)
+        UPLOAD_TYPE=$(echo "${UPLOAD_ID}" | cut -d '-' -f 2)
+        UPLOAD_MODRINTH_VERSION="${UPLOAD_VERSION}+${UPLOAD_ID}"
+        UPLOAD_MODRINTH_VERSION_JSON=$(echo "${UPLOAD_MODRINTH_VERSION}" | jq --raw-input --compact-output)
+        UPLOAD_MODRINTH_NAME="HCsCR ${UPLOAD_MODRINTH_VERSION}"
+        UPLOAD_MODRINTH_NAME_JSON=$(echo "${UPLOAD_MODRINTH_NAME}" | jq --raw-input --compact-output)
+        UPLOAD_MODRINTH_GAME_VERSIONS_JSON="[$(echo "${UPLOAD_MC}" | jq --raw-input --compact-output)]"
+        if [ "${UPLOAD_TYPE}" == 'fabric' ]; then
+            UPLOAD_MODRINTH_LOADERS_JSON='["fabric","quilt"]'
+            UPLOAD_MODRINTH_DEPENDENCIES_JSON='[{"project_id":"P7dR8mSH","dependency_type":"required"},{"project_id":"mOgUt4GM","dependency_type":"optional"}]'
+        else
+            UPLOAD_MODRINTH_LOADERS_JSON="[$(echo "${UPLOAD_TYPE}" | jq --raw-input --compact-output)]"
+            UPLOAD_MODRINTH_DEPENDENCIES_JSON='[]'
+        fi
+
+        # Upload.
+        echo "Uploading '${UPLOAD_FILENAME}'... (version: '${UPLOAD_MC}', loader: '${UPLOAD_TYPE}', supported versions: ${UPLOAD_MODRINTH_GAME_VERSIONS_JSON}, supported loaders: ${UPLOAD_MODRINTH_LOADERS_JSON}, dependencies: ${UPLOAD_MODRINTH_DEPENDENCIES_JSON})"
+        curl --fail-with-body --max-time 30 --retry 3 --request POST --header "Authorization: ${UPLOAD_MODRINTH_TOKEN}" --form-string "data={\"name\":${UPLOAD_MODRINTH_NAME_JSON},\"version_number\":${UPLOAD_MODRINTH_VERSION_JSON},\"changelog\":${UPLOAD_CHANGELOG_MODIFIED_JSON},\"dependencies\":${UPLOAD_MODRINTH_DEPENDENCIES_JSON},\"game_versions\":${UPLOAD_MODRINTH_GAME_VERSIONS_JSON},\"version_type\":\"${UPLOAD_VERSION_TYPE}\",\"loaders\":${UPLOAD_MODRINTH_LOADERS_JSON},\"featured\":false,\"status\":\"listed\",\"requested_status\":\"listed\",\"project_id\":\"y8tZWXr6\",\"file_parts\":[\"${UPLOAD_FILENAME}\"],\"primary_file\":\"${UPLOAD_FILENAME}\"}" --form "${UPLOAD_FILENAME}=@${UPLOAD_FILE}" 'https://api.modrinth.com/v2/version'
+        echo 'Uploaded.'
+    done
+    echo 'Published Modrinth releases.'
 fi
 
 # Skip Discord, if desired.
