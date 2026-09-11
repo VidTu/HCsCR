@@ -123,31 +123,34 @@ dependencies {
 }
 
 tasks.withType<JavaCompile> {
-    // Compile with UTF-8.
-    options.encoding = "UTF-8"
+    // Don't process NeoForge internal tasks. (which are exposed?)
+    if (name != "neoFormRecompile") {
+        // Compile with UTF-8.
+        options.encoding = "UTF-8"
 
-    // Set the compiler debug options.
-    if ("${findProperty("ru.vidtu.hcscr.debug.javac") ?: findProperty("ru.vidtu.hcscr.debug")}".toBoolean()) {
-        // Enable local variable names, source file names, line numbers, method parameters, and all compiler warnings.
-        options.compilerArgs.addAll(listOf("-g", "-parameters", "-Xlint:all"))
-    } else if ("${findProperty("ru.vidtu.hcscr.slim")}".toBoolean()) {
-        // Enable all compiler warnings.
-        options.compilerArgs.addAll(listOf("-g:none", "-Xlint:all"))
-    } else {
-        // Enable local variable names, source file names, line numbers, and all compiler warnings.
-        options.compilerArgs.addAll(listOf("-g", "-Xlint:all"))
-    }
+        // Set the compiler debug options.
+        if ("${findProperty("ru.vidtu.hcscr.debug.javac") ?: findProperty("ru.vidtu.hcscr.debug")}".toBoolean()) {
+            // Enable local variable names, source file names, line numbers, method parameters, and all compiler warnings.
+            options.compilerArgs.addAll(listOf("-g", "-parameters", "-Xlint:all"))
+        } else if ("${findProperty("ru.vidtu.hcscr.slim")}".toBoolean()) {
+            // Enable all compiler warnings.
+            options.compilerArgs.addAll(listOf("-g:none", "-Xlint:all"))
+        } else {
+            // Enable local variable names, source file names, line numbers, and all compiler warnings.
+            options.compilerArgs.addAll(listOf("-g", "-Xlint:all"))
+        }
 
-    // Set the compatible Java target.
-    options.release = javaTarget
+        // Set the compatible Java target.
+        options.release = javaTarget
 
-    // Post-process classes. (strip metadata)
-    if ((name != "neoFormRecompile") && (!"${findProperty("ru.vidtu.hcscr.debug.metadata") ?: findProperty("ru.vidtu.hcscr.debug")}".toBoolean())) {
-        doLast {
-            Strip(destinationDirectory.get().asFile, classpath).use { strip ->
-                destinationDirectory.asFileTree
-                    .filter { it.name != "package-info.class" }
-                    .forEach { strip.stripBytecode(it) }
+        // Post-process classes. (strip metadata)
+        if (!"${findProperty("ru.vidtu.hcscr.debug.metadata") ?: findProperty("ru.vidtu.hcscr.debug")}".toBoolean()) {
+            doLast {
+                Strip(destinationDirectory.get().asFile, classpath).use { strip ->
+                    destinationDirectory.asFileTree
+                        .filter { it.name != "package-info.class" }
+                        .forEach { strip.stripBytecode(it) }
+                }
             }
         }
     }
