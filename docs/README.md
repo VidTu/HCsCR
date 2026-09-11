@@ -77,11 +77,11 @@ Obviously, you don't need them for Forge or NeoForge.
 **A**: This mod works on the client side. There is no server-side version.
 
 **Q**: Is this a hack?  
-**A**: It depends on your opinion on what's a hack and what's not. This mod
-reduces the role that ping (latency) plays in combat with crystals.
-Specifically, it does affect how fast the crystals are removed. Crystal
-placement is NOT affected. It cannot be affected in a way that's
-considered legitimate.
+**A**: It depends on your opinion on what's a hack and what's
+not. This mod reduces the role that ping (latency) plays in
+combat with crystals. Specifically, it does affect how fast
+the crystals are removed. Crystal placement is NOT affected.
+It cannot be affected in a way that's considered legitimate.
 
 **Q**: Is this designed to be a hack?  
 **A**: No.
