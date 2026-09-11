@@ -266,13 +266,13 @@ public final class ScheduledEntities {
             LOGGER.trace(HCsCR.MARKER, "HCsCR: Unscheduling a scheduled entity... (entity: {}, scheduled: {})", entity, SCHEDULED);
 
             // Remove. (store deadline)
-            final long deadline = SCHEDULED.remove(entity);
+            final long deadline = SCHEDULED.removeLong(entity);
 
             // Log. (**DEBUG**)
             LOGGER.debug(HCsCR.MARKER, "HCsCR: Unscheduled a scheduled entity. (entity: {}, deadline: {}, scheduled: {})", entity, deadline, SCHEDULED);
         } else {
             // Remove.
-            SCHEDULED.remove(entity);
+            SCHEDULED.removeLong(entity);
         }
     }
 

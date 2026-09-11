@@ -309,13 +309,13 @@ public final class HiddenEntities {
             LOGGER.trace(HCsCR.MARKER, "HCsCR: Showing a hidden entity... (entity: {}, hidden: {})", entity, HIDDEN);
 
             // Remove. (store remaining)
-            final int remaining = HIDDEN.remove(entity);
+            final int remaining = HIDDEN.removeInt(entity);
 
             // Log. (**DEBUG**)
             LOGGER.debug(HCsCR.MARKER, "HCsCR: Shown a hidden entity. (entity: {}, remaining: {}, hidden: {})", entity, remaining, HIDDEN);
         } else {
             // Remove.
-            HIDDEN.remove(entity);
+            HIDDEN.removeInt(entity);
         }
     }
 
