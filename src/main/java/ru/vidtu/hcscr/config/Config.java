@@ -34,6 +34,7 @@ import net.fabricmc.loader.api.FabricLoader;
 /*import net.minecraftforge.fml.loading.FMLPaths;
 *///?}
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
@@ -467,12 +468,15 @@ public final class Config {
         if (Variables.DEBUG_ASSERTS) {
             assert (player != null) : "HCsCR: Parameter 'player' is null. (entity: " + entity + ')';
             assert (entity != null) : "HCsCR: Parameter 'entity' is null. (player: " + player + ')';
-            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", player: " + player + ", entity: " + entity + ')';
+            final Minecraft client = Minecraft.getInstance();
+            assert (client.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", player: " + player + ", entity: " + entity + ')';
+            final ClientLevel clientLevel = client.level;
             //~ if >=1.20.1 '.level' -> '.level()' {
-            final Level level = player.level();
-            assert (level == entity.level()) : "HCsCR: Mismatching levels. (player: " + player + ", entity: " + entity + ", playerLevel: " + level + ", entityLevel: " + entity.level() + ')';
+            final Level playerLevel = player.level();
+            assert (clientLevel == playerLevel) : "HCsCR: Mismatching levels. (player: " + player + ", entity: " + entity + ", clientLevel: " + clientLevel + ", playerLevel: " + playerLevel + ')';
+            final Level entityLevel = entity.level();
+            assert (playerLevel == entityLevel) : "HCsCR: Mismatching levels. (player: " + player + ", entity: " + entity + ", playerLevel: " + playerLevel + ", entityLevel: " + entityLevel + ')';
             //~}
-            assert (level.isClientSide()) : "HCsCR: Server-side level. (player: " + player + ", entity: " + entity + ", level: " + level + ')';
         }
 
         // Check depending on the mode.
@@ -485,10 +489,16 @@ public final class Config {
                 if (entity instanceof net.minecraft.world.entity.Interaction) return true;
                 //?}
 
-                //~ if >=26.2 'Slime' -> 'cubemob.AbstractCubeMob' {
+                //? if >=26.2 {
                 //noinspection SimplifiableIfStatement // <- Preprocessor.
                 if ((entity instanceof net.minecraft.world.entity.monster.cubemob.AbstractCubeMob) && entity.isInvisibleTo(player)) return true; // Implicit NPE for 'player'
-                //~}
+                //?} elif forge && 1.16.5 {
+                /*//noinspection SimplifiableIfStatement // <- Preprocessor.
+                if ((entity instanceof net.minecraft.entity.monster.SlimeEntity) && entity.isInvisibleTo(player)) return true; // Implicit NPE for 'player'
+                *///?} else {
+                /*//noinspection SimplifiableIfStatement // <- Preprocessor.
+                if ((entity instanceof net.minecraft.world.entity.monster.Slime) && entity.isInvisibleTo(player)) return true; // Implicit NPE for 'player'
+                *///?}
 
                 return (entity instanceof EndCrystal);
             default:

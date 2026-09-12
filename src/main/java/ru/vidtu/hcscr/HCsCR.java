@@ -193,22 +193,28 @@ public final class HCsCR {
         }
 
         // Do NOT process hit if any of the following conditions is met:
-        // - The current level (world) is not client-side. (e.g., integrated server world)
-        // - The amount of dealt damage is zero or less.
+        // - The amount of dealt damage is zero or less. (or NaN)
         // - The damaged entity is already scheduled for removal.
+        // - The current level (world) is not client-side. (e.g., integrated server world)
         // - The mod is disabled via config or keybind.
-        // - This entity type shouldn't be processed at all (e.g. any living entity) or by the current config (e.g. slime).
-        // - The damaging entity is not a player.
-        if (!HStonecutter.levelOfEntity(entity).isClientSide() || (amount <= 0.0f) || // Implicit NPE for 'entity'
-                HStonecutter.isEntityRemoved(entity) || !Config.enable() ||
-                !Config.shouldProcess(player, entity)) return false;
+        // - This entity type shouldn't be processed at all (e.g., any living entity) or by the current config (e.g., slime).
+        //~ if >=1.17.1 'removed' -> 'isRemoved()' {
+            //~ if >=1.20.1 '.level' -> '.level()' {
+        if (!(amount > 0.0f) || entity.isRemoved() || !entity.level().isClientSide() || // Implicit NPE for 'entity'
+                !Config.enable() || !Config.shouldProcess(player, entity)) return false;
 
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
-            assert (player instanceof LocalPlayer) : "HCsCR: Source entity is not LocalPlayer. (player: " + player + ", entity: " + entity + ", source: " + source + ", amount: " + amount + ')';
+            assert (player instanceof LocalPlayer) : "HCsCR: Player is not LocalPlayer. (player: " + player + ", entity: " + entity + ", source: " + source + ", amount: " + amount + ')';
             //noinspection ObjectEquality // <- Should be the same reference.
-            assert ((player == source.getEntity()) && (player == source.getDirectEntity()) && (source.getEntity() == Minecraft.getInstance().player)) : "HCsCR: Source entity is not us. (player: " + player + ", entity: " + entity + ", source: " + source + ", amount: " + amount + ", sourceEntity: " + source.getEntity() + ", sourceDirectEntity: " + source.getDirectEntity() + ", mcPlayer: " + Minecraft.getInstance().player + ')';
-            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Handling entity attack NOT from the main thread. (thread: " + Thread.currentThread() + ", player: " + player + ", entity: " + entity + ", source: " + source + ", amount: " + amount + ')';
+            final Entity sourceEntity = source.getEntity();
+            assert (player == sourceEntity) : "HCsCR: Invalid source (player: " + player + ", entity: " + entity + ", source: " + source + ", amount: " + amount + ", sourceEntity: " + sourceEntity + ')';
+            final Entity sourceDirectEntity = source.getEntity();
+            assert (player == sourceDirectEntity) : "HCsCR: Indirect attack. (player: " + player + ", entity: " + entity + ", source: " + source + ", amount: " + amount + ", sourceDirectEntity: " + sourceDirectEntity + ')';
+            final Minecraft client = Minecraft.getInstance();
+            assert (client.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", player: " + player + ", entity: " + entity + ", source: " + source + ", amount: " + amount + ')';
+            final LocalPlayer mcPlayer = client.player;
+            assert (player == mcPlayer) : "HCsCR: Invalid player. (player: " + player + ", entity: " + entity + ", source: " + source + ", amount: " + amount + ", mcPlayer: " + mcPlayer + ')';
         }
 
         // Don't process player hits that deal zero damage, e.g. with the weakness effect.
@@ -260,7 +266,8 @@ public final class HCsCR {
 
         // Get the enveloped entities.
         final AABB entityBox = entity.getBoundingBox();
-        final List<Entity> entities = HStonecutter.levelOfEntity(entity).getEntities(entity, entity.getBoundingBox(), (final Entity other) -> {
+        final List<Entity> entities = entity.level().getEntities(entity, entity.getBoundingBox(), (final Entity other) -> {
+            //~}
             // Validate.
             if (Variables.DEBUG_ASSERTS) {
                 assert (other != null) : "HCsCR: Parameter 'other' is null. (entity: " + entity + ')';
@@ -268,9 +275,10 @@ public final class HCsCR {
 
             // Do NOT process hit if any of the following conditions is met:
             // - The damaged entity is already scheduled for removal.
-            // - This entity type shouldn't be processed at all (e.g. any living entity) or by the current config (e.g. slime).
+            // - This entity type shouldn't be processed at all (e.g., any living entity) or by the current config (e.g., slime).
             // - The other entity is not fully contained inside the enveloping entity.
-            if (HStonecutter.isEntityRemoved(other) || !Config.shouldProcess(player, other)) return false;
+            if (other.isRemoved() || !Config.shouldProcess(player, other)) return false;
+        //~}
             final AABB otherBox = other.getBoundingBox();
             return ((otherBox.minX >= entityBox.minX) && (otherBox.maxX <= entityBox.maxX) &&
                     (otherBox.minY >= entityBox.minY) && (otherBox.maxY <= entityBox.maxY) &&

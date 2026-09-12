@@ -29,19 +29,23 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
+import ru.vidtu.hcscr.config.BlockMode;
+import ru.vidtu.hcscr.config.Config;
 import ru.vidtu.hcscr.mixin.block.BlockBehaviour_BlockStateBaseMixin;
 import ru.vidtu.hcscr.mixin.block.EntityCollisionContextMixin;
 
 /^*
- * Mixin extender for {@link EntityCollisionContextMixin} that allows
+ * Mixin extension for {@link EntityCollisionContextMixin} that allows
  * getting the entity of {@link EntityCollisionContext}. (pre-1.17.1)
  * <p>
- * On newer (1.17.1+) versions, this logic is provided by vanilla.
+ * In newer (1.17.1+) versions, this logic is provided by vanilla.
  *
  * @author VidTu
  * @apiNote Internal use only
  * @see BlockBehaviour_BlockStateBaseMixin
  * @see EntityCollisionContextMixin
+ * @see Config#blocks()
+ * @see BlockMode#COLLISION
  ^/
 @ApiStatus.Internal
 @NullMarked

@@ -229,7 +229,7 @@ public final class HNeoForge {
             });
         });
         ^///?} else {
-        /^NetworkRegistry.newEventChannel(HStonecutter.CHANNEL, () -> "hcscr", (final String version) -> true, (final String version) -> true).addListener((final NetworkEvent event) -> {
+        /^NetworkRegistry.newEventChannel(HCsCR.CHANNEL, () -> "hcscr", (final String version) -> true, (final String version) -> true).addListener((final NetworkEvent event) -> {
             // Validate.
             if (Variables.DEBUG_ASSERTS) {
                 assert (event != null) : "HCsCR: Parameter 'event' is null.";

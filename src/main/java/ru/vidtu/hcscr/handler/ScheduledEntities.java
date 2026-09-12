@@ -25,8 +25,10 @@ package ru.vidtu.hcscr.handler;
 import it.unimi.dsi.fastutil.objects.Reference2LongArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2LongMap;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
@@ -46,6 +48,7 @@ import java.util.Iterator;
  * @author VidTu
  * @apiNote Internal use only
  * @see Config#crystalsDelay()
+ * @see HiddenEntities
  */
 @ApiStatus.Internal
 @NullMarked
@@ -61,8 +64,8 @@ public final class ScheduledEntities {
      * @see #unschedule(Entity)
      * @see #unscheduleAll()
      */
-    // This map is not expected to grow more than a few elements, so it's an array-baked map, not a hash-baked one.
-    // Moreover, it's being iterated linearly anyway in handleFrame(...).
+    // This map is not expected to grow more than a few elements, so it's an array-baked map,
+    // not a hash-baked one. Moreover, it's being iterated linearly anyway in loop(...).
     private static final Reference2LongMap<Entity> SCHEDULED = new Reference2LongArrayMap<>(0);
 
     /**
@@ -89,7 +92,14 @@ public final class ScheduledEntities {
     /**
      * Cleans the scheduled entities. Removes redundant entities from {@link #SCHEDULED}.
      * A redundant entry is one for which {@code long} value exceeds {@link System#nanoTime()}.
-     * Should be called every tick from {@link HCsCR#loop(Minecraft)}.
+     * <p>
+     * The entity is either removed from the world or handled in {@link HiddenEntities},
+     * depending on the {@link Config#crystalsResync()} config option.
+     * <p>
+     * If the entity hasn't reached the deadline but is marked for removal (or removed),
+     * it is silently discarded from the {@link #SCHEDULED} without any actions.
+     * <p>
+     * Should be called every frame from {@link HCsCR#loop(Minecraft)}.
      *
      * @param client   Client game instance
      * @param profiler Client profiler, {@code null} if {@link Variables#DEBUG_PROFILER} is {@code false}
@@ -203,13 +213,16 @@ public final class ScheduledEntities {
     }
 
     /**
-     * Adds (schedules) an entity into {@link #SCHEDULED}. Should be called in TODO.
+     * Adds (schedules) an entity into {@link #SCHEDULED}. Does nothing if already scheduled.
+     * <p>
+     * Should be called on entity hit in {@link IntentionallyBrokenReferenceTODO}.
      *
      * @param entity   Entity to schedule
      * @param deadline Time in units of {@link System#nanoTime()} to remove or hide the entity
      * @see #SCHEDULED
      * @see #unschedule(Entity)
      * @see #unscheduleAll()
+     * @see IntentionallyBrokenReferenceTODO
      * @see Config#crystalsDelay()
      * @see Constants#MIN_CRYSTALS_RESYNC
      * @see Constants#DEFAULT_CRYSTALS_RESYNC
@@ -222,22 +235,32 @@ public final class ScheduledEntities {
             assert (entity != null) : "HCsCR: Parameter 'entity' is null. (deadline: " + deadline + ')';
             final long diff = (System.nanoTime() - deadline);
             assert (diff >= -2_000_000_000L && diff <= 2_000_000_000L) : "HCsCR: Parameter 'deadline' differs from current time for more than 2 seconds. (entity: " + entity + ", deadline: " + deadline + ", diff: " + diff + ')';
-            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ", deadline: " + deadline + ')';
+            final Minecraft client = Minecraft.getInstance();
+            assert (client.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ", deadline: " + deadline + ')';
+            //~ if >=1.20.1 '.level' -> '.level()' {
+            final Level entityLevel = entity.level();
+            //~}
+            final ClientLevel clientLevel = client.level;
+            assert (entityLevel == clientLevel) : "HCsCR: Mismatching levels. (entity: " + entity + ", deadline: " + deadline + ", entityLevel: " + entityLevel + ", clientLevel: " + clientLevel + ')';
             //~ if >=1.17.1 'removed' -> 'isRemoved()' {
             assert (!entity.isRemoved()) : "HCsCR: Invalid entity. (entity: " + entity + ", deadline: " + deadline + ')';
             //~}
         }
 
         // Split debug logic.
-        if (Variables.DEBUG_LOGS && (LOGGER.isDebugEnabled(HCsCR.MARKER) || LOGGER.isTraceEnabled(HCsCR.MARKER))) {
+        if (Variables.DEBUG_LOGS) {
             // Log. (**TRACE**)
-            LOGGER.trace(HCsCR.MARKER, "HCsCR: Scheduling an entity removal... (entity: {}, deadline: {}, scheduled: {})", entity, deadline, SCHEDULED);
+            if (LOGGER.isTraceEnabled(HCsCR.MARKER)) {
+                LOGGER.trace(HCsCR.MARKER, "HCsCR: Scheduling an entity removal... (entity: {}, deadline: {}, scheduled: {})", entity, deadline, SCHEDULED);
+            }
 
             // Put. (store previous)
             final long previous = SCHEDULED.putIfAbsent(entity, deadline);
 
             // Log. (**DEBUG**)
-            LOGGER.debug(HCsCR.MARKER, "HCsCR: Scheduled an entity removal. (entity: {}, deadline: {}, previous: {}, scheduled: {})", entity, deadline, previous, SCHEDULED);
+            if (LOGGER.isDebugEnabled(HCsCR.MARKER)) {
+                LOGGER.debug(HCsCR.MARKER, "HCsCR: Scheduled an entity removal. (entity: {}, deadline: {}, previous: {}, scheduled: {})", entity, deadline, previous, SCHEDULED);
+            }
         } else {
             // Put.
             SCHEDULED.put(entity, deadline);
@@ -245,19 +268,27 @@ public final class ScheduledEntities {
     }
 
     /**
-     * Removes (unschedules) an entity from {@link #SCHEDULED}. Does nothing if it wasn't scjedules.
+     * Removes (unschedules) an entity from {@link #SCHEDULED}. Does nothing if it wasn't scjeduled.
+     * <p>
      * Should be called when an entity is removed in {@link ClientPacketListenerMixin}.
      *
      * @param Entity to unschedule
      * @see #SCHEDULED
      * @see #scheduleAt(Entity, long)
      * @see #unscheduleAll()
+     * @see ClientPacketListenerMixin
      */
     public static void unschedule(final Entity entity) { // TODO(VidTu): Implement.
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert (entity != null) : "HCsCR: Parameter 'entity' is null. (entity: " + entity + ')';
-            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ')';
+            final Minecraft client = Minecraft.getInstance();
+            assert (client.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ')';
+            //~ if >=1.20.1 '.level' -> '.level()' {
+            final Level entityLevel = entity.level();
+            //~}
+            final ClientLevel clientLevel = client.level;
+            assert (entityLevel == clientLevel) : "HCsCR: Mismatching levels. (entity: " + entity + ", entityLevel: " + entityLevel + ", clientLevel: " + clientLevel + ')';
         }
 
         // Split debug logic.
@@ -269,7 +300,9 @@ public final class ScheduledEntities {
             final long deadline = SCHEDULED.removeLong(entity);
 
             // Log. (**DEBUG**)
-            LOGGER.debug(HCsCR.MARKER, "HCsCR: Unscheduled a scheduled entity. (entity: {}, deadline: {}, scheduled: {})", entity, deadline, SCHEDULED);
+            if (LOGGER.isDebugEnabled(HCsCR.MARKER)) {
+                LOGGER.debug(HCsCR.MARKER, "HCsCR: Unscheduled a scheduled entity. (entity: {}, deadline: {}, scheduled: {})", entity, deadline, SCHEDULED);
+            }
         } else {
             // Remove.
             SCHEDULED.removeLong(entity);
@@ -278,11 +311,13 @@ public final class ScheduledEntities {
 
     /**
      * Clears all entities from {@link #SCHEDULED}. Does nothing if there are no entities.
-     * Should be called when a world is unloaded in {@link MinecraftMixin}.
+     * <p>
+     * Should be called when a level is changed in {@link MinecraftMixin}.
      *
      * @see #SCHEDULED
      * @see #scheduleAt(Entity, long)
      * @see #unschedule(Entity)
+     * @see MinecraftMixin
      */
     public static void unscheduleAll() {
         // Validate.

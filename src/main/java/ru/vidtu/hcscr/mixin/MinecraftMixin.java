@@ -46,12 +46,18 @@ import ru.vidtu.hcscr.handler.ScheduledEntities;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
- * Mixin that clears various world-dependant data on world switching.
+ * Mixin that:
+ * <ul>
+ *     <li>Clears various world-dependant data on level update.</li>
+ *     <li>Handles the game loop (frames). (Fabric only)</li>
+ * </ul>
  *
  * @author VidTu
  * @apiNote Internal use only
+ * @see ScheduledEntities#unscheduleAll()
  * @see HiddenEntities#showAll()
  * @see BlockClips#clearClips()
+ * @see HCsCR#loop(Minecraft)
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(Minecraft.class)
@@ -86,25 +92,26 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
     }
 
     /**
-     * Clears the {@link HCsCR#SCHEDULED_ENTITIES}, {@link HCsCR#HIDDEN_ENTITIES},
-     * and {@link HCsCR#CLIPPING_BLOCKS} on level load, change, or unload.
+     * Handles game updating data on level load, change, or unload.
+     * <p>
+     * Clears various mod data on level update.
      *
      * @param level     New level, {@code null} if was unloaded, ignored
      * @param stopSound Whether the sound engine should be halted and all sounds stopped, ignored
      * @param ci        Callback data, ignored
      * @apiNote Do not call, called by Mixin
-     * @see HCsCR#SCHEDULED_ENTITIES
-     * @see HiddenEntities#clear()
-     * @see BlockClips#clear()
+     * @see ScheduledEntities#unscheduleAll()
+     * @see HiddenEntities#showAll()
+     * @see BlockClips#clearClips()
      */
     @DoNotCall("Called by Mixin")
     //? if >=1.21.11 {
     @Inject(method = "updateLevelInEngines(Lnet/minecraft/client/multiplayer/ClientLevel;Z)V", at = @At("RETURN"))
-    private void hcscr_updateLevelInEngines_return(@Nullable final ClientLevel level, final boolean stopSound,
+    private void hcscr_updateLevelInEngines_return(final @Nullable ClientLevel level, final boolean stopSound,
                                                    final CallbackInfo ci) {
     //?} else {
     /*@Inject(method = "updateLevelInEngines", at = @At("RETURN"))
-    private void hcscr_updateLevelInEngines_return(@Nullable final ClientLevel level, final CallbackInfo ci) {
+    private void hcscr_updateLevelInEngines_return(final @Nullable ClientLevel level, final CallbackInfo ci) {
     *///?}
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
@@ -127,9 +134,9 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
         // Log. (**TRACE**)
         if (Variables.DEBUG_LOGS) {
             //? if >=1.21.11 {
-            HCSCR_LOGGER.trace(HCsCR.MARKER, "HCsCR: Clearing... (level: {}, stopSound: {}, client: {})", level, stopSound, this);
+            HCSCR_LOGGER.trace(HCsCR.MARKER, "HCsCR: Clearing on level update... (level: {}, stopSound: {}, client: {})", level, stopSound, this);
             //?} else {
-            /*HCSCR_LOGGER.trace(HCsCR.MARKER, "HCsCR: Clearing... (level: {}, client: {})", level, this);
+            /*HCSCR_LOGGER.trace(HCsCR.MARKER, "HCsCR: Clearing on level update... (level: {}, client: {})", level, this);
             *///?}
         }
 
@@ -141,9 +148,9 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
         // Log. (**DEBUG**)
         if (Variables.DEBUG_LOGS) {
             //? if >=1.21.11 {
-            HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Cleared. (level: {}, stopSound: {}, client: {})", level, stopSound, this);
+            HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Cleared on level update. (level: {}, stopSound: {}, client: {})", level, stopSound, this);
             //?} else {
-            /*HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Cleared. (level: {}, client: {})", level, this);
+            /*HCSCR_LOGGER.debug(HCsCR.MARKER, "HCsCR: Cleared on level update. (level: {}, client: {})", level, this);
             *///?}
         }
 
@@ -155,9 +162,11 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 
     //? if fabric {
     /**
-     * Calls the {@link HCsCR#loop(Minecraft)} if the game is ticking.
+     * Handles every game loop iteration (every game frame).
+     * <p>
+     * Calls the {@link HCsCR#loop(Minecraft)} if the game ticking is advancing.
      *
-     * @param advanceGameTime Whether the game should be explicitly ticked or just updated, no logic is being run by the mod unless set to {@code true}
+     * @param advanceGameTime Whether the game should be ticked or just looped (game loop without game ticks), no logic is being run by the mod unless game is ticked (this set to {@code true})
      * @param ci              Callback data, ignored
      * @apiNote Do not call, called by Mixin
      * @see HCsCR#loop(Minecraft)
@@ -165,11 +174,11 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
     @DoNotCall("Called by Mixin")
     @Inject(method = "runTick", at = @At("RETURN"))
     private void hcscr_runTick_return(final boolean advanceGameTime, final CallbackInfo ci) {
-        // Skip if game is not ticking. This happens when the integrated
-        // server is loading, unloading, or the game is crashing.
+        // Do nothing if game is not ticking. This happens when the integrated
+        // server is initializing, shutting down, or the game is crashing.
         if (!advanceGameTime) return;
 
-        // Tick.
+        // Loop.
         HCsCR.loop((Minecraft) (Object) this);
     }
     //?}

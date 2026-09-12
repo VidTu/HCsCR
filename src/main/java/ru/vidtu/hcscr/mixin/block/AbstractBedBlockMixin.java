@@ -29,8 +29,14 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+//? if >=26.3 {
+import net.minecraft.world.level.block.AbstractBedBlock;
+//?}
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.BlockState;
+//? if >=1.21.11 {
+import net.minecraft.world.level.dimension.DimensionType;
+//?}
 import net.minecraft.world.phys.BlockHitResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,23 +54,14 @@ import ru.vidtu.hcscr.config.BlockMode;
 import ru.vidtu.hcscr.config.Config;
 import ru.vidtu.hcscr.handler.BlockClips;
 
-//? if >=1.21.11 {
-import net.minecraft.world.level.dimension.DimensionType;
-//?} elif <1.20.6 {
-/*import net.minecraft.world.InteractionHand;
-*///?}
-
-//? if >=26.3 {
-import net.minecraft.world.level.block.AbstractBedBlock;
-//?}
-
 //~ if >=26.3 'BedBlock.' -> 'AbstractBedBlock.' {
 /**
- * Mixin that allows beds to be removed (or clipped) via clicking
+ * Mixin that allows beds to be removed (or clipped) via clicking,
  * if {@link Config#blocks()} is not {@link BlockMode#OFF}.
  *
  * @author VidTu
  * @apiNote Internal use only
+ * @see Config#blocks()
  * @see BlockMode
  * @see BlockClips#addClip(BlockPos, BlockState)
  */
@@ -95,10 +92,22 @@ public final class AbstractBedBlockMixin {
     }
 
     /**
-     * Handles the bed click. Removes the bed if {@link Config#blocks()} is {@link BlockMode#FULL}, adds the
-     * bed to {@link BlockClips#addClip(BlockPos, BlockState)} if {@link BlockMode#COLLISION}. Does nothing
-     * otherwise. Also does nothing if the level (world) is from the server, the mod is globally disabled
-     * via {@link Config#enable()}, or the bed doesn't explode in the current dimension. (e.g., overworld)
+     * Handles the bed right click.
+     * <p>
+     * Removes the bed if {@link Config#blocks()} is {@link BlockMode#FULL}.
+     * <p>
+     * Adds the bed to {@link BlockClips#addClip(BlockPos, BlockState)}
+     * if {@link Config#blocks()} is {@link BlockMode#COLLISION}.
+     * <p>
+     * Does nothing if either:
+     * <ul>
+     *     <li>The bed is NOT made out of wool. (e.g., straw beds in 26.3+)
+     *     <li>The level (world) is not a client level.</li>
+     *     <li>The mod is disabled via {@link Config#enable()}.</li>
+     *     <li>The bed won't exploe in the current dimension. (e.g., overworld)</li>
+     * </ul>
+     * <p>
+     * Note that the bed adjacent part (if exists) is handled the same way too.
      *
      * @param state     Bed block state
      * @param level     The level that this bed block is placed in
@@ -123,7 +132,7 @@ public final class AbstractBedBlockMixin {
     /*@DoNotCall("Called by Mixin")
     @Inject(method = "use", at = @At("HEAD")) // HEAD here to avoid early returns from other Mixins an game code.
     private void hcscr_use_head(final BlockState state, final Level level, final BlockPos pos, final Player player,
-                                final InteractionHand hand, final BlockHitResult hitResult,
+                                final net.minecraft.world.InteractionHand hand, final BlockHitResult hitResult,
                                 final CallbackInfoReturnable<InteractionResult> cir) {
     *///?}
         // Validate.
@@ -156,16 +165,16 @@ public final class AbstractBedBlockMixin {
 
         // Do nothing if either:
         // - The bed is not a wool bed. (e.g., a straw bed from 26.3+)
-        // - The current level (world) is not client's. (e.g., integrated server world)
-        // - The mod is fully disabled via config.
+        // - The current level (world) is not a client one. (e.g., integrated server world)
+        // - The mod is fully disabled via the config.
         // - The bed doesn't explode in the current environment/dimension. (heuristical in 1.21.11+)
-        // - The "remove blocks" feature is OFF. (in switch block below)
+        // - The "Remove Blocks" option is OFF. (checked in the switch block below)
         //? if >=26.3 {
-        // Environmental attributes from 25w42a for BED_WORKS are NOT synced to the client,
+        // Environmental attribute data from 1.21.11 for "bed_works" is NOT synced to the client,
         // so we just guess and check by comparing if the dimension doesn't have an OVERWORLD skybox.
         if (!((Object) this instanceof BedBlock) || !level.isClientSide() || !Config.enable() || (level.dimensionType().skybox() == DimensionType.Skybox.OVERWORLD)) { // Implicit NPE for 'level'
         //?} elif >=1.21.11 {
-        /*// Environmental attributes from 25w42a for BED_WORKS are NOT synced to the client,
+        /*// Environmental attribute data from 1.21.11 for "bed_works" is NOT synced to the client,
         // so we just guess and check by comparing if the dimension doesn't have an OVERWORLD skybox.
         if (!level.isClientSide() || !Config.enable() || (level.dimensionType().skybox() == DimensionType.Skybox.OVERWORLD)) { // Implicit NPE for 'level'
         *///?} else {
@@ -184,13 +193,13 @@ public final class AbstractBedBlockMixin {
             return;
         }
 
-        // Small implementation note about bed "explosiveness" detection: It is not possible to detect whether the bed
-        // will explode in the current dimension definitevely. Therefore, we trust the server's "bedExplodes"
+        // Small implementation note about bed "explosiveness" detection: It is not possible to detect whether the
+        // bed will explode in the current dimension definitevely. Therefore, we trust the server's "bedExplodes"
         // before 1.21.11 value and use the heuristical approach to dimensions with checking whether the skybox
         // looks like OVERWORLD's one (doesn't exist in the nether, is a pixelated pattern in the end),
         // this will (of course) screw up the custom dimensions. However, there is no better alternative.
         // Servers can (and probably) will break this using custom dimensions or anti-cheat measures.
-        // However, if you are a server owner, you can block the mod via other measures, see README docs.
+        // However, if you are a server owner, you can block the mod via other measures, see the docs.
 
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
@@ -204,7 +213,7 @@ public final class AbstractBedBlockMixin {
         // Remove, clip or ignore.
         switch (Config.blocks()) {
             // Clip. (for BlockMode.COLLISION)
-            case COLLISION: {
+            case COLLISION: { // Scope. (curly bracket)
                 // Add the bed to block clips.
                 BlockClips.addClip(pos, state);
 
@@ -231,7 +240,7 @@ public final class AbstractBedBlockMixin {
             }
 
             // Remove. (for BlockMode.FULL)
-            case FULL: {
+            case FULL: { // Scope. (curly bracket)
                 // Remove the bed.
                 level.removeBlock(pos, false); // Implicit NPE for 'pos'
 
@@ -258,7 +267,7 @@ public final class AbstractBedBlockMixin {
             }
 
             // Do nothing. (for BlockMode.OFF or any unexpected value)
-            default: {
+            default: { // Scope. (curly bracket)
                 // Log. (**DEBUG**)
                 if (Variables.DEBUG_LOGS) {
                     //? if >=1.20.6 {

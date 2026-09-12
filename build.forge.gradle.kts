@@ -95,12 +95,18 @@ sc {
     swaps["remove_entity"] = if (mcp >= "1.17.1") "$1.discard();" else "$1.remove();"
 
     // Define MCP replacements.
+    // TODO(VidTu): This is SUPREMELY bad. Figure out a better solution.
     replacements.string(mcp <= "1.16.5") {
         val remaps = Properties()
         FileInputStream(rootDir.resolve("dev/mcp.properties")).use { remaps.load(it) }
         remaps.forEach { mojmap, mcp ->
-            replace("import ${"${mojmap}".replace('$', '.')};", "import ${"${mcp}".replace('$', '.')};")
+            val mojmapClass = "${mojmap}".replace('$', '.');
+            val mcpClass = "${mcp}".replace('$', '.');
+            replace("import ${mojmapClass};", "import ${mcpClass};")
             replace("L${"${mojmap}".replace('.', '/')};", "L${"${mcp}".replace('.', '/')};")
+            replace("final ${mojmapClass}", "final ${mcpClass}")
+            replace("new ${mojmapClass}", "new ${mcpClass}")
+            replace(" instanceof ${mojmapClass}", " instanceof ${mcpClass}")
             val mojmapLast = "${mojmap}".substringAfterLast('.').replace('$', '.');
             val mcpLast = "${mcp}".substringAfterLast('.').replace('$', '.');
             if (mojmapLast == mcpLast) return@forEach
@@ -109,12 +115,14 @@ sc {
             replace("(${mojmapLast}) ", "(${mcpLast}) ")
             replace("extends ${mojmapLast}", "extends ${mcpLast}")
             replace("final ${mojmapLast}", "final ${mcpLast}")
+            replace("final @Nullable ${mojmapLast}", "final @Nullable ${mcpLast}")
             replace("final @UnknownNullability ${mojmapLast}", "final @UnknownNullability ${mcpLast}")
             replace(" instanceof ${mojmapLast}", " instanceof ${mcpLast}")
             replace("@Mixin(${mojmapLast}.class)", "@Mixin(${mcpLast}.class)")
             replace("new ${mojmapLast}", "new ${mcpLast}")
             replace("/*non-final*/ ${mojmapLast}", "/*non-final*/ ${mcpLast}")
             replace("/*package-private*/ ${mojmapLast}", "/*package-private*/ ${mcpLast}")
+            replace("private ${mojmapLast} ", "private ${mcpLast} ")
             replace("/*shadow-final*/ ${mojmapLast}", "/*shadow-final*/ ${mcpLast}")
             replace("static ${mojmapLast}", "static ${mcpLast}")
         }

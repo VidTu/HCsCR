@@ -25,8 +25,14 @@ package ru.vidtu.hcscr.mixin.block;
 import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+//? if <1.20.6 {
+/*import net.minecraft.world.InteractionHand;
+*///?}
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+//? if <1.20.6 {
+/*import net.minecraft.world.item.ItemStack;
+*///?}
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RespawnAnchorBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -37,6 +43,9 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.UnknownNullability;
 import org.jspecify.annotations.NullMarked;
 import org.spongepowered.asm.mixin.Mixin;
+//? if <1.20.6 {
+/*import org.spongepowered.asm.mixin.Shadow;
+*///?}
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -47,20 +56,13 @@ import ru.vidtu.hcscr.config.BlockMode;
 import ru.vidtu.hcscr.config.Config;
 import ru.vidtu.hcscr.handler.BlockClips;
 
-//? if >=1.21.11 {
-import net.minecraft.world.level.dimension.DimensionType;
-//?} elif <1.20.6 {
-/*import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.ItemStack;
-import org.spongepowered.asm.mixin.Shadow;
-*///?}
-
 /**
- * Mixin that allows anchors to be removed (or clipped) via clicking
+ * Mixin that allows anchors to be removed (or clipped) via clicking,
  * if {@link Config#blocks()} is not {@link BlockMode#OFF}.
  *
  * @author VidTu
  * @apiNote Internal use only
+ * @see Config#blocks()
  * @see BlockMode
  * @see BlockClips#addClip(BlockPos, BlockState)
  */
@@ -73,7 +75,7 @@ public final class RespawnAnchorBlockMixin {
      */
     @Unique
     @UnknownNullability
-    private static final Logger HCSCR_LOGGER = (Variables.DEBUG_LOGS ? LogManager.getLogger("HCsCR/RespawnBlockMixin") : null);
+    private static final Logger HCSCR_LOGGER = (Variables.DEBUG_LOGS ? LogManager.getLogger("HCsCR/RespawnAnchorBlockMixin") : null);
 
     /**
      * An instance of this class cannot be created.
@@ -91,16 +93,27 @@ public final class RespawnAnchorBlockMixin {
     }
 
     /**
-     * Handles the anchor click. Removes the anchor if {@link Config#blocks()} is {@link BlockMode#FULL}, adds the
-     * anchor to {@link BlockClips#addClip(BlockPos, BlockState)} if {@link BlockMode#COLLISION}. Does nothing
-     * otherwise. Also does nothing if the level (world) is from the server, the mod is globally disabled
-     * via {@link Config#enable()}, or the anchor doesn't explode in the current dimension. (e.g., nether)
+     * Handles the anchor right click.
+     * <p>
+     * Removes the anchor if {@link Config#blocks()} is {@link BlockMode#FULL}.
+     * <p>
+     * Adds the anchor to {@link BlockClips#addClip(BlockPos, BlockState)}
+     * if {@link Config#blocks()} is {@link BlockMode#COLLISION}.
+     * <p>
+     * Does nothing if either:
+     * <ul>
+     *     <li>The level (world) is not a client level.</li>
+     *     <li>The mod is disabled via {@link Config#enable()}.</li>
+     *     <li>The anchor won't exploe in the current dimension. (e.g., nether)</li>
+     *     <li>The anchor is currently being charged. (only checked
+     *     pre-1.20.6; handled by the game logic in newer versions)</li>
+     * </ul>
      *
      * @param state     Anchor block state
      * @param level     The level that this anchor block is placed in
      * @param pos       Anchor block position
-     * @param player    Player interacting with the anchor, ignored
-     * @param hand      The hand the player uses to interact with the anchor (pre-1.20.6), ignored
+     * @param player    Player interacting with the anchor
+     * @param hand      The hand the player uses to interact with the anchor (pre-1.20.6)
      * @param hitResult The exact position player used the anchor at, ignored
      * @param cir       Callback data containing the anchor interaction result, ignored
      * @apiNote Do not call, called by Mixin
@@ -153,15 +166,15 @@ public final class RespawnAnchorBlockMixin {
         // Do nothing if either:
         // - The current level (world) is not client-side. (e.g., integrated server world)
         // - The anchor doesn't have any charges.
-        // - The mod is disabled via config or keybind.
+        // - The mod is fully disabled via the config.
         // - The anchor doesn't explode in the current environment/dimension. (heuristical in 1.21.11+)
-        // - The "remove blocks" feature is OFF. (in switch block below)
-        // - The anchor is currently being charged. (pre-1.20.6; checked in non-mixined logic for newer versions)
+        // - The "Remove Blocks" option is OFF. (checked in the switch block below)
+        // - The anchor is currently being charged. (pre-1.20.6, see below; checked in the game logic for newer versions)
         //? if >=1.21.11 {
-        // Environmental attributes from 25w42a for RESPAWN_ANCHOR_WORKS are NOT synced to the client,
+        // Environmental attributes from 1.21.11 for RESPAWN_ANCHOR_WORKS are NOT synced to the client,
         // so we just guess and check by comparing if the dimension doesn't have a skybox. (NONE skybox)
-        if (!level.isClientSide() || (state.getValue(RespawnAnchorBlock.CHARGE) == 0) || // Implicit NPE for 'level', 'state'
-                !Config.enable() || (level.dimensionType().skybox() == DimensionType.Skybox.NONE)) {
+        if (!level.isClientSide() || (state.getValue(RespawnAnchorBlock.CHARGE) == 0) || !Config.enable() || // Implicit NPE for 'level', 'state'
+                (level.dimensionType().skybox() == net.minecraft.world.level.dimension.DimensionType.Skybox.NONE)) {
         //?} else {
         /*if (!level.isClientSide() || (state.getValue(RespawnAnchorBlock.CHARGE) == 0) || // Implicit NPE for 'level', 'state'
                 !Config.enable() || RespawnAnchorBlock.canSetSpawn(level)) {
@@ -179,13 +192,13 @@ public final class RespawnAnchorBlockMixin {
             return;
         }
 
-        // Small implementation note about anchor "explosiveness" detection: It is not possible to detect whether the
-        // anchor will explode in the current dimension definitevely. Therefore, we trust the server's
+        // Small implementation note about anchor "explosiveness" detection: It is not possible to detect whether
+        // the anchor will explode in the current dimension definitevely. Therefore, we trust the server's
         // "anchorExplodes" before 1.21.11 value and use the heuristical approach to dimensions with checking whether
         // the skybox is NONE for the dimension (exists with sun in the overworld, is a pixelated pattern in the end),
         // this will (of course) screw up the custom dimensions. However, there is no better alternative.
         // Servers can (and probably) will break this using custom dimensions or anti-cheat measures.
-        // However, if you are a server owner, you can block the mod via other measures, see README docs.
+        // However, if you are a server owner, you can block the mod via other measures, see the docs.
 
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
@@ -197,7 +210,7 @@ public final class RespawnAnchorBlockMixin {
         }
 
         //? if <1.20.6 {
-        /*// Do nothing if we're charging the anchor.
+        /*// Do nothing if the player is charging the anchor.
         final ItemStack itemInHand = player.getItemInHand(hand); // Implicit NPE for 'player'
         if (((hand == InteractionHand.MAIN_HAND) && !isRespawnFuel(itemInHand) && // Implicit NPE for 'itemInHand'
                 isRespawnFuel(player.getItemInHand(InteractionHand.OFF_HAND))) ||
@@ -215,7 +228,7 @@ public final class RespawnAnchorBlockMixin {
         // Remove, clip or ignore.
         switch (Config.blocks()) {
             // Clip. (for BlockMode.COLLISION)
-            case COLLISION: {
+            case COLLISION: { // Scope. (curly bracket)
                 // Add the anchor to block clips.
                 BlockClips.addClip(pos, state);
 
@@ -233,7 +246,7 @@ public final class RespawnAnchorBlockMixin {
             }
 
             // Remove. (for BlockMode.FULL)
-            case FULL: {
+            case FULL: { // Scope. (curly bracket)
                 // Remove the anchor.
                 level.removeBlock(pos, false); // Implicit NPE for 'pos'
 
@@ -251,7 +264,7 @@ public final class RespawnAnchorBlockMixin {
             }
 
             // Do nothing. (for BlockMode.OFF or any unexpected value)
-            default: {
+            default: { // Scope. (curly bracket)
                 // Log. (**DEBUG**)
                 if (Variables.DEBUG_LOGS) {
                     //? if >=1.20.6 {
@@ -267,13 +280,13 @@ public final class RespawnAnchorBlockMixin {
     //? if <1.20.6 {
     /*@Contract(pure = true)
     @Shadow
-    private static boolean isRespawnFuel(final ItemStack itemInHand) {
+    private static boolean isRespawnFuel(final ItemStack itemInHand) { // TODO(VidTu): Javadocs?
         throw (Variables.DEBUG_ASSERTS ? new AssertionError("HCsCR: Unreachable code. (itemInHand: " + itemInHand + ')') : null);
     }
 
     @Contract(pure = true)
     @Shadow
-    private static boolean canBeCharged(final BlockState state) {
+    private static boolean canBeCharged(final BlockState state) { // TODO(VidTu): Javadocs?
         throw (Variables.DEBUG_ASSERTS ? new AssertionError("HCsCR: Unreachable code. (state: " + state + ')') : null);
     }
     *///?}

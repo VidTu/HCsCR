@@ -37,7 +37,9 @@ import ru.vidtu.hcscr.compile.Variables;
 
 /**
  * Mixin that speeds up entity removing via {@link HCsCR#hit(Player, Entity, DamageSource, float)}
- * via MixinExtras via {@link WrapOperation} hook. See {@code PlayerMixin_M} for a fallback.
+ * via MixinExtras via {@link WrapOperation} hook.
+ * <p>
+ * See {@code PlayerMixin_M} (Forge only) for a fallback.
  *
  * @author VidTu
  * @apiNote Internal use only
@@ -62,12 +64,13 @@ public final class PlayerMixin_E {
     }
 
     /**
-     * Processes the entity attacking. Calls original attack method as well as
-     * {@link HCsCR#handlePlayerHittingEntity(Player, Entity, DamageSource, float)},
-     * returns {@code true} if any succeeded.
+     * Handles attacking an entity from this player.
+     * <p>
+     * Calls original attack method as well as {@link HCsCR#hit(Player, Entity, DamageSource, float)},
+     * returns {@code true} if any succeeded. Will <b>not</b> short-circuit on either call.
      *
-     * @param target       Entity being attacked by this player
-     * @param damageSource Attack source (inaccurate if invoked on the client)
+     * @param target       Target entity being attacked by this player
+     * @param damageSource Attack source (inaccurate on the client)
      * @param totalDamage  Total amount of damage done to the entity (inaccurate if invoked on the client)
      * @param original     Original method callback handler
      * @return Whether the attack has succeeded
@@ -79,6 +82,7 @@ public final class PlayerMixin_E {
     @WrapOperation(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurtOrSimulate(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
     private boolean hcscr_attack_hurtOrSimulate(final Entity target, final DamageSource damageSource,
                                                 final float totalDamage, final Operation<Boolean> original) {
+    //~}
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert (target != null) : "HCsCR: Parameter 'target' is null. (damageSource: " + damageSource + ", totalDamage: " + totalDamage + ", original: " + original + ", player: " + this + ')';
@@ -91,5 +95,4 @@ public final class PlayerMixin_E {
         //noinspection NonShortCircuitBooleanExpression // <- Needs to call both methods.
         return (original.call(target, damageSource, totalDamage) | HCsCR.hit((Player) (Object) this, target, damageSource, totalDamage));
     }
-    //~}
 }

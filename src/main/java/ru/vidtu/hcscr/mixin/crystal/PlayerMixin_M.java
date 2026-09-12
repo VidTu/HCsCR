@@ -39,7 +39,9 @@ import ru.vidtu.hcscr.platform.HStonecutter;
 
 /^*
  * Mixin that speeds up entity removing via {@link HCsCR#hit(Player, Entity, DamageSource, float)}
- * in absence of MixinExtras via {@link Redirect} hook. See {@link PlayerMixin_E} for the default (non-fallback) Mixin.
+ * in absence of MixinExtras via {@link Redirect} hook. (Forge only)
+ * <p>
+ * See {@link PlayerMixin_E} for the default (non-fallback) Mixin.
  *
  * @author VidTu
  * @apiNote Internal use only
@@ -66,13 +68,15 @@ public final class PlayerMixin_M {
     }
 
     /^*
-     * Processes the entity attacking. Calls original attack method as well as
-     * {@link HCsCR#handlePlayerHittingEntity(Player, Entity, DamageSource, float)},
-     * returns {@code true} if any succeeded.
+     * Handles attacking an entity from this player.
+     * <p>
+     * Calls original attack method as well as {@link HCsCR#hit(Player, Entity, DamageSource, float)},
+     * returns {@code true} if any succeeded. Will <b>not</b> short-circuit on either call.
      *
-     * @param target       Entity being attacked by this player
-     * @param damageSource Attack source (inaccurate if invoked on the client)
+     * @param target       Target entity being attacked by this player
+     * @param damageSource Attack source (inaccurate on the client)
      * @param totalDamage  Total amount of damage done to the entity (inaccurate if invoked on the client)
+     * @param original     Original method callback handler
      * @return Whether the attack has succeeded
      * @apiNote Do not call, called by Mixin
      * @see HCsCR#hit(Player, Entity, DamageSource, float)

@@ -25,8 +25,11 @@
  *
  * @author VidTu
  * @apiNote Internal use only
- * @see ru.vidtu.hcscr.config.Config#crystals()
  * @see ru.vidtu.hcscr.config.CrystalMode
+ * @see ru.vidtu.hcscr.config.Config#crystals()
+ * @see ru.vidtu.hcscr.HCsCR
+ * @see ru.vidtu.hcscr.handler.HiddenEntities
+ * @see ru.vidtu.hcscr.handler.ScheduledEntities
  */
 @ApiStatus.Internal
 @NullMarked

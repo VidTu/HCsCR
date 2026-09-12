@@ -45,7 +45,6 @@ import ru.vidtu.hcscr.platform.HStonecutter;
  * @author VidTu
  * @apiNote Internal use only
  * @see HiddenEntities#isHidden(Entity)
- * @see Entity#getBoundingBox()
  * @see Config#crystalsResync()
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
@@ -53,7 +52,11 @@ import ru.vidtu.hcscr.platform.HStonecutter;
 @NullMarked
 public final class EntityMixin {
     /**
-     * Empty bounding box, provided by the implementation.
+     * Empty singleton bounding box.
+     * <p>
+     * Provided by the implementation. ({@link Shadow})
+     *
+     * @see HiddenEntities#isHidden(Entity)
      */
     @SuppressWarnings("NonConstantFieldWithUpperCaseName") // <- Shadow.
     @Shadow
@@ -76,11 +79,18 @@ public final class EntityMixin {
     }
 
     /**
-     * Sets the bounding box to {@link #INITIAL_AABB} if this entity is {@link HiddenEntities#isHidden(Entity)},
-     * removing its bounding box from the world. Does nothing otherwise. Also does nothing if entity's
-     * level (world) is not client one. (e.g., an integrated server world)
+     * Handles the bounding box obtaining process.
+     * <p>
+     * Sets the bounding box to {@link #INITIAL_AABB} if this entity is
+     * {@link HiddenEntities#isHidden(Entity)}, removing its bounding box.
+     * <p>
+     * Does nothing if either:
+     * <ul>
+     *     <li>The level (world) is not a client level.</li>
+     *     <li>An entity returns {@code false} in {@link HiddenEntities#isHidden(Entity)}.</li>
+     * </ul>
      *
-     * @param cir Callback data containing the resulting bounding box
+     * @param cir Callback data containing the resulting bounding box (will be modified)
      * @apiNote Do not call, called by Mixin
      * @see HiddenEntities#isHidden(Entity)
      * @see #INITIAL_AABB
@@ -89,15 +99,17 @@ public final class EntityMixin {
     @Inject(method = "getBoundingBox", at = @At("HEAD"), cancellable = true) // HEAD here for early return.
     private void hcscr_getBoundingBox_head(final CallbackInfoReturnable<AABB> cir) {
         // Validate.
-        final Level level = HStonecutter.levelOfEntity((Entity) (Object) this);
+        //~ if >=1.20.1 '.level' -> '.level()' {
+        final Level level = ((Entity) (Object) this).level();
+        //~}
         if (Variables.DEBUG_ASSERTS) {
             assert (level != null) : "HCsCR: Level is null. (cir: " + cir + ", entity: " + this + ')';
             // No thread checks, called from either side.
         }
 
         // Do nothing if either:
-        // - The current level (world) is not client-side. (e.g., integrated server world)
-        // - The entity is not hidden via HiddenEntities.isHidden(...).
+        // - The current level (world) is not a client one. (e.g., integrated server world)
+        // - The entity is not marked hidden via HiddenEntities.isHidden(...).
         if (!level.isClientSide() || !HiddenEntities.isHidden((Entity) (Object) this)) return; // Implicit NPE for 'level'
 
         // Spoof to an empty hitbox.

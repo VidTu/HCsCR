@@ -140,49 +140,4 @@ public final class HStonecutter {
         /*return client.getProfiler(); // Implicit NPE for 'client'
         *///?}
     }
-
-    /**
-     * Gets the level of the entity.
-     *
-     * @param entity Target entity to get the level of
-     * @return The level (world) in which the entity is currently located or was last located
-     */
-    @Contract(pure = true)
-    public static Level levelOfEntity(final Entity entity) {
-        // Validate.
-        if (Variables.DEBUG_ASSERTS) {
-            assert (entity != null) : "HCsCR: Parameter 'entity' is null.";
-            // No thread checks here because this can be called from the integrated server.
-        }
-
-        //? if >=1.20.1 {
-        return entity.level(); // Implicit NPE for 'entity'
-        //?} else {
-        /*return entity.level; // Implicit NPE for 'entity'
-        *///?}
-    }
-
-    /**
-     * Checks whether the entity has been removed from the world or marked for removal from the world.
-     *
-     * @param entity Target entity to check
-     * @return Whether the entity has been removed
-     * @see #removeEntity(Entity)
-     */
-    @SuppressWarnings({"deprecation", "RedundantSuppression"}) // <- Forge 1.16.5.
-    @Contract(pure = true)
-    public static boolean isEntityRemoved(final Entity entity) {
-        // Validate.
-        if (Variables.DEBUG_ASSERTS) {
-            assert (entity != null) : "HCsCR: Parameter 'entity' is null.";
-            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Checking entity removal NOT from the main thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ')';
-        }
-
-        // Delegate.
-        //? if >=1.17.1 {
-        return entity.isRemoved(); // Implicit NPE for 'entity'
-        //?} else {
-        /*return entity.removed; // Implicit NPE for 'entity'
-        *///?}
-    }
 }

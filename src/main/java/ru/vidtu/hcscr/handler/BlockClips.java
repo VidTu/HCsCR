@@ -69,12 +69,12 @@ public final class BlockClips {
      * The validity is checked in {@link #tick(Minecraft, ProfilerFiller)}. If a block position's (key)
      * state (value) is not matching the real state (every tick), then it is removed from the map.
      * 
-     * @see BlockBehaviour_BlockStateBaseMixin
      * @see #tick(Minecraft, ProfilerFiller)
      * @see #shouldClip(BlockPos)
      * @see #addClip(BlockPos, BlockState)
      * @see #removeClip(BlockPos)
      * @see #clearClips()
+     * @see BlockBehaviour_BlockStateBaseMixin
      */
     // This map is not expected to grow more than a few elements, so it's an array-baked map,
     // not a hash-baked one. Moreover, it's being iterated linearly anyway in tick(...).
@@ -102,9 +102,11 @@ public final class BlockClips {
     }
 
     /**
-     * Cleans the block clips. Removes redundant entries from {@link #CLIPS}. A redundant
-     * entry is one that's actual state located at its "key" position is not equal to its
-     * "value" state. Should be called every tick from {@link HCsCR#tick(Minecraft)}.
+     * Cleans the block clips. Removes redundant entries from
+     * {@link #CLIPS}. A redundant entry is one that's actual state
+     * located at its "key" position is not equal to its "value" state.
+     * <p>
+     * Should be called every tick from {@link HCsCR#tick(Minecraft)}.
      *
      * @param client   Client game instance
      * @param profiler Client profiler, {@code null} if {@link Variables#DEBUG_PROFILER} is {@code false}
@@ -213,8 +215,9 @@ public final class BlockClips {
     }
 
     /**
-     * Checks if a clip exists at the location. Should be called on
-     * collision from {@link BlockBehaviour_BlockStateBaseMixin}.
+     * Checks if a clip exists at the location.
+     * <p>
+     * Should be called on collision from {@link BlockBehaviour_BlockStateBaseMixin}.
      *
      * @param pos Block position to check a clip at
      * @return {@code true} if a clip exists in {@link #CLIPS} for that location, {@code false} if not
@@ -222,6 +225,7 @@ public final class BlockClips {
      * @see #addClip(BlockPos, BlockState)
      * @see #removeClip(BlockPos)
      * @see #clearClips()
+     * @see BlockBehaviour_BlockStateBaseMixin
      */
     @Contract(pure = true)
     public static boolean shouldClip(final BlockPos pos) {
@@ -236,8 +240,10 @@ public final class BlockClips {
     }
 
     /**
-     * Adds a clip into {@link #CLIPS}. Should be called when right clicking
-     * from {@link AbstractBedBlockMixin} or {@link RespawnAnchorBlockMixin}.
+     * Adds a clip into {@link #CLIPS}. Overwrites the existing entries, if any.
+     * <p>
+     * Should be called when right clicking from {@link AbstractBedBlockMixin}
+     * or {@link RespawnAnchorBlockMixin}.
      *
      * @param pos   Block position to create a clip for
      * @param state Expected block state at the clip for it to be effective
@@ -245,6 +251,8 @@ public final class BlockClips {
      * @see #shouldClip(BlockPos)
      * @see #removeClip(BlockPos)
      * @see #clearClips()
+     * @see AbstractBedBlockMixin
+     * @see RespawnAnchorBlockMixin
      */
     public static void addClip(final BlockPos pos, final BlockState state) {
         // Validate.
@@ -254,7 +262,7 @@ public final class BlockClips {
             final Minecraft client = Minecraft.getInstance();
             assert (client.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", pos: " + pos + ", state: " + state + ')';
             final ClientLevel level = client.level;
-            assert (level != null) : "HCsCR: Level is null. (pos: " + pos + ", state: " + state + ')';
+            assert (level != null) : "HCsCR: Client level is null. (pos: " + pos + ", state: " + state + ')';
             final BlockState actualState = level.getBlockState(pos);
             assert (state == actualState) : "HCsCR: Mismatching block state. (pos: " + pos + ", state: " + state + ", actualState: " + actualState + ')';
         }
@@ -277,6 +285,7 @@ public final class BlockClips {
 
     /**
      * Removes a clip by its position from {@link #CLIPS}. Does nothing if there's no clip.
+     * <p>
      * Should be called when a block is re-synchronized in {@link ClientPacketListenerMixin}.
      *
      * @param pos Block position to remove a clip at
@@ -310,12 +319,14 @@ public final class BlockClips {
 
     /**
      * Clears all clips from {@link #CLIPS}. Does nothing if there are no clips.
-     * Should be called when a world is unloaded in {@link MinecraftMixin}.
+     * <p>
+     * Should be called when a level is changed in {@link MinecraftMixin}.
      *
      * @see #CLIPS
      * @see #shouldClip(BlockPos)
      * @see #addClip(BlockPos, BlockState)
      * @see #removeClip(BlockPos)
+     * @see MinecraftMixin
      */
     public static void clearClips() {
         // Validate.

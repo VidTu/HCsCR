@@ -199,7 +199,7 @@ public final class ConfigScreen extends Screen {
 
         // Close the screen.
         //$ set_screen minecraft 'this.parent'
-        minecraft.gui.setScreen(this.parent); // Implicit NPE for 'minecraft'
+        minecraft.gui.setScreen(this.parent);// Implicit NPE for 'minecraft'
     }
 
     /**

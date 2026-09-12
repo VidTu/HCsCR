@@ -43,17 +43,13 @@ import ru.vidtu.hcscr.config.BlockMode;
 import ru.vidtu.hcscr.config.Config;
 import ru.vidtu.hcscr.handler.BlockClips;
 
-//? if <1.17.1 {
-/*import ru.vidtu.hcscr.extension.EntityCollisionContextExtension;
-*///?}
-
 /**
  * Mixin that removes client player collision from blocks
  * that are {@link BlockClips#shouldClip(BlockPos)}.
  *
  * @author VidTu
  * @apiNote Internal use only
- * @see BlockClips#has(BlockPos)
+ * @see BlockClips#shouldClip(BlockPos)
  * @see BlockMode#COLLISION
  * @see Config#blocks()
  */
@@ -77,14 +73,22 @@ public final class BlockBehaviour_BlockStateBaseMixin {
     }
 
     /**
-     * Injects the empty collision for blocks in {@link BlockClips#shouldClip(BlockPos)} for the
-     * client player entity context only. Does nothing for other contexts, including if the level
-     * (world) is from the server, context lacks an entity, or the entity is not the client player.
+     * Handles the block collision shape obtaining process.
+     * <p>
+     * Injects the empty collision for blocks in {@link BlockClips#shouldClip(BlockPos)}
+     * only for the client player entity context.
+     * <p>
+     * Does nothing if either:
+     * <ul>
+     *     <li>Context lacks an entity. (or the entity is null)</li>
+     *     <li>The entity is not a client (local) player. (or null)</li>
+     *     <li>A block returns {@code false} in {@link BlockClips#shouldClip(BlockPos)}.</li>
+     * </ul>
      *
      * @param level   The level that this block is placed in, ignored
      * @param pos     Block position
      * @param context Current collision context to infer the collision type
-     * @param cir     Callback data containing the resulting collision shape
+     * @param cir     Callback data containing the resulting collision shape (will be modified)
      * @apiNote Do not call, called by Mixin
      * @see BlockClips#shouldClip(BlockPos)
      */
@@ -103,15 +107,15 @@ public final class BlockBehaviour_BlockStateBaseMixin {
 
         // Do nothing if either:
         // - The current collision context lacks an entity. (i.e., it's NOT an EntityCollisionContext)
-        // - The context's entity is not a client player. (e.g., a non-player entity, a server player, a null)
-        // - The block position doesn't match BlockClips.shouldClip(...).
+        // - The context's entity is not a client (local) player. (e.g., a non-player entity, a server player, a null)
+        // - The block position is not marked clippable via BlockClips.shouldClip(...).
         //? if >=1.18.2 {
         if (!(context instanceof EntityCollisionContext ctx) || !(ctx.getEntity() instanceof LocalPlayer) || !BlockClips.shouldClip(pos)) return;
         //?} elif >=1.17.1 {
         /*if (!(context instanceof EntityCollisionContext ctx) || !(ctx.getEntity().orElse(null) instanceof LocalPlayer) || !BlockClips.shouldClip(pos)) return;
         *///?} else {
         /*//noinspection CastToIncompatibleInterface // <- Mixin Accessor.
-        if (!(context instanceof EntityCollisionContext) || !(((EntityCollisionContextExtension) context).hcscr_entity() instanceof LocalPlayer) || !BlockClips.shouldClip(pos)) return;
+        if (!(context instanceof EntityCollisionContext) || !(((ru.vidtu.hcscr.extension.EntityCollisionContextExtension) context).hcscr_entity() instanceof LocalPlayer) || !BlockClips.shouldClip(pos)) return;
         *///?}
 
         // Spoof collision data to an empty shape.

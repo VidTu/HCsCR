@@ -110,7 +110,9 @@ public final class Keys {
     }
 
     /**
-     * Handles the keys. Should be called every tick from {@link HCsCR#tick(Minecraft)}.
+     * Handles the keys.
+     * <p>
+     * Should be called every tick from {@link HCsCR#tick(Minecraft)}.
      *
      * @param client   Client game instance
      * @param profiler Client profiler, {@code null} if {@link Variables#DEBUG_PROFILER} is {@code false}
@@ -144,7 +146,9 @@ public final class Keys {
     }
 
     /**
-     * Handles the {@link #CONFIG} key. Should be called every tick.
+     * Handles the {@link #CONFIG} key.
+     * <p>
+     * Should be called every tick from {@link #loop(Minecraft, ProfilerFiller)}.
      *
      * @param client   Client game instance
      * @param profiler Client profiler, {@code null} if {@link Variables#DEBUG_PROFILER} is {@code false}
@@ -207,7 +211,9 @@ public final class Keys {
     }
 
     /**
-     * Handles the {@link #TOGGLE} key. Should be called every tick.
+     * Handles the {@link #TOGGLE} key.
+     * <p>
+     * Should be called every tick from {@link #loop(Minecraft, ProfilerFiller)}.
      *
      * @param client   Client game instance
      * @param profiler Client profiler, {@code null} if {@link Variables#DEBUG_PROFILER} is {@code false}

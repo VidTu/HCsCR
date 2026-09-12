@@ -24,8 +24,10 @@ package ru.vidtu.hcscr.handler;
 
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
@@ -62,12 +64,12 @@ public final class HiddenEntities {
      * They are counted down in {@link #tick(Minecraft, ProfilerFiller)}. If the counter
      * reaches zero before the entity is removed, the entity becomes visible once again.
      *
-     * @see EntityMixin
      * @see #tick(Minecraft, ProfilerFiller)
      * @see #isHidden(Entity)
      * @see #hideFor(Entity, int)
      * @see #show(Entity)
      * @see #showAll()
+     * @see EntityMixin
      */
     // This map should be array-backed, but it must support setValue(int) in iterators.
     // fastutil versions before 8.5.12 (shipped before MC1.21.4) don't have this due to a bug:
@@ -99,15 +101,24 @@ public final class HiddenEntities {
     }
 
     /**
-     * Cleans the hidden entities. Removes redundant entities from {@link #HIDDEN}. A redundant
-     * entry is one for which {@code int} value reached zero. If not reached zero, decrements
-     * by one every method call. Should be called every tick from {@link HCsCR#tick(Minecraft)}.
+     * Cleans the hidden entities. Removes redundant entities from {@link #HIDDEN}.
+     * A redundant entry is one for which {@code int} value reached zero.
+     * If not reached zero, decrements by one every method call.
+     * <p>
+     * Once the entity has reached zero, it is removed from the {@link #HIDDEN}
+     * and therefore can be seen in the world once again.
+     * <p>
+     * If the entity is marked for removal (or removed), it is silently discarded
+     * from the {@link #HIDDEN}, because it is deemed to be removed by the server.
+     * <p>
+     * Should be called every tick from {@link HCsCR#tick(Minecraft)}.
      *
      * @param client   Client game instance
      * @param profiler Client profiler, {@code null} if {@link Variables#DEBUG_PROFILER} is {@code false}
      * @see HCsCR#tick(Minecraft)
      * @see #HIDDEN
      */
+    @SuppressWarnings({"deprecation", "RedundantSuppression"}) // <- Forge 1.16.5 for Entity.removed.
     public static void tick(final Minecraft client, final @UnknownNullability ProfilerFiller profiler) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
@@ -223,6 +234,7 @@ public final class HiddenEntities {
 
     /**
      * Checks if an entity should be hidden exists at the location.
+     * <p>
      * Should be called on hitbox retrieval from {@link EntityMixin}.
      *
      * @param entity Entity to check the hidden status of
@@ -231,13 +243,24 @@ public final class HiddenEntities {
      * @see #hideFor(Entity, int)
      * @see #show(Entity)
      * @see #showAll()
+     * @see EntityMixin
      */
+    @SuppressWarnings({"deprecation", "RedundantSuppression"}) // <- Forge 1.16.5 for Entity.removed.
     @Contract(pure = true)
     public static boolean isHidden(final Entity entity) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert (entity != null) : "HCsCR: Parameter 'entity' is null. (entity: " + entity + ')';
-            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ')';
+            final Minecraft client = Minecraft.getInstance();
+            assert (client.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ')';
+            //~ if >=1.20.1 '.level' -> '.level()' {
+            final Level entityLevel = entity.level();
+            //~}
+            final ClientLevel clientLevel = client.level;
+            assert (entityLevel == clientLevel) : "HCsCR: Mismatching levels. (entity: " + entity + ", entityLevel: " + entityLevel + ", clientLevel: " + clientLevel + ')';
+            //~ if >=1.17.1 'removed' -> 'isRemoved()' {
+            assert (!entity.isRemoved()) : "HCsCR: Invalid entity. (entity: " + entity + ')';
+            //~}
         }
 
         // Check.
@@ -245,7 +268,11 @@ public final class HiddenEntities {
     }
 
     /**
-     * Adds (hides) an entity into {@link #HIDDEN}. Should be called in TODO.
+     * Adds (hides) an entity into {@link #HIDDEN}.
+     * Overwrites the hiding time if already exists.
+     * <p>
+     * Should be called on entity hit in {@link IntentionallyBrokenReferenceTODO}
+     * or entity scheduled removal in in {@link ScheduledEntities}.
      *
      * @param entity Entity to hide
      * @param ticks  Amount of ticks to hide the entity for (in the range of {@link Constants#MIN_CRYSTALS_RESYNC} inclusive to {@link Constants#MAX_CRYSTALS_RESYNC} inclusive)
@@ -253,33 +280,46 @@ public final class HiddenEntities {
      * @see #isHidden(Entity)
      * @see #show(Entity)
      * @see #showAll()
+     * @see IntentionallyBrokenReferenceTODO
+     * @see ScheduledEntities
      * @see Config#crystalsResync()
      * @see Constants#MIN_CRYSTALS_RESYNC
      * @see Constants#DEFAULT_CRYSTALS_RESYNC
      * @see Constants#MAX_CRYSTALS_RESYNC
      */
+    @SuppressWarnings({"deprecation", "RedundantSuppression"}) // <- Forge 1.16.5 for Entity.removed.
     public static void hideFor(final Entity entity, final @Range(from = Constants.MIN_CRYSTALS_RESYNC, to = Constants.MAX_CRYSTALS_RESYNC) int ticks) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert (entity != null) : "HCsCR: Parameter 'entity' is null. (ticks: " + ticks + ')';
             final int resync = Config.crystalsResync();
             assert (ticks == resync) : "HCsCR: Parameter 'ticks' doesn't match config's 'crystalsResync'. (entity: " + entity + ", ticks: " + ticks + ", resync: " + resync + ')';
-            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ", ticks: " + ticks + ')';
+            final Minecraft client = Minecraft.getInstance();
+            assert (client.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ", ticks: " + ticks + ')';
+            //~ if >=1.20.1 '.level' -> '.level()' {
+            final Level entityLevel = entity.level();
+            //~}
+            final ClientLevel clientLevel = client.level;
+            assert (entityLevel == clientLevel) : "HCsCR: Mismatching levels. (entity: " + entity + ", ticks: " + ticks + ", entityLevel: " + entityLevel + ", clientLevel: " + clientLevel + ')';
             //~ if >=1.17.1 'removed' -> 'isRemoved()' {
             assert (!entity.isRemoved()) : "HCsCR: Invalid entity. (entity: " + entity + ", ticks: " + ticks + ')';
             //~}
         }
 
         // Split debug logic.
-        if (Variables.DEBUG_LOGS && (LOGGER.isDebugEnabled(HCsCR.MARKER) || LOGGER.isTraceEnabled(HCsCR.MARKER))) {
+        if (Variables.DEBUG_LOGS) {
             // Log. (**TRACE**)
-            LOGGER.trace(HCsCR.MARKER, "HCsCR: Hiding an entity... (entity: {}, ticks: {}, hidden: {})", entity, ticks, HIDDEN);
+            if (LOGGER.isTraceEnabled(HCsCR.MARKER)) {
+                LOGGER.trace(HCsCR.MARKER, "HCsCR: Hiding an entity... (entity: {}, ticks: {}, hidden: {})", entity, ticks, HIDDEN);
+            }
 
             // Put. (store previous)
             final int previous = HIDDEN.put(entity, ticks);
 
             // Log. (**DEBUG**)
-            LOGGER.debug(HCsCR.MARKER, "HCsCR: Hid an entity. (entity: {}, ticks: {}, previous: {}, hidden: {})", entity, ticks, previous, HIDDEN);
+            if (LOGGER.isDebugEnabled(HCsCR.MARKER)) {
+                LOGGER.debug(HCsCR.MARKER, "HCsCR: Hid an entity. (entity: {}, ticks: {}, previous: {}, hidden: {})", entity, ticks, previous, HIDDEN);
+            }
         } else {
             // Put.
             HIDDEN.put(entity, ticks);
@@ -288,6 +328,7 @@ public final class HiddenEntities {
 
     /**
      * Removes (shows) an entity from {@link #HIDDEN}. Does nothing if it wasn't hidden.
+     * <p>
      * Should be called when an entity is removed in {@link ClientPacketListenerMixin}.
      *
      * @param Entity to show
@@ -295,12 +336,19 @@ public final class HiddenEntities {
      * @see #isHidden(Entity)
      * @see #hideFor(Entity, int)
      * @see #showAll()
+     * @see ClientPacketListenerMixin
      */
     public static void show(final Entity entity) { // TODO(VidTu): Implement.
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert (entity != null) : "HCsCR: Parameter 'entity' is null. (entity: " + entity + ')';
-            assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ')';
+            final Minecraft client = Minecraft.getInstance();
+            assert (client.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ')';
+            //~ if >=1.20.1 '.level' -> '.level()' {
+            final Level entityLevel = entity.level();
+            //~}
+            final ClientLevel clientLevel = client.level;
+            assert (entityLevel == clientLevel) : "HCsCR: Mismatching levels. (entity: " + entity + ", entityLevel: " + entityLevel + ", clientLevel: " + clientLevel + ')';
         }
 
         // Split debug logic.
@@ -312,7 +360,9 @@ public final class HiddenEntities {
             final int remaining = HIDDEN.removeInt(entity);
 
             // Log. (**DEBUG**)
-            LOGGER.debug(HCsCR.MARKER, "HCsCR: Shown a hidden entity. (entity: {}, remaining: {}, hidden: {})", entity, remaining, HIDDEN);
+            if (LOGGER.isDebugEnabled(HCsCR.MARKER)) {
+                LOGGER.debug(HCsCR.MARKER, "HCsCR: Shown a hidden entity. (entity: {}, remaining: {}, hidden: {})", entity, remaining, HIDDEN);
+            }
         } else {
             // Remove.
             HIDDEN.removeInt(entity);
@@ -321,12 +371,14 @@ public final class HiddenEntities {
 
     /**
      * Clears all entities from {@link #HIDDEN}. Does nothing if there are no entities.
-     * Should be called when a world is unloaded in {@link MinecraftMixin}.
+     * <p>
+     * Should be called when a level is changed in {@link MinecraftMixin}.
      *
      * @see #HIDDEN
      * @see #isHidden(Entity)
      * @see #hideFor(Entity, int)
      * @see #show(Entity)
+     * @see MinecraftMixin
      */
     public static void showAll() {
         // Validate.

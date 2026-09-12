@@ -42,6 +42,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.Variables;
+import ru.vidtu.hcscr.config.BlockMode;
+import ru.vidtu.hcscr.config.Config;
 import ru.vidtu.hcscr.handler.BlockClips;
 
 /**
@@ -50,6 +52,8 @@ import ru.vidtu.hcscr.handler.BlockClips;
  * @author VidTu
  * @apiNote Internal use only
  * @see BlockClips#removeClip(BlockPos)
+ * @see BlockMode#COLLISION
+ * @see Config#blocks()
  */
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(ClientPacketListener.class)
@@ -57,6 +61,8 @@ import ru.vidtu.hcscr.handler.BlockClips;
 public final class ClientPacketListenerMixin {
     /**
      * Current level, {@code null} if none.
+     * <p>
+     * Provided by the implementation. ({@link Shadow})
      */
     @Shadow
     @Nullable
@@ -78,10 +84,15 @@ public final class ClientPacketListenerMixin {
     }
 
     /**
-     * Removes the packet block position via {@link BlockClips#removeClip(BlockPos)} on
-     * receiving block update packet from the server. Also removes the related bed part
-     * the same way if the received block update is at position that contains a bed.
-     * Does nothing if the clip didn't exist there. Gets called on the game thread.
+     * Handles the single block update packet.
+     * <p>
+     * Removes the packet block position via {@link BlockClips#removeClip(BlockPos)} when
+     * receiving a block update packet from the server. Does nothing if there wasn't any clips.
+     * <p>
+     * Gets called on the game thread.
+     * <p>
+     * Additionally removes the clip for the related bed part,
+     * if there a (client) bed at the position on the client.
      *
      * @param packet Packet that updates the block state
      * @param ci     Callback data, ignored
@@ -97,7 +108,12 @@ public final class ClientPacketListenerMixin {
             assert (Minecraft.getInstance().isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", packet: " + packet + ", handler: " + this + ')';
         }
 
-        // TODO(VidTu): Logging?
+        // TODO(VidTu): Logging.
+
+        // Do nothing, if the level is null. Servers might send this packet,
+        // it's important that either both or neither we/vanilla fuck up.
+        final Level level = this.level;
+        if (level == null) return;
 
         // Remove the block's clip.
         final BlockPos pos = packet.getPos(); // Implicit NPE for 'packet'
@@ -106,14 +122,11 @@ public final class ClientPacketListenerMixin {
         }
         BlockClips.removeClip(pos);
 
-        // Find the bed, do nothing if the block is not bed.
-        // Also do nothing if the level is null, that shouldn't happen.
-        final Level level = this.level;
-        if (level == null) return;
+        // Find the bed, do nothing if the block is not a bed.
         final BlockState state = level.getBlockState(pos);
         if (!state.is(BlockTags.BEDS)) return;
 
-        // Find the bed's connected part, do nothing if the other part is not bed.
+        // Find the bed's connected part, do nothing if the other part is not a bed.
         final BlockPos connectedPos = pos.relative(BedBlock.getConnectedDirection(state));
         final BlockState connectedState = level.getBlockState(connectedPos);
         if (!connectedState.is(BlockTags.BEDS)) return;

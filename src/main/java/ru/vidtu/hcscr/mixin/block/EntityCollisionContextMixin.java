@@ -35,26 +35,30 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import ru.vidtu.hcscr.compile.Variables;
+import ru.vidtu.hcscr.config.BlockMode;
+import ru.vidtu.hcscr.config.Config;
 import ru.vidtu.hcscr.extension.EntityCollisionContextExtension;
 import ru.vidtu.hcscr.platform.HStonecutter;
 
 /^*
- * Mixin that stored the source entity of {@link EntityCollisionContext}
- * for the {@link EntityCollisionContextExtension} extension. (pre-1.17.1)
+ * Mixin that stored the source entity of {@link EntityCollisionContext} for
+ * the {@link EntityCollisionContextExtension} mixin extension. (pre-1.17.1)
  * <p>
- * On newer (1.17.1+) versions, this logic is provided by vanilla.
+ * In newer (1.17.1+) versions, this logic is provided by vanilla.
  *
  * @author VidTu
  * @apiNote Internal use only
  * @see EntityCollisionContextExtension
  * @see BlockBehaviour_BlockStateBaseMixin
+ * @see Config#blocks()
+ * @see BlockMode#COLLISION
  ^/
 // @ApiStatus.Internal // Can't annotate this without logging in the console.
 @Mixin(EntityCollisionContext.class)
 @NullMarked
 public final class EntityCollisionContextMixin implements EntityCollisionContextExtension {
     /^*
-     * Entity involving in the context, {@code null} if none.
+     * Entity involved in the context, {@code null} if none or not stored.
      ^/
     @Unique
     @Nullable
@@ -76,6 +80,8 @@ public final class EntityCollisionContextMixin implements EntityCollisionContext
     }
 
     /^*
+     * Initializes the collision context.
+     * <p>
      * Stores the {@link #hcscr_entity} for future use.
      *
      * @param entity The entity to store in the context, {@code null} if none
@@ -93,12 +99,13 @@ public final class EntityCollisionContextMixin implements EntityCollisionContext
     /^*
      * Gets the entity.
      *
-     * @return Entity involving in the context, {@code null} if none or not stored
+     * @return Entity involved in the context, {@code null} if none or not stored
      ^/
     @Contract(pure = true)
     @Override
     @Nullable
     public Entity hcscr_entity() {
+        // Return.
         return this.hcscr_entity;
     }
 }
