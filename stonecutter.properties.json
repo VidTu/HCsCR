@@ -3,8 +3,8 @@
     "fabric": {
       "api": "0.160.4+26.3",
       "modmenu": "21.0.0-beta.1",
-      "minecraft": "26.3-rc-2",
-      "constraints": "26.3-rc.2"
+      "minecraft": "26.3-rc-3",
+      "constraints": "26.3-rc.3"
     }
   },
   "26.2": {
