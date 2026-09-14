@@ -23,8 +23,7 @@
 // This is the root Gradle entrypoint. It installs the Stonecutter preprocessor,
 // and various root Gradle things, as well as includes and generates every
 // virtual subproject by the Stonecutter. Also includes compile-time project.
-// See "build.fabric-intermediary.gradle.kts" for legacy Intermediary Fabric.
-// See "build.fabric-mojmap.gradle.kts" for modern Mojmap Fabric.
+// See "build.fabric.gradle.kts" for Fabric.
 // See "build.forge.gradle.kts" for Forge.
 // See "build.neoforge.gradle.kts" for NeoForge.
 // See "build.neoforge-hacky.gradle.kts" for NeoForge ugly hack for 1.20.1.
