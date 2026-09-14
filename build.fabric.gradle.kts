@@ -24,7 +24,6 @@
 // Stonecutter multiple times, for each non-remapped version. (compiled once)
 // Based on Loom and processes the preparation/complation/building
 // of the most of the mod that is not covered by the Stonecutter or Blossom.
-// See "build.fabric-intermediary.gradle.kts" for legacy Intermediary Fabric.
 // See "build.forge.gradle.kts" for Forge.
 // See "build.neoforge.gradle.kts" for NeoForge.
 // See "build.neoforge-hacky.gradle.kts" for NeoForge ugly hack for 1.20.1.
@@ -40,7 +39,7 @@ import ru.vidtu.hcscr.buildsrc.Strip
 plugins {
     id("java")
     alias(libs.plugins.blossom)
-    alias(libs.plugins.fabric.loom)
+    id("dev.kikugie.loom-back-compat")
 }
 
 // Extract versions.
@@ -49,12 +48,19 @@ val mcv = mc.version // Literal version. (toString)
 val mcp = mc.parsed // Comparable version. (operator overloading)
 
 // Language.
-val javaTarget = 25
+val javaTarget = when {
+    (mcp >= "26.1.2") -> 25
+    (mcp >= "1.20.6") -> 21
+    (mcp >= "1.18.2") -> 17
+    (mcp >= "1.17.1") -> 16
+    else -> 8
+}
 val javaVersion = JavaVersion.toVersion(javaTarget)
 java {
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
-    toolchain.languageVersion = JavaLanguageVersion.of(javaTarget)
+    val javaToolchain = if (javaTarget == 16) 17 else javaTarget
+    toolchain.languageVersion = JavaLanguageVersion.of(javaToolchain)
 }
 
 // Metadata.
@@ -75,7 +81,7 @@ sc {
 
     // Stonecutter swaps.
     swaps["set_screen"] = if (mcp >= "26.2") "$1.gui.setScreen($2);" else "$1.setScreen($2);"
-    swaps["remove_entity"] = "$1.discard();"
+    swaps["remove_entity"] = if (mcp >= "1.17.1") "$1.discard();" else "$1.remove();"
 }
 
 loom {
@@ -87,7 +93,12 @@ loom {
         // Customize the client run.
         named("client") {
             // Set up debug VM args.
-            jvmArguments.add("@../dev/args.vm.txt")
+            if (javaVersion.isJava9Compatible) {
+                jvmArguments.add("@../dev/args.vm.txt")
+            } else {
+                jvmArguments.addAll(rootDir.resolve("dev/args.vm.txt").readLines()
+                    .filter { it.isNotEmpty() && !it.startsWith('#') && ("line.separator" !in it) })
+            }
 
             // Set the run dir.
             runDirectory = rootDir.resolve("run")
@@ -108,6 +119,9 @@ repositories {
     mavenCentral()
     maven("https://maven.fabricmc.net/") // Fabric.
     maven("https://maven.terraformersmc.com/releases/") // ModMenu.
+    if (mcp eq "1.20.4") { // Fix for ModMenu not providing Text Placeholder API.
+        maven("https://maven.nucleoid.xyz/") // ModMenu. (Text Placeholder API)
+    }
 }
 
 // Dependencies.
@@ -123,6 +137,9 @@ dependencies {
     val minecraft = minecraftProperty ?: mcv
     minecraft("com.mojang:minecraft:${minecraft}")
 
+    // Mappings.
+    loomx.applyMojangMappings()
+
     // Force non-vulnerable Log4J, so that vulnerability scanners don't scream loud.
     // It's also cool for our logging config. (see the "dev/log4j2.xml" file)
     implementation(libs.log4j) {
@@ -132,15 +149,17 @@ dependencies {
     }
 
     // Fabric Loader.
-    implementation(libs.fabric.loader)
+    modImplementation(libs.fabric.loader)
 
     // Modular Fabric API.
     val fapi = "${property("api")}"
     require(fapi.isNotBlank() && fapi != "null") { "Fabric API version is not provided via 'api' in ${project}." }
-    implementation(fabricApi.module("fabric-key-mapping-api-v1", fapi)) // Handles the keybinds. (NOTE: <=1.21.11 script uses "binding", not "mapping")
-    implementation(fabricApi.module("fabric-lifecycle-events-v1", fapi)) // Handles game ticks.
-    implementation(fabricApi.module("fabric-networking-api-v1", fapi)) // Registers the channel, see README.
-    implementation(fabricApi.module("fabric-resource-loader-v1", fapi)) // Loads languages.
+    val fabricKeyApiName = if (mcp >= "26.1.2") "mapping" else "binding"
+    val fabricResourceLoaderRevision = if (mcp >= "1.21.10") "v1" else "v0"
+    modImplementation(fabricApi.module("fabric-key-${fabricKeyApiName}-api-v1", fapi)) // Handles the keybinds.
+    modImplementation(fabricApi.module("fabric-lifecycle-events-v1", fapi)) // Handles game ticks.
+    modImplementation(fabricApi.module("fabric-networking-api-v1", fapi)) // Registers the channel, see README.
+    modImplementation(fabricApi.module("fabric-resource-loader-${fabricResourceLoaderRevision}", fapi)) // Loads languages.
 
     // ModMenu.
     val modmenu = "${property("modmenu")}"
@@ -150,10 +169,13 @@ dependencies {
     // compilation of an optional ModMenu compatibility class (HModMenu.java) and launching the game.
     // Just prefix the ModMenu version with '$' to make it compile-only.
     if (modmenu.startsWith('$')) {
-        compileOnly("com.terraformersmc:modmenu:${modmenu.substring(1)}")
+        modCompileOnly("com.terraformersmc:modmenu:${modmenu.substring(1)}")
     } else {
-        implementation("com.terraformersmc:modmenu:${modmenu}")
-        implementation(fabricApi.module("fabric-screen-api-v1", fapi)) // ModMenu dependency.
+        modImplementation("com.terraformersmc:modmenu:${modmenu}")
+        if (mcp eq "1.21.10") {
+            modImplementation(fabricApi.module("fabric-resource-loader-v0", fapi)) // ModMenu dependency.
+        }
+        modImplementation(fabricApi.module("fabric-screen-api-v1", fapi)) // ModMenu dependency.
     }
 }
 
@@ -174,7 +196,13 @@ tasks.withType<JavaCompile> {
     }
 
     // Set the compatible Java target.
-    options.release = javaTarget
+    // JDK 8 (used by 1.16.x) doesn't support the "-release" flag and
+    // uses "-source" and "-target" ones (see the top of the file),
+    // so we must NOT specify it, or the "javac" will fail.
+    // JDK 9+ does listen to this option.
+    if (javaVersion.isJava9Compatible) {
+        options.release = javaTarget
+    }
 
     // Post-process classes. (strip metadata)
     if (!"${findProperty("ru.vidtu.hcscr.debug.metadata") ?: findProperty("ru.vidtu.hcscr.debug")}".toBoolean()) {
@@ -214,17 +242,17 @@ tasks.withType<ProcessResources> {
     // Exclude not needed loader entrypoint files.
     exclude("META-INF/mods.toml", "META-INF/neoforge.mods.toml", "pack.mcmeta")
 
-    // Replace the Fabric Resource Loader version.
-    // >=26.1.2 has consistent v1, this is used by Intermediary.
-    inputs.property("fabricResourceLoaderRevision", "v1")
+    // Determine and replace the Fabric Resource Loader version.
+    val fabricResourceLoaderRevision = if (mcp >= "1.21.10") "v1" else "v0"
+    inputs.property("fabricResourceLoaderRevision", fabricResourceLoaderRevision)
 
-    // Replace Fabric Keybinding/Keymapping module name.
-    // >=26.1.2 has "mapping", previous versions have "binding".
+    // Determine and replace Fabric Keybinding/Keymapping module name.
+    val fabricKeyApiName = if (mcp >= "26.1.2") "mapping" else "binding"
     inputs.property("fabricKeyApiName", "mapping")
 
-    // Replace the Fabric API module name.
-    // >=26.1.2 has consistent fabric-api, this is used by Intermediary.
-    inputs.property("fabricApiName", "fabric-api")
+    // Determine and replace the Fabric API module name.
+    val fabricApiName = if (mcp >= "1.18.2") "fabric-api" else "fabric"
+    inputs.property("fabricApiName", fabricApiName)
 
     // Expand Minecraft constraints that can be manually overridden for reasons. (e.g., snapshots)
     val constraintsProperty = findProperty("constraints")
@@ -234,6 +262,7 @@ tasks.withType<ProcessResources> {
 
     // Expand version and dependencies.
     inputs.property("mixinJava", javaTarget)
+    inputs.property("minecraft", mcv)
     inputs.property("version", version)
     filesMatching(listOf("fabric.mod.json", "hcscr.mixins.json")) {
         expand(inputs.properties)
@@ -267,6 +296,6 @@ tasks.withType<Jar> {
 }
 
 // Output into "build/libs" instead of "versions/<ver>/build/libs".
-tasks.withType<Jar> {
+loomx.modJar {
     destinationDirectory = rootProject.layout.buildDirectory.file("libs").get().asFile
 }
