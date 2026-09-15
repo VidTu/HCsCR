@@ -56,6 +56,9 @@
                 <RegexFilter regex="^.*:.* from mod .*: Class version \d+ required is higher than the class version supported by the current version of Mixin \(JAVA_\d+ supports class version \d+\)$" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <RegexFilter regex="^Mixing .* from .* into .*$" onMatch="DENY" onMismatch="NEUTRAL"/>
 
+                <!-- Forge. (non-debug level; above ThresholdFilter) -->
+                <RegexFilter regex="^Wrote .* byte class file .* to .*$" onMatch="DENY" onMismatch="NEUTRAL"/>
+
                 <!-- Accept all non-debug logs. -->
                 <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
 
@@ -65,13 +68,16 @@
 
                 <!-- Forge/FML verbose logging. -->
                 <MarkerFilter marker="AXFORM" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <MarkerFilter marker="CORE" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <MarkerFilter marker="CLASSDUMP" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <MarkerFilter marker="CLASSLOADING" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <MarkerFilter marker="DISTXFORM" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <MarkerFilter marker="EVENTBUS" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <MarkerFilter marker="LAUNCHPLUGIN" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <MarkerFilter marker="LOADING" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <MarkerFilter marker="REGISTRIES" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <MarkerFilter marker="REGISTRYDUMP" onMatch="DENY" onMismatch="NEUTRAL"/>
-                <MarkerFilter marker="REGISTRY_DUMP" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <MarkerFilter marker="1REGISTRY_DUMP" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <MarkerFilter marker="SCAN" onMatch="DENY" onMismatch="NEUTRAL"/>
 
                 <!-- Fabric's classpath scanning logs for every class/JAR. -->
@@ -82,6 +88,10 @@
                 <RegexFilter regex="^.*:.* from mod .* does(?:n't)? use it's CallbackInfo(?:Returnable)?$" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <RegexFilter regex="^.*:.* from mod .* has .* override\(s\) in child classes$" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <RegexFilter regex="^.*:.* from mod .* won't be passed a CallbackInfo(?:Returnable)? as a result$" onMatch="DENY" onMismatch="NEUTRAL"/>
+
+                <!-- Session service (Mojang API) errors with stack-traces or otherwise false alarms. -->
+                <!-- We don't use online accounts in development. -->
+                <RegexFilter regex="^Request failed$" useRawMsg="true" onMatch="DENY" onMismatch="NEUTRAL"/>
 
                 <!-- Netty Java 9 module errors. (on Forge) -->
                 <RegexFilter regex="^direct buffer constructor: unavailable$" useRawMsg="true" onMatch="DENY" onMismatch="NEUTRAL"/>
