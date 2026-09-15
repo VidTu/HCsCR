@@ -254,10 +254,9 @@ public final class HiddenEntities {
             final Minecraft client = Minecraft.getInstance();
             assert (client.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ')';
             //~ if >=1.20.1 '.level' -> '.level()' {
-            final Level entityLevel = entity.level();
+            final Level level = entity.level();
             //~}
-            final ClientLevel clientLevel = client.level;
-            assert (entityLevel == clientLevel) : "HCsCR: Mismatching levels. (entity: " + entity + ", entityLevel: " + entityLevel + ", clientLevel: " + clientLevel + ')';
+            assert (level.isClientSide()) : "HCsCR: Server-side level. (entity: " + entity + ", level: " + level + ')';
         }
 
         // Check.
