@@ -11,6 +11,7 @@ Remove your end crystals before the server even knows you hit 'em!
 
 ## Downloads
 
+- [Modrinth](https://modrinth.com/mod/hcscr)
 - [GitHub Releases](https://github.com/VidTu/HCsCR/releases)
 
 ## Dependencies
@@ -55,7 +56,8 @@ Other versions were never supported.
 **A**: You can join the [Discord server](https://discord.gg/Q6saSVSuYQ).
 
 **Q**: Where can I download this mod?  
-**A**: [GitHub Releases](https://github.com/VidTu/HCsCR/releases).
+**A**: [Modrinth](https://modrinth.com/mod/hcscr)
+or [GitHub Releases](https://github.com/VidTu/HCsCR/releases).
 You can also find unstable builds at
 [GitHub Actions](https://github.com/VidTu/HCsCR/actions).
 You'll need a GitHub account to download these.
@@ -98,18 +100,15 @@ is not required. Monetization and redistribution are allowed as per the
 [Apache 2.0 License](https://github.com/VidTu/HCsCR/blob/main/LICENSE).
 *BEWARE*: This mod may be considered a hack by some people.
 
-**Q**: Why is this mod not on Modrinth or CurseForge?  
-**A**: Modrinth
-[says](https://github.com/user-attachments/assets/437df1a1-3331-499c-ac49-6ec114494bd4)
-it violates their [rules](https://modrinth.com/legal/rules). CurseForge has a
-terrible API and I don't want to deal with it.
-
-**Q**: Why does this mod exist, when there are server-side crystal optimizers?  
+**Q**: Why does this mod exist, when there are server-side crystal optimizers?
+Is it better than other client-side crystal optimizers (alternatives)?  
 **A**: Firstly, this mod was created in 2023 before the server-side crystal
 optimizers. Secondly, not every server has a server-side crystal optimizer.
 Thirdly, I updated it in 2025 because I needed to learn the
 [Stonecutter](https://stonecutter.kikugie.dev/) preprocessor.
-Now it's not hard to maintain, so why not.
+Now it's not hard to maintain, so why not. It is probably
+*neither better nor worse* than other client-side crystal
+optimizers, but it has a lot of settings for your convenience.
 
 **Q**: How fast is it?  
 **A**: It should be pretty fast. No precise numbers,

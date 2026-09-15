@@ -20,9 +20,10 @@ Where possible, **prefer** GitHub Private vulnerability reporting.
 
 The only supported versions for vulnerability reporting are:
 
-- The latest release published to GitHub.
+- The latest release published to Modrinth and/or GitHub.
 - The latest pre-release published to GitHub[^1].
+- The latest alpha and/or beta published to Modrinth[1].
 - The latest Git commit build.
 
-[^1]: Pre-release versions are supported *only* if they
-      were published after the latest *stable* release.
+[^1]: Pre-release, alpha and beta versions are supported *only*
+      if they were published after the latest *stable* release.
