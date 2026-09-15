@@ -258,9 +258,6 @@ public final class HiddenEntities {
             //~}
             final ClientLevel clientLevel = client.level;
             assert (entityLevel == clientLevel) : "HCsCR: Mismatching levels. (entity: " + entity + ", entityLevel: " + entityLevel + ", clientLevel: " + clientLevel + ')';
-            //~ if >=1.17.1 'removed' -> 'isRemoved()' {
-            assert (!entity.isRemoved()) : "HCsCR: Invalid entity. (entity: " + entity + ')';
-            //~}
         }
 
         // Check.
