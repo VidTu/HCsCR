@@ -32,7 +32,7 @@ log4j = "2.26.1"
 mixin = "0.8.7"
 mixinextras = "0.5.5"
 moddevgradle = "2.0.147"
-neogradle = "7.1.38"
+neogradle = "7.1.39"
 
 [plugins]
 blossom = { id = "net.kyori.blossom", version.ref = "blossom" }
