@@ -28,5 +28,7 @@
   "hcscr.delay.off": "Выключена",
   "hcscr.delay.format": "%sмс",
   "modmenu.descriptionTranslation.hcscr": "Удаляй свои кристаллы края, прежде чем сервер даже узнает, что ты ударил их!",
-  "modmenu.summaryTranslation.hcscr": "Удаляй свои кристаллы края быстрее!"
+  "modmenu.summaryTranslation.hcscr": "Удаляй свои кристаллы края быстрее!",
+  "fml.menu.mods.info.description.hcscr": "Удаляй свои кристаллы края, прежде чем сервер даже узнает, что ты ударил их!",
+  "neoforge.screen.mods.info.description.hcscr": "Удаляй свои кристаллы края, прежде чем сервер даже узнает, что ты ударил их!"
 }

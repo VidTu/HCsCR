@@ -28,5 +28,7 @@
   "hcscr.delay.off": "Disabled",
   "hcscr.delay.format": "%sms",
   "modmenu.descriptionTranslation.hcscr": "Remove your end crystals before the server even knows you hit 'em!",
-  "modmenu.summaryTranslation.hcscr": "Remove your end crystals faster!"
+  "modmenu.summaryTranslation.hcscr": "Remove your end crystals faster!",
+  "fml.menu.mods.info.description.hcscr": "Remove your end crystals before the server even knows you hit 'em!",
+  "neoforge.screen.mods.info.description.hcscr": "Remove your end crystals before the server even knows you hit 'em!"
 }
