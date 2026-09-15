@@ -248,7 +248,7 @@ tasks.withType<ProcessResources> {
 
     // Determine and replace Fabric Keybinding/Keymapping module name.
     val fabricKeyApiName = if (mcp >= "26.1.2") "mapping" else "binding"
-    inputs.property("fabricKeyApiName", "mapping")
+    inputs.property("fabricKeyApiName", fabricKeyApiName)
 
     // Determine and replace the Fabric API module name.
     val fabricApiName = if (mcp >= "1.18.2") "fabric-api" else "fabric"
