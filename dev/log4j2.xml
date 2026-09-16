@@ -77,7 +77,7 @@
                 <MarkerFilter marker="LOADING" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <MarkerFilter marker="REGISTRIES" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <MarkerFilter marker="REGISTRYDUMP" onMatch="DENY" onMismatch="NEUTRAL"/>
-                <MarkerFilter marker="1REGISTRY_DUMP" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <MarkerFilter marker="REGISTRY_DUMP" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <MarkerFilter marker="SCAN" onMatch="DENY" onMismatch="NEUTRAL"/>
 
                 <!-- Fabric's classpath scanning logs for every class/JAR. -->
