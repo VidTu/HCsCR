@@ -20,8 +20,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// This is the Fabric loader buildscript. It is processed by the Stonecutter
-// multiple times, for each non-remapped version. (compiled once)
+// This is the Fabric loader buildscript. It is processed by the
+// Stonecutter multiple times, for each version. (compiled once)
 // Based on Loom and processes the preparation/complation/building
 // of the most of the mod that is not covered by the Stonecutter or Blossom.
 // See "build.forge.gradle.kts" for Forge.
