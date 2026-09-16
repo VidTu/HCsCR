@@ -5,7 +5,7 @@
       "modmenu": "21.0.0-beta.1"
     },
     "neoforge": {
-      "loader": "26.3.0.1-beta",
+      "loader": "26.3.0.3-beta",
       "constraints": "[26.3.0,26.3.1)"
     }
   },
