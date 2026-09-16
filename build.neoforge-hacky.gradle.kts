@@ -59,7 +59,6 @@ base.archivesName = "HCsCR"
 version = "${version}+${name}"
 description = "Remove your end crystals before the server even knows you hit 'em!"
 
-// Define Stonecutter preprocessor variables/constants.
 sc {
     // Stonecutter constants.
     constants["fabric"] = false
