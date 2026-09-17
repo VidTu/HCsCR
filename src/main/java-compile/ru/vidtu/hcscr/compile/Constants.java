@@ -104,7 +104,8 @@ public final class Constants {
      *
      * @deprecated Custom updaters are not needed for mods on Modrinth
      */
-    @Deprecated(forRemoval = true)
+    @ApiStatus.ScheduledForRemoval
+    @Deprecated
     @CompileTimeConstant
     public static final long UPDATER_CACHE_SECONDS = 300L;
 
@@ -113,7 +114,8 @@ public final class Constants {
      *
      * @deprecated Custom updaters are not needed for mods on Modrinth
      */
-    @Deprecated(forRemoval = true)
+    @ApiStatus.ScheduledForRemoval
+    @Deprecated
     @CompileTimeConstant
     public static final String UPDATER_URL = "https://raw.githubusercontent.com/VidTu/HCsCR/main/updater_hcscr_fabric.properties";
 
@@ -122,7 +124,8 @@ public final class Constants {
      *
      * @deprecated Custom updaters are not needed for mods on Modrinth
      */
-    @Deprecated(forRemoval = true)
+    @ApiStatus.ScheduledForRemoval
+    @Deprecated
     @CompileTimeConstant
     public static final String UPDATER_FALLBACK_LINK = "https://github.com/VidTu/HCsCR/releases/latest";
 
@@ -133,7 +136,8 @@ public final class Constants {
      *
      * @deprecated Custom updaters are not needed for mods on Modrinth
      */
-    @Deprecated(forRemoval = true)
+    @ApiStatus.ScheduledForRemoval
+    @Deprecated
     @CompileTimeConstant
     public static final long UPDATER_TIMEOUT_SECONDS = 30L;
 
@@ -147,7 +151,8 @@ public final class Constants {
      *
      * @deprecated Custom updaters are not needed for mods on Modrinth
      */
-    @Deprecated(forRemoval = true)
+    @ApiStatus.ScheduledForRemoval
+    @Deprecated
     @CompileTimeConstant
     public static final int UPDATER_MAX_BODY_LENGTH = 65536;
 
@@ -161,7 +166,8 @@ public final class Constants {
      *
      * @deprecated Custom updaters are not needed for mods on Modrinth
      */
-    @Deprecated(forRemoval = true)
+    @ApiStatus.ScheduledForRemoval
+    @Deprecated
     @CompileTimeConstant
     public static final int UPDATER_MAX_COMPONENT_LENGTH = 255;
 
@@ -172,7 +178,8 @@ public final class Constants {
      *
      * @deprecated Custom updaters are not needed for mods on Modrinth
      */
-    @Deprecated(forRemoval = true)
+    @ApiStatus.ScheduledForRemoval
+    @Deprecated
     @CompileTimeConstant
     public static final char UPDATER_KEY_SEPARATOR = '@';
 
@@ -183,7 +190,8 @@ public final class Constants {
      *
      * @deprecated Custom updaters are not needed for mods on Modrinth
      */
-    @Deprecated(forRemoval = true)
+    @ApiStatus.ScheduledForRemoval
+    @Deprecated
     @CompileTimeConstant
     public static final String UPDATER_KEY_VERSION_SUFFIX = "version";
 
@@ -194,7 +202,8 @@ public final class Constants {
      *
      * @deprecated Custom updaters are not needed for mods on Modrinth
      */
-    @Deprecated(forRemoval = true)
+    @ApiStatus.ScheduledForRemoval
+    @Deprecated
     @CompileTimeConstant
     public static final String UPDATER_KEY_LINK_SUFFIX = "link";
 

@@ -49,6 +49,7 @@ import java.util.List;
  * @deprecated Centralized preprocessing is bad design
  */
 @ApiStatus.Internal
+@ApiStatus.ScheduledForRemoval
 @Deprecated
 @NullMarked
 public final class HStonecutter {

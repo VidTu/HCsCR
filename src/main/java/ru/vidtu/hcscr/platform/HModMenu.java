@@ -109,7 +109,8 @@ public final class HModMenu implements ModMenuApi {
      * @apiNote Do not call, called by ModMenu
      * @deprecated Custom updaters are not needed for mods on Modrinth
      */
-    @Deprecated(forRemoval = true)
+    @ApiStatus.ScheduledForRemoval
+    @Deprecated
     @DoNotCall("Called by ModMenu")
     @Contract(value = "-> new", pure = true)
     @Override
@@ -132,8 +133,9 @@ public final class HModMenu implements ModMenuApi {
      * @apiNote Internal use only
      * @deprecated Custom updaters are not needed for mods on Modrinth
      */
-    @Deprecated(forRemoval = true)
     @ApiStatus.Internal
+    @ApiStatus.ScheduledForRemoval
+    @Deprecated
     @NullMarked
     /*package-private*/ static final class Updater implements UpdateChecker {
         /**
@@ -421,8 +423,9 @@ public final class HModMenu implements ModMenuApi {
      * @apiNote Internal use only
      * @deprecated Custom updaters are not needed for mods on Modrinth
      */
-    @Deprecated(forRemoval = true)
     @ApiStatus.Internal
+    @ApiStatus.ScheduledForRemoval
+    @Deprecated
     @NullMarked
     static final class Update implements UpdateInfo {
         /**
