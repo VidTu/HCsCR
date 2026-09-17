@@ -101,19 +101,28 @@ public final class Constants {
      * Cache/memoization time for the updater in seconds.
      * <p>
      * Equals to {@code 300} seconds. (i.e., {@code 5} minutes)
+     *
+     * @deprecated Custom updaters are not needed for mods on Modrinth
      */
+    @Deprecated(forRemoval = true)
     @CompileTimeConstant
     public static final long UPDATER_CACHE_SECONDS = 300L;
 
     /**
      * URL for fetching the update info.
+     *
+     * @deprecated Custom updaters are not needed for mods on Modrinth
      */
+    @Deprecated(forRemoval = true)
     @CompileTimeConstant
     public static final String UPDATER_URL = "https://raw.githubusercontent.com/VidTu/HCsCR/main/updater_hcscr_fabric.properties";
 
     /**
      * Fallback updater link.
+     *
+     * @deprecated Custom updaters are not needed for mods on Modrinth
      */
+    @Deprecated(forRemoval = true)
     @CompileTimeConstant
     public static final String UPDATER_FALLBACK_LINK = "https://github.com/VidTu/HCsCR/releases/latest";
 
@@ -121,7 +130,10 @@ public final class Constants {
      * Connection/request timeout for the updater in seconds.
      * <p>
      * Equals to {@code 30} seconds.
+     *
+     * @deprecated Custom updaters are not needed for mods on Modrinth
      */
+    @Deprecated(forRemoval = true)
     @CompileTimeConstant
     public static final long UPDATER_TIMEOUT_SECONDS = 30L;
 
@@ -132,7 +144,10 @@ public final class Constants {
      * <p>
      * Depending on the implementation, this might be counted
      * in either or both UTF-8 codepoints or UTF-8 bytes.
+     *
+     * @deprecated Custom updaters are not needed for mods on Modrinth
      */
+    @Deprecated(forRemoval = true)
     @CompileTimeConstant
     public static final int UPDATER_MAX_BODY_LENGTH = 65536;
 
@@ -143,7 +158,10 @@ public final class Constants {
      * <p>
      * Depending on the implementation, this might be counted
      * in either or both UTF-8 codepoints or UTF-8 bytes.
+     *
+     * @deprecated Custom updaters are not needed for mods on Modrinth
      */
+    @Deprecated(forRemoval = true)
     @CompileTimeConstant
     public static final int UPDATER_MAX_COMPONENT_LENGTH = 255;
 
@@ -151,7 +169,10 @@ public final class Constants {
      * Magic separator character for property keys.
      * <p>
      * Equals to {@code '@'}.
+     *
+     * @deprecated Custom updaters are not needed for mods on Modrinth
      */
+    @Deprecated(forRemoval = true)
     @CompileTimeConstant
     public static final char UPDATER_KEY_SEPARATOR = '@';
 
@@ -159,7 +180,10 @@ public final class Constants {
      * Magic suffix for property keys indicating the displayed version.
      * <p>
      * Equals to {@code "version"}.
+     *
+     * @deprecated Custom updaters are not needed for mods on Modrinth
      */
+    @Deprecated(forRemoval = true)
     @CompileTimeConstant
     public static final String UPDATER_KEY_VERSION_SUFFIX = "version";
 
@@ -167,7 +191,10 @@ public final class Constants {
      * Magic suffix for property keys indicating the download link.
      * <p>
      * Equals to {@code "link"}.
+     *
+     * @deprecated Custom updaters are not needed for mods on Modrinth
      */
+    @Deprecated(forRemoval = true)
     @CompileTimeConstant
     public static final String UPDATER_KEY_LINK_SUFFIX = "link";
 
