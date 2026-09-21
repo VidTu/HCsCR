@@ -229,7 +229,7 @@ tasks.withType<JavaCompile> {
         doLast {
             Strip(destinationDirectory.get().asFile, classpath).use { strip ->
                 destinationDirectory.asFileTree
-                    .filter { it.name != "package-info.class" }
+                    .filter { (it.name != "package-info.class" && it.name.endsWith(".class")) }
                     .forEach { strip.stripBytecode(it) }
             }
         }

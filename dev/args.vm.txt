@@ -84,6 +84,7 @@
 -Dmixin.debug=true
 -Dmixin.debug.strict=true
 -Dmixin.checks=true
+-Deventbus.api.strictRuntimeChecks=true
 -DMC_DEBUG_ENABLED
 -DMC_DEBUG_ALLOW_LOW_SIM_DISTANCE
 -DMC_DEBUG_SHOW_LOCAL_SERVER_ENTITY_HIT_BOXES
