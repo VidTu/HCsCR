@@ -2,7 +2,8 @@
 
 # HCsCR
 
-Remove your end crystals before the server even knows you hit 'em!
+Remove your end crystals before the server even
+knows you hit 'em! (a "crystal optimizer")
 
 ## Language
 
