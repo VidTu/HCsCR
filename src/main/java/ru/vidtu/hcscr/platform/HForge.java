@@ -25,6 +25,7 @@
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.Connection;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -243,7 +244,7 @@ public final class HForge {
             if (Variables.DEBUG_ASSERTS) {
                 assert (connection != null) : "HCsCR: Connection is null. (event: " + event + ", source: " + source + ')';
             }
-            connection.disconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'connection'
+            connection.disconnect(Component.translatable("hcscr.false")); // Implicit NPE for 'connection'
         });
         //?} else {
         /^NetworkRegistry.newEventChannel(HCsCR.CHANNEL, () -> "hcscr", (final String version) -> true, (final String version) -> true).addListener((final NetworkEvent event) -> {
@@ -272,7 +273,7 @@ public final class HForge {
             if (Variables.DEBUG_ASSERTS) {
                 assert (connection != null) : "HCsCR: Connection is null. (event: " + event + ", sourceGetter: " + sourceGetter + ", source: " + source + ')';
             }
-            connection.disconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'connection'
+            connection.disconnect(Component.translatable("hcscr.false")); // Implicit NPE for 'connection'
         });
         ^///?}
 

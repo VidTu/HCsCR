@@ -48,7 +48,6 @@ import ru.vidtu.hcscr.handler.HiddenEntities;
 import ru.vidtu.hcscr.handler.Keys;
 import ru.vidtu.hcscr.handler.ScheduledEntities;
 import ru.vidtu.hcscr.mixin.crystal.EntityMixin;
-import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.util.List;
 
@@ -101,6 +100,8 @@ public final class HCsCR {
 
     /**
      * Handles the client tick. (ending of a client tick)
+     * <p>
+     * Calls some handlers that depend on ticks.
      *
      * @param client Client game instance
      * @see Keys#tick(Minecraft, ProfilerFiller)
@@ -117,7 +118,8 @@ public final class HCsCR {
         // Get and push the profiler.
         final ProfilerFiller profiler;
         if (Variables.DEBUG_PROFILER) {
-            profiler = HStonecutter.profilerOfClient(client); // Implicit NPE for 'client'
+            //$ assign_profiler profiler client
+            profiler = net.minecraft.util.profiling.Profiler.get();
             profiler.push("hcscr:tick");
         } else {
             profiler = null;
@@ -140,6 +142,8 @@ public final class HCsCR {
 
     /**
      * Handles the client main loop. (a single game frame)
+     * <p>
+     * Calls some handlers that depend on frames.
      *
      * @param client Client game instance
      * @see ScheduledEntities#loop(Minecraft, ProfilerFiller)
@@ -154,7 +158,8 @@ public final class HCsCR {
         // Get and push the profiler.
         final ProfilerFiller profiler;
         if (Variables.DEBUG_PROFILER) {
-            profiler = HStonecutter.profilerOfClient(client); // Implicit NPE for 'client'
+            //$ assign_profiler profiler client
+            profiler = net.minecraft.util.profiling.Profiler.get();
             profiler.push("hcscr:loop");
         } else {
             profiler = null;
@@ -162,6 +167,58 @@ public final class HCsCR {
 
         // Scheduled entities. (cleanup/remove)
         ScheduledEntities.loop(client, profiler); // Implicit NPE for 'client'
+
+        // Pop the profiler.
+        if (Variables.DEBUG_PROFILER) {
+            profiler.pop();
+        }
+    }
+
+    /**
+     * Handles the client respawn. (client level load, unload, or change)
+     * <p>
+     * Clears some handlers' data tied to levels.
+     *
+     * @param client Client game instance
+     * @see ScheduledEntities#unscheduleAll()
+     * @see HiddenEntities#showAll()
+     * @see BlockClips#clearClips()
+     */
+    public static void respawn(final Minecraft client) {
+        // Validate.
+        if (Variables.DEBUG_ASSERTS) {
+            assert (client != null) : "HCsCR: Parameter 'client' is null.";
+            assert (client.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", client: " + client + ')';
+        }
+
+        // Get and push the profiler.
+        final ProfilerFiller profiler;
+        if (Variables.DEBUG_PROFILER) {
+            //$ assign_profiler profiler client
+            profiler = net.minecraft.util.profiling.Profiler.get();
+            profiler.push("hcscr:respawn");
+        } else {
+            profiler = null;
+        }
+
+        // Log. (**TRACE**)
+        if (Variables.DEBUG_LOGS) {
+            LOGGER.trace(MARKER, "HCsCR: Clearing on respawn...");
+        }
+
+        // Unschedule (clear) all scheduled entities.
+        ScheduledEntities.unscheduleAll();
+
+        // Show (clear) all hidden entities.
+        HiddenEntities.showAll();
+
+        // Remove all block clips.
+        BlockClips.clearClips();
+
+        // Log. (**DEBUG**)
+        if (Variables.DEBUG_LOGS) {
+            LOGGER.debug(MARKER, "HCsCR: Cleared on respawn.");
+        }
 
         // Pop the profiler.
         if (Variables.DEBUG_PROFILER) {

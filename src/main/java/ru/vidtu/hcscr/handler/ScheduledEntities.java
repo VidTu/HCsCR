@@ -312,12 +312,12 @@ public final class ScheduledEntities {
     /**
      * Clears all entities from {@link #SCHEDULED}. Does nothing if there are no entities.
      * <p>
-     * Should be called when a level is changed in {@link MinecraftMixin}.
+     * Should be called on respawn in {@link HCsCR#respawn(Minecraft)}.
      *
      * @see #SCHEDULED
      * @see #scheduleAt(Entity, long)
      * @see #unschedule(Entity)
-     * @see MinecraftMixin
+     * @see HCsCR#respawn(Minecraft)
      */
     public static void unscheduleAll() {
         // Validate.

@@ -489,6 +489,8 @@ public final class Config {
                 if (entity instanceof net.minecraft.world.entity.Interaction) return true;
                 //?}
 
+                // TODO(VidTu): This is a preprocessing edgecase that can be simplified
+                //  using local replacements after Forge 1.16.5 is dealt with.
                 //? if >=26.2 {
                 //noinspection SimplifiableIfStatement // <- Preprocessor.
                 if ((entity instanceof net.minecraft.world.entity.monster.cubemob.AbstractCubeMob) && entity.isInvisibleTo(player)) return true; // Implicit NPE for 'player'

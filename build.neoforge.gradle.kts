@@ -75,9 +75,15 @@ sc {
     // Stonecutter property path.
     properties.tags(mcv, "neoforge")
 
+    // Stonecutter replacements.
+    replacements.string(false) { // mcp < "1.19.2" = false
+        replace("Component.translatable(", "new net.minecraft.network.chat.TranslatableComponent(")
+    }
+
     // Stonecutter swaps.
+    swaps["assign_profiler"] = if (mcp >= "1.21.3") "$1 = net.minecraft.util.profiling.Profiler.get();" else "$1 = $2.getProfiler();"
+    swaps["remove_entity"] = "$1.discard();" // NeoForge is always >=1.17.1.
     swaps["set_screen"] = if (mcp >= "26.2") "$1.gui.setScreen($2);" else "$1.setScreen($2);"
-    swaps["remove_entity"] = "$1.discard();"
 }
 
 // Set up runs.

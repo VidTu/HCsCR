@@ -53,7 +53,6 @@ import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import ru.vidtu.hcscr.compile.Variables;
-import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -104,7 +103,7 @@ public final class ConfigScreen extends Screen {
     @Contract(pure = true)
     public ConfigScreen(@Nullable final Screen parent) {
         // Call super.
-        super(HStonecutter.translate("hcscr.title"));
+        super(Component.translatable("hcscr.title"));
 
         // Assign.
         this.parent = parent;
@@ -130,8 +129,8 @@ public final class ConfigScreen extends Screen {
         // "Enable" checkbox.
         /*non-final*/ int index = 0;
         final int centerX = (this.width / 2);
-        this.addRenderableWidget(this.createCheckbox(centerX, calculateWidgetY(index++), HStonecutter.translate("hcscr.enable"), // Implicit NPE for 'font'
-                HStonecutter.translate("hcscr.enable.tip"), Config.enable(), Config::enable));
+        this.addRenderableWidget(this.createCheckbox(centerX, calculateWidgetY(index++), Component.translatable("hcscr.enable"), // Implicit NPE for 'font'
+                Component.translatable("hcscr.enable.tip"), Config.enable(), Config::enable));
 
         // "Crystals" cycle-button.
         final int buttonX = (centerX - 100);
@@ -146,19 +145,19 @@ public final class ConfigScreen extends Screen {
         }));
 
         // "Crystals Delay" slider.
-        final IntFunction<Component> crystalsDelayMessage = (final int delay) -> HStonecutter.translate("options.generic_value",
-                HStonecutter.translate("hcscr.crystalsDelay"), (delay > 0) ? HStonecutter.translate(
-                        "hcscr.delay.format", delay / 1_000_000) : HStonecutter.translate("hcscr.delay.off"));
+        final IntFunction<Component> crystalsDelayMessage = (final int delay) -> Component.translatable("options.generic_value",
+                Component.translatable("hcscr.crystalsDelay"), (delay > 0) ? Component.translatable(
+                        "hcscr.delay.format", delay / 1_000_000) : Component.translatable("hcscr.delay.off"));
         this.addRenderableWidget(this.createSlider(buttonX, calculateWidgetY(index++), 200, 20,
-                crystalsDelayMessage, HStonecutter.translate("hcscr.crystalsDelay.tip"),
+                crystalsDelayMessage, Component.translatable("hcscr.crystalsDelay.tip"),
                 Config.crystalsDelay(), 0, 200_000_000, Config::crystalsDelay));
 
         // "Crystals Resync" slider.
-        final IntFunction<Component> crystalsResyncMessage = (final int resync) -> HStonecutter.translate("options.generic_value",
-                HStonecutter.translate("hcscr.crystalsResync"), (resync > 0) ? HStonecutter.translate(
-                        "hcscr.delay.format", resync * 50) : HStonecutter.translate("hcscr.delay.off"));
+        final IntFunction<Component> crystalsResyncMessage = (final int resync) -> Component.translatable("options.generic_value",
+                Component.translatable("hcscr.crystalsResync"), (resync > 0) ? Component.translatable(
+                        "hcscr.delay.format", resync * 50) : Component.translatable("hcscr.delay.off"));
         this.addRenderableWidget(this.createSlider(buttonX, calculateWidgetY(index++), 200, 20,
-                crystalsResyncMessage, HStonecutter.translate("hcscr.crystalsResync.tip"),
+                crystalsResyncMessage, Component.translatable("hcscr.crystalsResync.tip"),
                 Config.crystalsResync(), 0, 50, Config::crystalsResync));
 
         // "Blocks" button.

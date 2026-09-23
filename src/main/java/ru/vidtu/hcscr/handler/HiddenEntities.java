@@ -39,7 +39,6 @@ import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.Constants;
 import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.config.Config;
-import ru.vidtu.hcscr.mixin.MinecraftMixin;
 import ru.vidtu.hcscr.mixin.crystal.EntityMixin;
 
 import java.util.Iterator;
@@ -368,13 +367,13 @@ public final class HiddenEntities {
     /**
      * Clears all entities from {@link #HIDDEN}. Does nothing if there are no entities.
      * <p>
-     * Should be called when a level is changed in {@link MinecraftMixin}.
+     * Should be called on respawn in {@link HCsCR#respawn(Minecraft)}.
      *
      * @see #HIDDEN
      * @see #isHidden(Entity)
      * @see #hideFor(Entity, int)
      * @see #show(Entity)
-     * @see MinecraftMixin
+     * @see HCsCR#respawn(Minecraft)
      */
     public static void showAll() {
         // Validate.

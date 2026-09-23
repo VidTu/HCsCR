@@ -25,7 +25,7 @@
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-
+import net.minecraft.network.chat.Component;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -170,7 +170,7 @@ public final class HNeoForge {
                 }
 
                 // Close the connection.
-                context.disconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'context'
+                context.disconnect(Component.translatable("hcscr.false")); // Implicit NPE for 'context'
             });
         });
         //?} elif >=1.20.4 {
@@ -225,7 +225,7 @@ public final class HNeoForge {
                 }
 
                 // Close the connection.
-                handler.disconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'handler'
+                handler.disconnect(Component.translatable("hcscr.false")); // Implicit NPE for 'handler'
             });
         });
         ^///?} else {
@@ -251,7 +251,7 @@ public final class HNeoForge {
             if (Variables.DEBUG_ASSERTS) {
                 assert (connection != null) : "HCsCR: Connection is null. (event: " + event + ", source: " + source + ')';
             }
-            connection.disconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'connection'
+            connection.disconnect(Component.translatable("hcscr.false")); // Implicit NPE for 'connection'
         });
         ^///?}
 

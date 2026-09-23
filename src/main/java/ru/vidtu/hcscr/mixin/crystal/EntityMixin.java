@@ -36,7 +36,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.handler.HiddenEntities;
-import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
  * Mixin that disables the bounding box for entities

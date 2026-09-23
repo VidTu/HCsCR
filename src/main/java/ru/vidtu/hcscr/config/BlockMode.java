@@ -27,7 +27,6 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 import ru.vidtu.hcscr.handler.BlockClips;
-import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.util.Locale;
 
@@ -89,8 +88,8 @@ public enum BlockMode {
         final String key = ("hcscr.blocks." + this.name().toLowerCase(Locale.ROOT));
 
         // Create the components.
-        this.label = HStonecutter.translate("options.generic_value", HStonecutter.translate("hcscr.blocks"), HStonecutter.translate(key.intern()));
-        this.tip = HStonecutter.translate((key + ".tip").intern());
+        this.label = Component.translatable("options.generic_value", Component.translatable("hcscr.blocks"), Component.translatable(key.intern()));
+        this.tip = Component.translatable((key + ".tip").intern());
     }
 
     /**

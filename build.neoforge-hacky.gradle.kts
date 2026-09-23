@@ -70,8 +70,15 @@ sc {
     properties.tags("1.20.1", "neoforge")
 
     // Stonecutter swaps.
-    swaps["set_screen"] = "$1.setScreen($2);"
+    // Hacky NeoForge is always =1.20.1.
+    swaps["assign_profiler"] = "$1 = $2.getProfiler();"
     swaps["remove_entity"] = "$1.discard();"
+    swaps["set_screen"] = "$1.setScreen($2);"
+
+    // Stonecutter replacements.
+    replacements.string(false) { // mcp < "1.19.2" = false
+        replace("Component.translatable(", "new net.minecraft.network.chat.TranslatableComponent(")
+    }
 }
 
 legacyForge {
@@ -87,7 +94,7 @@ legacyForge {
         // Enable recompilation for CI.
         // NOTE: Bin-patching produces uncompilable artifacts for
         // NeoForge 1.20.1, at least for HCsCR. Specifically, it
-        // has issues with anonymous classes in HStonecutter.java.
+        // has issues with anonymous classes in ConfigScreen.java.
         setDisableRecompilation(false)
     }
 

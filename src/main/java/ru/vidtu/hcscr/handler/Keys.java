@@ -41,7 +41,6 @@ import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.config.Config;
 import ru.vidtu.hcscr.config.ConfigScreen;
-import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
  * Handling logic for the mod's keys. (aka key bindings or key mappings)
@@ -248,7 +247,7 @@ public final class Keys {
             final boolean newState = Config.toggle();
 
             // Show the action bar message, play the sound.
-            final Component message = HStonecutter.translate("hcscr." + newState)
+            final Component message = Component.translatable("hcscr." + newState)
                     .withStyle(newState ? ChatFormatting.GREEN : ChatFormatting.RED)
                     .withStyle(ChatFormatting.BOLD);
             //~ if >=26.2 'gui' -> 'gui.hud' {

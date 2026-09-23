@@ -28,7 +28,6 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
-import ru.vidtu.hcscr.platform.HStonecutter;
 
 import java.util.Locale;
 
@@ -91,8 +90,8 @@ public enum CrystalMode {
         final String key = ("hcscr.crystals." + this.name().toLowerCase(Locale.ROOT));
 
         // Create the components.
-        this.label = HStonecutter.translate("options.generic_value", HStonecutter.translate("hcscr.crystals"), HStonecutter.translate(key.intern()));
-        this.tip = HStonecutter.translate((key + ".tip").intern());
+        this.label = Component.translatable("options.generic_value", Component.translatable("hcscr.crystals"), Component.translatable(key.intern()));
+        this.tip = Component.translatable((key + ".tip").intern());
     }
 
     /**

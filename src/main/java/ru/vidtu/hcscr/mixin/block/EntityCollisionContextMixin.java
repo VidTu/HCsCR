@@ -38,7 +38,6 @@ import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.config.BlockMode;
 import ru.vidtu.hcscr.config.Config;
 import ru.vidtu.hcscr.extension.EntityCollisionContextExtension;
-import ru.vidtu.hcscr.platform.HStonecutter;
 
 /^*
  * Mixin that stored the source entity of {@link EntityCollisionContext} for

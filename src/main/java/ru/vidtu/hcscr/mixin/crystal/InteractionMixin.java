@@ -41,7 +41,6 @@ import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.config.Config;
 import ru.vidtu.hcscr.config.CrystalMode;
-import ru.vidtu.hcscr.platform.HStonecutter;
 
 /**
  * Mixin that allows interaction entities (1.19.4+) to be hit,

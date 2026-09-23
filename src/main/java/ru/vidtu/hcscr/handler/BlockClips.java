@@ -39,7 +39,6 @@ import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.config.Config;
 import ru.vidtu.hcscr.config.BlockMode;
-import ru.vidtu.hcscr.mixin.MinecraftMixin;
 import ru.vidtu.hcscr.mixin.block.AbstractBedBlockMixin;
 import ru.vidtu.hcscr.mixin.block.BlockBehaviour_BlockStateBaseMixin;
 import ru.vidtu.hcscr.mixin.block.ClientPacketListenerMixin;
@@ -320,13 +319,13 @@ public final class BlockClips {
     /**
      * Clears all clips from {@link #CLIPS}. Does nothing if there are no clips.
      * <p>
-     * Should be called when a level is changed in {@link MinecraftMixin}.
+     * Should be called on respawn in {@link HCsCR#respawn(Minecraft)}.
      *
      * @see #CLIPS
      * @see #shouldClip(BlockPos)
      * @see #addClip(BlockPos, BlockState)
      * @see #removeClip(BlockPos)
-     * @see MinecraftMixin
+     * @see HCsCR#respawn(Minecraft)
      */
     public static void clearClips() {
         // Validate.

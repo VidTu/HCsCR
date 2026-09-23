@@ -35,7 +35,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.Variables;
 import ru.vidtu.hcscr.platform.HPlugin;
-import ru.vidtu.hcscr.platform.HStonecutter;
 
 /^*
  * Mixin that speeds up entity removing via {@link HCsCR#hit(Player, Entity, DamageSource, float)}

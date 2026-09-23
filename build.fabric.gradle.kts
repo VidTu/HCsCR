@@ -80,8 +80,14 @@ sc {
     properties.tags(mcv, "fabric")
 
     // Stonecutter swaps.
-    swaps["set_screen"] = if (mcp >= "26.2") "$1.gui.setScreen($2);" else "$1.setScreen($2);"
+    swaps["assign_profiler"] = if (mcp >= "1.21.3") "$1 = net.minecraft.util.profiling.Profiler.get();" else "$1 = $2.getProfiler();"
     swaps["remove_entity"] = if (mcp >= "1.17.1") "$1.discard();" else "$1.remove();"
+    swaps["set_screen"] = if (mcp >= "26.2") "$1.gui.setScreen($2);" else "$1.setScreen($2);"
+
+    // Stonecutter replacements.
+    replacements.string(mcp < "1.19.2") {
+        replace("Component.translatable(", "new net.minecraft.network.chat.TranslatableComponent(")
+    }
 }
 
 loom {

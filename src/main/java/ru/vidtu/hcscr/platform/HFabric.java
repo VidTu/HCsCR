@@ -29,6 +29,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
@@ -156,7 +157,7 @@ public final class HFabric implements ClientModInitializer {
             }
 
             // Close the connection.
-            sender.disconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'sender'
+            sender.disconnect(Component.translatable("hcscr.false")); // Implicit NPE for 'sender'
         });
         ClientPlayNetworking.registerGlobalReceiver(type, (final CustomPacketPayload payload, final ClientPlayNetworking.Context context) -> {
             // Validate.
@@ -171,7 +172,7 @@ public final class HFabric implements ClientModInitializer {
             }
 
             // Close the connection.
-            sender.disconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'sender'
+            sender.disconnect(Component.translatable("hcscr.false")); // Implicit NPE for 'sender'
         });
         //?} elif >=1.20.2 {
         /*ClientConfigurationNetworking.registerGlobalReceiver(HCsCR.CHANNEL, (final Minecraft client, final ClientConfigurationPacketListenerImpl handler, final FriendlyByteBuf buf, final PacketSender responseSender) -> {
@@ -184,7 +185,7 @@ public final class HFabric implements ClientModInitializer {
             }
 
             // Close the connection.
-            handler.onDisconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'handler'
+            handler.onDisconnect(Component.translatable("hcscr.false")); // Implicit NPE for 'handler'
         });
         ClientPlayNetworking.registerGlobalReceiver(HCsCR.CHANNEL, (final Minecraft client, final ClientPacketListener handler, final FriendlyByteBuf buf, final PacketSender responseSender) -> {
             // Validate.
@@ -196,7 +197,7 @@ public final class HFabric implements ClientModInitializer {
             }
 
             // Close the connection.
-            handler.onDisconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'handler'
+            handler.onDisconnect(Component.translatable("hcscr.false")); // Implicit NPE for 'handler'
         });
         *///?} else {
         /*ClientPlayNetworking.registerGlobalReceiver(HCsCR.CHANNEL, (final Minecraft client, final ClientPacketListener handler, final FriendlyByteBuf buf, final PacketSender responseSender) -> {
@@ -209,7 +210,7 @@ public final class HFabric implements ClientModInitializer {
             }
 
             // Close the connection.
-            handler.onDisconnect(HStonecutter.translate("hcscr.false")); // Implicit NPE for 'handler'
+            handler.onDisconnect(Component.translatable("hcscr.false")); // Implicit NPE for 'handler'
         });
         *///?}
 
