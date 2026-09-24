@@ -2,7 +2,7 @@
   "26.4": {
     "fabric": {
       "api": "0.161.1+26.4",
-      "modmenu": "21.0.0-beta.1",
+      "modmenu": "21.0.0",
       "minecraft": "26.4-snapshot-1",
       "constraints": "26.4-alpha.1"
     }
