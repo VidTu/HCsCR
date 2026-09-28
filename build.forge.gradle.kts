@@ -22,13 +22,13 @@
 
 // This is the Forge loader buildscript. It is processed by the
 // Stonecutter multiple times, for each version. (compiled once)
-// Based on ForgeGradle and processes the preparation/complation/building
+// Based on ForgeGradle, it processes the preparation/complation/building
 // of the most of the mod that is not covered by the Stonecutter or Blossom.
 // See "build.fabric.gradle.kts" for Fabric.
-// See "build.neoforge.gradle.kts" for NeoForge.
-// See "build.neoforge-hacky.gradle.kts" for NeoForge ugly hack for 1.20.1.
-// See "stonecutter.gradle.kts" for the Stonecutter configuration.
-// See "settings.gradle.kts" for the Gradle configuration.
+// See "build.neoforge.gradle.kts" for NeoForge 1.20.2+.
+// See "build.neoforge-old.gradle.kts" for NeoForge 1.20.1.
+// See "stonecutter.gradle.kts" for Stonecutter.
+// See "settings.gradle.kts" for Gradle.
 
 import com.google.gson.Gson
 import com.google.gson.JsonElement
@@ -62,6 +62,7 @@ val javaVersion = JavaVersion.toVersion(javaTarget)
 java {
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
+    // Don't require Java 16 on the system. (we will still compile for it, see below for the "-release" target)
     val javaToolchain = if (javaTarget == 16) 17 else javaTarget
     toolchain.languageVersion = JavaLanguageVersion.of(javaToolchain)
 }
@@ -83,7 +84,6 @@ sc {
     // Stonecutter constants.
     constants["fabric"] = false
     constants["forge"] = true
-    constants["hacky_neoforge"] = false
     constants["neoforge"] = false
 
     // Stonecutter property path.
@@ -91,18 +91,23 @@ sc {
 
     // Stonecutter swaps.
     swaps["assign_profiler"] = if (mcp >= "1.21.3") "$1 = net.minecraft.util.profiling.Profiler.get();" else "$1 = $2.getProfiler();"
+    swaps["extract_level"] = if (mcp >= "1.20.1") "final $1 $2 = $3.level();" else "final $1 $2 = $3.level;"
     swaps["remove_entity"] = if (mcp >= "1.17.1") "$1.discard();" else "$1.remove();"
     swaps["set_screen"] = if (mcp >= "26.2") "$1.gui.setScreen($2);" else "$1.setScreen($2);"
 
     // Stonecutter replacements.
-    replacements.string(mcp < "1.19.2") {
-        replace("Component.translatable(", "new net.minecraft.network.chat.TranslatableComponent(")
+    replacements.string(mcp >= "1.21.11") {
+        replace("ResourceLocation", "Identifier")
+    }
+    replacements.string(mcp >= "1.19.2") {
+        replace("new net.minecraft.network.chat.TranslatableComponent(", "Component.translatable(")
     }
 
     // Define MCP replacements.
     // TODO(VidTu): This is SUPREMELY bad. Figure out a better solution.
     replacements.string(mcp <= "1.16.5") {
         replace("new net.minecraft.network.chat.TranslatableComponent(", "new net.minecraft.util.text.TranslationTextComponent(")
+        replace("Identifier", "ResourceLocation")
         val remaps = Properties()
         FileInputStream(rootDir.resolve("dev/mcp.properties")).use { remaps.load(it) }
         remaps.forEach { mojmap, mcp ->
@@ -236,7 +241,7 @@ tasks.withType<JavaCompile> {
         doLast {
             Strip(destinationDirectory.get().asFile, classpath).use { strip ->
                 destinationDirectory.asFileTree
-                    .filter { (it.name != "package-info.class" && it.name.endsWith(".class")) }
+                    .filter { ((it.name != "package-info.class") && it.name.endsWith(".class")) }
                     .forEach { strip.stripBytecode(it) }
             }
         }
@@ -278,9 +283,11 @@ tasks.withType<ProcessResources> {
     inputs.property("forgeUpdaterUrl", "https://raw.githubusercontent.com/VidTu/HCsCR/main/updater_hcscr_forge.json")
 
     // Expand Mixin Java version. Forge is full of edge-cases covered here.
-    val mixinJava = if (mcp >= "26.1.2") 21
-    else if (mcp eq "1.20.6") 18
-    else javaTarget
+    val mixinJava = when {
+        (mcp >= "26.1.2") -> 21 // Non-Fabric Mixin 0.8.7 included in Forge doesn't have JAVA_25 as its target.
+        (mcp eq "1.20.6") -> 18 // Non-Fabric Mixin 0.8.5 included in Forge 1.20.6 doesn't have JAVA_21 as its target.
+        else -> javaTarget
+    }
     inputs.property("mixinJava", mixinJava)
 
     // Expand version and dependencies.
@@ -330,7 +337,7 @@ tasks.withType<Jar> {
 }
 
 if (mcp >= "1.20.6") {
-    // Output into "build/libs" instead of "versions/<ver>/build/libs".
+    // Output into "build/libs" instead of "versions/<version>/build/libs".
     tasks.withType<Jar> {
         destinationDirectory = rootProject.layout.buildDirectory.file("libs").get().asFile
     }
@@ -356,7 +363,7 @@ if (mcp >= "1.20.6") {
         }
     }
 
-    // Output remapped JAR into "build/libs" instead of "versions/<ver>/build/libs".
+    // Output remapped JAR into "build/libs" instead of "versions/<version>/build/libs".
     tasks.withType<RenameJar> {
         output = rootProject.layout.buildDirectory.file("libs").get().asFile.resolve("HCsCR-${version}.jar")
     }

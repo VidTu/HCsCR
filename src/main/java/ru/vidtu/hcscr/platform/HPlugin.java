@@ -20,7 +20,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-//? if forge || hacky_neoforge {
+//? if forge || (neoforge && 1.20.1) {
 /*package ru.vidtu.hcscr.platform;
 
 import com.google.errorprone.annotations.DoNotCall;

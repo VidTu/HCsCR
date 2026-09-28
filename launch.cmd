@@ -30,5 +30,5 @@ if "%~1"=="" (
 
 :: Launch.
 echo SCRIPT: Launching '%1'...
-cmd.exe /C gradlew.bat "-Dru.vidtu.hcscr.only=%1" "%1:runClient"
+cmd.exe /C gradlew.bat "-Dru.vidtu.hcscr.single=%1" "%1:runClient"
 echo SCRIPT: Launch for '%1' exited with code %ERRORLEVEL%.

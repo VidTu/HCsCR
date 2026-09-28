@@ -56,8 +56,7 @@ import ru.vidtu.hcscr.config.ConfigScreen;
 @NullMarked
 public final class Keys {
     //? if >=1.21.10 {
-        //~ if >=1.21.11 'ResourceLocation' -> 'Identifier' {
-            //~ if neoforge 'KeyMapping.Category.register' -> 'new KeyMapping.Category' {
+        //~ if neoforge 'KeyMapping.Category.register' -> 'new KeyMapping.Category' {
     /**
      * Key category for {@link #CONFIG} and {@link #TOGGLE}.
      *
@@ -65,7 +64,6 @@ public final class Keys {
      * @see #TOGGLE
      */
     public static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(net.minecraft.resources.Identifier.fromNamespaceAndPath("hcscr", "root"));
-            //~}
         //~}
     //?}
 

@@ -106,6 +106,22 @@ public final class Constants {
     public static final int MSPT = 50;
 
     /**
+     * A height (Y) padding from the top in scaled pixels for screens.
+     * <p>
+     * Equals to {@code 12} scaled pixels.
+     */
+    @CompileTimeConstant
+    public static final int PADDING_TOP = 12;
+
+    /**
+     * A height (Y) padding from the bottom in scaled pixels for screens.
+     * <p>
+     * Equals to {@code 4} scaled pixels.
+     */
+    @CompileTimeConstant
+    public static final int PADDING_BOTTOM = 4;
+
+    /**
      * A width in scaled pixels for all UI widgets.
      * <p>
      * Equals to {@code 200} scaled pixels.

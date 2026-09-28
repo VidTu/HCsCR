@@ -30,5 +30,5 @@ if "%~1"=="" (
 
 :: Build.
 echo SCRIPT: Building '%1'...
-cmd.exe /C gradlew.bat "-Dru.vidtu.hcscr.only=%1" "%1:assemble"
+cmd.exe /C gradlew.bat "-Dru.vidtu.hcscr.single=%1" "%1:assemble"
 echo SCRIPT: Build for '%1' exited with code %ERRORLEVEL%.

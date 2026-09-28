@@ -29,7 +29,7 @@ echo SCRIPT: Launching all versions...
 for /D %%F in (versions\*) do (
     :: Launch.
     echo SCRIPT: Launching '%%~nxF'...
-    cmd.exe /c gradlew.bat "-Dru.vidtu.hcscr.only=%%~nxF" "%%~nxF:runClient"
+    cmd.exe /c gradlew.bat "-Dru.vidtu.hcscr.single=%%~nxF" "%%~nxF:runClient"
     echo SCRIPT: Launch for '%%~nxF' exited with code !ERRORLEVEL!.
     if not !ERRORLEVEL!==0 (
         echo SCRIPT: Non-zero exit code. Press any key to continue, terminate ^(CTRL+C^) to cancel.

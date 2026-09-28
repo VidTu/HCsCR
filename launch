@@ -32,5 +32,5 @@ fi
 
 # Launch.
 echo "SCRIPT: Launching '${1}'..."
-./gradlew "-Dru.vidtu.hcscr.only=${1}" "${1}:runClient" && true
+./gradlew "-Dru.vidtu.hcscr.single=${1}" "${1}:runClient" && true
 echo "SCRIPT: Launch for '${1}' exited with code ${?}."

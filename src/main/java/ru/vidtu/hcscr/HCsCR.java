@@ -32,6 +32,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.resources.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
@@ -69,12 +70,10 @@ public final class HCsCR {
     /**
      * A channel identifier for servers to know that this mod is installed.
      */
-    //? if >=1.21.11 {
-    public static final net.minecraft.resources.Identifier CHANNEL = net.minecraft.resources.Identifier.fromNamespaceAndPath("hcscr", "imhere");
-    //?} elif >=1.21.1 || (forge && (!hacky_neoforge) && >=1.18.2 && (!1.20.2)) {
-    /*public static final net.minecraft.resources.ResourceLocation CHANNEL = net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("hcscr", "imhere");
-    *///?} else {
-    /*public static final net.minecraft.resources.ResourceLocation CHANNEL = new net.minecraft.resources.ResourceLocation("hcscr", "imhere");
+    //? if >=1.21.1 || (forge && >=1.18.2 && (!1.20.2)) {
+    public static final Identifier CHANNEL = Identifier.fromNamespaceAndPath("hcscr", "imhere");
+    //?} else {
+    /*public static final Identifier CHANNEL = new Identifier("hcscr", "imhere");
     *///?}
 
     /**

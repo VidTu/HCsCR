@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "compatibilityLevel": "JAVA_${mixinJava}",
   "package": "ru.vidtu.hcscr.mixin",
-  //? if forge || hacky_neoforge {
+  //? if forge || (neoforge && 1.20.1) {
   /*"plugin": "ru.vidtu.hcscr.platform.HPlugin",
   *///?}
   //? if forge && <1.20.6 {
@@ -22,7 +22,7 @@
     //? if >=1.19.4 {
     "crystal.InteractionMixin",
     //?}
-    //? if forge || hacky_neoforge {
+    //? if forge || (neoforge && 1.20.1) {
     /*"crystal.PlayerMixin_E",
     "crystal.PlayerMixin_M"
     *///?} else {

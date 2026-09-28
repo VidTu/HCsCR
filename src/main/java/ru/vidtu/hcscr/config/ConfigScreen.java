@@ -172,8 +172,8 @@ public final class ConfigScreen extends Screen {
         }));
 
         // "Done" button.
-        this.addRenderableWidget(this.createButton(buttonX, this.height - 28, Constants.WIDGET_WIDTH,
-                Constants.WIDGET_HEIGHT, CommonComponents.GUI_DONE, null, 
+        this.addRenderableWidget(this.createButton(buttonX, this.height - Constants.PADDING_BOTTOM - Constants.WIDGET_GAP,
+                Constants.WIDGET_WIDTH, Constants.WIDGET_HEIGHT, CommonComponents.GUI_DONE, null,
                 (final Button ignoredButton, final Consumer<Component> ignoredTipSetter) -> this.onClose()));
             //~}
         //~}
@@ -248,11 +248,11 @@ public final class ConfigScreen extends Screen {
 
         // Render the title.
         //? if >=26.1.2 {
-        graphics.centeredText(font, this.title, this.width / 2, 12, 0xFF_FF_FF_FF); // Implicit NPE for 'font'
+        graphics.centeredText(font, this.title, this.width / 2, Constants.PADDING_TOP, 0xFF_FF_FF_FF); // Implicit NPE for 'font'
         //?} elif >=1.20.1 {
-        /*graphics.drawCenteredString(font, this.title, this.width / 2, 12, 0xFF_FF_FF_FF); // Implicit NPE for 'font'
+        /*graphics.drawCenteredString(font, this.title, this.width / 2, Constants.PADDING_TOP, 0xFF_FF_FF_FF); // Implicit NPE for 'font'
         *///?} else {
-        /*drawCenteredString(graphics, font, this.title, this.width / 2, 12, 0xFF_FF_FF_FF); // Implicit NPE for 'font'
+        /*drawCenteredString(graphics, font, this.title, this.width / 2, Constants.PADDING_TOP, 0xFF_FF_FF_FF); // Implicit NPE for 'font'
         *///?}
 
         // Render the deferred tooltip. (pre-1.19.4)
@@ -635,6 +635,6 @@ public final class ConfigScreen extends Screen {
         }
 
         // Calculate.
-        return (36 + (index * (Constants.WIDGET_HEIGHT + Constants.WIDGET_GAP)));
+        return ((Constants.PADDING_TOP + Constants.WIDGET_GAP) + (index * (Constants.WIDGET_HEIGHT + Constants.WIDGET_GAP)));
     }
 }

@@ -31,7 +31,7 @@ for LAUNCH_FOLDER in versions/*; do
 
     # Launch.
     echo "SCRIPT: Launching '${LAUNCH_VERSION}'..."
-    ./gradlew "-Dru.vidtu.hcscr.only=${LAUNCH_VERSION}" "${LAUNCH_VERSION}:runClient" && true
+    ./gradlew "-Dru.vidtu.hcscr.single=${LAUNCH_VERSION}" "${LAUNCH_VERSION}:runClient" && true
     LAUNCH_EXIT="${?}"
     echo "SCRIPT: Launch for '${LAUNCH_VERSION}' exited with code ${LAUNCH_EXIT}."
     [ "${LAUNCH_EXIT}" -ne 0 ] && echo 'SCRIPT: Non-zero exit code. Press Enter to continue, terminate (CTRL+C) to cancel.' && read -r _

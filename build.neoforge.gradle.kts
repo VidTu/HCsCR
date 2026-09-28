@@ -20,15 +20,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// This is the NeoForge loader buildscript. It is processed by the
-// Stonecutter multiple times, for each version and each loader. (compiled once)
-// Based on NeoGradle and processes the preparation/complation/building
+// This is the NeoForge (1.20.2+) loader buildscript. It is processed
+// by the Stonecutter multiple times, for each version. (compiled once)
+// Based on NeoGradle, processes the preparation/complation/building
 // of the most of the mod that is not covered by the Stonecutter or Blossom.
 // See "build.fabric.gradle.kts" for Fabric.
 // See "build.forge.gradle.kts" for Forge.
-// See "build.neoforge-hacky.gradle.kts" for NeoForge ugly hack for 1.20.1.
-// See "stonecutter.gradle.kts" for the Stonecutter configuration.
-// See "settings.gradle.kts" for the Gradle configuration.
+// See "build.neoforge-old.gradle.kts" for NeoForge 1.20.1.
+// See "stonecutter.gradle.kts" for Stonecutter.
+// See "settings.gradle.kts" for Gradle.
 
 import com.google.gson.Gson
 import com.google.gson.JsonElement
@@ -69,19 +69,22 @@ sc {
     // Stonecutter constants.
     constants["fabric"] = false
     constants["forge"] = false
-    constants["hacky_neoforge"] = false
     constants["neoforge"] = true
 
     // Stonecutter property path.
     properties.tags(mcv, "neoforge")
 
     // Stonecutter replacements.
-    replacements.string(false) { // mcp < "1.19.2" = false
-        replace("Component.translatable(", "new net.minecraft.network.chat.TranslatableComponent(")
+    replacements.string(mcp >= "1.21.11") {
+        replace("ResourceLocation", "Identifier")
+    }
+    replacements.string(true) { // (mcp >= "1.19.2") = true
+        replace("new net.minecraft.network.chat.TranslatableComponent(", "Component.translatable(")
     }
 
     // Stonecutter swaps.
     swaps["assign_profiler"] = if (mcp >= "1.21.3") "$1 = net.minecraft.util.profiling.Profiler.get();" else "$1 = $2.getProfiler();"
+    swaps["extract_level"] = "final $1 $2 = $3.level();" // NeoForge is always >=1.20.1.
     swaps["remove_entity"] = "$1.discard();" // NeoForge is always >=1.17.1.
     swaps["set_screen"] = if (mcp >= "26.2") "$1.gui.setScreen($2);" else "$1.setScreen($2);"
 }
@@ -153,7 +156,7 @@ tasks.withType<JavaCompile> {
             doLast {
                 Strip(destinationDirectory.get().asFile, classpath).use { strip ->
                     destinationDirectory.asFileTree
-                        .filter { (it.name != "package-info.class" && it.name.endsWith(".class")) }
+                        .filter { ((it.name != "package-info.class") && it.name.endsWith(".class")) }
                         .forEach { strip.stripBytecode(it) }
                 }
             }
@@ -246,7 +249,7 @@ tasks.withType<Jar> {
     }
 }
 
-// Output into "build/libs" instead of "versions/<ver>/build/libs".
+// Output into "build/libs" instead of "versions/<version>/build/libs".
 tasks.withType<Jar> {
     destinationDirectory = rootProject.layout.buildDirectory.file("libs").get().asFile
 }

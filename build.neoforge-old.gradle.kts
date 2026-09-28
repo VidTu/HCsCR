@@ -20,15 +20,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// This is the NeoForge loader buildscript. It is processed by the
-// Stonecutter multiple times, for each version and each loader. (compiled once)
-// Based on ModDevGradle and processes the preparation/complation/building
+// This is the NeoForge (1.20.1) loader buildscript. It is processed
+// by the Stonecutter multiple times, for each version. (compiled once)
+// Based on Legacy ModDevGradle, processes the preparation/complation/building
 // of the most of the mod that is not covered by the Stonecutter or Blossom.
 // See "build.fabric.gradle.kts" for Fabric.
 // See "build.forge.gradle.kts" for Forge.
-// See "build.neoforge.gradle.kts" for NeoForge.
-// See "stonecutter.gradle.kts" for the Stonecutter configuration.
-// See "settings.gradle.kts" for the Gradle configuration.
+// See "build.neoforge.gradle.kts" for NeoForge 1.20.2+.
+// See "stonecutter.gradle.kts" for Stonecutter.
+// See "settings.gradle.kts" for Gradle.
 
 // NeoForge 1.20.1 is a piece of hacky mess that's basically Forge 1.20.1 with
 // a "95% OFF" discount. It is loosely Forge, but not Forge. It uses Forge
@@ -62,31 +62,34 @@ description = "Remove your end crystals before the server even knows you hit 'em
 sc {
     // Stonecutter constants.
     constants["fabric"] = false
-    constants["forge"] = true // Yes, that's correct for NeoForge 1.20.1.
-    constants["hacky_neoforge"] = true // And that's extremely correct.
-    constants["neoforge"] = false // Yes, that's also correct.
+    constants["forge"] = false
+    constants["neoforge"] = true
 
     // Stonecutter property path.
     properties.tags("1.20.1", "neoforge")
 
     // Stonecutter swaps.
-    // Hacky NeoForge is always =1.20.1.
+    // Old NeoForge is always =1.20.1.
     swaps["assign_profiler"] = "$1 = $2.getProfiler();"
+    swaps["extract_level"] = "final $1 $2 = $3.level();"
     swaps["remove_entity"] = "$1.discard();"
     swaps["set_screen"] = "$1.setScreen($2);"
 
     // Stonecutter replacements.
-    replacements.string(false) { // mcp < "1.19.2" = false
-        replace("Component.translatable(", "new net.minecraft.network.chat.TranslatableComponent(")
+    replacements.string(false) { // (mcp >= "1.21.11") = false
+        replace("ResourceLocation", "Identifier")
+    }
+    replacements.string(true) { // (mcp >= "1.19.2") = true
+        replace("new net.minecraft.network.chat.TranslatableComponent(", "Component.translatable(")
     }
 }
 
 legacyForge {
     // Minecraft and NeoForge.
     val neoforge = "${property("loader")}"
-    require(neoforge.isNotBlank() && neoforge != "null") { "NeoForge (Hacky) version is not provided via 'loader' in ${project}." }
+    require(neoforge.isNotBlank() && neoforge != "null") { "Old NeoForge version is not provided via 'loader' in ${project}." }
     val extractedMinecraft = neoforge.substringBefore('-')
-    require(extractedMinecraft == "1.20.1") { "NeoForge (Hacky) version '${neoforge}' provides Minecraft ${extractedMinecraft} in ${project}, but we want 1.20.1." }
+    require(extractedMinecraft == "1.20.1") { "Old NeoForge version '${neoforge}' provides Minecraft ${extractedMinecraft} in ${project}, but we want 1.20.1." }
     enable {
         // Set the version.
         neoForgeVersion = neoforge
@@ -182,7 +185,7 @@ tasks.withType<JavaCompile> {
         doLast {
             Strip(destinationDirectory.get().asFile, classpath).use { strip ->
                 destinationDirectory.asFileTree
-                    .filter { (it.name != "package-info.class" && it.name.endsWith(".class")) }
+                    .filter { ((it.name != "package-info.class") && it.name.endsWith(".class")) }
                     .forEach { strip.stripBytecode(it) }
             }
         }
@@ -270,7 +273,7 @@ tasks.withType<Jar> {
     }
 }
 
-// Output into "build/libs" instead of "versions/<ver>/build/libs".
+// Output into "build/libs" instead of "versions/<version>/build/libs".
 tasks.withType<Jar> {
     destinationDirectory = rootProject.layout.buildDirectory.file("libs").get().asFile
 }

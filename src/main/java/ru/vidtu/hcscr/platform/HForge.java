@@ -20,7 +20,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-//? if forge {
+//? if forge || (neoforge && 1.20.1) {
 /*package ru.vidtu.hcscr.platform;
 
 import net.minecraft.client.Minecraft;
@@ -41,7 +41,7 @@ import ru.vidtu.hcscr.config.Config;
 import ru.vidtu.hcscr.config.ConfigScreen;
 import ru.vidtu.hcscr.handler.Keys;
 
-//? if hacky_neoforge {
+//? if neoforge {
 /^import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
@@ -168,7 +168,7 @@ public final class HForge {
      ^/
     private static final Logger LOGGER = LogManager.getLogger("HCsCR/HForge");
 
-    //? if hacky_neoforge {
+    //? if neoforge {
     /^/^¹*
      * Creates and loads a new mod.
      *
@@ -282,7 +282,7 @@ public final class HForge {
         /^final EventBus<RegisterKeyMappingsEvent> bus = RegisterKeyMappingsEvent.BUS;
         ^///?} elif >=1.21.8 {
         final EventBus<RegisterKeyMappingsEvent> bus = RegisterKeyMappingsEvent.getBus(ctx.getModBusGroup()); // Implicit NPE for 'ctx'
-        //?} elif !hacky_neoforge {
+        //?} elif !neoforge {
         /^final IEventBus bus = ctx.getModEventBus(); // Implicit NPE for 'ctx'
         ^///?}
         //? if >=1.19.2 {
@@ -378,7 +378,7 @@ public final class HForge {
         ^///?}
 
         // Register the config screen.
-        //? if hacky_neoforge {
+        //? if neoforge {
         /^container.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((final Minecraft mcClient, final Screen modsScreen) -> {
             // Validate.
             if (Variables.DEBUG_ASSERTS) {

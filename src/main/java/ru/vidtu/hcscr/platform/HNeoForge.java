@@ -20,7 +20,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-//? if neoforge {
+//? if neoforge && !1.20.1 {
 /*package ru.vidtu.hcscr.platform;
 
 import net.minecraft.client.Minecraft;
