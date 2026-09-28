@@ -36,7 +36,7 @@ import java.util.Locale;
  *
  * @author VidTu
  * @apiNote Internal use only
- * @see CrystalMode
+ * @see BlockMode
  * @see Config#crystals()
  * @see Config#shouldProcess(Player, Entity)
  */

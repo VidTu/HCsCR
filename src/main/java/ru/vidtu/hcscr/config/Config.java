@@ -76,11 +76,9 @@ public final class Config {
     /**
      * HCsCR config file.
      */
-    //? if fabric {
+    //~ if fabric 'FMLPaths.CONFIGDIR.get()' -> 'FabricLoader.getInstance().getConfigDir()' {
     private static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve("hcscr.json");
-    //?} else {
-    /*private static final Path FILE = FMLPaths.CONFIGDIR.get().resolve("hcscr.json");
-    *///?}
+    //~}
 
     /**
      * GSON instance for configuration loading/saving.
@@ -223,6 +221,7 @@ public final class Config {
             // Write the config.
             Files.createDirectories(FILE.getParent());
             try (final BufferedWriter writer = Files.newBufferedWriter(FILE)) {
+                // Save the config.
                 GSON.toJson(new Config(), writer);
             }
 
