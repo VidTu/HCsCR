@@ -240,6 +240,7 @@ public final class HCsCR {
      * @see Config#crystalsResync()
      * @see Config#crystalsDelay()
      */
+    @SuppressWarnings({"deprecation", "RedundantSuppression"}) // <- Forge 1.16.5 for Entity.removed.
     public static boolean hit(final Player player, final Entity entity, final DamageSource source, final float amount) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {

@@ -52,6 +52,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
+import ru.vidtu.hcscr.compile.Constants;
 import ru.vidtu.hcscr.compile.Variables;
 
 import java.util.List;
@@ -71,15 +72,14 @@ import java.util.function.IntFunction;
 @NullMarked
 public final class ConfigScreen extends Screen {
     /**
-     * A duration for tooltips in version-dependant units. Currently {@code 250} milliseconds.
+     * A duration the mouse has to be hovered on the widget for the tooltip to appear.
+     *
+     * @see Constants#TOOLTIP_DURATION_MILLISECONDS
+     * @see Constants#TOOLTIP_DURATION_NANOSECONDS
      */
     //? if >=1.20.6 {
-    private static final java.time.Duration TOOLTIP_DURATION = java.time.Duration.ofMillis(250L);
-    //?} elif >=1.19.4 {
-    /*private static final int TOOLTIP_DURATION = 250; // Milliseconds.
-    *///?} else {
-    /*private static final long TOOLTIP_DURATION = 250_000_000L; // Nanoseconds.
-    *///?}
+    private static final java.time.Duration TOOLTIP_DURATION = java.time.Duration.ofMillis(Constants.TOOLTIP_DURATION_MILLISECONDS);
+    //?}
 
     /**
      * Parent screen, {@code null} if none.
@@ -133,9 +133,9 @@ public final class ConfigScreen extends Screen {
                 Component.translatable("hcscr.enable.tip"), Config.enable(), Config::enable));
 
         // "Crystals" cycle-button.
-        final int buttonX = (centerX - 100);
+        final int buttonX = (centerX - (Constants.WIDGET_WIDTH / 2));
         final CrystalMode crystals = Config.crystals();
-        this.addRenderableWidget(this.createButton(buttonX, calculateWidgetY(index++), 200, 20, crystals.label(), crystals.tip(), (final Button button, final Consumer<Component> tipSetter) -> {
+        this.addRenderableWidget(this.createButton(buttonX, calculateWidgetY(index++), Constants.WIDGET_WIDTH, Constants.WIDGET_HEIGHT, crystals.label(), crystals.tip(), (final Button button, final Consumer<Component> tipSetter) -> {
             // Update the config.
             final CrystalMode newCrystals = Config.cycleCrystals(/*back=*/minecraft.hasShiftDown()); // Implicit NPE for 'minecraft'
 
@@ -146,23 +146,23 @@ public final class ConfigScreen extends Screen {
 
         // "Crystals Delay" slider.
         final IntFunction<Component> crystalsDelayMessage = (final int delay) -> Component.translatable("options.generic_value",
-                Component.translatable("hcscr.crystalsDelay"), (delay > 0) ? Component.translatable(
-                        "hcscr.delay.format", delay / 1_000_000) : Component.translatable("hcscr.delay.off"));
-        this.addRenderableWidget(this.createSlider(buttonX, calculateWidgetY(index++), 200, 20,
-                crystalsDelayMessage, Component.translatable("hcscr.crystalsDelay.tip"),
-                Config.crystalsDelay(), 0, 200_000_000, Config::crystalsDelay));
+                Component.translatable("hcscr.crystalsDelay"), (delay != 0) ? Component.translatable("hcscr.delay.format",
+                        delay / Constants.CRYSTALS_DELAY_RESOLUTION) : Component.translatable("hcscr.delay.off"));
+        this.addRenderableWidget(this.createSlider(buttonX, calculateWidgetY(index++), Constants.WIDGET_WIDTH,
+                Constants.WIDGET_HEIGHT, crystalsDelayMessage, Component.translatable("hcscr.crystalsDelay.tip"),
+                Config.crystalsDelay(), Constants.MIN_CRYSTALS_DELAY, Constants.MAX_CRYSTALS_DELAY, Config::crystalsDelay));
 
         // "Crystals Resync" slider.
         final IntFunction<Component> crystalsResyncMessage = (final int resync) -> Component.translatable("options.generic_value",
-                Component.translatable("hcscr.crystalsResync"), (resync > 0) ? Component.translatable(
-                        "hcscr.delay.format", resync * 50) : Component.translatable("hcscr.delay.off"));
-        this.addRenderableWidget(this.createSlider(buttonX, calculateWidgetY(index++), 200, 20,
-                crystalsResyncMessage, Component.translatable("hcscr.crystalsResync.tip"),
-                Config.crystalsResync(), 0, 50, Config::crystalsResync));
+                Component.translatable("hcscr.crystalsResync"), (resync != 0) ? Component.translatable(
+                        "hcscr.delay.format", resync * Constants.MSPT) : Component.translatable("hcscr.delay.off"));
+        this.addRenderableWidget(this.createSlider(buttonX, calculateWidgetY(index++), Constants.WIDGET_WIDTH,
+                Constants.WIDGET_HEIGHT, crystalsResyncMessage, Component.translatable("hcscr.crystalsResync.tip"),
+                Config.crystalsResync(), Constants.MIN_CRYSTALS_RESYNC, Constants.MAX_CRYSTALS_RESYNC, Config::crystalsResync));
 
         // "Blocks" button.
         final BlockMode blocks = Config.blocks();
-        this.addRenderableWidget(this.createButton(buttonX, calculateWidgetY(index++), 200, 20, blocks.label(), blocks.tip(), (final Button button, final Consumer<Component> tipSetter) -> {
+        this.addRenderableWidget(this.createButton(buttonX, calculateWidgetY(index++), Constants.WIDGET_WIDTH, Constants.WIDGET_HEIGHT, blocks.label(), blocks.tip(), (final Button button, final Consumer<Component> tipSetter) -> {
             // Update the blocks.
             final BlockMode newBlocks = Config.cycleBlocks(/*back=*/minecraft.hasShiftDown()); // Implicit NPE for 'minecraft'
 
@@ -172,7 +172,8 @@ public final class ConfigScreen extends Screen {
         }));
 
         // "Done" button.
-        this.addRenderableWidget(this.createButton(buttonX, this.height - 28, 200, 20, CommonComponents.GUI_DONE, null, 
+        this.addRenderableWidget(this.createButton(buttonX, this.height - 28, Constants.WIDGET_WIDTH,
+                Constants.WIDGET_HEIGHT, CommonComponents.GUI_DONE, null, 
                 (final Button ignoredButton, final Consumer<Component> ignoredTipSetter) -> this.onClose()));
             //~}
         //~}
@@ -288,8 +289,8 @@ public final class ConfigScreen extends Screen {
             assert ((x >= -320) && (x <= screenWidth)) : "HCsCR: Parameter 'x' is not in the [" + -320 + ".." + screenWidth + "] range. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", screen: " + this + ')';
             final int screenHeight = Math.max(this.height, 240);
             assert ((y >= -240) && (y <= screenHeight)) : "HCsCR: Parameter 'y' is not in the [" + -240 + ".." + screenHeight + "] range. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", screen: " + this + ')';
-            assert (width == 200) : "HCsCR: Parameter 'width' is not 200. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", screen: " + this + ')';
-            assert (height == 20) : "HCsCR: Parameter 'height' is 20. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", screen: " + this + ')';
+            assert (width == Constants.WIDGET_WIDTH) : "HCsCR: Parameter 'width' is not " + Constants.WIDGET_WIDTH + ". (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", screen: " + this + ')';
+            assert (height == Constants.WIDGET_HEIGHT) : "HCsCR: Parameter 'height' is " + Constants.WIDGET_HEIGHT + ". (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", screen: " + this + ')';
             assert (message != null) : "HCsCR: Parameter 'message' is null. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", tooltip: " + tooltip + ", handler: " + handler + ", screen: " + this + ')';
             assert (handler != null) : "HCsCR: Parameter 'handler' is null. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", screen: " + this + ')';
             assert (font != null) : "HCsCR: Font is null. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", message: " + message + ", tooltip: " + tooltip + ", handler: " + handler + ", screen: " + this + ')';
@@ -319,15 +320,17 @@ public final class ConfigScreen extends Screen {
                     return;
                 }
                 innerButton.setTooltip(Tooltip.create(newTip));
+            //~ if >=1.20.6 'Constants.TOOLTIP_DURATION_MILLISECONDS' -> 'TOOLTIP_DURATION' {
                 innerButton.setTooltipDelay(TOOLTIP_DURATION);
             });
         }).bounds(x, y, width, height).build();
         if (tooltip == null) return button;
         button.setTooltip(Tooltip.create(tooltip));
         button.setTooltipDelay(TOOLTIP_DURATION);
+            //~}
         return button;
         //?} else {
-        /*final MutableObject<List<FormattedCharSequence>> tipHolder = new MutableObject<>((tooltip == null) ? null : font.split(tooltip, 170)); // Implicit NPE for 'font'
+        /*final MutableObject<List<FormattedCharSequence>> tipHolder = new MutableObject<>((tooltip == null) ? null : font.split(tooltip, Constants.TOOLTIP_WIDTH)); // Implicit NPE for 'font'
         return new Button(x, y, width, height, message, (final Button innerButton) -> {
             // Validate.
             if (Variables.DEBUG_ASSERTS) {
@@ -343,7 +346,7 @@ public final class ConfigScreen extends Screen {
                 }
 
                 // Set the tooltip.
-                tipHolder.setValue((newTip == null) ? null : font.split(newTip, 170));
+                tipHolder.setValue((newTip == null) ? null : font.split(newTip, Constants.TOOLTIP_WIDTH));
             });
         }) {
             /^*
@@ -371,7 +374,7 @@ public final class ConfigScreen extends Screen {
                 }
 
                 // Button is not hovered for enough time.
-                if ((System.nanoTime() - this.lastAway) < TOOLTIP_DURATION) return;
+                if ((System.nanoTime() - this.lastAway) < Constants.TOOLTIP_DURATION_NANOSECONDS) return;
 
                 // Render (defer) the tooltip.
                 ConfigScreen.this.tooltip = tipHolder.getValue();
@@ -412,7 +415,7 @@ public final class ConfigScreen extends Screen {
 
         // Create.
         //? if >=1.20.4 {
-        final Checkbox box = Checkbox.builder(message, font).pos(x - ((font.width(message) + 24) / 2), y).selected(check).onValueChange((final Checkbox innerBox, final boolean value) -> {  // Implicit NPE for 'message', 'font'
+        final Checkbox box = Checkbox.builder(message, font).pos(x - ((font.width(message) + (Constants.CHECKBOX_SIZE + Constants.WIDGET_GAP)) / 2), y).selected(check).onValueChange((final Checkbox innerBox, final boolean value) -> {  // Implicit NPE for 'message', 'font'
             // Validate.
             if (Variables.DEBUG_ASSERTS) {
                 assert (innerBox != null) : "HCsCR: Parameter 'innerBox' is null. (innerBox: " + innerBox + ", value: " + value + ')';
@@ -423,8 +426,8 @@ public final class ConfigScreen extends Screen {
             handler.accept(value); // Implicit NPE for 'handler'
         }).build();
         //?} else {
-        /*final int width = font.width(message) + 24; // Implicit NPE for 'font', 'message'
-        final Checkbox box = new Checkbox(x - (width / 2), y, width, 20, message, check) {
+        /*final int width = (font.width(message) + (Constants.CHECKBOX_SIZE + Constants.WIDGET_GAP)); // Implicit NPE for 'font', 'message'
+        final Checkbox box = new Checkbox(x - (width / 2), y, width, Constants.WIDGET_HEIGHT, message, check) {
             @Override
             public void onPress() {
                 // Validate.
@@ -441,9 +444,11 @@ public final class ConfigScreen extends Screen {
 
             //? if <1.19.4 {
             /^/^¹*
-             * A tooltip split to {@code 170} scaled pixels wide, a value used in modern versions.
+             * A tooltip, split into lines to look like in modern versions.
+             *
+             * @see Constants#TOOLTIP_WIDTH
              ¹^/
-            private final List<FormattedCharSequence> tip = font.split(tooltip, 170); // Implicit NPE for 'tooltip'
+            private final List<FormattedCharSequence> tip = font.split(tooltip, Constants.TOOLTIP_WIDTH); // Implicit NPE for 'tooltip'
 
             /^¹*
              * Last time when the mouse was NOT over this checkbox in units of {@link System#nanoTime()}.
@@ -470,7 +475,7 @@ public final class ConfigScreen extends Screen {
                 }
 
                 // Checkbox is not hovered for enough time.
-                if ((System.nanoTime() - this.lastAway) < TOOLTIP_DURATION) return;
+                if ((System.nanoTime() - this.lastAway) < Constants.TOOLTIP_DURATION_NANOSECONDS) return;
 
                 // Render (defer) the tooltip.
                 ConfigScreen.this.tooltip = this.tip;
@@ -480,7 +485,9 @@ public final class ConfigScreen extends Screen {
         *///?}
         //? if >=1.19.4 {
         box.setTooltip(Tooltip.create(tooltip)); // Implicit NPE for 'tooltip'
+            //~ if >=1.20.6 'Constants.TOOLTIP_DURATION_MILLISECONDS' -> 'TOOLTIP_DURATION' {
         box.setTooltipDelay(TOOLTIP_DURATION);
+            //~}
         //?}
         return box;
     }
@@ -512,8 +519,8 @@ public final class ConfigScreen extends Screen {
             assert ((x >= -320) && (x <= screenWidth)) : "HCsCR: Parameter 'x' is not in the [" + -320 + ".." + screenWidth + "] range. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", screen: " + this + ')';
             final int screenHeight = Math.max(this.height, 240);
             assert ((y >= -240) && (y <= screenHeight)) : "HCsCR: Parameter 'y' is not in the [" + -240 + ".." + screenHeight + "] range. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", screen: " + this + ')';
-            assert (width == 200) : "HCsCR: Parameter 'width' is not 200. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", screen: " + this + ')';
-            assert (height == 20) : "HCsCR: Parameter 'height' is 20. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", screen: " + this + ')';
+            assert (width == Constants.WIDGET_WIDTH) : "HCsCR: Parameter 'width' is not " + Constants.WIDGET_WIDTH + ". (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", screen: " + this + ')';
+            assert (height == Constants.WIDGET_HEIGHT) : "HCsCR: Parameter 'height' is " + Constants.WIDGET_HEIGHT + ". (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", screen: " + this + ')';
             assert (provider != null) : "HCsCR: Parameter 'provider' is null. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", screen: " + this + ')';
             assert (tooltip != null) : "HCsCR: Parameter 'tooltip' is null. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", screen: " + this + ')';
             assert (max > min) : "HCsCR: Parameter 'min' <= 'max'. (x: " + x + ", y: " + y + ", width: " + width + ", height: " + height + ", provider: " + provider + ", tooltip: " + tooltip + ", value: " + value + ", min: " + min + ", max: " + max + ", handler: " + handler + ", screen: " + this + ')';
@@ -556,9 +563,11 @@ public final class ConfigScreen extends Screen {
 
             //? if <1.19.4 {
             /*/^*
-             * A tooltip split to {@code 170} scaled pixels wide, a value used in modern versions.
+             * A tooltip, split into lines to look like in modern versions.
+             *
+             * @see Constants#TOOLTIP_WIDTH
              ^/
-            private final List<FormattedCharSequence> tip = font.split(tooltip, 170); // Implicit NPE for 'font', 'tooltip'
+            private final List<FormattedCharSequence> tip = font.split(tooltip, Constants.TOOLTIP_WIDTH); // Implicit NPE for 'font', 'tooltip'
 
             /^*
              * Last time when the mouse was NOT over this slider in units of {@link System#nanoTime()}.
@@ -585,7 +594,7 @@ public final class ConfigScreen extends Screen {
                 }
 
                 // Slider is not hovered for enough time.
-                if ((System.nanoTime() - this.lastAway) < TOOLTIP_DURATION) return;
+                if ((System.nanoTime() - this.lastAway) < Constants.TOOLTIP_DURATION_NANOSECONDS) return;
 
                 // Render (defer) the tooltip.
                 ConfigScreen.this.tooltip = this.tip;
@@ -594,7 +603,9 @@ public final class ConfigScreen extends Screen {
         };
         //? if >=1.19.4 {
         slider.setTooltip(Tooltip.create(tooltip)); // Implicit NPE for 'tooltip'
+            //~ if >=1.20.6 'Constants.TOOLTIP_DURATION_MILLISECONDS' -> 'TOOLTIP_DURATION' {
         slider.setTooltipDelay(TOOLTIP_DURATION);
+            //~}
         //?}
         return slider;
     }
@@ -624,6 +635,6 @@ public final class ConfigScreen extends Screen {
         }
 
         // Calculate.
-        return (36 + (index * 24));
+        return (36 + (index * (Constants.WIDGET_HEIGHT + Constants.WIDGET_GAP)));
     }
 }

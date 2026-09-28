@@ -80,6 +80,7 @@ public final class PlayerMixin_M {
      * @apiNote Do not call, called by Mixin
      * @see HCsCR#hit(Player, Entity, DamageSource, float)
      ^/
+    @SuppressWarnings({"deprecation", "RedundantSuppression"}) // <- Entity.hurtOrSimulate() is deprecated but we're overriding it.
     @DoNotCall("Called by Mixin")
     //~ if >=1.21.3 'hurt' -> 'hurtOrSimulate' {
     @Redirect(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurtOrSimulate(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
