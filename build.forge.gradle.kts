@@ -107,7 +107,6 @@ sc {
     // TODO(VidTu): This is SUPREMELY bad. Figure out a better solution.
     replacements.string(mcp <= "1.16.5") {
         replace("new net.minecraft.network.chat.TranslatableComponent(", "new net.minecraft.util.text.TranslationTextComponent(")
-        replace("Identifier", "ResourceLocation")
         val remaps = Properties()
         FileInputStream(rootDir.resolve("dev/mcp.properties")).use { remaps.load(it) }
         remaps.forEach { mojmap, mcp ->
