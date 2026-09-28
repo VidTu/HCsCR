@@ -263,7 +263,7 @@ public final class ScheduledEntities {
             }
         } else {
             // Put.
-            SCHEDULED.put(entity, deadline);
+            SCHEDULED.putIfAbsent(entity, deadline);
         }
     }
 
