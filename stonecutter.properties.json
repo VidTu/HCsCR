@@ -1,10 +1,10 @@
 {
   "26.4": {
     "fabric": {
-      "api": "0.161.1+26.4",
+      "api": "0.161.2+26.4",
       "modmenu": "22.0.0-alpha.1",
-      "minecraft": "26.4-snapshot-1",
-      "constraints": "26.4-alpha.1"
+      "minecraft": "26.4-snapshot-2",
+      "constraints": "26.4-alpha.2"
     }
   },
   "26.3": {
@@ -17,7 +17,7 @@
       "constraints": "[66,67)"
     },
     "neoforge": {
-      "loader": "26.3.0.33-beta",
+      "loader": "26.3.0.37-beta",
       "constraints": "[26.3.0,26.3.1)"
     }
   },
