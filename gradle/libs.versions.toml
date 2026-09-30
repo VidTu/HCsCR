@@ -31,7 +31,7 @@ jspecify = "1.0.1"
 log4j = "2.26.1"
 mixin = "0.8.7"
 mixinextras = "0.5.5"
-moddevgradle = "2.0.147"
+moddevgradle = "2.0.148"
 neogradle = "7.1.39"
 
 [plugins]
