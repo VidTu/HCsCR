@@ -32,7 +32,12 @@ import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
+// TODO(VidTu): Forge 1.16.5 preprocessing edge case. (see build.forge.gradle.kts)
+//? if forge && 1.16.5 {
+/*import net.minecraft.util.ResourceLocation;
+*///? } else {
 import net.minecraft.resources.Identifier;
+//?}  
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;

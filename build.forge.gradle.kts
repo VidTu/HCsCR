@@ -104,7 +104,7 @@ sc {
     }
 
     // Define MCP replacements.
-    // TODO(VidTu): This is SUPREMELY bad. Figure out a better solution.
+    // FIXME(VidTu): This is SUPREMELY bad. Figure out a better solution.
     replacements.string(mcp <= "1.16.5") {
         replace("new net.minecraft.network.chat.TranslatableComponent(", "new net.minecraft.util.text.TranslationTextComponent(")
         val remaps = Properties()
