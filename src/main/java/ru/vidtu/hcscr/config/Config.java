@@ -35,7 +35,6 @@ import net.fabricmc.loader.api.FabricLoader;
 *///?}
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.entity.player.Player;
@@ -194,8 +193,8 @@ public final class Config {
         } finally {
             // Clamp. (to avoid invalid values)
             crystals = MoreObjects.firstNonNull(crystals, CrystalMode.DEFAULT);
-            crystalsDelay = Mth.clamp(((crystalsDelay / Constants.CRYSTALS_DELAY_RESOLUTION) * Constants.CRYSTALS_DELAY_RESOLUTION), Constants.MIN_CRYSTALS_DELAY, Constants.MAX_CRYSTALS_DELAY);
-            crystalsResync = Mth.clamp(crystalsResync, Constants.MIN_CRYSTALS_RESYNC, Constants.MAX_CRYSTALS_RESYNC);
+            crystalsDelay = Math.clamp(((crystalsDelay / Constants.CRYSTALS_DELAY_RESOLUTION) * Constants.CRYSTALS_DELAY_RESOLUTION), Constants.MIN_CRYSTALS_DELAY, Constants.MAX_CRYSTALS_DELAY);
+            crystalsResync = Math.clamp(crystalsResync, Constants.MIN_CRYSTALS_RESYNC, Constants.MAX_CRYSTALS_RESYNC);
             blocks = MoreObjects.firstNonNull(blocks, BlockMode.DEFAULT);
         }
     }
@@ -367,7 +366,7 @@ public final class Config {
         }
 
         // Set. (with clamping)
-        Config.crystalsDelay = Mth.clamp(((crystalsDelay / Constants.CRYSTALS_DELAY_RESOLUTION) * Constants.CRYSTALS_DELAY_RESOLUTION), Constants.MIN_CRYSTALS_DELAY, Constants.MAX_CRYSTALS_DELAY);
+        Config.crystalsDelay = Math.clamp(((crystalsDelay / Constants.CRYSTALS_DELAY_RESOLUTION) * Constants.CRYSTALS_DELAY_RESOLUTION), Constants.MIN_CRYSTALS_DELAY, Constants.MAX_CRYSTALS_DELAY);
     }
 
     /**
@@ -410,7 +409,7 @@ public final class Config {
         }
 
         // Set. (with clamping)
-        Config.crystalsResync = Mth.clamp(crystalsResync, Constants.MIN_CRYSTALS_RESYNC, Constants.MAX_CRYSTALS_RESYNC);
+        Config.crystalsResync = Math.clamp(crystalsResync, Constants.MIN_CRYSTALS_RESYNC, Constants.MAX_CRYSTALS_RESYNC);
     }
 
     /**

@@ -76,6 +76,9 @@ sc {
     swaps["set_screen"] = "$1.setScreen($2);"
 
     // Stonecutter replacements.
+    replacements.string(false) { // (mcp >= "26.4") = false
+        replace("net.minecraft.util.Mth.clamp", "Math.clamp")
+    }
     replacements.string(false) { // (mcp >= "1.21.11") = false
         replace("ResourceLocation", "Identifier")
     }
