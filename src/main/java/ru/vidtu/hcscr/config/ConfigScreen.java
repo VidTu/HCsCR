@@ -127,7 +127,7 @@ public final class ConfigScreen extends Screen {
         }
 
         // "Enable" checkbox.
-        /*non-final*/ int index = 0;
+        /*non-final*/ int index = 1; // Title counts as a widget, starting at 1 instead of 0.
         final int centerX = (this.width / 2);
         this.addRenderableWidget(this.createCheckbox(centerX, calculateWidgetY(index++), Component.translatable("hcscr.enable"), // Implicit NPE for 'font'
                 Component.translatable("hcscr.enable.tip"), Config.enable(), Config::enable));
@@ -172,8 +172,9 @@ public final class ConfigScreen extends Screen {
         }));
 
         // "Done" button.
-        this.addRenderableWidget(this.createButton(buttonX, this.height - Constants.PADDING_BOTTOM - Constants.WIDGET_GAP,
-                Constants.WIDGET_WIDTH, Constants.WIDGET_HEIGHT, CommonComponents.GUI_DONE, null,
+        this.addRenderableWidget(this.createButton(buttonX, this.height - Constants.PADDING_BOTTOM -
+                Constants.WIDGET_HEIGHT - Constants.WIDGET_GAP, Constants.WIDGET_WIDTH,
+                Constants.WIDGET_HEIGHT, CommonComponents.GUI_DONE, null,
                 (final Button ignoredButton, final Consumer<Component> ignoredTipSetter) -> this.onClose()));
             //~}
         //~}
@@ -631,7 +632,7 @@ public final class ConfigScreen extends Screen {
     private static int calculateWidgetY(final int index) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
-            assert ((index >= 0) && (index <= 8)) : "HCsCR: Parameter 'index' is not in the [0..8] range. (index: " + index + ')';
+            assert ((index >= 1) && (index <= 5)) : "HCsCR: Parameter 'index' is not in the [1..5] range. (index: " + index + ')';
         }
 
         // Calculate.
