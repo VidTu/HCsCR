@@ -86,11 +86,11 @@ sc {
     swaps["set_screen"] = if (mcp >= "26.2") "$1.gui.setScreen($2);" else "$1.setScreen($2);"
 
     // Stonecutter replacements.
-    replacements.string(mcp >= "26.4") {
-        replace("net.minecraft.util.Mth.clamp", "Math.clamp")
-    }
     replacements.string(mcp >= "1.21.11") {
         replace("ResourceLocation", "Identifier")
+    }
+    replacements.string(mcp >= "1.20.6") {
+        replace("net.minecraft.util.Mth.clamp", "Math.clamp")
     }
     replacements.string(mcp >= "1.19.2") {
         replace("new net.minecraft.network.chat.TranslatableComponent", "Component.translatable")

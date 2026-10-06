@@ -75,11 +75,11 @@ sc {
     properties.tags(mcv, "neoforge")
 
     // Stonecutter replacements.
-    replacements.string(mcp >= "26.4") {
-        replace("net.minecraft.util.Mth.clamp", "Math.clamp")
-    }
     replacements.string(mcp >= "1.21.11") {
         replace("ResourceLocation", "Identifier")
+    }
+    replacements.string(mcp >= "1.20.6") {
+        replace("net.minecraft.util.Mth.clamp", "Math.clamp")
     }
     replacements.string(true) { // (mcp >= "1.19.2") = true
         replace("new net.minecraft.network.chat.TranslatableComponent(", "Component.translatable(")

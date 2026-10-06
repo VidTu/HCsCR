@@ -76,13 +76,13 @@ sc {
     swaps["set_screen"] = "$1.setScreen($2);"
 
     // Stonecutter replacements.
-    replacements.string(false) { // (mcp >= "26.4") = false
-        replace("net.minecraft.util.Mth.clamp", "Math.clamp")
-    }
-    replacements.string(false) { // (mcp >= "1.21.11") = false
+    replacements.string(false) { // (mcp >= "1.21.11") == false
         replace("ResourceLocation", "Identifier")
     }
-    replacements.string(true) { // (mcp >= "1.19.2") = true
+    replacements.string(false) { // (mcp >= "1.20.6") == false
+        replace("net.minecraft.util.Mth.clamp", "Math.clamp")
+    }
+    replacements.string(true) { // (mcp >= "1.19.2") == true
         replace("new net.minecraft.network.chat.TranslatableComponent(", "Component.translatable(")
     }
 }
