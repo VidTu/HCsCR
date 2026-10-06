@@ -82,7 +82,7 @@ sc {
         replace("net.minecraft.util.Mth.clamp", "Math.clamp")
     }
     replacements.string(true) { // (mcp >= "1.19.2") = true
-        replace("new net.minecraft.network.chat.TranslatableComponent(", "Component.translatable(")
+        replace("new net.minecraft.network.chat.TranslatableComponent", "Component.translatable")
     }
 
     // Stonecutter swaps.

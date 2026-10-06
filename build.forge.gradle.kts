@@ -103,7 +103,7 @@ sc {
         replace("net.minecraft.util.Mth.clamp", "Math.clamp")
     }
     replacements.string(mcp >= "1.19.2") {
-        replace("new net.minecraft.network.chat.TranslatableComponent(", "Component.translatable(")
+        replace("new net.minecraft.network.chat.TranslatableComponent", "Component.translatable")
     }
 
     // Define MCP replacements.
