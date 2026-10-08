@@ -292,10 +292,19 @@ tasks.withType<ProcessResources> {
     }
     inputs.property("mixinJava", mixinJava)
 
-    // Expand version and dependencies.
+    // Expand version, dependencies and platform.
     inputs.property("minecraft", mcv)
     inputs.property("version", version)
     inputs.property("platform", "forge")
+
+    // Expand contributors.
+    val contributors = "${findProperty("contributors")}"
+        .split(',')
+        .map { it.trim() }
+        .joinToString(", ")
+    inputs.property("contributors", contributors)
+
+    // Replace properties.
     filesMatching(listOf("hcscr.mixins.json", "META-INF/mods.toml")) {
         expand(inputs.properties)
     }

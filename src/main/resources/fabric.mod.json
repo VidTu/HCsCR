@@ -8,8 +8,7 @@
     "VidTu"
   ],
   "contributors": [
-    "Offenderify",
-    "libffi"
+    "${contributors}"
   ],
   "contact": {
     "homepage": "https://modrinth.com/mod/hcscr",

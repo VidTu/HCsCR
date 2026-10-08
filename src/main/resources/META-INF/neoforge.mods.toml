@@ -35,7 +35,7 @@ itemIcon = "end_crystal"
 logoFile = "hcscr.png"
 logoBlur = true
 iconFile = "hcscr.png"
-credits = "Offenderify, libffi"
+credits = "${contributors}"
 authors = "VidTu"
 description = "Remove your end crystals before the server even knows you hit 'em!"
 
