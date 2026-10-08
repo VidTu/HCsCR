@@ -110,8 +110,8 @@ public final class ClientPacketListenerMixin {
 
         // TODO(VidTu): Logging.
 
-        // Do nothing, if the level is null. Servers might send this packet,
-        // it's important that either both or neither we/vanilla fuck up.
+        // Do nothing, if the level is null. Servers might send this packet illegaly,
+        // it's important that we don't get the blame for erroring if level is null.
         final Level level = this.level;
         if (level == null) return;
 
