@@ -28,7 +28,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 //? if fabric {
 import net.fabricmc.loader.api.FabricLoader;
-//?} elif neoforge {
+//?} elif neoforge && !1.20.1 {
 /*import net.neoforged.fml.loading.FMLPaths;
 *///?} else {
 /*import net.minecraftforge.fml.loading.FMLPaths;

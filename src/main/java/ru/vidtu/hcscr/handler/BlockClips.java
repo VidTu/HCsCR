@@ -67,7 +67,7 @@ public final class BlockClips {
      * <p>
      * The validity is checked in {@link #tick(Minecraft, ProfilerFiller)}. If a block position's (key)
      * state (value) is not matching the real state (every tick), then it is removed from the map.
-     * 
+     *
      * @see #tick(Minecraft, ProfilerFiller)
      * @see #shouldClip(BlockPos)
      * @see #addClip(BlockPos, BlockState)

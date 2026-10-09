@@ -55,7 +55,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 //?} elif >=1.20.4 {
 /^import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.fml.IExtensionPoint;
 import net.neoforged.neoforge.client.ConfigScreenHandler;
 import net.neoforged.neoforge.event.TickEvent;
@@ -191,7 +191,7 @@ public final class HNeoForge {
 
                 @Contract(pure = true)
                 @Override
-                public ResourceLocation id() {
+                public Identifier id() {
                     return HCsCR.CHANNEL;
                 }
 

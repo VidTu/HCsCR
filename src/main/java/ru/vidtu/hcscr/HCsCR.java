@@ -37,7 +37,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 // TODO(VidTu): Forge 1.16.5 preprocessing edge case. (see build.forge.gradle.kts)
 //? if forge && 1.16.5 {
-/*import net.minecraft.util.ResourceLocation;
+/*import net.minecraft.util.Identifier;
 *///? } else {
 import net.minecraft.resources.Identifier;
 //?}

@@ -108,7 +108,8 @@ sc {
     // Define MCP replacements.
     // FIXME(VidTu): This is SUPREMELY bad. Figure out a better solution.
     replacements.string(mcp <= "1.16.5") {
-        replace("new net.minecraft.network.chat.TranslatableComponent(", "new net.minecraft.util.text.TranslationTextComponent(")
+        replace("new net.minecraft.network.chat.TranslatableComponent", "new net.minecraft.util.text.TranslationTextComponent")
+        replace("net.minecraft.util.Mth.clamp", "net.minecraft.util.math.MathHelper.clamp")
         val remaps = Properties()
         FileInputStream(rootDir.resolve("dev/mcp.properties")).use { remaps.load(it) }
         remaps.forEach { mojmap, mcp ->
