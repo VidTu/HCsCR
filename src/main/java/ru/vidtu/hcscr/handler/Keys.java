@@ -192,7 +192,7 @@ public final class Keys {
 
             // Open the config screen.
             final ConfigScreen screen = new ConfigScreen(null);
-            //$ set_screen client screen
+            //$ set_screen 'client' 'screen'
             client.gui.setScreen(screen);
 
             // Log. (**DEBUG**)

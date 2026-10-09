@@ -469,12 +469,12 @@ public final class Config {
             final Minecraft client = Minecraft.getInstance();
             assert (client.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", player: " + player + ", entity: " + entity + ')';
             final ClientLevel clientLevel = client.level;
-            //~ if >=1.20.1 '.level' -> '.level()' {
+            //$ extract_level 'playerLevel' 'player'
             final Level playerLevel = player.level();
             assert (clientLevel == playerLevel) : "HCsCR: Mismatching levels. (player: " + player + ", entity: " + entity + ", clientLevel: " + clientLevel + ", playerLevel: " + playerLevel + ')';
+            //$ extract_level 'entityLevel' 'entity'
             final Level entityLevel = entity.level();
             assert (playerLevel == entityLevel) : "HCsCR: Mismatching levels. (player: " + player + ", entity: " + entity + ", playerLevel: " + playerLevel + ", entityLevel: " + entityLevel + ')';
-            //~}
         }
 
         // Check depending on the mode.

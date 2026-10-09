@@ -98,9 +98,8 @@ public final class EntityMixin {
     @Inject(method = "getBoundingBox", at = @At("HEAD"), cancellable = true) // HEAD here for early return.
     private void hcscr_getBoundingBox_head(final CallbackInfoReturnable<AABB> cir) {
         // Validate.
-        //~ if >=1.20.1 '.level' -> '.level()' {
+        //$ extract_level 'level' '((Entity) (Object) this)'
         final Level level = ((Entity) (Object) this).level();
-        //~}
         if (Variables.DEBUG_ASSERTS) {
             assert (level != null) : "HCsCR: Level is null. (cir: " + cir + ", entity: " + this + ')';
             // No thread checks, called from either side.

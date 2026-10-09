@@ -196,7 +196,7 @@ public final class ScheduledEntities {
             if (shouldHide) {
                 HiddenEntities.hideFor(entity, resync);
             } else {
-                //$ remove_entity entity
+                //$ remove_entity 'entity'
                 entity.discard();
             }
 
@@ -237,9 +237,8 @@ public final class ScheduledEntities {
             assert (diff >= -2_000_000_000L && diff <= 2_000_000_000L) : "HCsCR: Parameter 'deadline' differs from current time for more than 2 seconds. (entity: " + entity + ", deadline: " + deadline + ", diff: " + diff + ')';
             final Minecraft client = Minecraft.getInstance();
             assert (client.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ", deadline: " + deadline + ')';
-            //~ if >=1.20.1 '.level' -> '.level()' {
+            //$ extract_level 'entityLevel' 'entity'
             final Level entityLevel = entity.level();
-            //~}
             final ClientLevel clientLevel = client.level;
             assert (entityLevel == clientLevel) : "HCsCR: Mismatching levels. (entity: " + entity + ", deadline: " + deadline + ", entityLevel: " + entityLevel + ", clientLevel: " + clientLevel + ')';
             //~ if >=1.17.1 'removed' -> 'isRemoved()' {
@@ -284,9 +283,8 @@ public final class ScheduledEntities {
             assert (entity != null) : "HCsCR: Parameter 'entity' is null. (entity: " + entity + ')';
             final Minecraft client = Minecraft.getInstance();
             assert (client.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ')';
-            //~ if >=1.20.1 '.level' -> '.level()' {
+            //$ extract_level 'entityLevel' 'entity'
             final Level entityLevel = entity.level();
-            //~}
             final ClientLevel clientLevel = client.level;
             assert (entityLevel == clientLevel) : "HCsCR: Mismatching levels. (entity: " + entity + ", entityLevel: " + entityLevel + ", clientLevel: " + clientLevel + ')';
         }

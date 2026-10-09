@@ -86,8 +86,7 @@ sc {
     }
 
     // Stonecutter swaps.
-    swaps["assign_profiler"] = if (mcp >= "1.21.3") "$1 = net.minecraft.util.profiling.Profiler.get();" else "$1 = $2.getProfiler();"
-    swaps["extract_level"] = "final $1 $2 = $3.level();" // NeoForge is always >=1.20.1.
+    swaps["extract_level"] = "final Level $1 = $2.level();" // NeoForge is always >=1.20.1.
     swaps["remove_entity"] = "$1.discard();" // NeoForge is always >=1.17.1.
     swaps["set_screen"] = if (mcp >= "26.2") "$1.gui.setScreen($2);" else "$1.setScreen($2);"
 }

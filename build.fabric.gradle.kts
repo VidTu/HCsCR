@@ -80,8 +80,7 @@ sc {
     properties.tags(mcv, "fabric")
 
     // Stonecutter swaps.
-    swaps["assign_profiler"] = if (mcp >= "1.21.3") "$1 = net.minecraft.util.profiling.Profiler.get();" else "$1 = $2.getProfiler();"
-    swaps["extract_level"] = if (mcp >= "1.20.1") "final $1 $2 = $3.level();" else "final $1 $2 = $3.level;"
+    swaps["extract_level"] = if (mcp >= "1.20.1") "final Level $1 = $2.level();" else "final Level $1 = $2.level;"
     swaps["remove_entity"] = if (mcp >= "1.17.1") "$1.discard();" else "$1.remove();"
     swaps["set_screen"] = if (mcp >= "26.2") "$1.gui.setScreen($2);" else "$1.setScreen($2);"
 

@@ -252,9 +252,8 @@ public final class HiddenEntities {
             assert (entity != null) : "HCsCR: Parameter 'entity' is null. (entity: " + entity + ')';
             final Minecraft client = Minecraft.getInstance();
             assert (client.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ')';
-            //~ if >=1.20.1 '.level' -> '.level()' {
+            //$ extract_level 'level' 'entity'
             final Level level = entity.level();
-            //~}
             assert (level.isClientSide()) : "HCsCR: Server-side level. (entity: " + entity + ", level: " + level + ')';
         }
 
@@ -291,9 +290,8 @@ public final class HiddenEntities {
             assert (ticks == resync) : "HCsCR: Parameter 'ticks' doesn't match config's 'crystalsResync'. (entity: " + entity + ", ticks: " + ticks + ", resync: " + resync + ')';
             final Minecraft client = Minecraft.getInstance();
             assert (client.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ", ticks: " + ticks + ')';
-            //~ if >=1.20.1 '.level' -> '.level()' {
+            //$ extract_level 'entityLevel' 'entity'
             final Level entityLevel = entity.level();
-            //~}
             final ClientLevel clientLevel = client.level;
             assert (entityLevel == clientLevel) : "HCsCR: Mismatching levels. (entity: " + entity + ", ticks: " + ticks + ", entityLevel: " + entityLevel + ", clientLevel: " + clientLevel + ')';
             //~ if >=1.17.1 'removed' -> 'isRemoved()' {
@@ -339,9 +337,8 @@ public final class HiddenEntities {
             assert (entity != null) : "HCsCR: Parameter 'entity' is null. (entity: " + entity + ')';
             final Minecraft client = Minecraft.getInstance();
             assert (client.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", entity: " + entity + ')';
-            //~ if >=1.20.1 '.level' -> '.level()' {
+            //$ extract_level 'entityLevel' 'entity'
             final Level entityLevel = entity.level();
-            //~}
             final ClientLevel clientLevel = client.level;
             assert (entityLevel == clientLevel) : "HCsCR: Mismatching levels. (entity: " + entity + ", entityLevel: " + entityLevel + ", clientLevel: " + clientLevel + ')';
         }

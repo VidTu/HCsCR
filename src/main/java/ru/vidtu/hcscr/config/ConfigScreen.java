@@ -199,7 +199,7 @@ public final class ConfigScreen extends Screen {
         Config.save();
 
         // Close the screen.
-        //$ set_screen minecraft 'this.parent'
+        //$ set_screen 'minecraft' 'this.parent'
         minecraft.gui.setScreen(this.parent);// Implicit NPE for 'minecraft'
     }
 
@@ -213,7 +213,7 @@ public final class ConfigScreen extends Screen {
      * @param tickDelta Current tick delta (not to be confused with the partial tick)
      * @apiNote Do not call, called by Minecraft
      */
-    @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") // <- >=26.1: I refuse to rename 'tickDelta' to 'a'; <26.1: Mojmap didn't provide parameters.
+    @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") // <- Mojmap didn't provide parameter names.
     @DoNotCall("Called by Minecraft")
     @Override
     //? if >=26.1.2 {

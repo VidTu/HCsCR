@@ -118,9 +118,8 @@ public abstract class InteractionMixin extends Entity {
         }
 
         // Validate.
-        //~ if >=1.20.1 '.level' -> '.level()' {
+        //$ extract_level 'level' 'this'
         final Level level = this.level();
-        //~}
         if (Variables.DEBUG_ASSERTS) {
             assert (level != null) : "HCsCR: Interaction level is null. (source: " + source + ", cir: " + cir + ", entity: " + this + ')';
         }

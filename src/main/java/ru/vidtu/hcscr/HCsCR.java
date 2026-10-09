@@ -24,6 +24,9 @@ package ru.vidtu.hcscr;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+//? if >=1.21.3 {
+import net.minecraft.util.profiling.Profiler;
+//?}
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -37,7 +40,7 @@ import net.minecraft.world.phys.AABB;
 /*import net.minecraft.util.ResourceLocation;
 *///? } else {
 import net.minecraft.resources.Identifier;
-//?}  
+//?}
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
@@ -112,6 +115,7 @@ public final class HCsCR {
      * @see HiddenEntities#tick(Minecraft, ProfilerFiller)
      * @see BlockClips#tick(Minecraft, ProfilerFiller)
      */
+    //~ if >=1.21.3 'client.getProfiler' -> 'Profiler.get' {
     public static void tick(final Minecraft client) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
@@ -122,8 +126,7 @@ public final class HCsCR {
         // Get and push the profiler.
         final ProfilerFiller profiler;
         if (Variables.DEBUG_PROFILER) {
-            //$ assign_profiler profiler client
-            profiler = net.minecraft.util.profiling.Profiler.get();
+            profiler = Profiler.get();
             profiler.push("hcscr:tick");
         } else {
             profiler = null;
@@ -162,8 +165,7 @@ public final class HCsCR {
         // Get and push the profiler.
         final ProfilerFiller profiler;
         if (Variables.DEBUG_PROFILER) {
-            //$ assign_profiler profiler client
-            profiler = net.minecraft.util.profiling.Profiler.get();
+            profiler = Profiler.get();
             profiler.push("hcscr:loop");
         } else {
             profiler = null;
@@ -198,8 +200,7 @@ public final class HCsCR {
         // Get and push the profiler.
         final ProfilerFiller profiler;
         if (Variables.DEBUG_PROFILER) {
-            //$ assign_profiler profiler client
-            profiler = net.minecraft.util.profiling.Profiler.get();
+            profiler = Profiler.get();
             profiler.push("hcscr:respawn");
         } else {
             profiler = null;
@@ -229,6 +230,7 @@ public final class HCsCR {
             profiler.pop();
         }
     }
+    //~}
 
     /**
      * Handles the entity hit by a player. Removes the entity client-side or promotes to {@link #SCHEDULED_ENTITIES}, if required.
@@ -311,7 +313,7 @@ public final class HCsCR {
                 // Remove the entity instantly, if there's no resync.
                 final int resync = Config.crystalsResync();
                 if (resync == 0) {
-                    //$ remove_entity entity
+                    //$ remove_entity 'entity'
                     entity.discard();
                     return true;
                 }
@@ -353,10 +355,10 @@ public final class HCsCR {
             // Remove the entities instantly, if there's no resync.
             final int resync = Config.crystalsResync();
             if (resync == 0) {
-                //$ remove_entity entity
+                //$ remove_entity 'entity'
                 entity.discard();
                 for (final Entity other : entities) {
-                    //$ remove_entity other
+                    //$ remove_entity 'other'
                     other.discard();
                 }
                 return true;

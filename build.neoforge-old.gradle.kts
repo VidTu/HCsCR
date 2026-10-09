@@ -70,8 +70,7 @@ sc {
 
     // Stonecutter swaps.
     // Old NeoForge is always =1.20.1.
-    swaps["assign_profiler"] = "$1 = $2.getProfiler();"
-    swaps["extract_level"] = "final $1 $2 = $3.level();"
+    swaps["extract_level"] = "final Level $1 = $2.level();"
     swaps["remove_entity"] = "$1.discard();"
     swaps["set_screen"] = "$1.setScreen($2);"
 
