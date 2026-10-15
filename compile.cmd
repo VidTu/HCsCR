@@ -37,14 +37,14 @@ if /I "%~1"=="legacy" (
     echo SCRIPT: Building in legacy mode...
     cmd.exe /C gradlew.bat -Dru.vidtu.hcscr.legacy=true assemble
     echo SCRIPT: Building in legacy mode exited with code %ERRORLEVEL%.
-    goto :end
+    exit /B 0
 )
 if /I "%~1"=="normal" (
     :: Build in normal mode.
     echo SCRIPT: Building in normal mode...
     cmd.exe /C gradlew.bat assemble
     echo SCRIPT: Building in normal mode exited with code %ERRORLEVEL%.
-    goto :end
+    exit /B 0
 )
 :: Build in single mode.
 echo SCRIPT: Building in single ^('%1'^) mode...
