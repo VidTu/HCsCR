@@ -49,4 +49,4 @@ if /I "%~1"=="normal" (
 :: Build in single mode.
 echo SCRIPT: Building in single ^('%1'^) mode...
 cmd.exe /C gradlew.bat "-Dru.vidtu.hcscr.single=%1" "%1:assemble"
-echo SCRIPT: Build in single ^('%1'^) mode exited with code %ERRORLEVEL%.
+echo SCRIPT: Building in single ^('%1'^) mode exited with code %ERRORLEVEL%.

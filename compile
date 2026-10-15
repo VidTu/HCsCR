@@ -38,15 +38,15 @@ if [ "${1}" = 'legacy' ]; then
     # Build in legacy mode.
     echo 'SCRIPT: Building in legacy mode...'
     ./gradlew -Dru.vidtu.hcscr.legacy=true assemble && true
-    echo "SCRIPT: Build in legacy mode exited with code ${?}."
+    echo "SCRIPT: Building in legacy mode exited with code ${?}."
 elif [ "${1}" = 'normal' ]; then
     # Build in normal mode.
     echo 'SCRIPT: Building in normal mode...'
     ./gradlew assemble && true
-    echo "SCRIPT: Build in normal mode exited with code ${?}."
+    echo "SCRIPT: Building in normal mode exited with code ${?}."
 else
     # Build in single mode.
     echo "SCRIPT: Building in single ('${1}') mode..."
     ./gradlew "-Dru.vidtu.hcscr.single=${1}" "${1}:assemble" && true
-    echo "SCRIPT: Build in single ('${1}') mode exited with code ${?}."
+    echo "SCRIPT: Building in single ('${1}') mode exited with code ${?}."
 fi
