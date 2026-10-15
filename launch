@@ -25,8 +25,8 @@ set -euo pipefail
 
 # Check args.
 if [ "${#}" -eq 0 ]; then
-    echo 'SCRIPT: You must specify the version to launch.'
-    echo 'Example: ./launch 1.20.1-fabric'
+    # Fail.
+    echo 'SCRIPT: You must specify the version to launch. (e.g., "./launch 1.20.1-fabric")'
     exit 2
 fi
 

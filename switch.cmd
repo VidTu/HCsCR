@@ -23,8 +23,8 @@
 
 :: Check args.
 if "%~1"=="" (
-    echo SCRIPT: You must specify the version to switch.
-    echo Example: switch.cmd 1.20.1-fabric
+    :: Fail.
+    echo SCRIPT: You must specify the version to switch. ^(e.g., "switch.cmd 1.20.1-fabric"^)
     exit /b 2
 )
 

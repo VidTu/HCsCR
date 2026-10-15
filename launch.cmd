@@ -23,8 +23,8 @@
 
 :: Check args.
 if "%~1"=="" (
-    echo SCRIPT: You must specify the version to launch.
-    echo Example: launch.cmd 1.20.1-fabric
+    :: Fail.
+    echo SCRIPT: You must specify the version to launch. ^(e.g., "launch.cmd 1.20.1-fabric"^)
     exit /B 2
 )
 

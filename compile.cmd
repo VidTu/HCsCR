@@ -21,10 +21,17 @@
 :: Disable echo.
 @echo off
 
-:: Set local variable scope.
-setlocal
-
 :: Check args.
+if "%~1"=="" (
+    :: Fail.
+    echo SCRIPT: You must specify the mode of execution or the version to build.
+    echo SCRIPT: Normal ^(Beta/Active^): ./compile normal
+    echo SCRIPT: Legacy ^(Beta/Active/Legacy^): ./compile legacy
+    echo SCRIPT: Single: ./compile ^<version^> ^(e.g., "./compile 1.20.1-fabric"^)
+    exit /B 2
+)
+
+:: Select execution mode.
 if /I "%~1"=="legacy" (
     :: Build in legacy mode.
     echo SCRIPT: Building in legacy mode...
@@ -39,11 +46,7 @@ if /I "%~1"=="normal" (
     echo SCRIPT: Building in normal mode exited with code %ERRORLEVEL%.
     goto :end
 )
-echo ERROR: You must specify the mode of execution.
-echo Normal (Beta/Active): compileall.cmd normal
-echo Legacy (Beta/Active/Legacy): compileall.cmd legacy
-exit /B 2
-
-:end
-:: End local variable scope.
-endlocal
+:: Build in single mode.
+echo SCRIPT: Building in single ^('%1'^) mode...
+cmd.exe /C gradlew.bat "-Dru.vidtu.hcscr.single=%1" "%1:assemble"
+echo SCRIPT: Build in single ^('%1'^) mode exited with code %ERRORLEVEL%.
