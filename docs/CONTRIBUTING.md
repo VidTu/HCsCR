@@ -23,8 +23,8 @@ into an anti-cheat plugin if you want to block all of them.
 
 **Q**: How to compile for only one Minecraft version?
 I can't stand waiting hours for the project to initialize.  
-**A**: Run the `./compileone <version>-<loader>` script with a desired version,
-for example: `./compileone 1.16.5-fabric`. Note that due to the Stonecutter
+**A**: Run the `./compile <version>-<loader>` script with a desired version,
+for example: `./compile 1.16.5-fabric`. Note that due to the Stonecutter
 requirements, the latest version may still be initialized because it is the
 [VCS Version](https://stonecutter.kikugie.dev/wiki/glossary#vcs-version)
 of HCsCR by design.
@@ -73,9 +73,9 @@ To compile one specific Minecraft version of the mod from the source code:
    compilation, download either of those, the other will be automatically
    downloaded via Java toolchains) and dump it into `PATH` and/or `JAVA_HOME`.
 3. Clone or download the repository. (`.git` folder is *not* required)
-4. Run `./compileone <version>-<loader>` from the terminal/PowerShell
+4. Run `./compile <version>-<loader>` from the terminal/PowerShell
    from within the downloaded repository folder.
-   (for example: `./compileone 1.16.5-fabric`)
+   (for example: `./compile 1.16.5-fabric`)
 5. Grab the JAR from the `./build/libs/` folder.
 
 ### Supported Versions
@@ -98,7 +98,7 @@ supported versions of the mod from the source code:
    download either of those, the other will be automatically downloaded
    via Java toolchains) and dump it into `PATH` and/or `JAVA_HOME`.
 3. Clone or download the repository. (`.git` folder is *not* required)
-4. Run `./compileall` from the terminal/PowerShell
+4. Run `./compile normal` from the terminal/PowerShell
    from within the downloaded repository folder.
 5. Grab the JARs from the `./build/libs/` folder.
 
@@ -122,7 +122,7 @@ supported versions of the mod from the source code:
    compilation, download either of those, the others will be automatically
    downloaded via Java toolchains) and dump it into `PATH` and/or `JAVA_HOME`.
 3. Clone or download the repository. (`.git` folder is *not* required)
-4. Run `./compileall --legacy` from the terminal/PowerShell
+4. Run `./compile legacy` from the terminal/PowerShell
    from within the downloaded repository folder.
 5. Grab the JARs from the `./build/libs/` folder.
 
