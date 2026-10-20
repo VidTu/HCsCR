@@ -25,9 +25,9 @@
 if "%~1"=="" (
     :: Fail.
     echo SCRIPT: You must specify the mode of execution or the version to build.
-    echo SCRIPT: Normal ^(Beta/Active^): ./compile normal
-    echo SCRIPT: Legacy ^(Beta/Active/Legacy^): ./compile legacy
-    echo SCRIPT: Single: ./compile ^<version^> ^(e.g., "./compile 1.20.1-fabric"^)
+    echo SCRIPT: Normal ^(Beta/Active^): compile.cmd normal
+    echo SCRIPT: Legacy ^(Beta/Active/Legacy^): compile.cmd legacy
+    echo SCRIPT: Single: compile.cmd ^<version^> ^(e.g., "compile.cmd 1.20.1-fabric"^)
     exit /B 2
 )
 
