@@ -216,9 +216,11 @@ public final class ConfigScreen extends Screen {
     @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter") // <- Mojmap didn't provide parameter names.
     @DoNotCall("Called by Minecraft")
     @Override
-    //? if >=26.1.2 {
-    public void extractRenderState(final GuiGraphicsExtractor graphics, final int mouseX, final int mouseY, final float tickDelta) {
-    //?} elif >=1.20.1 {
+    //? if >=26.4 {
+    public void extractRenderState(final GuiGraphicsExtractor graphics) {
+    //?} elif >=26.1.2 {
+    /*public void extractRenderState(final GuiGraphicsExtractor graphics, final int mouseX, final int mouseY, final float tickDelta) {
+    *///?} elif >=1.20.1 {
     /*public void render(final GuiGraphics graphics, final int mouseX, final int mouseY, final float tickDelta) {
     *///?} else {
     /*public void render(final PoseStack graphics, final int mouseX, final int mouseY, final float tickDelta) {
@@ -226,12 +228,20 @@ public final class ConfigScreen extends Screen {
         // Extract and validate.
         final Font font = this.font;
         if (Variables.DEBUG_ASSERTS) {
-            assert (graphics != null) : "HCsCR: Parameter 'graphics' is null. (mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
+            //? if >=26.4 {
+            assert (graphics != null) : "HCsCR: Parameter 'graphics' is null. (screen: " + this + ')';
+            assert (font != null) : "HCsCR: Font is null. (graphics: " + graphics + ", screen: " + this + ')';
+            final Minecraft minecraft = this.minecraft;
+            assert (minecraft != null) : "HCsCR: Client is null. (graphics: " + graphics + ", screen: " + this + ')';
+            assert (minecraft.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", graphics: " + graphics + ", screen: " + this + ')';
+            //?} else {
+            /*assert (graphics != null) : "HCsCR: Parameter 'graphics' is null. (mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
             assert ((tickDelta >= 0.0f) && (tickDelta < Float.POSITIVE_INFINITY)) : "HCsCR: Parameter 'tickDelta' is not in the [0..+INF) range. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
             assert (font != null) : "HCsCR: Font is null. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
             final Minecraft minecraft = this.minecraft;
             assert (minecraft != null) : "HCsCR: Client is null. (graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
             assert (minecraft.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", graphics: " + graphics + ", mouseX: " + mouseX + ", mouseY: " + mouseY + ", tickDelta: " + tickDelta + ", screen: " + this + ')';
+            *///?}
         }
 
         // Render the background. (pre-1.20.2)
@@ -241,9 +251,11 @@ public final class ConfigScreen extends Screen {
         *///?}
 
         // Render widgets.
-        //? if >=26.1.2 {
-        super.extractRenderState(graphics, mouseX, mouseY, tickDelta); // Implicit NPE for 'graphics'
-        //?} else {
+        //? if >=26.4 {
+        super.extractRenderState(graphics); // Implicit NPE for 'graphics'
+        //?} elif >=26.1.2 {
+        /*super.extractRenderState(graphics, mouseX, mouseY, tickDelta); // Implicit NPE for 'graphics'
+        *///?} else {
         /*super.render(graphics, mouseX, mouseY, tickDelta); // Implicit NPE for 'graphics'
         *///?}
 
