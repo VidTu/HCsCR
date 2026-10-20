@@ -22,7 +22,7 @@
 
 // This is the NeoForge (1.20.2+) loader buildscript. It is processed
 // by the Stonecutter multiple times, for each version. (compiled once)
-// Based on NeoGradle, processes the preparation/complation/building
+// Based on NeoGradle, it processes the preparation/complation/building
 // of the most of the mod that is not covered by the Stonecutter or Blossom.
 // See "build.fabric.gradle.kts" for Fabric.
 // See "build.forge.gradle.kts" for Forge.
@@ -196,7 +196,7 @@ tasks.withType<ProcessResources> {
         exclude("fabric.mod.json", "META-INF/neoforge.mods.toml")
     }
 
-    // Determine and replace the version range constraints.
+    // Determine and expand the loader version constraints.
     val constraints = "${project.property("constraints")}"
     require(constraints.isNotBlank() && constraints != "null") { "Constraints are not provided via 'constraints' in ${project}." }
     inputs.property("constraints", constraints)
@@ -204,7 +204,7 @@ tasks.withType<ProcessResources> {
     // Expand the updater URL.
     inputs.property("forgeUpdaterUrl", "https://raw.githubusercontent.com/VidTu/HCsCR/main/updater_hcscr_neoforge.json")
 
-    // Expand version and dependencies.
+    // Expand Mixin Java target, Minecraft version constraints, version, and platform.
     inputs.property("mixinJava", javaTarget)
     inputs.property("minecraft", mcv)
     inputs.property("version", version)

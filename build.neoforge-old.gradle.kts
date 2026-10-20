@@ -22,7 +22,7 @@
 
 // This is the NeoForge (1.20.1) loader buildscript. It is processed
 // by the Stonecutter multiple times, for each version. (compiled once)
-// Based on Legacy ModDevGradle, processes the preparation/complation/building
+// Based on Legacy ModDevGradle, it processes the preparation/complation/building
 // of the most of the mod that is not covered by the Stonecutter or Blossom.
 // See "build.fabric.gradle.kts" for Fabric.
 // See "build.forge.gradle.kts" for Forge.
@@ -220,7 +220,7 @@ tasks.withType<ProcessResources> {
     // Exclude not needed loader entrypoint files.
     exclude("fabric.mod.json", "META-INF/neoforge.mods.toml")
 
-    // Determine and replace the version range constraints.
+    // Determine and replace the loader version constraints.
     val constraints = "${project.property("constraints")}"
     require(constraints.isNotBlank() && constraints != "null") { "Constraints are not provided via 'constraints' in ${project}." }
     inputs.property("constraints", constraints)
@@ -228,9 +228,9 @@ tasks.withType<ProcessResources> {
     // Expand the updater URL.
     inputs.property("forgeUpdaterUrl", "https://raw.githubusercontent.com/VidTu/HCsCR/main/updater_hcscr_neoforge.json")
 
-    // Expand version and dependencies.
-    inputs.property("minecraft", "1.20.1")
+    // Expand Mixin Java target, Minecraft version constraints, version, and platform.
     inputs.property("mixinJava", 17)
+    inputs.property("minecraft", "1.20.1")
     inputs.property("version", version)
     inputs.property("platform", "forge") // Yes, that's correct for NeoForge 1.20.1.
 

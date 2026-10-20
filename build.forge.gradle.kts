@@ -276,7 +276,7 @@ tasks.withType<ProcessResources> {
     // Exclude not needed loader entrypoint files.
     exclude("fabric.mod.json", "META-INF/neoforge.mods.toml")
 
-    // Determine and replace the version range constraints.
+    // Determine and expand the loader version constraints.
     val constraints = "${project.property("constraints")}"
     require(constraints.isNotBlank() && constraints != "null") { "Constraints are not provided via 'constraints' in ${project}." }
     inputs.property("constraints", constraints)
@@ -284,7 +284,7 @@ tasks.withType<ProcessResources> {
     // Expand the updater URL.
     inputs.property("forgeUpdaterUrl", "https://raw.githubusercontent.com/VidTu/HCsCR/main/updater_hcscr_forge.json")
 
-    // Expand Mixin Java version. Forge is full of edge-cases covered here.
+    // Expand Mixin Java target. Forge is full of edge-cases covered here.
     val mixinJava = when {
         (mcp >= "26.1.2") -> 21 // Non-Fabric Mixin 0.8.7 included in Forge doesn't have JAVA_25 as its target.
         (mcp eq "1.20.6") -> 18 // Non-Fabric Mixin 0.8.5 included in Forge 1.20.6 doesn't have JAVA_21 as its target.
@@ -292,7 +292,7 @@ tasks.withType<ProcessResources> {
     }
     inputs.property("mixinJava", mixinJava)
 
-    // Expand version, dependencies and platform.
+    // Expand Minecraft version constraints, version, and platform.
     inputs.property("minecraft", mcv)
     inputs.property("version", version)
     inputs.property("platform", "forge")

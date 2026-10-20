@@ -254,25 +254,25 @@ tasks.withType<ProcessResources> {
     // Exclude not needed loader entrypoint files.
     exclude("META-INF/mods.toml", "META-INF/neoforge.mods.toml", "pack.mcmeta")
 
-    // Determine and replace the Fabric Resource Loader version.
+    // Determine and expand the Fabric Resource Loader version.
     val fabricResourceLoaderRevision = if (mcp >= "1.21.10") "v1" else "v0"
     inputs.property("fabricResourceLoaderRevision", fabricResourceLoaderRevision)
 
-    // Determine and replace Fabric Keybinding/Keymapping module name.
+    // Determine and expand Fabric Keybinding/Keymapping module name.
     val fabricKeyApiName = if (mcp >= "26.1.2") "mapping" else "binding"
     inputs.property("fabricKeyApiName", fabricKeyApiName)
 
-    // Determine and replace the Fabric API module name.
+    // Determine and expand the Fabric API module name.
     val fabricApiName = if (mcp >= "1.18.2") "fabric-api" else "fabric"
     inputs.property("fabricApiName", fabricApiName)
 
-    // Expand Minecraft constraints that can be manually overridden for reasons. (e.g., snapshots)
+    // Expand Minecraft version constraints that can be manually overridden for reasons. (e.g., snapshots)
     val constraintsProperty = findProperty("constraints")
     require(constraintsProperty != mcv) { "Unneeded 'constraints' property set to ${constraintsProperty} in ${project}, it already uses this version." }
     val constraints = constraintsProperty ?: mcv
     inputs.property("minecraft", constraints)
 
-    // Expand version and dependencies.
+    // Expand Mixin Java target and version.
     inputs.property("mixinJava", javaTarget)
     inputs.property("version", version)
 
