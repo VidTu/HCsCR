@@ -13,7 +13,7 @@
       "modmenu": "21.0.0"
     },
     "forge": {
-      "loader": "26.3-66.0.13",
+      "loader": "26.3-66.1.0",
       "constraints": "[66,67)"
     },
     "neoforge": {
