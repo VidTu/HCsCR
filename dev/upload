@@ -60,8 +60,8 @@
 # Any POSIX shell should work, no bash-isms used (intentionally). The script
 # should be system-agnostic, but was tested with MinGW (Windows) and Debian.
 
-# Fail on error, fail on unbound variable, pipefail mode.
-set -euo pipefail
+# Fail on error, fail on unbound variable.
+set -eu
 
 # Begin.
 echo 'NOTE: Uploading HCsCR...'
@@ -130,6 +130,7 @@ echo 'Found all needed JAR files.'
 # Source the '.env' file.
 if [ -f '.env' ]; then
     echo "Sourcing '.env'..."
+    # shellcheck source=/dev/null
     . ./.env
     echo "Sourced '.env'."
 else
@@ -241,7 +242,7 @@ if [ -z "${UPLOAD_MODRINTH_SKIP:-}" ]; then
         UPLOAD_MODRINTH_NAME="HCsCR ${UPLOAD_MODRINTH_VERSION}"
         UPLOAD_MODRINTH_NAME_JSON=$(echo "${UPLOAD_MODRINTH_NAME}" | jq --raw-input --compact-output)
         UPLOAD_MODRINTH_GAME_VERSIONS_JSON="[$(echo "${UPLOAD_MC}" | jq --raw-input --compact-output)]"
-        if [ "${UPLOAD_TYPE}" == 'fabric' ]; then
+        if [ "${UPLOAD_TYPE}" = 'fabric' ]; then
             UPLOAD_MODRINTH_LOADERS_JSON='["fabric","quilt"]'
             UPLOAD_MODRINTH_DEPENDENCIES_JSON='[{"project_id":"P7dR8mSH","dependency_type":"required"},{"project_id":"mOgUt4GM","dependency_type":"optional"}]'
         else

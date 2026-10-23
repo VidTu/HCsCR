@@ -20,8 +20,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Fail on error, fail on unbound variable, pipefail mode.
-set -euo pipefail
+# Fail on error, fail on unbound variable.
+set -eu
 
 # Check args.
 if [ "${#}" -eq 0 ]; then
