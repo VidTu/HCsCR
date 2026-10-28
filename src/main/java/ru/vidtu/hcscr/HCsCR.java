@@ -23,18 +23,10 @@
 package ru.vidtu.hcscr;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 //? if >=1.21.3 {
 import net.minecraft.util.profiling.Profiler;
 //?}
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ai.attributes.AttributeMap;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.AABB;
 // TODO(VidTu): Forge 1.16.5 preprocessing edge case. (see build.forge.gradle.kts)
 //? if forge && 1.16.5 {
 /*import net.minecraft.util.Identifier;
@@ -50,15 +42,10 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.UnknownNullability;
 import org.jspecify.annotations.NullMarked;
 import ru.vidtu.hcscr.compile.Variables;
-import ru.vidtu.hcscr.config.Config;
-import ru.vidtu.hcscr.config.CrystalMode;
 import ru.vidtu.hcscr.handler.BlockClips;
 import ru.vidtu.hcscr.handler.HiddenEntities;
 import ru.vidtu.hcscr.handler.Keys;
 import ru.vidtu.hcscr.handler.ScheduledEntities;
-import ru.vidtu.hcscr.mixin.crystal.EntityMixin;
-
-import java.util.List;
 
 /**
  * Main HCsCR class.
@@ -231,153 +218,4 @@ public final class HCsCR {
         }
     }
     //~}
-
-    /**
-     * Handles the entity hit by a player. Removes the entity client-side or promotes to {@link #SCHEDULED_ENTITIES}, if required.
-     *
-     * @param player Player attacking the entity
-     * @param entity Entity being attacked by a player
-     * @param source Attack source (inaccurate if invoked on the client)
-     * @param amount Total amount of damage done to the entity (inaccurate if invoked on the client)
-     * @return Whether the entity has been removed
-     * @see Config#enable()
-     * @see Config#shouldProcess(Player, Entity)
-     * @see Config#crystals()
-     * @see Config#crystalsResync()
-     * @see Config#crystalsDelay()
-     */
-    @SuppressWarnings({"deprecation", "RedundantSuppression"}) // <- Forge 1.16.5 for Entity.removed.
-    public static boolean hit(final Player player, final Entity entity, final DamageSource source, final float amount) {
-        // Validate.
-        if (Variables.DEBUG_ASSERTS) {
-            assert (player != null) : "HCsCR: Parameter 'player' is null. (entity: " + entity + ", source: " + source + ", amount: " + amount + ')';
-            assert (entity != null) : "HCsCR: Parameter 'entity' is null. (player: " + player + ", source: " + source + ", amount: " + amount + ')';
-            assert (source != null) : "HCsCR: Parameter 'source' is null. (player: " + player + ", entity: " + entity + ", amount: " + amount + ')';
-            assert (Float.isFinite(amount)) : "HCsCR: Parameter 'amount' is not finite. (player: " + player + ", entity: " + entity + ", source: " + source + ", amount: " + amount + ')';
-        }
-
-        // Do NOT process hit if any of the following conditions is met:
-        // - The amount of dealt damage is zero or less. (or NaN)
-        // - The damaged entity is already scheduled for removal.
-        // - The current level (world) is not client-side. (e.g., integrated server world)
-        // - The mod is disabled via config or keybind.
-        // - This entity type shouldn't be processed at all (e.g., any living entity) or by the current config (e.g., slime).
-        //~ if >=1.17.1 'removed' -> 'isRemoved()' {
-            //~ if >=1.20.1 '.level' -> '.level()' {
-        if (!(amount > 0.0f) || entity.isRemoved() || !entity.level().isClientSide() || // Implicit NPE for 'entity'
-                !Config.enable() || !Config.shouldProcess(player, entity)) return false;
-
-        // Validate.
-        if (Variables.DEBUG_ASSERTS) {
-            assert (player instanceof LocalPlayer) : "HCsCR: Player is not LocalPlayer. (player: " + player + ", entity: " + entity + ", source: " + source + ", amount: " + amount + ')';
-            //noinspection ObjectEquality // <- Should be the same reference.
-            final Entity sourceEntity = source.getEntity();
-            assert (player == sourceEntity) : "HCsCR: Invalid source (player: " + player + ", entity: " + entity + ", source: " + source + ", amount: " + amount + ", sourceEntity: " + sourceEntity + ')';
-            final Entity sourceDirectEntity = source.getEntity();
-            assert (player == sourceDirectEntity) : "HCsCR: Indirect attack. (player: " + player + ", entity: " + entity + ", source: " + source + ", amount: " + amount + ", sourceDirectEntity: " + sourceDirectEntity + ')';
-            final Minecraft client = Minecraft.getInstance();
-            assert (client.isSameThread()) : "HCsCR: Wrong thread. (thread: " + Thread.currentThread() + ", player: " + player + ", entity: " + entity + ", source: " + source + ", amount: " + amount + ')';
-            final LocalPlayer mcPlayer = client.player;
-            assert (player == mcPlayer) : "HCsCR: Invalid player. (player: " + player + ", entity: " + entity + ", source: " + source + ", amount: " + amount + ", mcPlayer: " + mcPlayer + ')';
-        }
-
-        // Don't process player hits that deal zero damage, e.g. with the weakness effect.
-        final AttributeMap map = player.getAttributes();
-        for (final MobEffectInstance instance : player.getActiveEffects()) {
-            //? if >=1.20.6 {
-            instance.getEffect().value().addAttributeModifiers(map, instance.getAmplifier()); // Implicit NPE for 'effect', 'map'
-            //?} elif >=1.20.2 {
-            /*instance.getEffect().addAttributeModifiers(map, instance.getAmplifier()); // Implicit NPE for 'effect', 'map'
-            *///?} else {
-            /*instance.getEffect().addAttributeModifiers(player, map, instance.getAmplifier()); // Implicit NPE for 'player', 'effect', 'map'
-            *///?}
-        }
-        final double attributeAmount = player.getAttributeValue(Attributes.ATTACK_DAMAGE);
-        for (final MobEffectInstance instance : player.getActiveEffects()) {
-            //? if >=1.20.6 {
-            instance.getEffect().value().removeAttributeModifiers(map); // Implicit NPE for 'effect', 'map'
-            //?} elif >=1.20.2 {
-            /*instance.getEffect().removeAttributeModifiers(map); // Implicit NPE for 'effect', 'map'
-            *///?} else {
-            /*instance.getEffect().removeAttributeModifiers(player, map, instance.getAmplifier()); // Implicit NPE for 'player', 'effect', 'map'
-            *///?}
-        }
-        if (attributeAmount <= 0.0d) return false;
-
-        // Fast-remove one crystal entity, if the mode is DIRECT.
-        final CrystalMode mode = Config.crystals();
-        if (mode == CrystalMode.DIRECT) {
-            // Remove/hide the entity, if there's no delay.
-            final int delay = Config.crystalsDelay();
-            if (delay == 0) {
-                // Remove the entity instantly, if there's no resync.
-                final int resync = Config.crystalsResync();
-                if (resync == 0) {
-                    //$ remove_entity 'entity'
-                    entity.discard();
-                    return true;
-                }
-
-                // Hide the entity.
-                HiddenEntities.hideFor(entity, resync);
-                return true;
-            }
-
-            // Schedule the removal of the entity, if the delay exists.
-            ScheduledEntities.scheduleAt(entity, System.nanoTime() + delay);
-            return true;
-        }
-
-        // Get the enveloped entities.
-        final AABB entityBox = entity.getBoundingBox();
-        final List<Entity> entities = entity.level().getEntities(entity, entity.getBoundingBox(), (final Entity other) -> {
-            //~}
-            // Validate.
-            if (Variables.DEBUG_ASSERTS) {
-                assert (other != null) : "HCsCR: Parameter 'other' is null. (entity: " + entity + ')';
-            }
-
-            // Do NOT process hit if any of the following conditions is met:
-            // - The damaged entity is already scheduled for removal.
-            // - This entity type shouldn't be processed at all (e.g., any living entity) or by the current config (e.g., slime).
-            // - The other entity is not fully contained inside the enveloping entity.
-            if (other.isRemoved() || !Config.shouldProcess(player, other)) return false;
-        //~}
-            final AABB otherBox = other.getBoundingBox();
-            return ((otherBox.minX >= entityBox.minX) && (otherBox.maxX <= entityBox.maxX) &&
-                    (otherBox.minY >= entityBox.minY) && (otherBox.maxY <= entityBox.maxY) &&
-                    (otherBox.minZ >= entityBox.minZ) && (otherBox.maxZ <= entityBox.maxZ));
-        });
-
-        // Remove/hide the entities, if there's no delay.
-        final int delay = Config.crystalsDelay();
-        if (delay == 0) {
-            // Remove the entities instantly, if there's no resync.
-            final int resync = Config.crystalsResync();
-            if (resync == 0) {
-                //$ remove_entity 'entity'
-                entity.discard();
-                for (final Entity other : entities) {
-                    //$ remove_entity 'other'
-                    other.discard();
-                }
-                return true;
-            }
-
-            // Hide the entity.
-            HiddenEntities.hideFor(entity, resync);
-            for (final Entity other : entities) {
-                HiddenEntities.hideFor(other, resync);
-            }
-            return true;
-        }
-
-        // Schedule the removal of the entities, if the delay exists.
-        final long removeAt = (System.nanoTime() + delay);
-        ScheduledEntities.scheduleAt(entity, removeAt);
-        for (final Entity other : entities) {
-            ScheduledEntities.scheduleAt(other, removeAt);
-        }
-        return true;
-    }
 }

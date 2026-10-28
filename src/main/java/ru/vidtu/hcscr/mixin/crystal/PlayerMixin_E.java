@@ -32,11 +32,11 @@ import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.Variables;
+import ru.vidtu.hcscr.handler.Entities;
 
 /**
- * Mixin that speeds up entity removing via {@link HCsCR#hit(Player, Entity, DamageSource, float)}
+ * Mixin that speeds up entity removing via {@link Entities#hit(Player, Entity, DamageSource, float)}
  * via MixinExtras via {@link WrapOperation} hook.
  * <p>
  * See {@code PlayerMixin_M} (Forge only) for a fallback.
@@ -66,7 +66,7 @@ public final class PlayerMixin_E {
     /**
      * Handles attacking an entity from this player.
      * <p>
-     * Calls original attack method as well as {@link HCsCR#hit(Player, Entity, DamageSource, float)},
+     * Calls original attack method as well as {@link Entities#hit(Player, Entity, DamageSource, float)},
      * returns {@code true} if any succeeded. Will <b>not</b> short-circuit on either call.
      *
      * @param target       Target entity being attacked by this player
@@ -75,7 +75,7 @@ public final class PlayerMixin_E {
      * @param original     Original method callback handler
      * @return Whether the attack has succeeded
      * @apiNote Do not call, called by Mixin
-     * @see HCsCR#hit(Player, Entity, DamageSource, float)
+     * @see Entities#hit(Player, Entity, DamageSource, float)
      */
     @DoNotCall("Called by Mixin")
     //~ if >=1.21.3 'hurt' -> 'hurtOrSimulate' {
@@ -93,6 +93,6 @@ public final class PlayerMixin_E {
 
         // Delegate.
         //noinspection NonShortCircuitBooleanExpression // <- Needs to call both methods.
-        return (original.call(target, damageSource, totalDamage) | HCsCR.hit((Player) (Object) this, target, damageSource, totalDamage));
+        return (original.call(target, damageSource, totalDamage) | Entities.hit((Player) (Object) this, target, damageSource, totalDamage));
     }
 }

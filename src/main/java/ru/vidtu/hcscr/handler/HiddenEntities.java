@@ -282,7 +282,7 @@ public final class HiddenEntities {
      * @see Constants#MAX_CRYSTALS_RESYNC
      */
     @SuppressWarnings({"deprecation", "RedundantSuppression"}) // <- Forge 1.16.5 for Entity.removed.
-    public static void hideFor(final Entity entity, final @Range(from = Constants.MIN_CRYSTALS_RESYNC, to = Constants.MAX_CRYSTALS_RESYNC) int ticks) {
+    static void hideFor(final Entity entity, final @Range(from = Constants.MIN_CRYSTALS_RESYNC, to = Constants.MAX_CRYSTALS_RESYNC) int ticks) {
         // Validate.
         if (Variables.DEBUG_ASSERTS) {
             assert (entity != null) : "HCsCR: Parameter 'entity' is null. (ticks: " + ticks + ')';

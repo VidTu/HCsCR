@@ -32,12 +32,12 @@ import org.jspecify.annotations.NullMarked;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import ru.vidtu.hcscr.HCsCR;
 import ru.vidtu.hcscr.compile.Variables;
+import ru.vidtu.hcscr.handler.Entities;
 import ru.vidtu.hcscr.platform.HPlugin;
 
 /^*
- * Mixin that speeds up entity removing via {@link HCsCR#hit(Player, Entity, DamageSource, float)}
+ * Mixin that speeds up entity removing via {@link Entities#hit(Player, Entity, DamageSource, float)}
  * in absence of MixinExtras via {@link Redirect} hook. (Forge only)
  * <p>
  * See {@link PlayerMixin_E} for the default (non-fallback) Mixin.
@@ -69,7 +69,7 @@ public final class PlayerMixin_M {
     /^*
      * Handles attacking an entity from this player.
      * <p>
-     * Calls original attack method as well as {@link HCsCR#hit(Player, Entity, DamageSource, float)},
+     * Calls original attack method as well as {@link Entities#hit(Player, Entity, DamageSource, float)},
      * returns {@code true} if any succeeded. Will <b>not</b> short-circuit on either call.
      *
      * @param target       Target entity being attacked by this player
@@ -78,7 +78,7 @@ public final class PlayerMixin_M {
      * @param original     Original method callback handler
      * @return Whether the attack has succeeded
      * @apiNote Do not call, called by Mixin
-     * @see HCsCR#hit(Player, Entity, DamageSource, float)
+     * @see Entities#hit(Player, Entity, DamageSource, float)
      ^/
     @SuppressWarnings({"deprecation", "RedundantSuppression"}) // <- Entity.hurtOrSimulate() is deprecated but we're overriding it.
     @DoNotCall("Called by Mixin")
@@ -95,7 +95,7 @@ public final class PlayerMixin_M {
 
         // Delegate.
         //noinspection NonShortCircuitBooleanExpression // <- Needs to call both methods.
-        return (target.hurtOrSimulate(damageSource, totalDamage) | HCsCR.hit((Player) (Object) this, target, damageSource, totalDamage));
+        return (target.hurtOrSimulate(damageSource, totalDamage) | Entities.hit((Player) (Object) this, target, damageSource, totalDamage));
     }
     //~}
 }
