@@ -1,10 +1,10 @@
 {
   "26.4": {
     "fabric": {
-      "api": "0.165.0+26.4",
-      "modmenu": "22.0.0-alpha.2",
-      "minecraft": "26.4-snapshot-5",
-      "constraints": "26.4-alpha.5"
+      "api": "0.165.1+26.4",
+      "modmenu": "22.0.0-alpha.3",
+      "minecraft": "26.4-snapshot-6",
+      "constraints": "26.4-alpha.6"
     }
   },
   "26.3": {
