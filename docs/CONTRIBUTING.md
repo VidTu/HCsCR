@@ -31,7 +31,7 @@ of HCsCR by design.
 
 **Q**: Was any artificial intelligence (AI) or large language model (LLM) used
 in the creation of this project? Does this project allows AI contributions?  
-**A**: See the "[Artificial Intelligence](#artificial-antelligence)" section.
+**A**: See the "[Artificial Intelligence](#artificial-intelligence)" section.
 
 **Q**: Does HCsCR have a public API?  
 **A**: Nope. Except for the plugin channel mentioned above, there's no
