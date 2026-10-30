@@ -29,16 +29,9 @@ requirements, the latest version may still be initialized because it is the
 [VCS Version](https://stonecutter.kikugie.dev/wiki/glossary#vcs-version)
 of HCsCR by design.
 
-**Q**: Why so much yapping in the README.md and CONTRIBUTING.md?  
-**A**: ~~I paid for the whole LLM, I'm going to use the whole LLM.~~
-Because writing READMEs is easier than writing actual code.
-
-**Q**: Do you use AI/LLM/Code Generation/Copilot/etc.?  
-**A**: [Perhaps](https://github.com/VidTu/HCsCR/commit/1fd405d66e447c2dbdb775a39e3ca066b20e2fc4),
-but with [consequences](https://github.com/VidTu/HCsCR/commit/1898f1dc49a3b9e154cc89b40652a5cb30ef8459).
-Mostly, no, the code is 99.67% human-written, because AI is generating dumb
-stuff, especially for Minecraft. If you (or some contributors) will use AI, and
-it will magically® work™, good for you. I don't promote AI nor am I against it.
+**Q**: Was any artificial intelligence (AI) or large language model (LLM) used
+in the creation of this project? Does this project allows AI contributions?  
+**A**: See the "[Artificial Intelligence](#artificial-antelligence)" section.
 
 **Q**: Does HCsCR have a public API?  
 **A**: Nope. Except for the plugin channel mentioned above, there's no
@@ -218,6 +211,20 @@ The main requirements for PRs are basically the bare minimum. PRs must be:
 - Relevant (related to the project's functionality)
 - Understandable (by you and project's authors)
 - In English (both the code and the description)
+
+## Artificial Intelligence
+
+### Disclosure
+
+HCsCR is being written by humans for humans. It contains little to
+no AI-generated code or documentation. However, AI was used to
+proofread and correct the documentation you are reading right now.
+
+### Policy
+
+AI (LLMs and agents) is allowed for creating both pull requests and issues,
+in part or in whole, as long as [contributing requirements](#contributing)
+are met and the AI assistance is disclosed in the issue/PR description.
 
 ## Security
 
