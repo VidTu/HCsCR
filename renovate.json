@@ -14,7 +14,8 @@
         "com.terraformersmc:modmenu",
         "net.minecraftforge:forge",
         "net.neoforged:forge",
-        "net.neoforged:neoforge"
+        "net.neoforged:neoforge",
+        "java-jdk"
       ],
       "enabled": false
     }
