@@ -10,12 +10,12 @@
     {
       "matchPackageNames": [
         "com.mojang:minecraft",
-        "net.fabricmc.fabric-api:fabric-api",
         "com.terraformersmc:modmenu",
+        "java-jdk",
+        "net.fabricmc.fabric-api:fabric-api",
         "net.minecraftforge:forge",
         "net.neoforged:forge",
-        "net.neoforged:neoforge",
-        "java-jdk"
+        "net.neoforged:neoforge"
       ],
       "enabled": false
     }
