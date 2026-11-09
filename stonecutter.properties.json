@@ -168,7 +168,7 @@
     },
     "forge": {
       "loader": "1.20.4-49.2.13",
-      "constraints": "[49.1.8,50)"
+      "constraints": "[49.1.9,50)"
     },
     "neoforge": {
       "loader": "20.4.253",
