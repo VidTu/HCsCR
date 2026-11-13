@@ -5,7 +5,13 @@
   "name": "HCsCR",
   "description": "Remove your end crystals before the server even knows you hit 'em!",
   "authors": [
-    "VidTu"
+    {
+      "name": "VidTu",
+      "contact": {
+        "homepage": "https://github.com/VidTu",
+        "email": "imvidtu@proton.me"
+      }
+    }
   ],
   "contributors": [
     "${contributors}"
@@ -14,7 +20,7 @@
     "homepage": "https://modrinth.com/mod/hcscr",
     "sources": "https://github.com/VidTu/HCsCR",
     "issues": "https://github.com/VidTu/HCsCR/issues",
-    "email": "pig@vidtu.ru",
+    "email": "imvidtu@proton.me",
     "discord": "https://discord.gg/Q6saSVSuYQ"
   },
   "license": "Apache-2.0",
