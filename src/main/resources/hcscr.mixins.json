@@ -6,7 +6,7 @@
   //? if forge || (neoforge && 1.20.1) {
   /*"plugin": "ru.vidtu.hcscr.platform.HPlugin",
   *///?}
-  //? if forge && <1.20.6 {
+  //? if (forge && <1.20.6) || (neoforge && 1.20.1) {
   /*"refmap": "hcscr.mixins.refmap.json",
   *///?}
   "client": [
