@@ -117,7 +117,7 @@ public final class Entities {
             assert (player == mcPlayer) : "HCsCR: Invalid player. (player: " + player + ", entity: " + entity + ", source: " + source + ", amount: " + amount + ", mcPlayer: " + mcPlayer + ')';
         }
 
-        // Don't process player hits that deal zero damage with effects. (e.g., with the weakness effect.)
+        // Don't process player hits that deal zero damage with effects. (e.g., with the weakness effect)
         final double effectsAmount = calculateDamageWithEffects(player);
         if (!(effectsAmount > 0.0d)) return false;
 
