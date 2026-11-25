@@ -251,8 +251,9 @@ public final class Keys {
             //~ if >=26.2 'gui' -> 'gui.hud' {
             client.gui.hud.setOverlayMessage(message, /*animate=*/false); // Implicit NPE for 'client'
             //~}
+            //~ if >=26.4 '/*, volume=0.25f*/' -> ', /*volume=*/0.25f' {
             client.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING, /*pitch=*/(newState ? 2.0f : 0.0f), /*volume=*/0.25f));
-
+            //~}
             // Log. (**DEBUG**)
             if (Variables.DEBUG_LOGS) {
                 LOGGER.debug(HCsCR.MARKER, "HCsCR: Toggled the mod. (client: {}, newState: {}, key: {})", client, newState, TOGGLE);
