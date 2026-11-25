@@ -1,15 +1,15 @@
 {
   "26.4": {
     "fabric": {
-      "api": "0.166.3+26.4",
+      "api": "0.167.1+26.4",
       "modmenu": "22.0.0-alpha.7",
-      "minecraft": "26.4-snapshot-10",
-      "constraints": ">=26.4-alpha.9 <=26.4-alpha.10"
+      "minecraft": "26.4-pre-1",
+      "constraints": "26.4-pre.1"
     }
   },
   "26.3": {
     "fabric": {
-      "api": "0.166.2+26.3",
+      "api": "0.167.0+26.3",
       "modmenu": "21.0.1"
     },
     "forge": {
@@ -17,7 +17,7 @@
       "constraints": "[66,67)"
     },
     "neoforge": {
-      "loader": "26.3.0.113",
+      "loader": "26.3.0.118",
       "constraints": "[26.3.0-beta,26.3.1)"
     }
   },
@@ -45,7 +45,7 @@
       "constraints": "[64,65)"
     },
     "neoforge": {
-      "loader": "26.1.2.127",
+      "loader": "26.1.2.130",
       "constraints": "[26.1.2-beta,26.1.3)"
     }
   },

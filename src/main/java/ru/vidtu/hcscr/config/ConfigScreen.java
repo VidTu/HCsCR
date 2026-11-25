@@ -261,11 +261,11 @@ public final class ConfigScreen extends Screen {
 
         // Render the title.
         //? if >=26.1.2 {
-        graphics.centeredText(font, this.title, this.width / 2, Constants.PADDING_TOP, 0xFF_FF_FF_FF); // Implicit NPE for 'font'
+        graphics.centeredText(font, this.title, this.width / 2, Constants.PADDING_TOP, /*color=*/0xFF_FF_FF_FF); // Implicit NPE for 'font'
         //?} elif >=1.20.1 {
-        /*graphics.drawCenteredString(font, this.title, this.width / 2, Constants.PADDING_TOP, 0xFF_FF_FF_FF); // Implicit NPE for 'font'
+        /*graphics.drawCenteredString(font, this.title, this.width / 2, Constants.PADDING_TOP, /^color=^/0xFF_FF_FF_FF); // Implicit NPE for 'font'
         *///?} else {
-        /*drawCenteredString(graphics, font, this.title, this.width / 2, Constants.PADDING_TOP, 0xFF_FF_FF_FF); // Implicit NPE for 'font'
+        /*drawCenteredString(graphics, font, this.title, this.width / 2, Constants.PADDING_TOP, /^color=^/0xFF_FF_FF_FF); // Implicit NPE for 'font'
         *///?}
 
         // Render the deferred tooltip. (pre-1.19.4)

@@ -191,7 +191,7 @@ public final class Keys {
             }
 
             // Open the config screen.
-            final ConfigScreen screen = new ConfigScreen(null);
+            final ConfigScreen screen = new ConfigScreen(/*parent=*/null);
             //$ set_screen 'client' 'screen'
             client.gui.setScreen(screen);
 
@@ -251,7 +251,7 @@ public final class Keys {
             //~ if >=26.2 'gui' -> 'gui.hud' {
             client.gui.hud.setOverlayMessage(message, /*animate=*/false); // Implicit NPE for 'client'
             //~}
-            client.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING, (newState ? 2.0f : 0.0f)));
+            client.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING, /*pitch=*/(newState ? 2.0f : 0.0f), /*volume=*/0.25f));
 
             // Log. (**DEBUG**)
             if (Variables.DEBUG_LOGS) {
