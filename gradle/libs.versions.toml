@@ -22,7 +22,7 @@
 blossom = "2.2.0"
 error_prone_annotations = "2.53.0"
 fabric-loader = "0.20.1"
-forgegradle = "7.0.40"
+forgegradle = "7.0.41"
 forgerenamer = "1.2.0"
 gson = "2.15.0"
 idea-ext = "1.4.1"
